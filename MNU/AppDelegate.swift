@@ -208,6 +208,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction @objc func doHelp(sender: Any?) {
 
         // Show the 'Help' via the website
+        // TODO provide offline help
         NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/squinter/index.html")!)
     }
 
