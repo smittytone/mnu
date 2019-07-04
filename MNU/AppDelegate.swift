@@ -32,8 +32,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var inDarkMode: Bool = false
     var useDesktop: Bool = false
 
-    var controllers: [MenuItemViewController]? = nil
-
+    var controllers: [String:Any] = [:]
+    var task: Process? = nil
 
     // MARK: - App Lifecycle Functions
 
@@ -74,24 +74,33 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.appMenu = NSMenu.init(title: "MNU")
 
         // Add the stock Dark Mode item
+        var controller: MenuItemViewController = makeSwitchController(title: "macOS UI Mode")
+        controller.offImageName = "light_mode_icon"
+        controller.onImageName = "dark_mode_icon"
+        controller.state = self.inDarkMode
+        controller.action = #selector(self.doModeSwitch(sender:))
+
         var anItem: NSMenuItem = NSMenuItem.init(title: "MODE-SW",
                                                  action: nil,
                                                  keyEquivalent: "")
-        anItem.view = modeSwitchView
-        anItem.target = self;
-        modeSwitchControl.selectSegment(withTag: (self.inDarkMode ? 1 : 0))
+        anItem.view = controller.view
 
         // If we're running on a version of macOS that doesn't do Dark Mode, grey out
         // the control and disable the switch
-        modeSwitchControl.isEnabled = !disableDarkMode
-        if (disableDarkMode) { modeSwitchText.textColor = NSColor.secondaryLabelColor }
+        controller.viewSwitch.isEnabled = !disableDarkMode
+        if (disableDarkMode) {
+            controller.viewText.textColor = NSColor.secondaryLabelColor
+            controller.viewImage.alphaValue = 0.4
+        }
 
         // Add the menu item and a separator
         self.appMenu!.addItem(anItem)
         self.appMenu!.addItem(NSMenuItem.separator())
 
         // Desktop Usage Item
-        var controller = makeController(title: "Show Files on Desktop")
+        controller = makeSwitchController(title: "Show Files on Desktop")
+        controller.onImageName = "desktop_icon_on"
+        controller.offImageName = "desktop_icon_off"
         controller.state = self.useDesktop
         controller.action = #selector(self.doDesktopSwitch(sender:))
 
@@ -102,14 +111,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.appMenu!.addItem(anItem)
         self.appMenu!.addItem(NSMenuItem.separator())
 
-        // Test Item
-        controller = makeController(title: "Use Desktop Features")
-        controller.action = #selector(self.doQuit)
+        // Gitup Item
+        var buttonController: ButtonViewController = makeButtonController(title: "Update Git")
+        buttonController.offImageName = "logo_gt"
+        buttonController.onImageName = "logo_gt"
+        buttonController.action = #selector(self.doGit(sender:))
 
-        anItem = NSMenuItem.init(title: "TEST-SW",
+        anItem = NSMenuItem.init(title: "GIT-ACT",
                                  action: nil,
                                  keyEquivalent: "")
-        anItem.view = controller.view
+        anItem.view = buttonController.view
+        self.appMenu!.addItem(anItem)
+        self.appMenu!.addItem(NSMenuItem.separator())
+
+        // brew Item
+        buttonController = makeButtonController(title: "Update Brew")
+        buttonController.offImageName = "logo_br"
+        buttonController.onImageName = "logo_br"
+        buttonController.action = #selector(self.doBrew(sender:))
+
+        anItem = NSMenuItem.init(title: "BREW-ACT",
+                                 action: nil,
+                                 keyEquivalent: "")
+        anItem.view = buttonController.view
         self.appMenu!.addItem(anItem)
         self.appMenu!.addItem(NSMenuItem.separator())
 
@@ -117,7 +141,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         anItem = NSMenuItem.init(title: "APP-INFO",
                                  action: #selector(self.doHelp),
                                  keyEquivalent: "")
-        anItem.view = appInfoView
+        anItem.view = self.appInfoView
         anItem.target = self;
         self.appMenu!.addItem(anItem)
 
@@ -153,9 +177,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var arg: String = "-e tell application \"System Events\" to tell appearance preferences to set dark mode to "
 
         // Modify the script according to user selection
-        let modeSwitch: NSSegmentedControl = sender as! NSSegmentedControl
+        let modeSwitch: NSButton = sender as! NSButton
 
-        if modeSwitch.selectedSegment == 0 {
+        if modeSwitch.state == NSControl.StateValue.off {
             // Light Mode
             arg += "false"
             self.inDarkMode = false
@@ -166,10 +190,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
+        // self.appMenu!.cancelTracking()
+
+        let controller: MenuItemViewController = self.controllers["Show Files on Desktop"] as! MenuItemViewController
+        controller.setImage(isOn: self.useDesktop)
 
         // Run the task
-        runProcess(app: "/usr/bin/osascript", with: [arg])
+        runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
     }
 
 
@@ -196,10 +223,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
+        // self.appMenu!.cancelTracking()
+
+        let controller: MenuItemViewController = self.controllers["Show Files on Desktop"] as! MenuItemViewController
+        controller.setImage(isOn: self.useDesktop)
 
         // Run the task to restart the Finder
         killFinder(andDock: false)
+    }
+
+
+    @IBAction @objc func doGit(sender: Any?) {
+
+        let arg: String = "-e tell application \"Terminal\" to set currentTab to do script (\"gitup\")"
+
+        // Close the menu - required for controls within views added to menu items
+        self.appMenu!.cancelTracking()
+
+        // Run the task
+        runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
+    }
+
+
+    @IBAction @objc func doBrew(sender: Any?) {
+
+        let arg: String = "-e tell application \"Terminal\" to set currentTab to do script (\"brew update\")"
+
+        // Close the menu - required for controls within views added to menu items
+        self.appMenu!.cancelTracking()
+
+        // Run the task
+        runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
     }
 
 
@@ -218,6 +272,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    @IBAction @objc func doTest(sender: Any?) {
+
+        let deskSwitch: NSButton = sender as! NSButton
+        let controller: MenuItemViewController = self.controllers["Use Desktop Features"] as! MenuItemViewController
+        controller.setImage(isOn: (deskSwitch.state == NSControl.StateValue.on ? true : false))
+    }
+
+
     // MARK: - Miscellaneous Functions
 
     func killFinder(andDock: Bool) {
@@ -225,22 +287,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set up a task to kill the macOS Finder and, optionally, the Dock
         var args: [String] =  ["Finder"]
         if andDock { args.append("Dock") }
-        runProcess(app: "/usr/bin/killall", with: args)
+        runProcess(app: "/usr/bin/killall", with: args, doBlock: true)
     }
 
 
-    func runProcess(app path: String, with args: [String]) {
+    func runProcess(app path: String, with args: [String], doBlock: Bool) {
 
         // Generic task creation and run function
-        let task = Process()
+        let task: Process = Process()
         task.launchPath = path
-        task.arguments = args
+        if args.count > 0 { task.arguments = args }
+
+        let pipe = Pipe()
+        task.standardOutput = pipe
+
         task.launch()
-        task.waitUntilExit()
+
+        if doBlock {
+            // Block until the task has completed (short tasks ONLY)
+            task.waitUntilExit()
+        }
     }
 
 
-    func makeController(title: String) -> MenuItemViewController {
+    func makeSwitchController(title: String) -> MenuItemViewController {
 
         // Create and return a new generic switch controller
         let controller: MenuItemViewController = MenuItemViewController.init(nibName: nil, bundle: nil)
@@ -248,12 +318,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         controller.state = false
 
         // Add the new controller to the list of controllers
-        if self.controllers == nil {
-            self.controllers = [controller]
-        } else {
-            self.controllers!.append(controller)
-        }
+        self.controllers[title] = controller
 
+        // Return the controller for usage
+        return controller
+    }
+
+    func makeButtonController(title: String) -> ButtonViewController {
+
+        // Create and return a new generic switch controller
+        let controller: ButtonViewController = ButtonViewController.init(nibName: nil, bundle: nil)
+        controller.text = title
+        controller.state = true
+
+        // Add the new controller to the list of controllers
+        self.controllers[title] = controller
+
+        // Return the controller for usage
         return controller
     }
 }

@@ -9,6 +9,7 @@
         <customObject id="-2" userLabel="File's Owner" customClass="MenuItemViewController" customModule="MNU" customModuleProvider="target">
             <connections>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
+                <outlet property="viewImage" destination="MCt-tL-lDr" id="EZk-VQ-tnb"/>
                 <outlet property="viewSwitch" destination="sJs-3E-9dQ" id="Coc-Y0-5ZR"/>
                 <outlet property="viewText" destination="fax-Re-LeF" id="J3B-8T-3HB"/>
             </connections>
@@ -16,13 +17,13 @@
         <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customView id="Hz6-mo-xeY">
-            <rect key="frame" x="0.0" y="0.0" width="260" height="32"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="32"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fax-Re-LeF">
-                    <rect key="frame" x="18" y="8" width="170" height="16"/>
+                    <rect key="frame" x="56" y="8" width="176" height="16"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="16" id="Zn6-8d-7nx"/>
+                        <constraint firstAttribute="height" constant="16" id="BUS-5N-KbL"/>
                     </constraints>
                     <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="left" title="Show Files on Desktop" id="AAc-zA-Arq">
                         <font key="font" metaFont="menu"/>
@@ -31,7 +32,7 @@
                     </textFieldCell>
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sJs-3E-9dQ">
-                    <rect key="frame" x="198" y="4" width="54" height="24"/>
+                    <rect key="frame" x="238" y="4" width="54" height="24"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="JqN-2I-fIF"/>
                         <constraint firstAttribute="width" constant="54" id="a9l-qZ-9x5"/>
@@ -41,18 +42,29 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
+                <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="MCt-tL-lDr">
+                    <rect key="frame" x="20" y="1" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="30" id="9cv-wK-LIf"/>
+                        <constraint firstAttribute="width" constant="30" id="SYa-zS-7cx"/>
+                    </constraints>
+                    <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSActionTemplate" id="ci2-fm-fwO"/>
+                </imageView>
             </subviews>
             <constraints>
-                <constraint firstItem="sJs-3E-9dQ" firstAttribute="leading" secondItem="fax-Re-LeF" secondAttribute="trailing" constant="12" id="CZB-7o-1nA"/>
-                <constraint firstItem="fax-Re-LeF" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="DoT-5D-Fud"/>
+                <constraint firstItem="sJs-3E-9dQ" firstAttribute="leading" secondItem="fax-Re-LeF" secondAttribute="trailing" constant="8" id="2qw-8b-ejE"/>
+                <constraint firstItem="MCt-tL-lDr" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="CUe-hJ-aXq"/>
                 <constraint firstAttribute="trailing" secondItem="sJs-3E-9dQ" secondAttribute="trailing" constant="8" id="Hmw-IB-U8z"/>
-                <constraint firstItem="fax-Re-LeF" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="JYm-NF-qzi"/>
+                <constraint firstItem="fax-Re-LeF" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="Pp8-Wg-Q5a"/>
+                <constraint firstItem="MCt-tL-lDr" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="oSe-X8-Q4g"/>
+                <constraint firstItem="fax-Re-LeF" firstAttribute="leading" secondItem="MCt-tL-lDr" secondAttribute="trailing" constant="8" id="yJb-DK-Jwq"/>
                 <constraint firstItem="sJs-3E-9dQ" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="yJc-3A-Gd0"/>
             </constraints>
-            <point key="canvasLocation" x="139" y="127.5"/>
+            <point key="canvasLocation" x="168.5" y="127"/>
         </customView>
     </objects>
     <resources>
+        <image name="NSActionTemplate" width="14" height="14"/>
         <image name="switch_off" width="48.5" height="24"/>
         <image name="switch_on" width="48.5" height="24"/>
     </resources>

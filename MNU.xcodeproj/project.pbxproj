@@ -10,6 +10,8 @@
 		3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */; };
 		3B083B8022CC3C300025F081 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B083B7E22CC3C300025F081 /* MainMenu.xib */; };
 		3B083B8922CC3FD40025F081 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B083B8822CC3FD40025F081 /* Assets.xcassets */; };
+		3B0EF4DC22CDA2DB00B2B8F6 /* ButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */; };
+		3B0EF4DD22CDA2DB00B2B8F6 /* ButtonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */; };
 		3BE964D122CD7EE000290D39 /* MenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */; };
 		3BE964D222CD7EE000290D39 /* MenuItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */; };
 /* End PBXBuildFile section */
@@ -21,6 +23,8 @@
 		3B083B8122CC3C300025F081 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B083B8222CC3C300025F081 /* MNU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MNU.entitlements; sourceTree = "<group>"; };
 		3B083B8822CC3FD40025F081 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../OneDrive/Programming/mnu/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonViewController.swift; sourceTree = "<group>"; };
+		3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonViewController.xib; sourceTree = "<group>"; };
 		3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemViewController.swift; sourceTree = "<group>"; };
 		3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuItemViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +62,8 @@
 				3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */,
 				3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */,
 				3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */,
+				3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */,
+				3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */,
 				3B083B7E22CC3C300025F081 /* MainMenu.xib */,
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B083B8122CC3C300025F081 /* Info.plist */,
@@ -125,6 +131,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3B0EF4DD22CDA2DB00B2B8F6 /* ButtonViewController.xib in Resources */,
 				3BE964D222CD7EE000290D39 /* MenuItemViewController.xib in Resources */,
 				3B083B8922CC3FD40025F081 /* Assets.xcassets in Resources */,
 				3B083B8022CC3C300025F081 /* MainMenu.xib in Resources */,
@@ -139,6 +146,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3BE964D122CD7EE000290D39 /* MenuItemViewController.swift in Sources */,
+				3B0EF4DC22CDA2DB00B2B8F6 /* ButtonViewController.swift in Sources */,
 				3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

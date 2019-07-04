@@ -24,11 +24,11 @@
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customView id="AoJ-83-KmW">
-            <rect key="frame" x="0.0" y="0.0" width="260" height="32"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="32"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdW-Rx-jAI">
-                    <rect key="frame" x="18" y="8" width="161" height="16"/>
+                    <rect key="frame" x="18" y="8" width="201" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="6T6-ts-HRi"/>
                     </constraints>
@@ -39,7 +39,7 @@
                     </textFieldCell>
                 </textField>
                 <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T0Z-ff-Ynr">
-                    <rect key="frame" x="183" y="4" width="71" height="24"/>
+                    <rect key="frame" x="223" y="4" width="71" height="24"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="21" id="9bT-RJ-hET"/>
                         <constraint firstAttribute="width" constant="67" id="dfB-dz-bzS"/>
@@ -66,14 +66,13 @@
             <point key="canvasLocation" x="-22" y="111"/>
         </customView>
         <customView id="LQO-f4-D0U">
-            <rect key="frame" x="0.0" y="0.0" width="260" height="32"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="32"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
-                    <rect key="frame" x="229" y="2" width="25" height="25"/>
+                    <rect key="frame" x="269" y="2" width="25" height="25"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="21" id="miB-Q7-7eT"/>
-                        <constraint firstAttribute="height" constant="21" id="vYJ-v4-QVP"/>
+                        <constraint firstAttribute="height" constant="21" id="BHo-gI-yiS"/>
                     </constraints>
                     <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HJ6-eL-rlL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -86,8 +85,7 @@
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
                     <rect key="frame" x="20" y="7" width="36" height="17"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="36" id="P6C-Xt-x5l"/>
-                        <constraint firstAttribute="height" constant="16" id="YhR-UP-clc"/>
+                        <constraint firstAttribute="height" constant="16" id="oIw-RX-4de"/>
                     </constraints>
                     <buttonCell key="cell" type="inline" title="Quit" bezelStyle="inline" alignment="center" borderStyle="border" inset="2" id="nPm-1d-LIV">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -99,10 +97,10 @@
                 </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="8" id="Exu-MY-p2y"/>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="Hsi-U0-6gP"/>
-                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="LiY-B1-lPw"/>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="ptL-9w-tQS"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="2l4-RG-6fA"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="7MA-oj-XRH"/>
+                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="8" id="n9e-OI-Egv"/>
+                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="sgp-Ay-TtE"/>
             </constraints>
             <point key="canvasLocation" x="-22" y="206"/>
         </customView>
