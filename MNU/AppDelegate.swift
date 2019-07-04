@@ -235,25 +235,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction @objc func doGit(sender: Any?) {
 
-        let arg: String = "-e tell application \"Terminal\" to set currentTab to do script (\"gitup\")"
+        let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to do script (\"gitup\")"]
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
 
         // Run the task
-        runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
+        runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
     }
 
 
     @IBAction @objc func doBrew(sender: Any?) {
 
-        let arg: String = "-e tell application \"Terminal\" to set currentTab to do script (\"brew update\")"
+        let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to set currentTab to do script (\"brew update\")"]
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
 
         // Run the task
-        runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
+        runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
     }
 
 
@@ -298,6 +298,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         task.launchPath = path
         if args.count > 0 { task.arguments = args }
 
+        // Pipe out the output to avoid putting it in the log
         let pipe = Pipe()
         task.standardOutput = pipe
 
@@ -312,7 +313,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func makeSwitchController(title: String) -> MenuItemViewController {
 
-        // Create and return a new generic switch controller
+        // Create and return a new generic switch view controller
         let controller: MenuItemViewController = MenuItemViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = false
@@ -324,9 +325,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return controller
     }
 
+
     func makeButtonController(title: String) -> ButtonViewController {
 
-        // Create and return a new generic switch controller
+        // Create and return a new generic button view controller
         let controller: ButtonViewController = ButtonViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = true
