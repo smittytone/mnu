@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14810.11" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14810.11"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="GzC-gU-4Uq"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MNU" customModuleProvider="target">
+            <connections>
+                <outlet property="appInfoControl" destination="HNC-XV-ioA" id="O9Q-XZ-bo6"/>
+                <outlet property="appInfoView" destination="LQO-f4-D0U" id="t7Z-7r-DNg"/>
+                <outlet property="modeSwitchControl" destination="T0Z-ff-Ynr" id="zQU-Wp-EfO"/>
+                <outlet property="modeSwitchText" destination="tdW-Rx-jAI" id="6Gk-dr-NOF"/>
+                <outlet property="modeSwitchView" destination="AoJ-83-KmW" id="Y4C-Mb-eWO"/>
+            </connections>
+        </customObject>
+        <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
+        <customView id="AoJ-83-KmW">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdW-Rx-jAI">
+                    <rect key="frame" x="18" y="8" width="161" height="16"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="16" id="6T6-ts-HRi"/>
+                    </constraints>
+                    <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="left" title="macOS UI Mode" id="Swx-Ki-1Y6">
+                        <font key="font" metaFont="menu"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T0Z-ff-Ynr">
+                    <rect key="frame" x="183" y="4" width="71" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="21" id="9bT-RJ-hET"/>
+                        <constraint firstAttribute="width" constant="67" id="dfB-dz-bzS"/>
+                    </constraints>
+                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="JfR-cv-SEq">
+                        <font key="font" metaFont="system"/>
+                        <segments>
+                            <segment image="seg_icon_light" width="32"/>
+                            <segment image="seg_icon_dark" width="32" selected="YES" tag="1"/>
+                        </segments>
+                    </segmentedCell>
+                    <connections>
+                        <action selector="doModeSwitchWithSender:" target="Voe-Tx-rLC" id="7T8-xy-e5E"/>
+                    </connections>
+                </segmentedControl>
+            </subviews>
+            <constraints>
+                <constraint firstItem="T0Z-ff-Ynr" firstAttribute="leading" secondItem="tdW-Rx-jAI" secondAttribute="trailing" constant="8" id="5EE-Pv-Nhs"/>
+                <constraint firstItem="tdW-Rx-jAI" firstAttribute="leading" secondItem="AoJ-83-KmW" secondAttribute="leading" constant="20" id="8gS-pa-eh0"/>
+                <constraint firstItem="tdW-Rx-jAI" firstAttribute="centerY" secondItem="AoJ-83-KmW" secondAttribute="centerY" id="Sc5-gq-Q6f"/>
+                <constraint firstItem="T0Z-ff-Ynr" firstAttribute="centerY" secondItem="AoJ-83-KmW" secondAttribute="centerY" id="vNg-BZ-FOa"/>
+                <constraint firstAttribute="trailing" secondItem="T0Z-ff-Ynr" secondAttribute="trailing" constant="8" id="yUR-ku-bVn"/>
+            </constraints>
+            <point key="canvasLocation" x="-22" y="111"/>
+        </customView>
+        <customView id="LQO-f4-D0U">
+            <rect key="frame" x="0.0" y="0.0" width="260" height="32"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
+                    <rect key="frame" x="229" y="2" width="25" height="25"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="21" id="miB-Q7-7eT"/>
+                        <constraint firstAttribute="height" constant="21" id="vYJ-v4-QVP"/>
+                    </constraints>
+                    <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="HJ6-eL-rlL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="doHelpWithSender:" target="Voe-Tx-rLC" id="FSI-Sp-gdE"/>
+                    </connections>
+                </button>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
+                    <rect key="frame" x="20" y="7" width="36" height="17"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="36" id="P6C-Xt-x5l"/>
+                        <constraint firstAttribute="height" constant="16" id="YhR-UP-clc"/>
+                    </constraints>
+                    <buttonCell key="cell" type="inline" title="Quit" bezelStyle="inline" alignment="center" borderStyle="border" inset="2" id="nPm-1d-LIV">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="smallSystemBold"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
+                    </connections>
+                </button>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="8" id="Exu-MY-p2y"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="Hsi-U0-6gP"/>
+                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="LiY-B1-lPw"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="ptL-9w-tQS"/>
+            </constraints>
+            <point key="canvasLocation" x="-22" y="206"/>
+        </customView>
+    </objects>
+    <resources>
+        <image name="seg_icon_dark" width="17" height="17"/>
+        <image name="seg_icon_light" width="17" height="17"/>
+    </resources>
+</document>
