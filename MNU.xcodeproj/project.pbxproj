@@ -10,10 +10,14 @@
 		3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */; };
 		3B083B8022CC3C300025F081 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B083B7E22CC3C300025F081 /* MainMenu.xib */; };
 		3B083B8922CC3FD40025F081 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3B083B8822CC3FD40025F081 /* Assets.xcassets */; };
-		3B0EF4DC22CDA2DB00B2B8F6 /* ButtonViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */; };
-		3B0EF4DD22CDA2DB00B2B8F6 /* ButtonViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */; };
-		3BE964D122CD7EE000290D39 /* MenuItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */; };
-		3BE964D222CD7EE000290D39 /* MenuItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */; };
+		3B0EF4DC22CDA2DB00B2B8F6 /* ScriptItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DA22CDA2DB00B2B8F6 /* ScriptItemViewController.swift */; };
+		3B0EF4DD22CDA2DB00B2B8F6 /* ScriptItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B0EF4DB22CDA2DB00B2B8F6 /* ScriptItemViewController.xib */; };
+		3BBEF08B22CEBD90001D1CCB /* ConfigureWindowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08A22CEBD90001D1CCB /* ConfigureWindowViewController.swift */; };
+		3BBEF08D22CEC02F001D1CCB /* ItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08C22CEC02F001D1CCB /* ItemList.swift */; };
+		3BBEF08F22CEC634001D1CCB /* MNUitem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08E22CEC634001D1CCB /* MNUitem.swift */; };
+		3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF09022CECC00001D1CCB /* Constants.swift */; };
+		3BE964D122CD7EE000290D39 /* SwitchItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE964CF22CD7EE000290D39 /* SwitchItemViewController.swift */; };
+		3BE964D222CD7EE000290D39 /* SwitchItemViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3BE964D022CD7EE000290D39 /* SwitchItemViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -23,10 +27,14 @@
 		3B083B8122CC3C300025F081 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B083B8222CC3C300025F081 /* MNU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MNU.entitlements; sourceTree = "<group>"; };
 		3B083B8822CC3FD40025F081 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../OneDrive/Programming/mnu/Assets.xcassets; sourceTree = SOURCE_ROOT; };
-		3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonViewController.swift; sourceTree = "<group>"; };
-		3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ButtonViewController.xib; sourceTree = "<group>"; };
-		3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemViewController.swift; sourceTree = "<group>"; };
-		3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MenuItemViewController.xib; sourceTree = "<group>"; };
+		3B0EF4DA22CDA2DB00B2B8F6 /* ScriptItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptItemViewController.swift; sourceTree = "<group>"; };
+		3B0EF4DB22CDA2DB00B2B8F6 /* ScriptItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScriptItemViewController.xib; sourceTree = "<group>"; };
+		3BBEF08A22CEBD90001D1CCB /* ConfigureWindowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureWindowViewController.swift; sourceTree = "<group>"; };
+		3BBEF08C22CEC02F001D1CCB /* ItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemList.swift; sourceTree = "<group>"; };
+		3BBEF08E22CEC634001D1CCB /* MNUitem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNUitem.swift; sourceTree = "<group>"; };
+		3BBEF09022CECC00001D1CCB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		3BE964CF22CD7EE000290D39 /* SwitchItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchItemViewController.swift; sourceTree = "<group>"; };
+		3BE964D022CD7EE000290D39 /* SwitchItemViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchItemViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,11 +67,15 @@
 		3B083B7922CC3C2E0025F081 /* MNU */ = {
 			isa = PBXGroup;
 			children = (
+				3BBEF09022CECC00001D1CCB /* Constants.swift */,
 				3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */,
-				3BE964CF22CD7EE000290D39 /* MenuItemViewController.swift */,
-				3BE964D022CD7EE000290D39 /* MenuItemViewController.xib */,
-				3B0EF4DA22CDA2DB00B2B8F6 /* ButtonViewController.swift */,
-				3B0EF4DB22CDA2DB00B2B8F6 /* ButtonViewController.xib */,
+				3BE964CF22CD7EE000290D39 /* SwitchItemViewController.swift */,
+				3BE964D022CD7EE000290D39 /* SwitchItemViewController.xib */,
+				3B0EF4DA22CDA2DB00B2B8F6 /* ScriptItemViewController.swift */,
+				3B0EF4DB22CDA2DB00B2B8F6 /* ScriptItemViewController.xib */,
+				3BBEF08E22CEC634001D1CCB /* MNUitem.swift */,
+				3BBEF08C22CEC02F001D1CCB /* ItemList.swift */,
+				3BBEF08A22CEBD90001D1CCB /* ConfigureWindowViewController.swift */,
 				3B083B7E22CC3C300025F081 /* MainMenu.xib */,
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B083B8122CC3C300025F081 /* Info.plist */,
@@ -131,8 +143,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B0EF4DD22CDA2DB00B2B8F6 /* ButtonViewController.xib in Resources */,
-				3BE964D222CD7EE000290D39 /* MenuItemViewController.xib in Resources */,
+				3B0EF4DD22CDA2DB00B2B8F6 /* ScriptItemViewController.xib in Resources */,
+				3BE964D222CD7EE000290D39 /* SwitchItemViewController.xib in Resources */,
 				3B083B8922CC3FD40025F081 /* Assets.xcassets in Resources */,
 				3B083B8022CC3C300025F081 /* MainMenu.xib in Resources */,
 			);
@@ -145,9 +157,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3BE964D122CD7EE000290D39 /* MenuItemViewController.swift in Sources */,
-				3B0EF4DC22CDA2DB00B2B8F6 /* ButtonViewController.swift in Sources */,
+				3BE964D122CD7EE000290D39 /* SwitchItemViewController.swift in Sources */,
+				3BBEF08D22CEC02F001D1CCB /* ItemList.swift in Sources */,
+				3B0EF4DC22CDA2DB00B2B8F6 /* ScriptItemViewController.swift in Sources */,
 				3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */,
+				3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */,
+				3BBEF08B22CEBD90001D1CCB /* ConfigureWindowViewController.swift in Sources */,
+				3BBEF08F22CEC634001D1CCB /* MNUitem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

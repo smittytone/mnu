@@ -1,5 +1,5 @@
 
-//  ButtonViewController.swift
+//  SwitchItemViewController.swift
 //  MNU
 //
 //  Created by Tony Smith on 04/07/2019.
@@ -8,13 +8,12 @@
 
 import Cocoa
 
-class ButtonViewController: NSViewController {
+class SwitchItemViewController: NSViewController {
 
 
-    @IBOutlet weak var viewButton: NSButton!
-    @IBOutlet weak var viewText: NSTextField!
-    @IBOutlet weak var viewImage: NSImageView!
-    @IBOutlet weak var viewProgress: NSProgressIndicator!
+    @IBOutlet weak var itemSwitch: NSButton!
+    @IBOutlet weak var itemText: NSTextField!
+    @IBOutlet weak var itemImage: NSImageView!
 
 
     var text: String = ""
@@ -28,9 +27,9 @@ class ButtonViewController: NSViewController {
 
         super.viewDidLoad()
 
-        self.viewText.stringValue = self.text
-        self.viewButton.action = self.action
-        self.viewProgress.stopAnimation(nil)
+        self.itemText.stringValue = self.text
+        self.itemSwitch.state = self.state ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.itemSwitch.action = self.action
         setImage(isOn: self.state)
     }
 
@@ -39,8 +38,7 @@ class ButtonViewController: NSViewController {
 
         // Switch the image based on the value of 'isOn':
         // If 'isOn' is true, use 'onImage', otherwise use 'offImage'
-        self.viewImage.image = NSImage.init(named: (isOn ? self.onImageName : self.offImageName))
-        self.viewImage.needsDisplay = true
+        self.itemImage.image = NSImage.init(named: (isOn ? self.onImageName : self.offImageName))
+        self.itemImage.needsDisplay = true
     }
-
 }
