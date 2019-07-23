@@ -42,5 +42,5 @@ class ScriptItemViewController: NSViewController {
         self.itemImage.image = NSImage.init(named: (isOn ? self.onImageName : self.offImageName))
         self.itemImage.needsDisplay = true
     }
-
+    
 }
