@@ -6,7 +6,7 @@
 //  Copyright © 2019 Tony Smith. All rights reserved.
 
 
-import Foundation
+// Combine constants into a struct
 
 
 struct MNU_CONSTANTS {
@@ -19,8 +19,9 @@ struct MNU_CONSTANTS {
         }
 
         struct SCRIPT {
-            static let GIT  = 20
-            static let BREW = 21
+            static let GIT  = 10
+            static let BREW = 11
+            static let USER = 20
         }
     }
 
@@ -35,4 +36,6 @@ struct MNU_CONSTANTS {
         static let GIT = "Update Git"
         static let BREW = "Update Brew"
     }
+
+    static let MENU_TEXT_LEN = 50
 }
