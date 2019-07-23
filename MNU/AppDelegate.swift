@@ -24,8 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBOutlet weak var appInfoView: NSView!
     @IBOutlet weak var appInfoControl: NSButton!
 
-    @IBOutlet weak var cwvc: ConfigureWindowViewController!
+    @IBOutlet weak var cwvc: ConfigureViewController!
 
+    
     // MARK: - App Properties
 
     var statusItem: NSStatusItem? = nil
@@ -190,13 +191,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
+    }
 
-        /*
-        let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to set currentTab to do script (\"brew update\")"]
+    
+    @IBAction @objc func doScript(sender: Any?) {
 
-        // Run the task
-        runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
-         */
+        // Get the source for the script item
+        let theButton: NSButton = sender as! NSButton
+
+        for item in self.items {
+            if item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
+                if controller.itemButton == theButton {
+                    let scriptText = "tell application \"Terminal\"\nactivate\ndo script (\"\(item.script)\") in tab 1 of window 1\nend tell"
+                    let script: NSAppleScript = NSAppleScript.init(source: scriptText)!
+                    script.executeAndReturnError(nil)
+                }
+            }
+        }
+
+        // Close the menu - required for controls within views added to menu items
+        self.appMenu!.cancelTracking()
     }
 
 
@@ -217,7 +232,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction @objc func doConfigure(sender: Any?) {
 
-        let list: ItemList = ItemList()
+        let list: MNUitemList = MNUitemList()
         list.items = self.items
         cwvc.itemList = list
         cwvc.menuItemsTableView.reloadData()
@@ -233,7 +248,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     // MARK: - Menu And View Controller Maker Functions
 
-    func createMenu() {
+    @objc func createMenu() {
 
         // Create the app's menu
         let defaults = UserDefaults.standard
@@ -246,6 +261,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // NOTE For now this replicates a fixed order, but will allow us to support
         //      the user specifying a new order later on
         let menuItems: [Int] = defaults.array(forKey: "com.bps.mnu.item-order") as! [Int]
+        let userItems: [MNUitem] = defaults.array(forKey: "com.bps.mbu.user-items") as! [MNUitem]
+
         for itemCode in menuItems {
             if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                 // Create and add a Light/Dark Mode MNU item
@@ -257,7 +274,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 index += 1
 
                 // Create its controller
-                let controller: SwitchItemViewController = makeSwitchController(title: "macOS UI Mode")
+                let controller: SwitchItemViewController = makeSwitchController(title: "macOS Dark Mode")
                 controller.offImageName = "light_mode_icon"
                 controller.onImageName = "dark_mode_icon"
                 controller.state = self.inDarkMode
@@ -368,6 +385,40 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 self.appMenu!.addItem(menuItem)
                 self.appMenu!.addItem(NSMenuItem.separator())
             }
+
+            if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                // Add a user item
+
+                // Check we have valid data to use
+                assert(userItems.count == 0 || userItems.count < index)
+
+                let source: MNUitem = userItems[index]
+
+                let newItem = MNUitem()
+                newItem.title = source.title
+                newItem.code = itemCode
+                newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+                newItem.index = index
+                index += 1
+
+                let controller: ScriptItemViewController = makeScriptController(title: newItem.title)
+                controller.offImageName = "logo_gen"
+                controller.onImageName = "logo_gen"
+                controller.action = #selector(self.doScript(sender:))
+                newItem.controller = controller
+
+                // Add the new item to the stored list
+                self.items.append(newItem)
+
+                // Create the menu item that will display the MNU item
+                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
+                                                           action: nil,
+                                                           keyEquivalent: "")
+                menuItem.view = controller.view
+                menuItem.representedObject = source
+                self.appMenu!.addItem(menuItem)
+                self.appMenu!.addItem(NSMenuItem.separator())
+            }
         }
 
         // Finnally, add the app menu
@@ -405,7 +456,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func updateMenu() {
 
         // Received a menu order update notification
-        self.items = cwvc.itemList!.items!
+        self.items = cwvc.itemList!.items
 
         self.appMenu!.removeAllItems()
 
@@ -417,6 +468,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
                 let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
                 menuItem.view = controller.view
+
+                if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    // The controller for a user item may not have been assigned a selector yet, so do it here
+                    controller.action = #selector(self.doScript(sender:))
+                    controller.itemButton.action = controller.action
+                    controller.itemText.stringValue = item.title
+                }
             } else {
                 let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
                 menuItem.view = controller.view
@@ -457,11 +515,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func registerPreferences() {
 
         // Called by the app at launch to register its initial defaults
+        // Set up the following keys/values:
+        //   "com.bps.mnu.item-order" - An array of item type integers
+        //   "com.bps.mbu.user-items" - An array of user-created items
 
-        let keyArray: [String] = ["com.bps.mnu.item-order"]
+        // NOTE The index of a user item in the 'item-order' array is its location in the menu.
+        //      Iterating through the user items in 'user-items' will yield an item with an 'index'
+        //      property which matches the location in the menu
 
-        let valueArray: [[Int]] = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                    MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW]]
+        let keyArray: [String] = ["com.bps.mnu.item-order", "com.bps.mbu.user-items"]
+
+        let valueArray: [[Any]] = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
+                                    MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW], []]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
