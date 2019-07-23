@@ -32,10 +32,10 @@
                     </textFieldCell>
                 </textField>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="sJs-3E-9dQ">
-                    <rect key="frame" x="238" y="4" width="54" height="24"/>
+                    <rect key="frame" x="240" y="4" width="52" height="24"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="24" id="JqN-2I-fIF"/>
-                        <constraint firstAttribute="width" constant="54" id="a9l-qZ-9x5"/>
+                        <constraint firstAttribute="width" constant="52" id="a9l-qZ-9x5"/>
                     </constraints>
                     <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="switch_off" imagePosition="overlaps" alternateImage="switch_on" inset="2" id="9Yr-cq-P9N">
                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -52,7 +52,7 @@
                 </imageView>
             </subviews>
             <constraints>
-                <constraint firstItem="sJs-3E-9dQ" firstAttribute="leading" secondItem="fax-Re-LeF" secondAttribute="trailing" constant="8" id="2qw-8b-ejE"/>
+                <constraint firstItem="sJs-3E-9dQ" firstAttribute="leading" secondItem="fax-Re-LeF" secondAttribute="trailing" constant="10" id="2qw-8b-ejE"/>
                 <constraint firstItem="MCt-tL-lDr" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="CUe-hJ-aXq"/>
                 <constraint firstAttribute="trailing" secondItem="sJs-3E-9dQ" secondAttribute="trailing" constant="8" id="Hmw-IB-U8z"/>
                 <constraint firstItem="fax-Re-LeF" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="Pp8-Wg-Q5a"/>
