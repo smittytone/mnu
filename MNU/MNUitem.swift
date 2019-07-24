@@ -9,7 +9,7 @@
 import Cocoa
 
 
-class MNUitem: NSObject {
+class MNUitem: NSObject, NSCopying {
 
     // MARK: - Properties
 
@@ -20,5 +20,24 @@ class MNUitem: NSObject {
     var controller: Any? = nil          // The item's managing view controller
     var script: String = ""             // For user items, the bash command it will run
     var isNew: Bool = false             // Set to true when a user item is added
+    var isHidden: Bool = false          // Set to true when a switch item is hidden by the user
+
+
+    // MARK: NSCopying Functions
+
+    func copy(with zone: NSZone? = nil) -> Any {
+
+        let itemCopy = MNUitem()
+        itemCopy.title = self.title
+        itemCopy.type = self.type
+        itemCopy.code = self.code
+        itemCopy.index = self.index
+        itemCopy.script = self.script
+        itemCopy.isNew = self.isNew
+        itemCopy.isHidden = self.isHidden
+        itemCopy.controller = self.controller
+
+        return itemCopy
+    }
 
 }
