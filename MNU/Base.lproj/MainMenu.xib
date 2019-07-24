@@ -18,54 +18,9 @@
                 <outlet property="appInfoControl" destination="HNC-XV-ioA" id="O9Q-XZ-bo6"/>
                 <outlet property="appInfoView" destination="LQO-f4-D0U" id="t7Z-7r-DNg"/>
                 <outlet property="cwvc" destination="qtv-Yg-ACO" id="Inf-oR-edV"/>
-                <outlet property="modeSwitchControl" destination="T0Z-ff-Ynr" id="zQU-Wp-EfO"/>
-                <outlet property="modeSwitchText" destination="tdW-Rx-jAI" id="6Gk-dr-NOF"/>
-                <outlet property="modeSwitchView" destination="AoJ-83-KmW" id="Y4C-Mb-eWO"/>
             </connections>
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
-        <customView id="AoJ-83-KmW">
-            <rect key="frame" x="0.0" y="0.0" width="300" height="32"/>
-            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-            <subviews>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tdW-Rx-jAI">
-                    <rect key="frame" x="18" y="8" width="201" height="16"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="16" id="6T6-ts-HRi"/>
-                    </constraints>
-                    <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="left" title="macOS UI Mode" id="Swx-Ki-1Y6">
-                        <font key="font" metaFont="menu"/>
-                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                    </textFieldCell>
-                </textField>
-                <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="T0Z-ff-Ynr">
-                    <rect key="frame" x="223" y="4" width="71" height="24"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="21" id="9bT-RJ-hET"/>
-                        <constraint firstAttribute="width" constant="67" id="dfB-dz-bzS"/>
-                    </constraints>
-                    <segmentedCell key="cell" borderStyle="border" alignment="left" style="rounded" trackingMode="selectOne" id="JfR-cv-SEq">
-                        <font key="font" metaFont="system"/>
-                        <segments>
-                            <segment image="seg_icon_light" width="32"/>
-                            <segment image="seg_icon_dark" width="32" selected="YES" tag="1"/>
-                        </segments>
-                    </segmentedCell>
-                    <connections>
-                        <action selector="doModeSwitchWithSender:" target="Voe-Tx-rLC" id="7T8-xy-e5E"/>
-                    </connections>
-                </segmentedControl>
-            </subviews>
-            <constraints>
-                <constraint firstItem="T0Z-ff-Ynr" firstAttribute="leading" secondItem="tdW-Rx-jAI" secondAttribute="trailing" constant="8" id="5EE-Pv-Nhs"/>
-                <constraint firstItem="tdW-Rx-jAI" firstAttribute="leading" secondItem="AoJ-83-KmW" secondAttribute="leading" constant="20" id="8gS-pa-eh0"/>
-                <constraint firstItem="tdW-Rx-jAI" firstAttribute="centerY" secondItem="AoJ-83-KmW" secondAttribute="centerY" id="Sc5-gq-Q6f"/>
-                <constraint firstItem="T0Z-ff-Ynr" firstAttribute="centerY" secondItem="AoJ-83-KmW" secondAttribute="centerY" id="vNg-BZ-FOa"/>
-                <constraint firstAttribute="trailing" secondItem="T0Z-ff-Ynr" secondAttribute="trailing" constant="8" id="yUR-ku-bVn"/>
-            </constraints>
-            <point key="canvasLocation" x="-22" y="111"/>
-        </customView>
         <customView id="LQO-f4-D0U">
             <rect key="frame" x="0.0" y="0.0" width="312" height="32"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -482,7 +437,5 @@ Gw
         <image name="close_button_icon" width="30" height="30"/>
         <image name="configure_button_icon" width="30" height="30"/>
         <image name="help_button_icon" width="30" height="30"/>
-        <image name="seg_icon_dark" width="17" height="17"/>
-        <image name="seg_icon_light" width="17" height="17"/>
     </resources>
 </document>
