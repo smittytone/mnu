@@ -16,6 +16,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
     @IBOutlet weak var itemScriptText: NSTextField!
     @IBOutlet weak var menuTitleText: NSTextField!
     @IBOutlet weak var textCount: NSTextField!
+    @IBOutlet weak var titleText: NSTextField!
+    @IBOutlet weak var saveButton: NSButton!
 
 
     // MARK: - Class Properties
@@ -23,6 +25,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
     var hasChanged: Bool = false
     var newMNUitem: MNUitem? = nil
     var parentWindow: NSWindow? = nil
+    var isEditing: Bool = false
 
     
     // MARK: - Lifecycle Functions
@@ -38,9 +41,24 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     func showSheet() {
 
-        // Clear the new user item sheet's input fields first
-        self.itemScriptText.stringValue = ""
-        self.menuTitleText.stringValue = ""
+        if !self.isEditing {
+            // Clear the new user item sheet's input fields first
+            self.itemScriptText.stringValue = ""
+            self.menuTitleText.stringValue = ""
+            self.saveButton.title = "Add"
+            self.titleText.stringValue = "Add A New Terminal Command"
+        } else {
+            // Populate the fields from the MNUitem property
+            if let item: MNUitem = self.newMNUitem {
+                self.itemScriptText.stringValue = item.script
+                self.menuTitleText.stringValue = item.title
+                self.titleText.stringValue = "Edit This Terminal Command"
+                self.saveButton.title = "Update"
+            } else {
+                NSLog("Could not access the supplied MNUitem")
+                return
+            }
+        }
 
         // Present the sheet
         if let window = self.parentWindow {
@@ -61,34 +79,54 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     @IBAction @objc func doSave(sender: Any?) {
 
-        // Create a MNUuserItem
-        let newItem = MNUitem()
-        newItem.script = itemScriptText.stringValue
-        newItem.title = menuTitleText.stringValue
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
-        newItem.isNew = true
+        var hasChanged: Bool = false
 
-        // Add a view controller and set its view properties
-        let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
-        controller.text = newItem.title
-        controller.state = true
-        controller.onImageName = "dark_mode_icon"
-        controller.offImageName = "dark_mode_icon"
+        if !self.isEditing {
+            // Create a MNUuserItem
+            let newItem = MNUitem()
+            newItem.script = self.itemScriptText.stringValue
+            newItem.title = self.menuTitleText.stringValue
+            newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+            newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
+            newItem.isNew = true
 
-        // Assign the controller to the new menu item
-        newItem.controller = controller
+            // Add a view controller and set its view properties
+            let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
+            controller.text = newItem.title
+            controller.state = true
+            controller.onImageName = "dark_mode_icon"
+            controller.offImageName = "dark_mode_icon"
 
-        // Store the new menu item
-        self.newMNUitem = newItem
+            // Assign the controller to the new menu item
+            newItem.controller = controller
 
-        // Inform the configure window controller that there's a new item to list
-        let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
-                object: self)
+            // Store the new menu item
+            self.newMNUitem = newItem
+            hasChanged = true
+        } else {
+            // Save the updated fields
+            if let item = self.newMNUitem {
+                if item.title != self.menuTitleText.stringValue {
+                    hasChanged = true
+                    item.title = self.menuTitleText.stringValue
+                }
+
+                if item.script != self.itemScriptText.stringValue {
+                    hasChanged = true
+                    item.script = self.itemScriptText.stringValue
+                }
+            }
+        }
+        
+        if hasChanged {
+            // Inform the configure window controller that there's a new item to list
+            let nc = NotificationCenter.default
+            nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
+                    object: self)
+        }
 
         // Close the sheet
-       self.parentWindow!.endSheet(addItemSheet)
+        self.parentWindow!.endSheet(addItemSheet)
     }
 
 

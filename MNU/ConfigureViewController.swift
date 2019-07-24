@@ -82,6 +82,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     @IBAction @objc func doNewScriptItem(sender: Any?) {
 
         // Tell the add user item view controller to display its sheet
+        self.aivc.isEditing = false
         self.aivc.showSheet()
     }
 
@@ -93,6 +94,20 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
             item.isHidden = !item.isHidden
             self.hasChanged = true
             self.menuItemsTableView.reloadData()
+        }
+    }
+
+
+    @objc func doEditScript(sender: Any) {
+
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MNUitem = button.menuItem {
+            // Populate the sheet's fields for editing
+            self.aivc.newMNUitem = item
+            self.aivc.isEditing = true
+            
+            // Tell the add user item view controller to display its sheet
+            self.aivc.showSheet()
         }
     }
 
@@ -139,11 +154,17 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     @objc func processNewItem() {
 
         if aivc != nil {
-            if let item: MNUitem = aivc!.newMNUitem {
-                self.items!.items.append(item)
-                self.menuItemsTableView.reloadData()
-                self.hasChanged = true
+            self.hasChanged = true
+
+            if !aivc.isEditing {
+                if let item: MNUitem = aivc!.newMNUitem {
+                    self.items!.items.append(item)
+                }
+            } else {
+                //
             }
+
+            self.menuItemsTableView.reloadData()
         }
     }
 
@@ -170,12 +191,15 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
                     // This is a built-in switch, so change the button to 'show/hide'
                     cell!.button.title = item.isHidden ? "Show" : "Hide"
                     cell!.button.action = #selector(self.doShowHideSwitch(sender:))
+                    cell!.editButton.isHidden = true
                 }
 
                 if item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so change the button to 'show/hide'
                     cell!.button.title = "Delete"
                     cell!.button.action = #selector(self.doDeleteScript(sender:))
+                    cell!.editButton.action = #selector(self.doEditScript(sender:))
+                    cell!.editButton.menuItem = item
                 }
                 
                 cell!.title.stringValue = item.title

@@ -14,5 +14,6 @@ class MenuItemTableCellView: NSTableCellView {
     
     @IBOutlet weak var title: NSTextField!
     @IBOutlet weak var button: MenuItemTableCellButton!
+    @IBOutlet weak var editButton: MenuItemTableCellButton!
     
 }
