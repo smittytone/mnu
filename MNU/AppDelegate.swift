@@ -62,6 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
         let defaults: UserDefaults = UserDefaults.standard
+        //defaults.set([], forKey: "com.bps.mnu.item-order")
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain)!
         if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
             self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
@@ -91,6 +92,47 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationWillTerminate(_ aNotification: Notification) {
 
         // Insert code here to tear down your application
+        var savedItems: [Any] = []
+
+        for item: MNUitem in self.items {
+            savedItems.append(jsonize(item))
+        }
+
+        let defaults = UserDefaults.standard
+        defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
+        defaults.synchronize()
+    }
+
+
+    func jsonize(_ item: MNUitem) -> String {
+
+        let json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),\"code\":\(item.code),\"index\":\(item.index),\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
+        print(json)
+        return json
+    }
+
+
+    func dejsonize(_ json: String) -> MNUitem? {
+
+        print(json)
+        if let data = json.data(using: .utf8) {
+            do {
+                let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
+                let newItem = MNUitem()
+                newItem.title = dict!["title"] as! String
+                newItem.script = dict!["script"] as! String
+                newItem.type = dict!["type"] as! Int
+                newItem.code = dict!["code"] as! Int
+                newItem.index = dict!["index"] as! Int
+                newItem.isHidden = dict!["hidden"] as! Bool
+                return newItem
+            } catch {
+                print(error.localizedDescription)
+
+            }
+        }
+
+        return nil
     }
 
 
@@ -258,174 +300,104 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func createMenu() {
 
-        // Create the app's menu
+        // Create the app's menu using the loaded defaults
         let defaults = UserDefaults.standard
         var index = 0
         self.appMenu = NSMenu.init(title: "MNU")
         self.items.removeAll()
-
+        
         // Get the stored list of switch items and iterate through it, adding
         // the specified item as we go
         // NOTE For now this replicates a fixed order, but will allow us to support
         //      the user specifying a new order later on
-        let menuItems: [Int] = defaults.array(forKey: "com.bps.mnu.item-order") as! [Int]
-        let userItems: [MNUitem] = defaults.array(forKey: "com.bps.mbu.user-items") as! [MNUitem]
+        // keyArray = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
+        let menuItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
-        for itemCode in menuItems {
-            if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
-                // Create and add a Light/Dark Mode MNU item
-                let newItem = MNUitem()
-                newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
-                newItem.code = itemCode
-                newItem.type = MNU_CONSTANTS.TYPES.SWITCH
-                newItem.index = index
-                index += 1
+        if menuItems.count > 0 {
+            for item: String in menuItems {
+                if let loadedItem = dejsonize(item) {
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
+                        loadedItem.controller = makeModeSwitchController()
+                    }
 
-                // Create its controller
-                let controller: SwitchItemViewController = makeSwitchController(title: "macOS Dark Mode")
-                controller.offImageName = "light_mode_icon"
-                controller.onImageName = "dark_mode_icon"
-                controller.state = self.inDarkMode
-                controller.action = #selector(self.doModeSwitch(sender:))
-                newItem.controller = controller
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
+                        loadedItem.controller = makeDesktopSwitchController()
+                    }
 
-                // Add the new item to the stored list
-                self.items.append(newItem)
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
+                        loadedItem.controller = makeGitScriptController()
+                    }
 
-                // Create the menu item that will display the MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-                menuItem.view = controller.view
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
+                        loadedItem.controller = makeBrewScriptController()
+                    }
 
-                // If we're running on a version of macOS that doesn't do Dark Mode, grey out
-                // the control and disable the switch
-                if (self.disableDarkMode) {
-                    controller.itemSwitch.isEnabled = false
-                    controller.itemText.textColor = NSColor.secondaryLabelColor
-                    controller.itemImage.alphaValue = 0.4
+                    // Add the menu item to the list
+                    self.items.append(loadedItem)
+
+                    if !loadedItem.isHidden {
+                        // Create the NSMenuItem that will represent the MNU item
+                        let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
+                                                                   action: nil,
+                                                                   keyEquivalent: "")
+
+                        // Set NSMenuItem's view
+                        // NOTE Cast to NSViewController as it's all our subclasses' parent
+                        let controller: NSViewController = loadedItem.controller as! NSViewController
+                        menuItem.view = controller.view
+
+                        // Add the NSMenuItem to the menu
+                        self.appMenu!.addItem(menuItem)
+                        self.appMenu!.addItem(NSMenuItem.separator())
+                    }
+                }
+            }
+        } else {
+            // No user items present, so build the menu from defaults
+            let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
+
+            for itemCode in defaultItems {
+                var newItem: MNUitem? = nil
+
+                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
+                    // Create and add a Light/Dark Mode MNU item
+                    newItem = makeModeSwitch(index)
                 }
 
-                // Add the menu item and a separator
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
-            }
+                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
+                    // Create and add a Desktop Usage MNU Item
+                    newItem = makeDesktopSwitch(index)
+                }
 
-            if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
-                // Create and add a Desktop Usage MNU Item
-                let newItem = MNUitem()
-                newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
-                newItem.code = itemCode
-                newItem.type = MNU_CONSTANTS.TYPES.SWITCH
-                newItem.index = index
-                index += 1
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
+                    // Create and add the Git Update item
+                    newItem = makeGitScript(index)
+                }
 
-                // Create its controller
-                let controller: SwitchItemViewController = makeSwitchController(title: newItem.title)
-                controller.onImageName = "desktop_icon_on"
-                controller.offImageName = "desktop_icon_off"
-                controller.state = self.useDesktop
-                controller.action = #selector(self.doDesktopSwitch(sender:))
-                newItem.controller = controller
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
+                    // Create and add the Brew Update item
+                    newItem = makeBrewScript(index)
+                }
 
-                // Add the new item to the stored list
-                self.items.append(newItem)
+                if let item: MNUitem = newItem {
+                    // Add the menu item to the list
+                    self.items.append(item)
 
-                // Create the menu item that will display the MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-                menuItem.view = controller.view
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
-            }
+                    // Create the NSMenuItem that will represent the MNU item
+                    let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
+                                                               action: nil,
+                                                               keyEquivalent: "")
 
-            if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
-                // Add the Git Update item
-                let newItem = MNUitem()
-                newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
-                newItem.code = itemCode
-                newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-                newItem.index = index
-                index += 1
+                    // Set NSMenuItem's view
+                    // NOTE Cast to NSViewController as it's all our subclasses' parent
+                    let controller: NSViewController = item.controller as! NSViewController
+                    menuItem.view = controller.view
 
-                let controller: ScriptItemViewController = makeScriptController(title: newItem.title)
-                controller.offImageName = "logo_gt"
-                controller.onImageName = "logo_gt"
-                controller.action = #selector(self.doGit(sender:))
-                newItem.controller = controller
-
-                // Add the new item to the stored list
-                self.items.append(newItem)
-
-                // Create the menu item that will display the MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-                menuItem.view = controller.view
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
-            }
-
-            if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
-                // Add the Brew Update item
-                let newItem = MNUitem()
-                newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW
-                newItem.code = itemCode
-                newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-                newItem.index = index
-                index += 1
-
-                let controller: ScriptItemViewController = makeScriptController(title: newItem.title)
-                controller.offImageName = "logo_br"
-                controller.onImageName = "logo_br"
-                controller.action = #selector(self.doBrew(sender:))
-                newItem.controller = controller
-                
-                // Add the new item to the stored list
-                self.items.append(newItem)
-
-                // Create the menu item that will display the MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-                menuItem.view = controller.view
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
-            }
-
-            if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                // Add a user item
-
-                // Check we have valid data to use
-                assert(userItems.count == 0 || userItems.count < index)
-
-                let source: MNUitem = userItems[index]
-
-                let newItem = MNUitem()
-                newItem.title = source.title
-                newItem.code = itemCode
-                newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-                newItem.index = index
-                index += 1
-
-                let controller: ScriptItemViewController = makeScriptController(title: newItem.title)
-                controller.offImageName = "logo_gen"
-                controller.onImageName = "logo_gen"
-                controller.action = #selector(self.doScript(sender:))
-                newItem.controller = controller
-
-                // Add the new item to the stored list
-                self.items.append(newItem)
-
-                // Create the menu item that will display the MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: newItem.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-                menuItem.view = controller.view
-                menuItem.representedObject = source
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
+                    // Add the NSMenuItem to the menu
+                    self.appMenu!.addItem(menuItem)
+                    self.appMenu!.addItem(NSMenuItem.separator())
+                    index += 1
+                }
             }
         }
 
@@ -507,6 +479,121 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    func makeModeSwitch(_ index: Int) -> MNUitem {
+
+        // Make and return the stock UI mode switch
+        let newItem = MNUitem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
+        newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
+        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.index = index
+
+        // Create its controller
+        let controller: SwitchItemViewController = makeModeSwitchController()
+        newItem.controller = controller
+
+        // If we're running on a version of macOS that doesn't do Dark Mode, grey out
+        // the control and disable the switch
+        if (self.disableDarkMode) {
+            controller.itemSwitch.isEnabled = false
+            controller.itemText.textColor = NSColor.secondaryLabelColor
+            controller.itemImage.alphaValue = 0.4
+        }
+
+        return newItem
+    }
+
+
+    func makeModeSwitchController() -> SwitchItemViewController {
+
+        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE)
+        controller.offImageName = "light_mode_icon"
+        controller.onImageName = "dark_mode_icon"
+        controller.state = self.inDarkMode
+        controller.action = #selector(self.doModeSwitch(sender:))
+        return controller
+    }
+
+
+    func makeDesktopSwitch(_ index: Int) -> MNUitem {
+
+        // Make and return the stock desktop usage mode switch
+        let newItem = MNUitem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
+        newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
+        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.index = index
+
+        // Create its controller
+        let controller: SwitchItemViewController = makeDesktopSwitchController()
+        newItem.controller = controller
+        return newItem
+    }
+
+
+    func makeDesktopSwitchController() -> SwitchItemViewController {
+
+        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP)
+        controller.onImageName = "desktop_icon_on"
+        controller.offImageName = "desktop_icon_off"
+        controller.state = self.useDesktop
+        controller.action = #selector(self.doDesktopSwitch(sender:))
+        return controller
+    }
+
+
+    func makeGitScript(_ index: Int) -> MNUitem {
+
+        // Make the stock Git Update item
+        let newItem = MNUitem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
+        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.index = index
+
+        // Create its controller
+        let controller: ScriptItemViewController = makeGitScriptController()
+        newItem.controller = controller
+        return newItem
+    }
+
+
+    func makeGitScriptController() -> ScriptItemViewController {
+
+        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.GIT)
+        controller.offImageName = "logo_gt"
+        controller.onImageName = "logo_gt"
+        controller.action = #selector(self.doGit(sender:))
+        return controller
+    }
+
+
+    func makeBrewScript(_ index: Int) -> MNUitem {
+
+        // Make the stock Brew Update item
+        let newItem = MNUitem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW
+        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.index = index
+
+        // Create its controller
+        let controller: ScriptItemViewController = makeBrewScriptController()
+        newItem.controller = controller
+        return newItem
+    }
+
+
+    func makeBrewScriptController() -> ScriptItemViewController {
+
+        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW)
+        controller.offImageName = "logo_br"
+        controller.onImageName = "logo_br"
+        controller.action = #selector(self.doBrew(sender:))
+        return controller
+    }
+
+
     func makeSwitchController(title: String) -> SwitchItemViewController {
 
         // Create and return a new generic switch view controller
@@ -540,10 +627,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         //      Iterating through the user items in 'user-items' will yield an item with an 'index'
         //      property which matches the location in the menu
 
-        let keyArray: [String] = ["com.bps.mnu.item-order", "com.bps.mbu.user-items"]
+        let keyArray: [String] = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
 
-        let valueArray: [[Any]] = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                    MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW], []]
+        let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW], []]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
