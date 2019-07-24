@@ -32,7 +32,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         super.viewDidLoad()
 
         // Set the name length indicator
-        self.textCount.stringValue = "\(itemText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
+        self.textCount.stringValue = "\(menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
     }
 
 
@@ -105,7 +105,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
             if menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
                 // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
                 // keep that number of characters in the field
-                self.itemText.stringValue = String(menuTitleText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
+                self.menuTitleText.stringValue = String(menuTitleText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
                 NSSound.beep()
             }
 

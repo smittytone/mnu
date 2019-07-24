@@ -14,15 +14,12 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     // MARK: - UI Outlets
 
     @IBOutlet weak var menuItemsTableView: NSTableView!
-    @IBOutlet weak var swtichItemsPopup: NSPopUpButton!
     @IBOutlet weak var aivc: AddUserItemViewController!
-    @IBOutlet weak var addItemSheet: NSWindow!
 
 
     // MARK: - Class Properties
 
-    var itemList: MNUitemList? = nil
-    var itemArray: [MNUitem]? = nil
+    var items: MNUitemList? = nil
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
     var hasChanged: Bool = false
 
@@ -33,8 +30,13 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
         super.viewDidLoad()
 
+        // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([mnuPasteboardType])
 
+        // Set the add user item view controller's parent window
+        self.aivc.parentWindow = self.view.window!
+
+        // Watch for notifications of changes sent by the add user item view controller
         let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
@@ -43,53 +45,57 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     }
 
 
+    func show() {
+
+        // Show the controller's own window
+        self.view.window!.makeKeyAndOrderFront(self)
+        self.view.window!.orderFrontRegardless()
+    }
+
+    
     // MARK: - Action Functions
 
     @IBAction @objc func doCancel(sender: Any?) {
 
-        // Clear any new items
-        for i in 0..<self.itemList!.items.count {
-            let item: MNUitem = self.itemList!.items[i]
-            if item.isNew {
-                self.itemList!.items.remove(at: i)
-            }
-        }
-
-        // Just close the window
+        // Just close the configure window
         self.view.window!.close()
     }
 
 
     @IBAction @objc func doSave(sender: Any?) {
 
-        // If any changes have been made, inform the app
+        // If any changes have been made to the item list, inform the app delegate
         if hasChanged {
-            // Update any new items: mark them as no longer new
-            for i in 0..<self.itemList!.items.count {
-                let item: MNUitem = self.itemList!.items[i]
-                if item.isNew {
-                    item.isNew = false
-                }
-            }
-
-            // Notify the app delegate
-            let nc = NotificationCenter.default
+           let nc = NotificationCenter.default
             nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
                     object: self)
         }
 
-        // Close the Window
+        // Close the configure window
         self.view.window!.close()
     }
 
     
     @IBAction @objc func doNewScriptItem(sender: Any?) {
 
-        // Show the sheet
-        self.aivc.itemText.stringValue = ""
-        self.aivc.itemExec.stringValue = ""
-        self.view.window!.beginSheet(self.addItemSheet,
-                                     completionHandler: nil)
+        // Tell the add user item view controller to display its sheet
+        self.aivc.showSheet()
+    }
+
+
+    @objc func doShowHideSwitch(sender: Any) {
+
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MNUitem = button.menuItem {
+            item.isHidden = !item.isHidden
+            self.hasChanged = true
+            self.menuItemsTableView.reloadData()
+        }
+    }
+
+
+    @objc func doDeleteScript(sender: Any) {
+
     }
 
 
@@ -99,7 +105,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
         if aivc != nil {
             if let item: MNUitem = aivc!.newMNUitem {
-                self.itemList!.items.append(item)
+                self.items!.items.append(item)
                 self.menuItemsTableView.reloadData()
                 self.hasChanged = true
             }
@@ -111,8 +117,8 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     func numberOfRows(in tableView: NSTableView) -> Int {
 
-        if let itemList = self.itemList {
-            return itemList.items.count
+        if let items = self.items {
+            return items.items.count
         }
 
         return 0
@@ -121,11 +127,24 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 
-        if let itemList = self.itemList {
-            let item: MNUitem = itemList.items[row]
-            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "itemTitleCell"), owner: self) as? NSTableCellView
+        if let items = self.items {
+            let item: MNUitem = items.items[row]
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
             if cell != nil {
-                cell!.textField?.stringValue = item.title
+                if item.type == MNU_CONSTANTS.TYPES.SWITCH || (item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER) {
+                    // This is a built-in switch, so change the button to 'show/hide'
+                    cell!.button.title = item.isHidden ? "Show" : "Hide"
+                    cell!.button.action = #selector(self.doShowHideSwitch(sender:))
+                }
+
+                if item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    // This is a built-in switch, so change the button to 'show/hide'
+                    cell!.button.title = "Delete"
+                    cell!.button.action = #selector(self.doDeleteScript(sender:))
+                }
+                
+                cell!.title.stringValue = item.title
+                cell!.button.menuItem = item
                 return cell
             }
         }
@@ -136,8 +155,8 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 
-        if let itemList = self.itemList {
-            let item: MNUitem = itemList.items[row]
+        if let items = self.items {
+            let item: MNUitem = items.items[row]
             let pasteboardItem = NSPasteboardItem()
             pasteboardItem.setString(item.title, forType: mnuPasteboardType)
             return pasteboardItem
@@ -164,9 +183,9 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
             else { return false }
 
         var originalRow = -1
-        if let itemList = self.itemList {
-            for i in 0..<itemList.items.count {
-                let anItem: MNUitem = itemList.items[i]
+        if let items = self.items {
+            for i in 0..<items.items.count {
+                let anItem: MNUitem = items.items[i]
                 if anItem.title == itemTitle {
                     originalRow = i
                 }
@@ -181,9 +200,9 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
             tableView.endUpdates()
 
             // Move the list items
-            let anItem: MNUitem = itemList.items[originalRow]
-            itemList.items.remove(at: originalRow)
-            itemList.items.insert(anItem, at: newRow)
+            let anItem: MNUitem = items.items[originalRow]
+            items.items.remove(at: originalRow)
+            items.items.insert(anItem, at: newRow)
 
             hasChanged = true
             return true
