@@ -76,7 +76,7 @@
                         <constraint firstAttribute="width" constant="22" id="8ig-PL-J2B"/>
                         <constraint firstAttribute="height" constant="22" id="Sk6-4a-wJp"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="nPm-1d-LIV">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -90,7 +90,7 @@
                         <constraint firstAttribute="width" constant="22" id="HVp-h8-uQx"/>
                         <constraint firstAttribute="height" constant="22" id="yCa-lO-Sro"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="configure_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="ZUN-nM-V9E">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="configure_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="ZUN-nM-V9E">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -104,7 +104,7 @@
                         <constraint firstAttribute="height" constant="22" id="Ip0-rX-zBg"/>
                         <constraint firstAttribute="width" constant="22" id="rp6-zG-DW7"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="HJ6-eL-rlL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -365,7 +365,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv">
+                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv">
                         <rect key="frame" x="20" y="151" width="520" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="yfd-ZJ-HuE"/>
@@ -392,7 +392,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="C4g-Ra-SxG"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="qWe-hH-zjT">
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -435,7 +435,7 @@ Gw
                             <constraint firstAttribute="height" constant="21" id="6Sv-BS-j5j"/>
                             <constraint firstAttribute="width" constant="21" id="Ie4-x2-l6N"/>
                         </constraints>
-                        <buttonCell key="cell" type="help" bezelStyle="helpButton" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MB2-ZH-EEh">
+                        <buttonCell key="cell" type="help" bezelStyle="helpButton" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="MB2-ZH-EEh">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>

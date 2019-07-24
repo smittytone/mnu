@@ -42,7 +42,6 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         self.itemScriptText.stringValue = ""
         self.menuTitleText.stringValue = ""
 
-
         // Present the sheet
         if let window = self.parentWindow {
             window.beginSheet(self.addItemSheet,
@@ -56,7 +55,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
     @IBAction @objc func doCancel(sender: Any?) {
 
         // Just close the sheet
-        self.view.window!.close()
+        self.parentWindow!.endSheet(addItemSheet)
     }
 
 
@@ -89,7 +88,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
                 object: self)
 
         // Close the sheet
-        self.view.window!.close()
+       self.parentWindow!.endSheet(addItemSheet)
     }
 
 

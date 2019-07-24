@@ -20,6 +20,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     // MARK: - Class Properties
 
     var items: MNUitemList? = nil
+    var configureWindow: NSWindow? = nil
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
     var hasChanged: Bool = false
 
@@ -33,23 +34,25 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([mnuPasteboardType])
 
-        // Set the add user item view controller's parent window
-        self.aivc.parentWindow = self.view.window!
-
         // Watch for notifications of changes sent by the add user item view controller
         let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                        object: nil)
+
+        // Set the add user item view controller's parent window
+        self.configureWindow = self.view.window!
+        self.aivc.parentWindow = self.configureWindow!
     }
 
 
     func show() {
 
         // Show the controller's own window
-        self.view.window!.makeKeyAndOrderFront(self)
-        self.view.window!.orderFrontRegardless()
+        self.configureWindow!.center()
+        self.configureWindow!.makeKeyAndOrderFront(self)
+        self.configureWindow!.orderFrontRegardless()
     }
 
     
@@ -58,7 +61,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     @IBAction @objc func doCancel(sender: Any?) {
 
         // Just close the configure window
-        self.view.window!.close()
+        self.configureWindow!.close()
     }
 
 
@@ -72,7 +75,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         }
 
         // Close the configure window
-        self.view.window!.close()
+        self.configureWindow!.close()
     }
 
     
@@ -96,6 +99,38 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     @objc func doDeleteScript(sender: Any) {
 
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MNUitem = button.menuItem {
+            let alert: NSAlert = NSAlert()
+            alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
+            alert.informativeText = "This action cannot be undone unless you cancel your Configure changes."
+            alert.addButton(withTitle: "Yes")
+            alert.addButton(withTitle: "No")
+            alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
+                if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                    // Find the item referenced by the button, and remove it from
+                    // the configure window controller's list
+                    if let list = self.items {
+                        if list.items.count > 0 {
+                            var index = -1
+                            for i in 0..<list.items.count {
+                                let anItem: MNUitem = list.items[i]
+                                if anItem == item {
+                                    index = i
+                                    break
+                                }
+                            }
+
+                            if index != -1 {
+                                list.items.remove(at: index)
+                                self.hasChanged = true
+                                self.menuItemsTableView.reloadData()
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
