@@ -12,8 +12,9 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     // MARK: - UI Outlets
 
-    @IBOutlet weak var itemExec: NSTextField!
-    @IBOutlet weak var itemText: NSTextField!
+    @IBOutlet weak var addItemSheet: NSWindow!
+    @IBOutlet weak var itemScriptText: NSTextField!
+    @IBOutlet weak var menuTitleText: NSTextField!
     @IBOutlet weak var textCount: NSTextField!
 
 
@@ -21,6 +22,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     var hasChanged: Bool = false
     var newMNUitem: MNUitem? = nil
+    var parentWindow: NSWindow? = nil
 
     
     // MARK: - Lifecycle Functions
@@ -34,11 +36,26 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
     }
 
 
+    func showSheet() {
+
+        // Clear the new user item sheet's input fields first
+        self.itemScriptText.stringValue = ""
+        self.menuTitleText.stringValue = ""
+
+
+        // Present the sheet
+        if let window = self.parentWindow {
+            window.beginSheet(self.addItemSheet,
+                              completionHandler: nil)
+        }
+    }
+
+
     // MARK: - Action Functions
 
     @IBAction @objc func doCancel(sender: Any?) {
 
-        // Just close the window
+        // Just close the sheet
         self.view.window!.close()
     }
 
@@ -47,8 +64,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
         // Create a MNUuserItem
         let newItem = MNUitem()
-        newItem.script = itemExec.stringValue
-        newItem.title = itemText.stringValue
+        newItem.script = itemScriptText.stringValue
+        newItem.title = menuTitleText.stringValue
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
         newItem.isNew = true
@@ -71,7 +88,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                 object: self)
 
-        // Close the Window
+        // Close the sheet
         self.view.window!.close()
     }
 
@@ -84,16 +101,16 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         // where x is set by 'MNU_CONSTANTS.MENU_TEXT_LEN'
         let sender: NSTextField = obj.object as! NSTextField
 
-        if sender == itemText {
-            if itemText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
+        if sender == menuTitleText {
+            if menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
                 // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
                 // keep that number of characters in the field
-                self.itemText.stringValue = String(itemText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
+                self.itemText.stringValue = String(menuTitleText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
                 NSSound.beep()
             }
 
             // Whenever a character is entered, update the character count
-            self.textCount.stringValue = "\(self.itemText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
+            self.textCount.stringValue = "\(self.menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
             return;
         }
     }
