@@ -22,11 +22,11 @@
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customView id="LQO-f4-D0U">
-            <rect key="frame" x="0.0" y="0.0" width="312" height="32"/>
+            <rect key="frame" x="0.0" y="0.0" width="300" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
-                    <rect key="frame" x="20" y="5" width="22" height="22"/>
+                    <rect key="frame" x="20" y="10" width="22" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="22" id="8ig-PL-J2B"/>
                         <constraint firstAttribute="height" constant="22" id="Sk6-4a-wJp"/>
@@ -40,7 +40,7 @@
                     </connections>
                 </button>
                 <button translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP">
-                    <rect key="frame" x="145" y="5" width="22" height="22"/>
+                    <rect key="frame" x="139" y="10" width="22" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="22" id="HVp-h8-uQx"/>
                         <constraint firstAttribute="height" constant="22" id="yCa-lO-Sro"/>
@@ -54,7 +54,7 @@
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
-                    <rect key="frame" x="270" y="5" width="22" height="22"/>
+                    <rect key="frame" x="258" y="10" width="22" height="22"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="22" id="Ip0-rX-zBg"/>
                         <constraint firstAttribute="width" constant="22" id="rp6-zG-DW7"/>
@@ -157,7 +157,7 @@
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                     <subviews>
                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
-                                                            <rect key="frame" x="0.0" y="1" width="96" height="16"/>
+                                                            <rect key="frame" x="2" y="1" width="96" height="16"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="92" id="tts-Mb-HJ2"/>
                                                                 <constraint firstAttribute="height" constant="16" id="zpi-pp-OyT"/>
@@ -169,7 +169,7 @@
                                                             </textFieldCell>
                                                         </textField>
                                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                            <rect key="frame" x="468" y="0.0" width="64" height="17"/>
+                                                            <rect key="frame" x="467" y="0.0" width="64" height="17"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="TA0-kM-hOx"/>
                                                             </constraints>
@@ -179,7 +179,7 @@
                                                             </buttonCell>
                                                         </button>
                                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VVZ-kU-xyw" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                            <rect key="frame" x="396" y="0.0" width="64" height="17"/>
+                                                            <rect key="frame" x="395" y="0.0" width="64" height="17"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="16" id="Qmw-UO-F91"/>
                                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="64" id="tuV-22-Fyw"/>
@@ -196,8 +196,8 @@
                                                         <constraint firstItem="XTp-QK-fn6" firstAttribute="centerY" secondItem="Yb8-Cl-6kq" secondAttribute="centerY" id="SIG-Up-Sii"/>
                                                         <constraint firstItem="VVZ-kU-xyw" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="n7Y-Oz-8fP" secondAttribute="trailing" constant="8" symbolic="YES" id="TBh-Ov-eHl"/>
                                                         <constraint firstItem="VVZ-kU-xyw" firstAttribute="centerY" secondItem="Yb8-Cl-6kq" secondAttribute="centerY" id="ZGa-gr-cf1"/>
-                                                        <constraint firstAttribute="trailing" secondItem="XTp-QK-fn6" secondAttribute="trailing" constant="3" id="pTt-Mz-TQA"/>
-                                                        <constraint firstItem="n7Y-Oz-8fP" firstAttribute="leading" secondItem="Yb8-Cl-6kq" secondAttribute="leading" constant="2" id="sUz-WS-adf"/>
+                                                        <constraint firstAttribute="trailing" secondItem="XTp-QK-fn6" secondAttribute="trailing" constant="4" id="pTt-Mz-TQA"/>
+                                                        <constraint firstItem="n7Y-Oz-8fP" firstAttribute="leading" secondItem="Yb8-Cl-6kq" secondAttribute="leading" constant="4" id="sUz-WS-adf"/>
                                                     </constraints>
                                                     <connections>
                                                         <outlet property="button" destination="XTp-QK-fn6" id="EDl-HR-fij"/>

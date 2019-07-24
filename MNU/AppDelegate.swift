@@ -364,7 +364,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                         // Add the NSMenuItem to the menu
                         self.appMenu!.addItem(menuItem)
-                        self.appMenu!.addItem(NSMenuItem.separator())
+                        //self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
                     NSLog("Cound not deserialize \(item)")
@@ -413,7 +413,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                     // Add the NSMenuItem to the menu
                     self.appMenu!.addItem(menuItem)
-                    self.appMenu!.addItem(NSMenuItem.separator())
+                    //self.appMenu!.addItem(NSMenuItem.separator())
                     index += 1
                 }
             }
@@ -488,7 +488,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
                 // Add the menu item and a separator
                 self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
+                //self.appMenu!.addItem(NSMenuItem.separator())
             }
         }
 
