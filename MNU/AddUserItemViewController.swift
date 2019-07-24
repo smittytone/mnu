@@ -54,10 +54,11 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         newItem.isNew = true
 
         // Add a view controller and set its view properties
-        let controller: ScriptItemViewController = ScriptItemViewController()
+        let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
+        controller.text = newItem.title
+        controller.state = true
         controller.onImageName = "dark_mode_icon"
         controller.offImageName = "dark_mode_icon"
-        controller.itemText.stringValue = newItem.title
 
         // Assign the controller to the new menu item
         newItem.controller = controller
@@ -65,7 +66,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         // Store the new menu item
         self.newMNUitem = newItem
 
-        // Inform the app
+        // Inform the configure window controller that there's a new item to list
         let nc = NotificationCenter.default
         nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                 object: self)
@@ -79,18 +80,19 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     func controlTextDidChange(_ obj: Notification) {
 
+        // We use this to trap text entry into the 'itemText' field and limit it to x characters
+        // where x is set by 'MNU_CONSTANTS.MENU_TEXT_LEN'
         let sender: NSTextField = obj.object as! NSTextField
 
-        // New Project sheet
-
         if sender == itemText {
-            let textString: NSString = self.itemText.stringValue as NSString
-
-            if textString.length > MNU_CONSTANTS.MENU_TEXT_LEN {
-                self.itemText.stringValue = textString.substring(to: MNU_CONSTANTS.MENU_TEXT_LEN)
+            if itemText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
+                // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
+                // keep that number of characters in the field
+                self.itemText.stringValue = String(itemText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
                 NSSound.beep()
             }
 
+            // Whenever a character is entered, update the character count
             self.textCount.stringValue = "\(self.itemText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
             return;
         }
