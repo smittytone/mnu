@@ -78,6 +78,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Create the app's menu
         createMenu()
 
+        // Watch for item list changes sent by the configure window controller
         let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.updateMenu),
@@ -232,17 +233,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBAction @objc func doConfigure(sender: Any?) {
 
+        // Duplicate the current item list to pass on to the configure window view controller
         let list: MNUitemList = MNUitemList()
-        list.items = self.items
-        cwvc.itemList = list
-        cwvc.menuItemsTableView.reloadData()
+
+        if self.items.count > 0 {
+            for item: MNUitem in self.items {
+                let itemCopy: MNUitem = item.copy() as! MNUitem
+                list.items.append(itemCopy)
+            }
+        }
+
+        self.cwvc.items = list
+        self.cwvc.menuItemsTableView.reloadData()
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
 
-        // Present the config window
-        self.cwvc.view.window!.makeKeyAndOrderFront(self)
-        self.cwvc.view.window!.orderFrontRegardless()
+        // Tell the configure window controller to show its window
+        self.cwvc.show()
     }
 
 
@@ -456,36 +464,45 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func updateMenu() {
 
         // Received a menu order update notification
-        self.items = cwvc.itemList!.items
+        if let itemList: MNUitemList = cwvc.items {
+            self.items.removeAll()
+            self.items = itemList.items
+        }
 
+        // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
 
         for item in self.items {
-            // Create the menu item that will display the MNU item
-            let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                       action: nil,
-                                                       keyEquivalent: "")
-            if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
-                let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
-                menuItem.view = controller.view
+            // If the item is not hidden, add it to the menu
+            if !item.isHidden {
+                // Create ann NSMenuItem that will display the current MNU item
+                let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
+                                                           action: nil,
+                                                           keyEquivalent: "")
 
-                if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                    // The controller for a user item may not have been assigned a selector yet, so do it here
-                    controller.action = #selector(self.doScript(sender:))
-                    controller.itemButton.action = controller.action
-                    controller.itemText.stringValue = item.title
+                // Set the NSMenuItem's view to that maintained by the MNU item's controller
+                if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
+                    let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
+                    menuItem.view = controller.view
+
+                    if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                        // The controller for a user item may not have been assigned a selector yet, so do it here
+                        controller.action = #selector(self.doScript(sender:))
+                        controller.itemButton.action = controller.action
+                        controller.itemText.stringValue = item.title
+                    }
+                } else {
+                    let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
+                    menuItem.view = controller.view
                 }
-            } else {
-                let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
-                menuItem.view = controller.view
-            }
 
-            // Add the menu item and a separator
-            self.appMenu!.addItem(menuItem)
-            self.appMenu!.addItem(NSMenuItem.separator())
+                // Add the menu item and a separator
+                self.appMenu!.addItem(menuItem)
+                self.appMenu!.addItem(NSMenuItem.separator())
+            }
         }
 
-        // Add the app menu
+        // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
     }
 
