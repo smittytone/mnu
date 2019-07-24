@@ -29,12 +29,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - App Properties
 
-    var statusItem: NSStatusItem? = nil
-    var appMenu: NSMenu? = nil
-    var inDarkMode: Bool = false
-    var useDesktop: Bool = false
-    var disableDarkMode: Bool = false
-    var items: [MNUitem] = []
+    var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
+    var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
+    var inDarkMode: Bool = false                // Is the Mac in dark mode (true) or not (false)
+    var useDesktop: Bool = false                // Is the Mac using the desktop (true) or not (false)
+    var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
+    var items: [MNUitem] = []                   // The menu items that are present (but may be hidden)
     var task: Process? = nil
 
 
@@ -43,7 +43,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
         // First ensure we are running on Mojave or above -
-        // Dark Mode not supported by earlier versons
+        // Dark Mode is not supported by earlier versons
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
         if sysVer.minorVersion < 14 {
             // Wrong version!
@@ -62,7 +62,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
         let defaults: UserDefaults = UserDefaults.standard
-        //defaults.set([], forKey: "com.bps.mnu.item-order")
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain)!
         if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
             self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
@@ -72,6 +71,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let useDesktopDefault = defaultsDict["CreateDesktop"] {
             self.useDesktop = (useDesktopDefault as! String == "0") ? false : true
         }
+
+        // DEBUG
+        // Uncomment the next line to wipe stored prefs
+        //defaults.set([], forKey: "com.bps.mnu.item-order")
 
         // Register preferences
         registerPreferences()
@@ -91,7 +94,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
 
-        // Insert code here to tear down your application
+        // Store the current state of the menu
+        // NOTE We convert MNUitem object into basic JSON strings and save
+        //      these into an array that we will use to recreate the MNUitem list
+        //      at next start up. This is because Strings can be PLIST'ed whereas
+        //      custom objects cannot
         var savedItems: [Any] = []
 
         for item: MNUitem in self.items {
@@ -104,17 +111,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: - Loading And Saving Serialization Functions
+
     func jsonize(_ item: MNUitem) -> String {
 
-        let json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),\"code\":\(item.code),\"index\":\(item.index),\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
-        print(json)
+        // Generate a JSON string serialization of the specified MNUitem object
+        var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
+        json += "\"code\":\(item.code),\"index\":\(item.index),"
+        json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
         return json
     }
 
 
     func dejsonize(_ json: String) -> MNUitem? {
 
-        print(json)
+        // Recreate a MNUitem object from our simple JSON serialization
+        // NOTE We still need to create 'controller' properties, which is done later
         if let data = json.data(using: .utf8) {
             do {
                 let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
@@ -127,8 +139,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 newItem.isHidden = dict!["hidden"] as! Bool
                 return newItem
             } catch {
-                print(error.localizedDescription)
-
+                NSLog(error.localizedDescription)
             }
         }
 
@@ -268,6 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction @objc func doHelp(sender: Any?) {
 
         // Show the 'Help' via the website
+        // TODO create web page
         // TODO provide offline help
         NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/squinter/index.html")!)
     }
@@ -306,16 +318,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.appMenu = NSMenu.init(title: "MNU")
         self.items.removeAll()
         
-        // Get the stored list of switch items and iterate through it, adding
-        // the specified item as we go
-        // NOTE For now this replicates a fixed order, but will allow us to support
-        //      the user specifying a new order later on
-        // keyArray = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
+        // Get the stored list of switch items and iterate through it.
+        // First, get the array of JSON serializations stored in the user defaults
         let menuItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
         if menuItems.count > 0 {
+            // For each string in the array, create a MNUitem object from the serialization
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
+                    // Re-create each item's view controller according to its type
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                         loadedItem.controller = makeModeSwitchController()
                     }
@@ -332,9 +343,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         loadedItem.controller = makeBrewScriptController()
                     }
 
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                        loadedItem.controller = makeGenericScriptController(loadedItem.title)
+                    }
+
                     // Add the menu item to the list
                     self.items.append(loadedItem)
 
+                    // Unless the item is marked as hidden, create an NSMenuItem for it
                     if !loadedItem.isHidden {
                         // Create the NSMenuItem that will represent the MNU item
                         let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
@@ -350,10 +366,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         self.appMenu!.addItem(menuItem)
                         self.appMenu!.addItem(NSMenuItem.separator())
                     }
+                } else {
+                    NSLog("Cound not deserialize \(item)")
                 }
             }
         } else {
-            // No user items present, so build the menu from defaults
+            // No serialized items present, so assemble the default list of items
             let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
 
             for itemCode in defaultItems {
@@ -370,12 +388,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
-                    // Create and add the Git Update item
+                    // Create and add a Git Update item
                     newItem = makeGitScript(index)
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
-                    // Create and add the Brew Update item
+                    // Create and add a Brew Update item
                     newItem = makeBrewScript(index)
                 }
 
@@ -594,9 +612,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    func makeGenericScriptController(_ title: String) -> ScriptItemViewController {
+
+        // Create and return a generic switch view controller
+        let controller: ScriptItemViewController = makeScriptController(title: title)
+        controller.offImageName = "logo_gen"
+        controller.onImageName = "logo_gen"
+        controller.action = #selector(self.doScript(sender:))
+        return controller
+    }
+
+
     func makeSwitchController(title: String) -> SwitchItemViewController {
 
-        // Create and return a new generic switch view controller
+        // Create and return a new base switch view controller
         let controller: SwitchItemViewController = SwitchItemViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = false
@@ -606,7 +635,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func makeScriptController(title: String) -> ScriptItemViewController {
 
-        // Create and return a new generic button view controller
+        // Create and return a new base button view controller
         let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = true
