@@ -269,6 +269,9 @@ Gw
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="iD0-Pp-a2M"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
@@ -359,6 +362,9 @@ Gw
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="doShowHelpWithSender:" target="8Wq-hu-xtq" id="SYa-LF-jXa"/>
+                        </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-Om-6Ns">
                         <rect key="frame" x="18" y="210" width="524" height="16"/>

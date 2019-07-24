@@ -281,7 +281,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Show the 'Help' via the website
         // TODO create web page
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/squinter/index.html")!)
+        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html")!)
     }
 
 

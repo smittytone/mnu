@@ -79,6 +79,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
     @IBAction @objc func doSave(sender: Any?) {
 
+        // Save a new script item, or update an existing one (if we are editing)
+
         var hasChanged: Bool = false
 
         if !self.isEditing {
@@ -94,8 +96,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
             let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
             controller.text = newItem.title
             controller.state = true
-            controller.onImageName = "dark_mode_icon"
-            controller.offImageName = "dark_mode_icon"
+            controller.onImageName = "logo_gen"
+            controller.offImageName = "logo_gen"
 
             // Assign the controller to the new menu item
             newItem.controller = controller
@@ -120,6 +122,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         
         if hasChanged {
             // Inform the configure window controller that there's a new item to list
+            // NOTE The called code handles edited items too - it's not just for new items
             let nc = NotificationCenter.default
             nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                     object: self)
@@ -127,6 +130,15 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
 
         // Close the sheet
         self.parentWindow!.endSheet(addItemSheet)
+    }
+
+
+    @IBAction @objc func doShowHelp(sender: Any?) {
+
+        // Show the 'Help' via the website
+        // TODO create web page
+        // TODO provide offline help
+        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#add-edit")!)
     }
 
 

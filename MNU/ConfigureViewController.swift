@@ -149,6 +149,15 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     }
 
 
+    @IBAction @objc func doShowHelp(sender: Any?) {
+
+        // Show the 'Help' via the website
+        // TODO create web page
+        // TODO provide offline help
+        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#configure")!)
+    }
+
+
     // MARK: - Notification Handlers
 
     @objc func processNewItem() {
