@@ -15,6 +15,9 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MNU" customModuleProvider="target">
             <connections>
+                <outlet property="appControlConfigureButton" destination="s7c-vc-KUP" id="hAl-Uu-nTE"/>
+                <outlet property="appControlHelpButton" destination="HNC-XV-ioA" id="uYE-90-upK"/>
+                <outlet property="appControlQuitButton" destination="d0n-TZ-J0W" id="3Ou-H5-aAx"/>
                 <outlet property="appControlView" destination="LQO-f4-D0U" id="fMs-sX-JJN"/>
                 <outlet property="cwvc" destination="qtv-Yg-ACO" id="Inf-oR-edV"/>
             </connections>
@@ -24,7 +27,7 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
+                <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
                     <rect key="frame" x="20" y="10" width="22" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="22" id="8ig-PL-J2B"/>
@@ -38,7 +41,7 @@
                         <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
                     </connections>
                 </button>
-                <button translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP">
+                <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP">
                     <rect key="frame" x="139" y="10" width="22" height="22"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="22" id="HVp-h8-uQx"/>
@@ -326,17 +329,6 @@ Gw
                             <action selector="doSaveWithSender:" target="8Wq-hu-xtq" id="Mun-6s-v7l"/>
                         </connections>
                     </button>
-                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
-                        <rect key="frame" x="18" y="234" width="520" height="16"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="16" id="b9N-BZ-58f"/>
-                        </constraints>
-                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Add A New Terminal Command" id="0go-Tm-xMP">
-                            <font key="font" metaFont="system"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                        </textFieldCell>
-                    </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jm6-VI-8yC">
                         <rect key="frame" x="399" y="13" width="82" height="32"/>
                         <constraints>
@@ -373,7 +365,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="q1V-qY-SVu"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a terminal command, eg. ‘cd $HOME’" id="L8p-nC-86G">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a terminal command:" id="L8p-nC-86G">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -384,7 +376,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" id="cG4-aB-hsX">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="cd $HOME" drawsBackground="YES" id="cG4-aB-hsX">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -395,7 +387,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="vB2-0n-eEl"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a menu label for the script, eg. ‘Update Repos’ (50 characters max.)" id="OsI-jf-7AS">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a menu label for the command (30 characters max.):" id="OsI-jf-7AS">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -406,7 +398,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Vlb-Jz-4tg"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Go To Home Directory" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -420,8 +412,19 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="dgD-K9-Apa"/>
                         </constraints>
-                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="80/80" id="bbm-ZX-iFe">
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="30/30" id="bbm-ZX-iFe">
                             <font key="font" metaFont="smallSystem"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
+                        <rect key="frame" x="18" y="242" width="520" height="16"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="16" id="b9N-BZ-58f"/>
+                        </constraints>
+                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Add A New Terminal Command" id="0go-Tm-xMP">
+                            <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -450,8 +453,8 @@ Gw
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="lDu-cX-2AX"/>
                     <constraint firstItem="WiG-6V-3VE" firstAttribute="leading" secondItem="Jm6-VI-8yC" secondAttribute="trailing" constant="12" id="pGg-79-wsz"/>
                     <constraint firstAttribute="trailing" secondItem="oWJ-xC-IC0" secondAttribute="trailing" constant="20" id="q47-5Q-erD"/>
-                    <constraint firstItem="Bc4-ey-6Gh" firstAttribute="top" secondItem="kbT-Jg-8jd" secondAttribute="top" constant="20" id="tmL-kk-dAT"/>
-                    <constraint firstItem="v9D-Om-6Ns" firstAttribute="top" secondItem="Bc4-ey-6Gh" secondAttribute="bottom" constant="8" id="wIs-ee-yxj"/>
+                    <constraint firstItem="Bc4-ey-6Gh" firstAttribute="top" secondItem="kbT-Jg-8jd" secondAttribute="top" constant="12" id="tmL-kk-dAT"/>
+                    <constraint firstItem="v9D-Om-6Ns" firstAttribute="top" secondItem="Bc4-ey-6Gh" secondAttribute="bottom" constant="16" id="wIs-ee-yxj"/>
                     <constraint firstAttribute="trailing" secondItem="3GM-GK-4Xv" secondAttribute="trailing" constant="20" id="wX2-QX-wv0"/>
                     <constraint firstItem="luN-mo-wfm" firstAttribute="top" secondItem="3GM-GK-4Xv" secondAttribute="bottom" constant="8" id="zhN-5I-t2N"/>
                 </constraints>

@@ -39,6 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - UI Outlets
 
     @IBOutlet weak var appControlView: NSView!              // The last view on the menu is the control bar
+    @IBOutlet weak var appControlQuitButton: NSButton!      // The Quit button
+    @IBOutlet weak var appControlConfigureButton: NSButton! // The Configure button
+    @IBOutlet weak var appControlHelpButton: NSButton!      // The Help button
     @IBOutlet weak var cwvc: ConfigureViewController!       // The Configure window controller
 
     
@@ -93,6 +96,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Register preferences
         registerPreferences()
+
+        // Set Tooltips
+        setTooltips()
 
         // Create the app's menu
         createMenu()
@@ -478,7 +484,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
-            self.statusItem!.button!.toolTip = "Handy actions in one place"
+            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion 1.0.0"
             self.statusItem!.isVisible = true
         } else {
            NSLog("Error in MNU.createMenu()(): Could not initialise menu")
@@ -744,6 +750,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         defaults.synchronize()
+    }
+
+
+    func setTooltips() {
+
+        // Add tooltips to key UI items
+        appControlHelpButton.toolTip = "Get online help"
+        appControlQuitButton.toolTip = "Quit MNU"
+        appControlConfigureButton.toolTip = "Configure the items in the menu"
     }
 
 
