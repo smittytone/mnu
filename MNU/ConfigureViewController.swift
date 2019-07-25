@@ -34,8 +34,11 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     // MARK: - UI Outlets
 
+    @IBOutlet weak var windowTabView: NSTabView!
     @IBOutlet weak var menuItemsTableView: NSTableView!
+    @IBOutlet weak var menuItemsCountText: NSTextField!
     @IBOutlet weak var aivc: AddUserItemViewController!
+    @IBOutlet weak var aboutVersionText: NSTextField!
 
 
     // MARK: - Class Properties
@@ -65,9 +68,21 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Set the add user item view controller's parent window
         self.configureWindow = self.view.window!
         self.aivc.parentWindow = self.configureWindow!
+
+        // Set up the About MNU... tab text
+        let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        aboutVersionText.stringValue = "Version \(version) (\(build))"
     }
 
 
+    override func viewWillAppear() {
+
+        // Update the menu item list count indicator
+        displayItemCount()
+    }
+
+    
     func show() {
 
         // Show the controller's own window in the centre of the display
@@ -118,7 +133,10 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
             // Flip the item's recorded state and update the table
             item.isHidden = !item.isHidden
             self.hasChanged = true
+
+            // Reload the table data and update the status line
             self.menuItemsTableView.reloadData()
+            displayItemCount()
         }
     }
 
@@ -203,6 +221,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
             self.hasChanged = true
             self.menuItemsTableView.reloadData()
+            displayItemCount()
         }
     }
 
@@ -306,5 +325,33 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         }
 
         return false
+    }
+
+
+    // MARK: - Misc Functions
+
+    func displayItemCount() {
+
+        // Update the count of current menu items
+        var total = 0
+        var count = 0
+
+        if let list: MenuItemList = self.menuItems {
+            if list.items.count > 0 {
+                total = list.items.count
+                for item: MenuItem in list.items {
+                    if !item.isHidden {
+                        count += 1
+                    }
+                }
+            }
+        }
+
+        // Handle plurals in the text correctly, and subsitite 'no' for '0'
+        let itemText = count == 1 ? "item" : "items"
+        let countText = count == 0 ? "no" : "\(count)"
+
+        // Display the text
+        menuItemsCountText.stringValue = "Menu has \(countText) \(itemText) visible out of \(total)"
     }
 }
