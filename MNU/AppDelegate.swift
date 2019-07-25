@@ -260,7 +260,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    @IBAction @objc func doBrew(sender: Any?) {
+    @IBAction @objc func doBrewUpdate(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew update'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
@@ -270,6 +270,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
     }
+
+
+    @IBAction @objc func doBrewUpgrade(sender: Any?) {
+
+       // Set up the script that will open Terminal and run 'brew upgrade'
+       // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
+       // TODO Check for installation of brew and warn if it's missing
+       runScript("brew upgrade")
+
+       // Close the menu - required for controls within views added to menu items
+       self.appMenu!.cancelTracking()
+   }
 
     
     @IBAction @objc func doScript(sender: Any?) {
@@ -351,7 +363,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
                     // Re-create each item's view controller according to its type
-                    // The first four items are the built-ins; the last covers user-defined items
+                    // The first five items are the built-ins; the last covers user-defined items
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                         loadedItem.controller = makeModeSwitchController()
                     }
@@ -364,8 +376,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         loadedItem.controller = makeGitScriptController()
                     }
 
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
-                        loadedItem.controller = makeBrewScriptController()
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
+                        loadedItem.controller = makeBrewUpdateScriptController()
+                    }
+
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
+                        loadedItem.controller = makeBrewUpgradeScriptController()
                     }
 
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
@@ -418,9 +434,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     newItem = makeGitScript(index)
                 }
 
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW {
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
+                    // Create and add a Brew Upgrade item
+                    newItem = makeBrewUpgradeScript(index)
+                }
+
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
                     // Create and add a Brew Update item
-                    newItem = makeBrewScript(index)
+                    newItem = makeBrewUpdateScript(index)
                 }
 
                 if let item: MenuItem = newItem {
@@ -610,35 +631,61 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func makeGitScriptController() -> ScriptItemViewController {
 
         let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.GIT)
-        controller.offImageName = "logo_gt"
-        controller.onImageName = "logo_gt"
+        controller.offImageName = "logo_github"
+        controller.onImageName = "logo_github"
         controller.action = #selector(self.doGit(sender:))
         return controller
     }
 
 
-    func makeBrewScript(_ index: Int) -> MenuItem {
+    func makeBrewUpdateScript(_ index: Int) -> MenuItem {
 
         // Make and return a stock Brew Update item
         let newItem = MenuItem()
-        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW
-        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
         newItem.index = index
 
         // Create its controller
-        let controller: ScriptItemViewController = makeBrewScriptController()
+        let controller: ScriptItemViewController = makeBrewUpdateScriptController()
         newItem.controller = controller
         return newItem
     }
 
 
-    func makeBrewScriptController() -> ScriptItemViewController {
+    func makeBrewUpdateScriptController() -> ScriptItemViewController {
 
-        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW)
-        controller.offImageName = "logo_br"
-        controller.onImageName = "logo_br"
-        controller.action = #selector(self.doBrew(sender:))
+        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE)
+        controller.offImageName = "logo_brew_update"
+        controller.onImageName = "logo_brew_update"
+        controller.action = #selector(self.doBrewUpdate(sender:))
+        return controller
+    }
+
+
+    func makeBrewUpgradeScript(_ index: Int) -> MenuItem {
+
+            // Make and return a stock Brew Update item
+            let newItem = MenuItem()
+            newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
+            newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
+            newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+            newItem.index = index
+
+            // Create its controller
+            let controller: ScriptItemViewController = makeBrewUpgradeScriptController()
+            newItem.controller = controller
+            return newItem
+        }
+
+
+    func makeBrewUpgradeScriptController() -> ScriptItemViewController {
+
+        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE)
+        controller.offImageName = "logo_brew_upgrade"
+        controller.onImageName = "logo_brew_upgrade"
+        controller.action = #selector(self.doBrewUpgrade(sender:))
         return controller
     }
 
@@ -647,8 +694,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Create and return a generic switch view controller
         let controller: ScriptItemViewController = makeScriptController(title: title)
-        controller.offImageName = "logo_gen"
-        controller.onImageName = "logo_gen"
+        controller.offImageName = "logo_generic"
+        controller.onImageName = "logo_generic"
         controller.action = #selector(self.doScript(sender:))
         return controller
     }
@@ -689,7 +736,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let keyArray: [String] = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW], []]
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE,
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE], []]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))

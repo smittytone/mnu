@@ -34,28 +34,30 @@ struct MNU_CONSTANTS {
     struct ITEMS {
 
         struct SWITCH {
-            static let UIMODE   = 0
-            static let DESKTOP  = 1
+            static let UIMODE       = 0
+            static let DESKTOP      = 1
         }
 
         struct SCRIPT {
-            static let GIT      = 10
-            static let BREW     = 11
-            static let USER     = 20
+            static let GIT          = 10
+            static let BREW_UPDATE  = 11
+            static let BREW_UPGRADE = 12
+            static let USER         = 20
         }
     }
 
     struct TYPES {
-        static let SWITCH       = 0
-        static let SCRIPT       = 1
+        static let SWITCH           = 0
+        static let SCRIPT           = 1
     }
 
     struct BUILT_IN_TITLES {
-        static let UIMODE       = "macOS Dark Mode"
-        static let DESKTOP      = "Show Files on Desktop"
-        static let GIT          = "Update Git"
-        static let BREW         = "Update Brew"
+        static let UIMODE           = "macOS Dark Mode"
+        static let DESKTOP          = "Show Files on Desktop"
+        static let GIT              = "Update Git"
+        static let BREW_UPDATE      = "Update Brew"
+        static let BREW_UPGRADE     = "Upgrade Brew"
     }
 
-    static let MENU_TEXT_LEN    = 30
+    static let MENU_TEXT_LEN        = 30
 }

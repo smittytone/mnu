@@ -154,8 +154,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
             let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
             controller.text = newItem.title
             controller.state = true
-            controller.onImageName = "logo_gen"
-            controller.offImageName = "logo_gen"
+            controller.onImageName = "logo_generic"
+            controller.offImageName = "logo_generic"
 
             // Assign the controller to the new menu item
             newItem.controller = controller
