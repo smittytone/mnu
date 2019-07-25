@@ -657,8 +657,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func makeBrewUpdateScriptController() -> ScriptItemViewController {
 
         let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE)
-        controller.offImageName = "logo_brew"
-        controller.onImageName = "logo_brew"
+        controller.offImageName = "logo_brew_update"
+        controller.onImageName = "logo_brew_update"
         controller.action = #selector(self.doBrewUpdate(sender:))
         return controller
     }
@@ -683,8 +683,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func makeBrewUpgradeScriptController() -> ScriptItemViewController {
 
         let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE)
-        controller.offImageName = "logo_brew"
-        controller.onImageName = "logo_brew"
+        controller.offImageName = "logo_brew_upgrade"
+        controller.onImageName = "logo_brew_upgrade"
         controller.action = #selector(self.doBrewUpgrade(sender:))
         return controller
     }
