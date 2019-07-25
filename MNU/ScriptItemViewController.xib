@@ -22,12 +22,12 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pNa-By-H2n">
-                    <rect key="frame" x="228" y="12" width="52" height="17"/>
+                    <rect key="frame" x="240" y="12" width="40" height="18"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="16" id="FsH-Vp-xRy"/>
-                        <constraint firstAttribute="width" constant="52" id="YE2-HP-eLW"/>
+                        <constraint firstAttribute="width" constant="40" id="7wr-oc-4kb"/>
+                        <constraint firstAttribute="height" constant="17" id="8Hd-9i-fxN"/>
                     </constraints>
-                    <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarPlayTemplate" imagePosition="overlaps" alignment="center" borderStyle="border" inset="2" id="uZ8-9u-CYu">
+                    <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarPlayTemplate" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="uZ8-9u-CYu">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="smallSystemBold"/>
                     </buttonCell>
@@ -41,7 +41,7 @@
                     <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="tAf-Du-lEv"/>
                 </imageView>
                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="c2H-pV-VOi">
-                    <rect key="frame" x="56" y="13" width="142" height="16"/>
+                    <rect key="frame" x="56" y="13" width="37" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="5hm-yN-EKR"/>
                     </constraints>
@@ -58,7 +58,7 @@
                     </constraints>
                 </box>
                 <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="oQ1-Vi-cGB">
-                    <rect key="frame" x="204" y="13" width="16" height="16"/>
+                    <rect key="frame" x="216" y="13" width="16" height="16"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="16" id="cCP-ef-gea"/>
                         <constraint firstAttribute="width" constant="16" id="dBh-Wk-UMZ"/>
@@ -66,14 +66,13 @@
                 </progressIndicator>
             </subviews>
             <constraints>
+                <constraint firstItem="pNa-By-H2n" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="4ue-zQ-qtq"/>
                 <constraint firstItem="1A5-8r-NrH" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" constant="20" id="5Mz-bg-0nx"/>
-                <constraint firstAttribute="trailing" secondItem="pNa-By-H2n" secondAttribute="trailing" constant="20" id="MXk-o2-i2b"/>
-                <constraint firstItem="pNa-By-H2n" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="S9M-86-7Eq"/>
                 <constraint firstItem="c2H-pV-VOi" firstAttribute="leading" secondItem="1A5-8r-NrH" secondAttribute="trailing" constant="8" id="a0T-6o-d3N"/>
                 <constraint firstItem="CP1-Zf-18V" firstAttribute="leading" secondItem="Hz6-mo-xeY" secondAttribute="leading" id="bcJ-4e-1nz"/>
                 <constraint firstItem="1A5-8r-NrH" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="byn-WJ-r97"/>
-                <constraint firstItem="oQ1-Vi-cGB" firstAttribute="leading" secondItem="c2H-pV-VOi" secondAttribute="trailing" constant="8" id="d9I-2F-rK6"/>
-                <constraint firstItem="pNa-By-H2n" firstAttribute="leading" secondItem="oQ1-Vi-cGB" secondAttribute="trailing" constant="8" id="dCa-UI-zA6"/>
+                <constraint firstAttribute="trailing" secondItem="pNa-By-H2n" secondAttribute="trailing" constant="20" id="cCX-Mp-6G7"/>
+                <constraint firstItem="oQ1-Vi-cGB" firstAttribute="leading" secondItem="c2H-pV-VOi" secondAttribute="trailing" constant="125" id="d9I-2F-rK6"/>
                 <constraint firstItem="oQ1-Vi-cGB" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="dpk-va-qnd"/>
                 <constraint firstItem="c2H-pV-VOi" firstAttribute="centerY" secondItem="Hz6-mo-xeY" secondAttribute="centerY" id="qUI-4M-yyq"/>
                 <constraint firstAttribute="bottom" secondItem="CP1-Zf-18V" secondAttribute="bottom" id="t0o-yU-HoC"/>
