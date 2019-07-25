@@ -539,7 +539,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion 1.0.0"
             self.statusItem!.isVisible = true
         } else {
-           NSLog("Error in MNU.createMenu()(): Could not initialise menu")
+            NSLog("Error in MNU.createMenu()(): Could not initialise menu")
             presentError()
         }
     }
