@@ -50,7 +50,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
     var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
     var inDarkMode: Bool = false                // Is the Mac in dark mode (true) or not (false)
-    var useDesktop: Bool = false                // Is the Mac using the desktop (true) or not (false)
+    var useDesktop: Bool = false                // Is the Finder using the desktop (true) or not (false)
+    var showHidden: Bool = false                // Is the Finder showing hidden files (true) or not (false)
     var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
     var hasChanged: Bool = false                // Has the user changed the menu entries at all?
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
@@ -76,6 +77,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Set the default values for the states we control
         self.inDarkMode = false
         self.useDesktop = true
+        self.showHidden = false
 
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
@@ -90,7 +92,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.useDesktop = (useDesktopDefault as! String == "0") ? false : true
         }
 
-        // DEBUG
+        if let doShowHidden = defaultsDict["AppleShowAllFiles"] {
+            self.showHidden = (doShowHidden as! String == "YES") ? true : false
+        }
+
+        // MARK: DEBUG SWITCHES
         // Uncomment the next line to wipe stored prefs
         //defaults.set([], forKey: "com.bps.mnu.item-order")
 
@@ -241,6 +247,43 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let controller = item.controller! as! SwitchItemViewController
             controller.setImage(isOn: self.useDesktop)
         }
+
+        // Run the task to restart the Finder
+        killFinder(andDock: false)
+    }
+
+
+    @IBAction @objc func doShowHiddenFilesSwitch(sender: Any?) {
+
+        // Get the defaults for Finder as this contains the 'use desktop' option
+        let defaults: UserDefaults = UserDefaults.standard
+        var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
+
+        // Has the user switched the desktop on or off?
+        let hiddenSwitch: NSButton = sender as! NSButton
+
+        if hiddenSwitch.state == NSControl.StateValue.on {
+            // Show Hidden is ON, so add the 'AppleShowAllFiles' key to 'com.apple.finder'
+            defaultsDict["AppleShowAllFiles"] = "YES"
+            self.showHidden = true
+        } else {
+            // Show Hidden is OFF, so remove the 'AppleShowAllFiles' key from 'com.apple.finder'
+            defaultsDict.removeValue(forKey: "AppleShowAllFiles")
+            self.showHidden = false
+        }
+
+        // Write the defaults back out
+        defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
+
+        // Close the menu - required for controls within views added to menu items
+        self.appMenu!.cancelTracking()
+
+        // Update the Menu Item image
+        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN) {
+            let controller = item.controller! as! SwitchItemViewController
+            controller.setImage(isOn: self.showHidden)
+        }
+
         // Run the task to restart the Finder
         killFinder(andDock: false)
     }
@@ -369,13 +412,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
                     // Re-create each item's view controller according to its type
-                    // The first five items are the built-ins; the last covers user-defined items
+                    // The first six items are the built-ins; the last covers user-defined items
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                         loadedItem.controller = makeModeSwitchController()
                     }
 
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
                         loadedItem.controller = makeDesktopSwitchController()
+                    }
+
+                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
+                        loadedItem.controller = makeHiddenFilesSwitchController()
                     }
 
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
@@ -433,6 +480,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
                     // Create and add a Desktop Usage MNU Item
                     newItem = makeDesktopSwitch(index)
+                }
+
+                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
+                    // Create and add a Show Hidden Files item
+                    newItem = makeHiddenFilesSwitch(index)
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
@@ -555,6 +607,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: Dark Mode Switching
+
     func makeModeSwitch(_ index: Int) -> MenuItem {
 
         // Make and return a stock UI mode switch
@@ -591,6 +645,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: Desktop Usage Switching
+
     func makeDesktopSwitch(_ index: Int) -> MenuItem {
 
         // Make and return a stock desktop usage mode switch
@@ -618,6 +674,37 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: Show Hidden Files Switching
+
+    func makeHiddenFilesSwitch(_ index: Int) -> MenuItem {
+
+        // Make and return a stock desktop usage mode switch
+        let newItem = MenuItem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
+        newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
+        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.index = index
+
+        // Create its controller
+        let controller: SwitchItemViewController = makeHiddenFilesSwitchController()
+        newItem.controller = controller
+        return newItem
+    }
+
+
+    func makeHiddenFilesSwitchController() -> SwitchItemViewController {
+
+        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN)
+        controller.onImageName = "hidden_files_icon_on"
+        controller.offImageName = "hidden_files_icon_off"
+        controller.state = self.showHidden
+        controller.action = #selector(self.doShowHiddenFilesSwitch(sender:))
+        return controller
+    }
+
+
+    // MARK: Update Git Trigger
+
     func makeGitScript(_ index: Int) -> MenuItem {
 
         // Make and return a stock Git Update item
@@ -644,6 +731,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: Update Brew Trigger
+
     func makeBrewUpdateScript(_ index: Int) -> MenuItem {
 
         // Make and return a stock Brew Update item
@@ -669,6 +758,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return controller
     }
 
+
+    // MARK: Upgrade Brew Trigger
 
     func makeBrewUpgradeScript(_ index: Int) -> MenuItem {
 
@@ -742,6 +833,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let keyArray: [String] = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
+                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN,
                                    MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE,
                                    MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE], []]
 

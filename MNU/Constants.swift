@@ -36,6 +36,7 @@ struct MNU_CONSTANTS {
         struct SWITCH {
             static let UIMODE       = 0
             static let DESKTOP      = 1
+            static let SHOW_HIDDEN  = 2
         }
 
         struct SCRIPT {
@@ -54,6 +55,7 @@ struct MNU_CONSTANTS {
     struct BUILT_IN_TITLES {
         static let UIMODE           = "macOS Dark Mode"
         static let DESKTOP          = "Show Files on Desktop"
+        static let SHOW_HIDDEN      = "Show Hidden Files"
         static let GIT              = "Update Git"
         static let BREW_UPDATE      = "Update Brew"
         static let BREW_UPGRADE     = "Upgrade Brew"

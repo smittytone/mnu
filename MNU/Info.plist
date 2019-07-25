@@ -26,6 +26,8 @@
 	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>MNU requires access to these resources in order to open Terminal and run your commands, and to manage Dark Mode switching.</string>
 	<key>NSHumanReadableCopyright</key>
 	<string>Copyright © 2019 Tony Smith. All rights reserved.</string>
 	<key>NSMainNibFile</key>
