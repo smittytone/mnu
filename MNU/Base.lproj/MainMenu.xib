@@ -231,12 +231,12 @@
                         </scroller>
                     </scrollView>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xos-L3-Lxi">
-                        <rect key="frame" x="14" y="46" width="134" height="32"/>
+                        <rect key="frame" x="14" y="46" width="110" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="122" id="X3S-H9-Eeq"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="98" id="X3S-H9-Eeq"/>
                             <constraint firstAttribute="height" constant="21" id="zvi-ub-3bh"/>
                         </constraints>
-                        <buttonCell key="cell" type="push" title="Add Script Item" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
+                        <buttonCell key="cell" type="push" title="Add Item" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -376,7 +376,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="cd $HOME" drawsBackground="YES" id="cG4-aB-hsX">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. cd $HOME or ./myscript.sh" drawsBackground="YES" id="cG4-aB-hsX">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -398,7 +398,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="Vlb-Jz-4tg"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Go To Home Directory" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. Go To Home Directory" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
