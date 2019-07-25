@@ -1,9 +1,9 @@
 
 /*
-    MenuItemTableCellButton.swift
+    MenuItemList.swift
     MNU
 
-    Created by Tony Smith on 24/07/2019.
+    Created by Tony Smith on 05/07/2019.
     Copyright © 2019 Tony Smith. All rights reserved.
 
     MIT License
@@ -30,10 +30,12 @@
 import Cocoa
 
 
-class MenuItemTableCellButton: NSButton {
+class MenuItemList: NSObject {
 
-    // Subclass in order to add a property that points to the button's parent menu item
-
-    var menuItem: MenuItem? = nil
+    // NOTE This very simple class is used solely to allow us to pass
+    //      the item list around by reference. The property 'items' is never
+    //      nil - at minimum it is an empty array
     
+    var items: [MenuItem] = []
+
 }

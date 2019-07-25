@@ -1,9 +1,30 @@
 
-//  AppDelegate.swift
-//  MNU
-//
-//  Created by Tony Smith on 03/07/2019.
-//  Copyright © 2019 Tony Smith. All rights reserved.
+/*
+    AppDelegate.swift
+    MNU
+
+    Created by Tony Smith on 03/07/2019.
+    Copyright © 2019 Tony Smith. All rights reserved.
+
+    MIT License
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+ */
 
 
 import Cocoa
@@ -15,16 +36,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     //@IBOutlet weak var window: NSWindow!
     //@IBOutlet weak var myMenu: NSMenu!
 
-    // MARK: - UI Properties
+    // MARK: - UI Outlets
 
-    @IBOutlet weak var modeSwitchView: NSView!
-    @IBOutlet weak var modeSwitchControl: NSSegmentedControl!
-    @IBOutlet weak var modeSwitchText: NSTextField!
-
-    @IBOutlet weak var appInfoView: NSView!
-    @IBOutlet weak var appInfoControl: NSButton!
-
-    @IBOutlet weak var cwvc: ConfigureViewController!
+    @IBOutlet weak var appControlView: NSView!              // The last view on the menu is the control bar
+    @IBOutlet weak var cwvc: ConfigureViewController!       // The Configure window controller
 
     
     // MARK: - App Properties
@@ -34,7 +49,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var inDarkMode: Bool = false                // Is the Mac in dark mode (true) or not (false)
     var useDesktop: Bool = false                // Is the Mac using the desktop (true) or not (false)
     var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
-    var items: [MNUitem] = []                   // The menu items that are present (but may be hidden)
+    var hasChanged: Bool = false                // Has the user changed the menu entries at all?
+    var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     var task: Process? = nil
 
 
@@ -42,11 +58,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-        // First ensure we are running on Mojave or above -
-        // Dark Mode is not supported by earlier versons
+        // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
         if sysVer.minorVersion < 14 {
-            // Wrong version!
+            // Wrong version, so present a warnin message
             let alert = NSAlert.init()
             alert.messageText = "Unsupported version of macOS"
             alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
@@ -94,28 +109,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillTerminate(_ aNotification: Notification) {
 
-        // Store the current state of the menu
-        // NOTE We convert MNUitem object into basic JSON strings and save
-        //      these into an array that we will use to recreate the MNUitem list
-        //      at next start up. This is because Strings can be PLIST'ed whereas
-        //      custom objects cannot
-        var savedItems: [Any] = []
+        if self.hasChanged {
+            // Store the current state of the menu if it has changed
+            // NOTE We convert Menu Item objects into basic JSON strings and save
+            //      these into an array that we will use to recreate the Menu Item list
+            //      at next start up. This is because Strings can be PLIST'ed whereas
+            //      custom objects cannot
+            var savedItems: [Any] = []
 
-        for item: MNUitem in self.items {
-            savedItems.append(jsonize(item))
+            for item: MenuItem in self.items {
+                savedItems.append(jsonize(item))
+            }
+
+            let defaults = UserDefaults.standard
+            defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
+            defaults.synchronize()
         }
-
-        let defaults = UserDefaults.standard
-        defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
-        defaults.synchronize()
     }
 
 
     // MARK: - Loading And Saving Serialization Functions
 
-    func jsonize(_ item: MNUitem) -> String {
+    func jsonize(_ item: MenuItem) -> String {
 
-        // Generate a JSON string serialization of the specified MNUitem object
+        // Generate a simple JSON string serialization of the specified Menu Item object
         var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
         json += "\"code\":\(item.code),\"index\":\(item.index),"
         json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
@@ -123,14 +140,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func dejsonize(_ json: String) -> MNUitem? {
+    func dejsonize(_ json: String) -> MenuItem? {
 
-        // Recreate a MNUitem object from our simple JSON serialization
-        // NOTE We still need to create 'controller' properties, which is done later
+        // Recreate a Menu Item object from our simple JSON serialization
+        // NOTE We still need to create 'controller' properties, and this is done later
+        //      See 'updateMenu()'
         if let data = json.data(using: .utf8) {
             do {
                 let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                let newItem = MNUitem()
+                let newItem = MenuItem()
                 newItem.title = dict!["title"] as! String
                 newItem.script = dict!["script"] as! String
                 newItem.type = dict!["type"] as! Int
@@ -139,7 +157,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 newItem.isHidden = dict!["hidden"] as! Bool
                 return newItem
             } catch {
-                NSLog(error.localizedDescription)
+                NSLog("Error in MNU.dejsonize(): \(error.localizedDescription)")
+                presentError()
             }
         }
 
@@ -168,7 +187,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // Update the menu item image
-        if let item: MNUitem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE) {
+        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE) {
             let controller = item.controller! as! SwitchItemViewController
             controller.setImage(isOn: self.inDarkMode)
         }
@@ -181,7 +200,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.appMenu!.cancelTracking()
 
         // Run the task
-        //runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
+        // NOTE This code is no longer required, but retain it for reference
+        // runProcess(app: "/usr/bin/osascript", with: [arg], doBlock: true)
     }
 
 
@@ -208,9 +228,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
-        // self.appMenu!.cancelTracking()
+        self.appMenu!.cancelTracking()
 
-        if let item: MNUitem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP) {
+        // Update the Menu Item image
+        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP) {
             let controller = item.controller! as! SwitchItemViewController
             controller.setImage(isOn: self.useDesktop)
         }
@@ -222,17 +243,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction @objc func doGit(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'gitup'
-        let script: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"gitup\") in tab 1 of window 1\nend tell")!
-        script.executeAndReturnError(nil)
+        // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
+        //      and will fail (in Terminal) if it is not
+        // TODO Check for installation of gitup and warn if it's missing
+        runScript("gitup")
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
 
-        /*
-        let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to do script (\"gitup\")"]
-
         // Run the task
-        runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
+        // NOTE This code is no longer required, but retain it for reference
+        /*
+         let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to do script (\"gitup\")"]
+         runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
          */
     }
 
@@ -240,8 +263,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction @objc func doBrew(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew update'
-        let script: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"brew update\") in tab 1 of window 1\nend tell")!
-        script.executeAndReturnError(nil)
+        // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
+        // TODO Check for installation of brew and warn if it's missing
+        runScript("brew update")
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
@@ -250,16 +274,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     @IBAction @objc func doScript(sender: Any?) {
 
-        // Get the source for the script item
+        // Get the source Menu Item that the menu button is linked to
         let theButton: NSButton = sender as! NSButton
-
         for item in self.items {
-            if item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                // The iterated Menu Item is a user-defined one
                 let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
                 if controller.itemButton == theButton {
-                    let scriptText = "tell application \"Terminal\"\nactivate\ndo script (\"\(item.script)\") in tab 1 of window 1\nend tell"
-                    let script: NSAppleScript = NSAppleScript.init(source: scriptText)!
-                    script.executeAndReturnError(nil)
+                    // The button clicked is the one this Menu Item's view controller references
+                    // so run the script associated with the Menu Item
+                    runScript(item.script)
                 }
             }
         }
@@ -288,16 +312,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @IBAction @objc func doConfigure(sender: Any?) {
 
         // Duplicate the current item list to pass on to the configure window view controller
-        let list: MNUitemList = MNUitemList()
+        let list: MenuItemList = MenuItemList()
 
         if self.items.count > 0 {
-            for item: MNUitem in self.items {
-                let itemCopy: MNUitem = item.copy() as! MNUitem
+            for item: MenuItem in self.items {
+                let itemCopy: MenuItem = item.copy() as! MenuItem
                 list.items.append(itemCopy)
             }
         }
 
-        self.cwvc.items = list
+        self.cwvc.menuItems = list
         self.cwvc.menuItemsTableView.reloadData()
 
         // Close the menu - required for controls within views added to menu items
@@ -318,15 +342,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.appMenu = NSMenu.init(title: "MNU")
         self.items.removeAll()
         
-        // Get the stored list of switch items and iterate through it.
-        // First, get the array of JSON serializations stored in the user defaults
+        // Get the stored list of items, if there are any - an empty array will be loaded if there are not
         let menuItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
         if menuItems.count > 0 {
-            // For each string in the array, create a MNUitem object from the serialization
+            // We have loaded Menu Items, in serialized form, so run through them,
+            // convert them to real objects and add them to the menu
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
                     // Re-create each item's view controller according to its type
+                    // The first four items are the built-ins; the last covers user-defined items
                     if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                         loadedItem.controller = makeModeSwitchController()
                     }
@@ -347,7 +372,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         loadedItem.controller = makeGenericScriptController(loadedItem.title)
                     }
 
-                    // Add the menu item to the list
+                    // Add the Menu Item to the list
                     self.items.append(loadedItem)
 
                     // Unless the item is marked as hidden, create an NSMenuItem for it
@@ -367,15 +392,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         //self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
-                    NSLog("Cound not deserialize \(item)")
+                    NSLog("Error in MNU.createMenu()(): Cound not deserialize \(item)")
+                    presentError()
                 }
             }
         } else {
-            // No serialized items present, so assemble the default list of items
+            // No serialized items are present, so assemble a list based on the default values
             let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
 
             for itemCode in defaultItems {
-                var newItem: MNUitem? = nil
+                var newItem: MenuItem? = nil
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                     // Create and add a Light/Dark Mode MNU item
@@ -397,7 +423,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                     newItem = makeBrewScript(index)
                 }
 
-                if let item: MNUitem = newItem {
+                if let item: MenuItem = newItem {
                     // Add the menu item to the list
                     self.items.append(item)
 
@@ -434,18 +460,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             self.statusItem!.button!.toolTip = "Handy actions in one place"
             self.statusItem!.isVisible = true
         } else {
-            NSLog("Could not initialise menu")
+           NSLog("Error in MNU.createMenu()(): Could not initialise menu")
+            presentError()
         }
     }
 
 
     func addAppMenuItem() {
 
-        // Add the Info/Help Item
-        let appItem: NSMenuItem = NSMenuItem.init(title: "APP-INFO",
+        // Add the app's control bar item
+        let appItem: NSMenuItem = NSMenuItem.init(title: "APP-CONTROL",
                                                   action: #selector(self.doHelp),
                                                   keyEquivalent: "")
-        appItem.view = self.appInfoView
+        appItem.view = self.appControlView
         appItem.target = self;
         self.appMenu!.addItem(appItem)
     }
@@ -453,11 +480,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc func updateMenu() {
 
-        // Received a menu order update notification
-        if let itemList: MNUitemList = cwvc.items {
+        // We have received a notification from the Confiure window controller that the list of
+        // Menu Items has changed in some way, so rebuild the menu
+        if let itemList: MenuItemList = cwvc.menuItems {
             self.items.removeAll()
             self.items = itemList.items
         }
+
+        // Mark the fact that the menu has changed (so it can be saved on exit)
+        self.hasChanged = true
 
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
@@ -497,10 +528,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func makeModeSwitch(_ index: Int) -> MNUitem {
+    func makeModeSwitch(_ index: Int) -> MenuItem {
 
-        // Make and return the stock UI mode switch
-        let newItem = MNUitem()
+        // Make and return a stock UI mode switch
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
@@ -533,10 +564,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func makeDesktopSwitch(_ index: Int) -> MNUitem {
+    func makeDesktopSwitch(_ index: Int) -> MenuItem {
 
-        // Make and return the stock desktop usage mode switch
-        let newItem = MNUitem()
+        // Make and return a stock desktop usage mode switch
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
@@ -560,10 +591,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func makeGitScript(_ index: Int) -> MNUitem {
+    func makeGitScript(_ index: Int) -> MenuItem {
 
-        // Make the stock Git Update item
-        let newItem = MNUitem()
+        // Make and return a stock Git Update item
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -586,10 +617,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func makeBrewScript(_ index: Int) -> MNUitem {
+    func makeBrewScript(_ index: Int) -> MenuItem {
 
-        // Make the stock Brew Update item
-        let newItem = MNUitem()
+        // Make and return a stock Brew Update item
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -649,12 +680,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Called by the app at launch to register its initial defaults
         // Set up the following keys/values:
-        //   "com.bps.mnu.item-order" - An array of item type integers
-        //   "com.bps.mbu.user-items" - An array of user-created items
+        //   "com.bps.mnu.default-items" - An array of default items
+        //   "com.bps.mnu.item-order"    - An array of items (default and user-defined) set
+        //                                 once the user makes any change to the default set
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
-        //      Iterating through the user items in 'user-items' will yield an item with an 'index'
-        //      property which matches the location in the menu
 
         let keyArray: [String] = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
 
@@ -669,8 +699,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
-    func itemWithTitle(_ title: String) -> MNUitem? {
+    func itemWithTitle(_ title: String) -> MenuItem? {
 
+        // Return the Menu Item whose title matches the passed one
+        // TODO Probably should use a UUID rather than the title
         for item in self.items {
             if item.title == title {
                 return item
@@ -678,6 +710,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         return nil
+    }
+
+
+    func presentError() {
+
+        // Present a basic alert if an internal, non fatal error occurred.
+        // This is primarily a debugging tool
+        let alert = NSAlert.init()
+        alert.messageText = "Sorry, an internal error occurred"
+        alert.informativeText = "Please check the details in your computer's log."
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
+    }
+
+
+    func runScript(_ code: String) {
+
+        // Add the supplied script code ('code') to the boilerplate AppleScript and run it
+        let script: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
+        script.executeAndReturnError(nil)
     }
 
 
