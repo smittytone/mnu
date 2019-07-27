@@ -117,7 +117,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         }
 
         // Close the Configure window
-        self.configureWindow!.close()
+       // self.configureWindow!.close()
     }
 
     
