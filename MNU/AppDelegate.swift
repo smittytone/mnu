@@ -103,18 +103,31 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Register preferences
         registerPreferences()
 
+        // Check for first run
+        firstRunCheck()
+
         // Set Tooltips
         setTooltips()
 
         // Create the app's menu
         createMenu()
 
-        // Watch for item list changes sent by the configure window controller
+        // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.updateMenu),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
-                       object: nil)
+                       object: cwvc)
+
+        // Watch for changes to the startup launch preferemce
+        nc.addObserver(self,
+                       selector: #selector(self.enableAutoStart),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.startup-enabled"),
+                       object: cwvc)
+        nc.addObserver(self,
+                       selector: #selector(self.disableAutoStart),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
+                       object: cwvc)
 
     }
 
@@ -137,6 +150,75 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
             defaults.synchronize()
         }
+
+        // Disable notification listening (to be tidy)
+        let nc = NotificationCenter.default
+        nc.removeObserver(self)
+    }
+
+
+    func firstRunCheck() {
+
+        // Read  in the defaults to see if this is MNU's first run: value will be true
+        let defaults: UserDefaults = UserDefaults.standard
+        if defaults.bool(forKey: "com.bps.menu.first-run") {
+            // This is the first run - set the default to false
+            defaults.set(false, forKey: "com.bps.menu.first-run")
+
+            // Ask the user if they want to run MNU at startup
+            let alert = NSAlert.init()
+            alert.messageText = "Run MNU at Login?"
+            alert.informativeText = "Do you wish to set your Mac to run MNU when you log in?\nThis can also be set in MNU’s Preferences."
+            alert.addButton(withTitle: "Yes")
+            alert.addButton(withTitle: "No")
+            let selection: NSApplication.ModalResponse = alert.runModal()
+            if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user said yes, so add MNU to the login items system preference
+                toggleStartupLaunch(doTurnOn: true)
+
+                // Update MNU's own prefs
+                defaults.set(true, forKey: "com.bps.mnu.startup-launch")
+            }
+        }
+    }
+
+
+    func toggleStartupLaunch(doTurnOn: Bool) {
+
+        // Enable or disable (depending on the value of 'doTurnOn') the launching
+        // of MNU at user login
+        if doTurnOn {
+            // Turn on auto-start on login
+            let appPath: String = Bundle.main.bundlePath
+            if let script: String = Bundle.main.path(forResource: "AddToLogin",
+                                                     ofType: "scpt") {
+                runProcess(app: "/usr/bin/osascript",
+                           with: [script, appPath],
+                           doBlock: true)
+            }
+        } else {
+            // Turn off auto-start on login
+            if let script: String = Bundle.main.path(forResource: "RemoveLogin",
+                                                     ofType: "scpt") {
+                runProcess(app: "/usr/bin/osascript",
+                           with: [script],
+                           doBlock: true)
+            }
+        }
+    }
+
+
+    @objc func enableAutoStart() {
+
+        // Notification handler for the launch at login preference
+        toggleStartupLaunch(doTurnOn: true)
+    }
+
+
+    @objc func disableAutoStart() {
+
+        // Notification handler for the launch at login preference
+        toggleStartupLaunch(doTurnOn: false)
     }
 
 
@@ -830,12 +912,17 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
 
-        let keyArray: [String] = ["com.bps.mnu.default-items", "com.bps.mnu.item-order"]
+        let keyArray: [String] = ["com.bps.mnu.default-items",
+                                  "com.bps.mnu.item-order",
+                                  "com.bps.mnu.startup-launch",
+                                  "com.bps.menu.first-run"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.GIT, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE], []]
+                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE],
+                                  [],
+                                  false,
+                                  true]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))

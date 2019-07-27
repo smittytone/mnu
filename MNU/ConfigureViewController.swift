@@ -37,8 +37,10 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     @IBOutlet weak var windowTabView: NSTabView!
     @IBOutlet weak var menuItemsTableView: NSTableView!
     @IBOutlet weak var menuItemsCountText: NSTextField!
-    @IBOutlet weak var aivc: AddUserItemViewController!
+    @IBOutlet weak var prefsLaunchAtLogin: NSButton!
     @IBOutlet weak var aboutVersionText: NSTextField!
+
+    @IBOutlet weak var aivc: AddUserItemViewController!
 
 
     // MARK: - Class Properties
@@ -68,6 +70,10 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Set the add user item view controller's parent window
         self.configureWindow = self.view.window!
         self.aivc.parentWindow = self.configureWindow!
+
+        // Set up the Preferences section
+        let defaults: UserDefaults = UserDefaults.standard
+        self.prefsLaunchAtLogin.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
 
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -200,6 +206,17 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // TODO create web page
         // TODO provide offline help
         NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#how-to-configure")!)
+    }
+
+
+    @IBAction @objc func doToggleLaunchAtLogin(sender: Any?) {
+
+        // The user has toggled the 'launch at login' checkbox, so send a suitable
+        // notification to the app delegate
+        let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLogin.state == NSControl.StateValue.on ? "enabled" : "disabled")
+        let nc = NotificationCenter.default
+        nc.post(name: NSNotification.Name(rawValue: action),
+                object: self)
     }
 
 
