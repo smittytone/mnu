@@ -283,11 +283,7 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
-                                            <rect key="frame" x="198" y="220" width="138" height="18"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="134" id="1ux-Mi-Qmb"/>
-                                                <constraint firstAttribute="height" constant="14" id="HGo-hP-L7V"/>
-                                            </constraints>
+                                            <rect key="frame" x="198" y="122" width="138" height="18"/>
                                             <buttonCell key="cell" type="check" title="Start MNU at Login" bezelStyle="regularSquare" imagePosition="left" inset="2" id="HGc-B0-vYh">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -298,8 +294,8 @@
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="top" secondItem="RX0-XS-Gl5" secondAttribute="top" constant="25" id="Gsf-7r-I50"/>
-                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="egX-1c-I2H"/>
+                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" id="OtQ-9j-Z6g"/>
+                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="zox-ZN-tdj"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
