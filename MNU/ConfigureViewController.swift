@@ -35,13 +35,19 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     // MARK: - UI Outlets
 
     @IBOutlet weak var windowTabView: NSTabView!
+
+    // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
     @IBOutlet weak var menuItemsCountText: NSTextField!
-    @IBOutlet weak var prefsLaunchAtLogin: NSButton!
-    @IBOutlet weak var aboutVersionText: NSTextField!
-
     @IBOutlet weak var aivc: AddUserItemViewController!
 
+    // Preferences Tab
+    @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
+
+    // About... Tab
+    @IBOutlet weak var aboutVersionText: NSTextField!
+    @IBOutlet weak var fbvc: FeedbackSheetViewController!
+    
 
     // MARK: - Class Properties
 
@@ -70,10 +76,11 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Set the add user item view controller's parent window
         self.configureWindow = self.view.window!
         self.aivc.parentWindow = self.configureWindow!
-
+        self.fbvc.parentWindow = self.configureWindow!
+        
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLogin.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
 
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -116,8 +123,9 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
                     object: self)
         }
 
+        // DISABLED FROM BUILD 3
         // Close the Configure window
-       // self.configureWindow!.close()
+        // self.configureWindow!.close()
     }
 
     
@@ -209,11 +217,18 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     }
 
 
+    @IBAction @objc func submitFeedback(sender: Any?) {
+
+        // Get the feedback sheet view controller to show its sheet
+        self.fbvc.showSheet()
+    }
+
+
     @IBAction @objc func doToggleLaunchAtLogin(sender: Any?) {
 
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
-        let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLogin.state == NSControl.StateValue.on ? "enabled" : "disabled")
+        let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
         let nc = NotificationCenter.default
         nc.post(name: NSNotification.Name(rawValue: action),
                 object: self)
