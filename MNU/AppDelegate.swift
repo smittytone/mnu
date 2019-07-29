@@ -97,8 +97,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         // MARK: DEBUG SWITCHES
-        // Uncomment the next line to wipe stored prefs
+        // Uncomment the next two lines to wipe stored prefs
         //defaults.set([], forKey: "com.bps.mnu.item-order")
+        //defaults.set(true, forKey: "com.bps.menu.first-run")
 
         // Register preferences
         registerPreferences()
@@ -381,13 +382,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
-
-        // Run the task
-        // NOTE This code is no longer required, but retain it for reference
-        /*
-         let args: [String] = ["-e tell application \"Terminal\" to activate", "-e tell application \"Terminal\" to do script (\"gitup\")"]
-         runProcess(app: "/usr/bin/osascript", with: args, doBlock: true)
-         */
     }
 
 
@@ -483,6 +477,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let defaults = UserDefaults.standard
         var index = 0
         self.appMenu = NSMenu.init(title: "MNU")
+        self.appMenu!.autoenablesItems = false
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
@@ -970,8 +965,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func runScript(_ code: String) {
 
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
-        let script: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
-        script.executeAndReturnError(nil)
+        let script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell"
+        runProcess(app: "/usr/bin/osascript",
+                   with: ["-e", script],
+                   doBlock: false)
+        return
+
+
+        let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
+        let result = ascript.executeAndReturnError(nil)
+        NSLog(result.stringValue ?? "N/A")
     }
 
 
