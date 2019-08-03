@@ -964,17 +964,23 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func runScript(_ code: String) {
 
+    #if DEBUG
+        NSLog("MNU running script \'\(code)\'")
+    #endif
+
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
         let script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell"
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)
+
         return
 
-
+        /*
         let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
         let result = ascript.executeAndReturnError(nil)
         NSLog(result.stringValue ?? "N/A")
+        */
     }
 
 
