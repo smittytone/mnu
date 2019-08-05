@@ -537,12 +537,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Unless the item is marked as hidden, create an NSMenuItem for it
                     if !loadedItem.isHidden {
                         // Set NSMenuItem's view
-                        // NOTE Cast to SwitchItemViewController as it covers both types
-                        let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
+                        // NOTE Cast to NSViewController as it's the parent of both types
+                        let controller: NSViewController = loadedItem.controller as! NSViewController
                         
                         // Create the NSMenuItem that will represent the MNU item
                         let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
-                                                                   action: controller.action,
+                                                                   action: nil,
                                                                    keyEquivalent: "")
                         menuItem.view = controller.view
 
