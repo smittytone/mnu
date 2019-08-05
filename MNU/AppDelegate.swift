@@ -31,7 +31,7 @@ import Cocoa
 
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     //@IBOutlet weak var window: NSWindow!
     //@IBOutlet weak var myMenu: NSMenu!
@@ -130,6 +130,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
                        object: cwvc)
 
+        // Set up the control bar tooltips
+        self.appControlConfigureButton.toolTip = "Click to configure MNU"
+        self.appControlQuitButton.toolTip = "Click to quit MNU"
+        self.appControlHelpButton.toolTip = "Click to view online help information"
     }
 
 
@@ -155,6 +159,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Disable notification listening (to be tidy)
         let nc = NotificationCenter.default
         nc.removeObserver(self)
+    }
+
+
+    func applicationWillResignActive(_ notification: Notification) {
+
+        let nc = NotificationCenter.default
+        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+                object: self)
     }
 
 
@@ -292,7 +304,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         aps.executeAndReturnError(nil)
 
         // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
+        //self.appMenu!.cancelTracking()
 
         // Run the task
         // NOTE This code is no longer required, but retain it for reference
@@ -323,7 +335,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
+        //self.appMenu!.cancelTracking()
 
         // Update the Menu Item image
         if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP) {
@@ -359,7 +371,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
+        //self.appMenu!.cancelTracking()
 
         // Update the Menu Item image
         if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN) {
@@ -478,6 +490,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         var index = 0
         self.appMenu = NSMenu.init(title: "MNU")
         self.appMenu!.autoenablesItems = false
+        self.appMenu!.delegate = self
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
@@ -864,6 +877,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    // MARK: User-defined Script Handler
+    
     func makeGenericScriptController(_ title: String) -> ScriptItemViewController {
 
         // Create and return a generic switch view controller
@@ -1014,5 +1029,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+
+    // MARK: - NSMenuDelegate Functions
+
+    func menuDidClose(_ menu: NSMenu) {
+
+        // The menu has closed - tell the subviews
+        let nc = NotificationCenter.default
+        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+                object: self)
+    }
 }
 

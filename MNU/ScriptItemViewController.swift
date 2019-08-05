@@ -37,7 +37,6 @@ class ScriptItemViewController: NSViewController {
     @IBOutlet weak var itemButton: NSButton!
     @IBOutlet weak var itemText: NSTextField!
     @IBOutlet weak var itemImage: NSImageView!
-    @IBOutlet weak var itemProgress: NSProgressIndicator!
 
     
     // MARK: - Class Properties
@@ -47,7 +46,8 @@ class ScriptItemViewController: NSViewController {
     var action: Selector? = nil
     var onImageName: String = ""
     var offImageName: String = ""
-
+    var isHighlighted: Bool = false
+    
 
     // MARK: - Lifecycle Functions
 
@@ -60,11 +60,31 @@ class ScriptItemViewController: NSViewController {
         // until 'viewDidLoad()' is called
         self.itemText.stringValue = self.text
         self.itemButton.action = self.action
-        self.itemProgress.stopAnimation(nil)
         setImage(isOn: self.state)
+
+        // Set the menu item view as a mouse tracking area
+        //self.view.becomeFirstResponder()
+        let trackingArea = NSTrackingArea.init(rect: self.view.bounds,
+                                               options: [.activeAlways, .mouseEnteredAndExited],
+                                               owner: self,
+                                               userInfo: nil)
+        self.view.addTrackingArea(trackingArea)
+
+        // Watch for menu closing so we can remove the highlight
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.enterBackground),
+                                               name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+                                               object: nil)
     }
 
 
+    @objc func enterBackground() {
+
+        // The menu is backgrounding, so switch off highlighting
+        self.clearHightlight()
+    }
+
+    
     // MARK: - View Component Control Functions
 
     func setImage(isOn: Bool) {
@@ -75,4 +95,41 @@ class ScriptItemViewController: NSViewController {
         self.itemImage.needsDisplay = true
     }
 
+
+    // MARK: - Mouse Event Handler Functions
+
+    override func mouseEntered(with event: NSEvent) {
+
+        // Highlight the menu item using the system accent color
+        if let view = self.view as? MenuItemView {
+            view.backgroundColour = NSColor.controlAccentColor
+            view.needsDisplay = true
+            self.isHighlighted = true
+        }
+    }
+
+
+    override func mouseExited(with event: NSEvent) {
+
+        // Clear the menu item highlight
+        clearHightlight()
+    }
+
+
+    override func mouseUp(with event: NSEvent) {
+
+        // Make a click in the menu work like a click on the switch
+        self.itemButton.performClick(self)
+    }
+
+
+    func clearHightlight() {
+
+        // Remove the hightlight
+        if let view = self.view as? MenuItemView {
+            view.backgroundColour = NSColor.clear
+            view.needsDisplay = true
+            self.isHighlighted = false
+        }
+    }
 }
