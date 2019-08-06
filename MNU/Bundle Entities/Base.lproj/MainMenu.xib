@@ -119,7 +119,7 @@
                                             <rect key="frame" x="17" y="72" width="500" height="177"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
                                                 <rect key="frame" x="1" y="1" width="498" height="175"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="22" rowSizeStyle="systemDefault" viewBased="YES" id="2ab-77-HWZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="175"/>
@@ -281,20 +281,51 @@
                                     <rect key="frame" x="10" y="33" width="534" height="261"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
-                                            <rect key="frame" x="198" y="122" width="138" height="18"/>
-                                            <buttonCell key="cell" type="check" title="Start MNU at Login" bezelStyle="regularSquare" imagePosition="left" inset="2" id="HGc-B0-vYh">
-                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="doToggleLaunchAtLoginWithSender:" target="qtv-Yg-ACO" id="JdV-tf-Quw"/>
-                                            </connections>
-                                        </button>
+                                        <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
+                                            <rect key="frame" x="138" y="114" width="258" height="34"/>
+                                            <subviews>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
+                                                    <rect key="frame" x="-2" y="-2" width="262" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="y0m-i8-oeE"/>
+                                                    </constraints>
+                                                    <buttonCell key="cell" type="check" title="Execute Terminal commands in new tab" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6hj-XL-YC9">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="doSetTermPrefWithSender:" target="qtv-Yg-ACO" id="COU-Ji-Ib9"/>
+                                                    </connections>
+                                                </button>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
+                                                    <rect key="frame" x="-2" y="18" width="138" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="cJa-ru-2Vz"/>
+                                                    </constraints>
+                                                    <buttonCell key="cell" type="check" title="Start MNU at Login" bezelStyle="regularSquare" imagePosition="left" inset="2" id="HGc-B0-vYh">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="doToggleLaunchAtLoginWithSender:" target="qtv-Yg-ACO" id="JdV-tf-Quw"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="4vZ-qc-dFq"/>
+                                                <constraint firstAttribute="height" constant="34" id="BfM-yl-Ijd"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="DnE-Zc-Nqq"/>
+                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="L4b-iR-i6p"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" id="PfL-6B-Jvv"/>
+                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="aXN-t5-XGl"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mDI-9d-iRt" secondAttribute="trailing" constant="20" symbolic="YES" id="bzl-fn-gid"/>
+                                                <constraint firstAttribute="width" constant="258" id="oBu-rh-a1R"/>
+                                            </constraints>
+                                        </customView>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" id="OtQ-9j-Z6g"/>
-                                        <constraint firstItem="mDI-9d-iRt" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="zox-ZN-tdj"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="6sC-TM-JTF"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" id="H91-14-Z3x"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -411,6 +442,7 @@
                 <outlet property="menuItemsCountText" destination="LeE-FI-XfJ" id="mWA-3l-G0x"/>
                 <outlet property="menuItemsTableView" destination="2ab-77-HWZ" id="l1v-fo-niw"/>
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
+                <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
                 <outlet property="view" destination="gNH-Un-C4x" id="QLw-3R-J2p"/>
                 <outlet property="windowTabView" destination="sBi-nr-qbJ" id="eDP-pV-A5S"/>
             </connections>

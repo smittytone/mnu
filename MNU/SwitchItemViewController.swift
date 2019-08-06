@@ -72,7 +72,7 @@ class SwitchItemViewController: NSViewController {
         // Watch for menu closing so we can remove the highlight
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.enterBackground),
-                                               name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+                                               name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                                object: nil)
     }
 

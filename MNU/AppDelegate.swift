@@ -56,7 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var hasChanged: Bool = false                // Has the user changed the menu entries at all?
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     var task: Process? = nil
-
+    var doNewTermTab: Bool = false
 
     // MARK: - App Lifecycle Functions
 
@@ -99,7 +99,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // MARK: DEBUG SWITCHES
         // Uncomment the next two lines to wipe stored prefs
         //defaults.set([], forKey: "com.bps.mnu.item-order")
-        //defaults.set(true, forKey: "com.bps.menu.first-run")
+        //defaults.set(true, forKey: "com.bps.mnu.first-run")
 
         // Register preferences
         registerPreferences()
@@ -130,17 +130,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
                        object: cwvc)
 
-        // Set up the control bar tooltips
+        // Set up the control bar button tooltips
         self.appControlConfigureButton.toolTip = "Click to configure MNU"
         self.appControlQuitButton.toolTip = "Click to quit MNU"
         self.appControlHelpButton.toolTip = "Click to view online help information"
         
+        // Set up the control bar button images
         self.appControlConfigureButton.onImageName = "configure_button_icon_on"
         self.appControlConfigureButton.offImageName = "configure_button_icon"
-        
         self.appControlHelpButton.onImageName = "help_button_icon_on"
         self.appControlHelpButton.offImageName = "help_button_icon"
-        
         self.appControlQuitButton.onImageName = "close_button_icon_on"
         self.appControlQuitButton.offImageName = "close_button_icon"
     }
@@ -174,7 +173,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func applicationWillResignActive(_ notification: Notification) {
 
         let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                 object: self)
     }
 
@@ -183,9 +182,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Read  in the defaults to see if this is MNU's first run: value will be true
         let defaults: UserDefaults = UserDefaults.standard
-        if defaults.bool(forKey: "com.bps.menu.first-run") {
+        if defaults.bool(forKey: "com.bps.mnu.first-run") {
             // This is the first run - set the default to false
-            defaults.set(false, forKey: "com.bps.menu.first-run")
+            defaults.set(false, forKey: "com.bps.mnu.first-run")
 
             // Ask the user if they want to run MNU at startup
             let alert = NSAlert.init()
@@ -927,14 +926,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let keyArray: [String] = ["com.bps.mnu.default-items",
                                   "com.bps.mnu.item-order",
                                   "com.bps.mnu.startup-launch",
-                                  "com.bps.menu.first-run"]
+                                  "com.bps.mnu.first-run",
+                                  "com.bps.mnu.new-term-tab"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
                                    MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
                                    MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE],
                                   [],
                                   false,
-                                  true]
+                                  true,
+                                  false]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
@@ -986,7 +987,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     #endif
 
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
-        let script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell"
+        var script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\")"
+        let defaults: UserDefaults = UserDefaults.standard
+        let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
+        if !doTermNewTab { script += "in tab 1 of window 1" }
+        script += "\nend tell"
+        
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)
@@ -1038,7 +1044,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // The menu has closed - tell the subviews
         let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                 object: self)
     }
 }

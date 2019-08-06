@@ -50,6 +50,19 @@ class ScriptItemButton: NSButton {
                                            owner: self,
                                            userInfo: nil)
         self.addTrackingArea(trackingArea)
+        
+        // Watch for menu closing so we can remove the highlight
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(self.enterBackground),
+                                               name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
+                                               object: nil)
+    }
+    
+    
+    @objc func enterBackground() {
+        
+        // Clear the button's highlight
+        self.image = NSImage.init(named: self.offImageName)
     }
     
     

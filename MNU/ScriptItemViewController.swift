@@ -63,6 +63,7 @@ class ScriptItemViewController: NSViewController {
         self.itemButton.onImageName = "button_play_highlight"
         self.itemButton.offImageName = "button_play"
         setImage(isOn: self.state)
+        self.itemButton.isHidden = true
 
         // Set the menu item view as a mouse tracking area
         let trackingArea = NSTrackingArea.init(rect: self.view.bounds,
@@ -74,7 +75,7 @@ class ScriptItemViewController: NSViewController {
         // Watch for menu closing so we can remove the highlight
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(self.enterBackground),
-                                               name: NSNotification.Name.init(rawValue: "com.bps.menu.will-background"),
+                                               name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                                object: nil)
     }
 

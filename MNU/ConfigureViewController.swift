@@ -43,6 +43,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
     // Preferences Tab
     @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
+    @IBOutlet weak var prefsNewTermTabButton: NSButton!
 
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
@@ -81,6 +82,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
         self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
 
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -99,9 +101,11 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     func show() {
 
         // Show the controller's own window in the centre of the display
+        self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
-        self.configureWindow!.makeKeyAndOrderFront(self)
-        self.configureWindow!.orderFrontRegardless()
+        self.configureWindow!.makeKeyAndOrderFront(nil)
+        //self.configureWindow!.orderFrontRegardless()
+        //self.configureWindow!.makeKey()
     }
 
     
@@ -232,6 +236,17 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         let nc = NotificationCenter.default
         nc.post(name: NSNotification.Name(rawValue: action),
                 object: self)
+    }
+    
+    
+    @IBAction @objc func doSetTermPref(sender: Any?) {
+        
+        // The user has toggled the 'launch at login' checkbox, so send a suitable
+        // notification to the app delegate
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
+        defaults.set(state,
+                     forKey: "com.bps.mnu.new-term-tab")
     }
 
 
