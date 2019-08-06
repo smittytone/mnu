@@ -18,6 +18,7 @@
 		3B279CC622E7D683005D037D /* MenuItemTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */; };
 		3B279CC822E7DD1E005D037D /* MenuItemTableCellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */; };
 		3B68093F22F7333300042017 /* MenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B68093E22F7333300042017 /* MenuItemView.swift */; };
+		3BAD49D322F9C7D1007FD464 /* ScriptItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */; };
 		3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */; };
 		3BBEF08D22CEC02F001D1CCB /* MenuItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */; };
 		3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08E22CEC634001D1CCB /* MenuItem.swift */; };
@@ -43,6 +44,7 @@
 		3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellView.swift; sourceTree = "<group>"; };
 		3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellButton.swift; sourceTree = "<group>"; };
 		3B68093E22F7333300042017 /* MenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
+		3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptItemButton.swift; sourceTree = "<group>"; };
 		3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureViewController.swift; sourceTree = "<group>"; };
 		3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemList.swift; sourceTree = "<group>"; };
 		3BBEF08E22CEC634001D1CCB /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 				3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */,
 				3BBEF08E22CEC634001D1CCB /* MenuItem.swift */,
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
+				3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */,
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
 				3B01F0DC22EBEBF30045A78A /* Bundle Entities */,
@@ -212,6 +215,7 @@
 				3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */,
 				3B68093F22F7333300042017 /* MenuItemView.swift in Sources */,
 				3B01F0DF22EC175C0045A78A /* FeedbackSheetViewController.swift in Sources */,
+				3BAD49D322F9C7D1007FD464 /* ScriptItemButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,7 +354,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
@@ -374,7 +378,7 @@
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";

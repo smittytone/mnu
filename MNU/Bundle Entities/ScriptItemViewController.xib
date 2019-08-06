@@ -19,15 +19,15 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pNa-By-H2n">
-                    <rect key="frame" x="240" y="12" width="40" height="18"/>
+                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pNa-By-H2n" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
+                    <rect key="frame" x="240" y="13" width="40" height="17"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="40" id="7wr-oc-4kb"/>
                         <constraint firstAttribute="height" constant="17" id="8Hd-9i-fxN"/>
                     </constraints>
-                    <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarPlayTemplate" imagePosition="only" alignment="center" borderStyle="border" inset="2" id="uZ8-9u-CYu">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="button_play" imagePosition="only" alignment="center" alternateImage="button_play_highlight" inset="2" id="uZ8-9u-CYu">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="smallSystemBold"/>
+                        <font key="font" metaFont="system"/>
                     </buttonCell>
                 </button>
                 <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="1A5-8r-NrH">
@@ -73,6 +73,7 @@
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
-        <image name="NSTouchBarPlayTemplate" width="14" height="30"/>
+        <image name="button_play" width="40" height="17"/>
+        <image name="button_play_highlight" width="40" height="17"/>
     </resources>
 </document>

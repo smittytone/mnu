@@ -34,7 +34,7 @@ class ScriptItemViewController: NSViewController {
 
     // MARK: - UI Outlets
     
-    @IBOutlet weak var itemButton: NSButton!
+    @IBOutlet weak var itemButton: ScriptItemButton!
     @IBOutlet weak var itemText: NSTextField!
     @IBOutlet weak var itemImage: NSImageView!
 
@@ -60,10 +60,11 @@ class ScriptItemViewController: NSViewController {
         // until 'viewDidLoad()' is called
         self.itemText.stringValue = self.text
         self.itemButton.action = self.action
+        self.itemButton.onImageName = "button_play_highlight"
+        self.itemButton.offImageName = "button_play"
         setImage(isOn: self.state)
 
         // Set the menu item view as a mouse tracking area
-        //self.view.becomeFirstResponder()
         let trackingArea = NSTrackingArea.init(rect: self.view.bounds,
                                                options: [.activeAlways, .mouseEnteredAndExited],
                                                owner: self,

@@ -38,11 +38,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - UI Outlets
 
-    @IBOutlet weak var appControlView: NSView!              // The last view on the menu is the control bar
-    @IBOutlet weak var appControlQuitButton: NSButton!      // The Quit button
-    @IBOutlet weak var appControlConfigureButton: NSButton! // The Configure button
-    @IBOutlet weak var appControlHelpButton: NSButton!      // The Help button
-    @IBOutlet weak var cwvc: ConfigureViewController!       // The Configure window controller
+    @IBOutlet weak var appControlView: NSView!                      // The last view on the menu is the control bar
+    @IBOutlet weak var appControlQuitButton: ScriptItemButton!      // The Quit button
+    @IBOutlet weak var appControlConfigureButton: ScriptItemButton! // The Configure button
+    @IBOutlet weak var appControlHelpButton: ScriptItemButton!      // The Help button
+    @IBOutlet weak var cwvc: ConfigureViewController!               // The Configure window controller
 
     
     // MARK: - App Properties
@@ -134,6 +134,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.appControlConfigureButton.toolTip = "Click to configure MNU"
         self.appControlQuitButton.toolTip = "Click to quit MNU"
         self.appControlHelpButton.toolTip = "Click to view online help information"
+        
+        self.appControlConfigureButton.onImageName = "configure_button_icon_on"
+        self.appControlConfigureButton.offImageName = "configure_button_icon"
+        
+        self.appControlHelpButton.onImageName = "help_button_icon_on"
+        self.appControlHelpButton.offImageName = "help_button_icon"
+        
+        self.appControlQuitButton.onImageName = "close_button_icon_on"
+        self.appControlQuitButton.offImageName = "close_button_icon"
     }
 
 
@@ -304,7 +313,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         aps.executeAndReturnError(nil)
 
         // Close the menu - required for controls within views added to menu items
-        //self.appMenu!.cancelTracking()
+        self.appMenu!.cancelTracking()
 
         // Run the task
         // NOTE This code is no longer required, but retain it for reference
@@ -503,32 +512,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 if let loadedItem = dejsonize(item) {
                     // Re-create each item's view controller according to its type
                     // The first six items are the built-ins; the last covers user-defined items
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
-                        loadedItem.controller = makeModeSwitchController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
-                        loadedItem.controller = makeDesktopSwitchController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
-                        loadedItem.controller = makeHiddenFilesSwitchController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
-                        loadedItem.controller = makeGitScriptController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
-                        loadedItem.controller = makeBrewUpdateScriptController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
-                        loadedItem.controller = makeBrewUpgradeScriptController()
-                    }
-
-                    if loadedItem.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                        loadedItem.controller = makeGenericScriptController(loadedItem.title)
+                    switch loadedItem.code {
+                        case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
+                            loadedItem.controller = makeModeSwitchController()
+                        case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
+                            loadedItem.controller = makeDesktopSwitchController()
+                        case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
+                            loadedItem.controller = makeHiddenFilesSwitchController()
+                        case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
+                            loadedItem.controller = makeGitScriptController()
+                        case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
+                            loadedItem.controller = makeBrewUpdateScriptController()
+                        case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
+                            loadedItem.controller = makeBrewUpgradeScriptController()
+                        default:
+                            loadedItem.controller = makeGenericScriptController(loadedItem.title)
                     }
 
                     // Add the Menu Item to the list
@@ -537,18 +535,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Unless the item is marked as hidden, create an NSMenuItem for it
                     if !loadedItem.isHidden {
                         // Set NSMenuItem's view
-                        // NOTE Cast to NSViewController as it's the parent of both types
-                        let controller: NSViewController = loadedItem.controller as! NSViewController
-                        
                         // Create the NSMenuItem that will represent the MNU item
                         let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
                                                                    action: nil,
                                                                    keyEquivalent: "")
-                        menuItem.view = controller.view
-
+                        
+                        // NOTE Cast to NSViewController as it's the parent of both types
+                        if loadedItem.type == MNU_CONSTANTS.TYPES.SWITCH {
+                            let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
+                            menuItem.view = controller.view
+                        } else {
+                            let controller: ScriptItemViewController = loadedItem.controller as! ScriptItemViewController
+                            menuItem.view = controller.view
+                        }
+                        
                         // Add the NSMenuItem to the menu
                         self.appMenu!.addItem(menuItem)
-                        //self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
                     NSLog("Error in MNU.createMenu()(): Cound not deserialize \(item)")
