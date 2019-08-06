@@ -44,6 +44,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     // Preferences Tab
     @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
     @IBOutlet weak var prefsNewTermTabButton: NSButton!
+    @IBOutlet weak var prefsShowControlsButton: NSButton!
 
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
@@ -83,6 +84,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         let defaults: UserDefaults = UserDefaults.standard
         self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
         self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
 
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
@@ -122,9 +124,8 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
 
         // If any changes have been made to the item list, inform the app delegate
         if self.hasChanged {
-            let nc = NotificationCenter.default
-            nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
-                    object: self)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
+                                            object: self)
         }
 
         // DISABLED FROM BUILD 3
@@ -233,9 +234,8 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
         let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
-        let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name(rawValue: action),
-                object: self)
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
+                                        object: self)
     }
     
     
@@ -244,9 +244,24 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
         let defaults: UserDefaults = UserDefaults.standard
-        let state = prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
+        let state = self.prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
         defaults.set(state,
                      forKey: "com.bps.mnu.new-term-tab")
+    }
+
+
+    @IBAction @objc func doShowControls(sender: Any?) {
+
+        // The user has toggled the 'launch at login' checkbox, so send a suitable
+        // notification to the app delegate
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = self.prefsShowControlsButton.state == NSControl.StateValue.on ? true : false
+        defaults.set(state,
+                     forKey: "com.bps.mnu.show-controls")
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
+                                        object: self)
     }
 
 

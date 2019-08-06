@@ -107,11 +107,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Check for first run
         firstRunCheck()
 
-        // Set Tooltips
-        setTooltips()
-
         // Create the app's menu
         createMenu()
+
+        // Set up the control bar button tooltips
+        self.appControlConfigureButton.toolTip = "Click to configure MNU"
+        self.appControlQuitButton.toolTip = "Click to quit MNU"
+        self.appControlHelpButton.toolTip = "Click to view online help information"
+        
+        // Set up the control bar button images
+        self.appControlConfigureButton.onImageName = "configure_button_icon_on"
+        self.appControlConfigureButton.offImageName = "configure_button_icon"
+        self.appControlHelpButton.onImageName = "help_button_icon_on"
+        self.appControlHelpButton.offImageName = "help_button_icon"
+        self.appControlQuitButton.onImageName = "close_button_icon_on"
+        self.appControlQuitButton.offImageName = "close_button_icon"
 
         // Enable notification watching
         let nc = NotificationCenter.default
@@ -129,19 +139,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
                        object: cwvc)
-
-        // Set up the control bar button tooltips
-        self.appControlConfigureButton.toolTip = "Click to configure MNU"
-        self.appControlQuitButton.toolTip = "Click to quit MNU"
-        self.appControlHelpButton.toolTip = "Click to view online help information"
-        
-        // Set up the control bar button images
-        self.appControlConfigureButton.onImageName = "configure_button_icon_on"
-        self.appControlConfigureButton.offImageName = "configure_button_icon"
-        self.appControlHelpButton.onImageName = "help_button_icon_on"
-        self.appControlHelpButton.offImageName = "help_button_icon"
-        self.appControlQuitButton.onImageName = "close_button_icon_on"
-        self.appControlQuitButton.offImageName = "close_button_icon"
     }
 
 
@@ -165,20 +162,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
 
         // Disable notification listening (to be tidy)
-        let nc = NotificationCenter.default
-        nc.removeObserver(self)
+        NotificationCenter.default.removeObserver(self)
     }
 
 
     func applicationWillResignActive(_ notification: Notification) {
 
-        let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
-                object: self)
+        // App is backgrounding - inform interested view controllers
+        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
+                                        object: self)
     }
 
 
     func firstRunCheck() {
+
+        // Check whether we're running for the first time
+        // If so, invite the user to run MNU at launch
 
         // Read  in the defaults to see if this is MNU's first run: value will be true
         let defaults: UserDefaults = UserDefaults.standard
@@ -207,7 +206,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func toggleStartupLaunch(doTurnOn: Bool) {
 
         // Enable or disable (depending on the value of 'doTurnOn') the launching
-        // of MNU at user login
+        // of MNU at user login. This is activated by a notification from the
+        // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
         if doTurnOn {
             // Turn on auto-start on login
             let appPath: String = Bundle.main.bundlePath
@@ -340,7 +340,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
 
         // Write the defaults back out
-        defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
+        defaults.setPersistentDomain(defaultsDict,
+                                     forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
         //self.appMenu!.cancelTracking()
@@ -376,7 +377,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         }
 
         // Write the defaults back out
-        defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
+        defaults.setPersistentDomain(defaultsDict,
+                                     forName: "com.apple.finder")
 
         // Close the menu - required for controls within views added to menu items
         //self.appMenu!.cancelTracking()
@@ -663,6 +665,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
 
+        let defaults = UserDefaults.standard
+
         for item in self.items {
             // If the item is not hidden, add it to the menu
             if !item.isHidden {
@@ -674,6 +678,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 // Set the NSMenuItem's view to that maintained by the MNU item's controller
                 if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
                     let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
+                    controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
+                    controller.itemButton.isHidden = controller.isControlHidden
                     menuItem.view = controller.view
 
                     if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
@@ -684,12 +690,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     }
                 } else {
                     let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
+                    controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
+                    controller.itemButton.isHidden = controller.isControlHidden
                     menuItem.view = controller.view
                 }
 
-                // Add the menu item and a separator
+                // Add the menu item
                 self.appMenu!.addItem(menuItem)
-                //self.appMenu!.addItem(NSMenuItem.separator())
             }
         }
 
@@ -716,7 +723,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // If we're running on a version of macOS that doesn't do Dark Mode, grey out
         // the control and disable the switch
         if (self.disableDarkMode) {
-            controller.itemSwitch.isEnabled = false
+            controller.itemButton.isEnabled = false
             controller.itemText.textColor = NSColor.secondaryLabelColor
             controller.itemImage.alphaValue = 0.4
         }
@@ -883,10 +890,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func makeGenericScriptController(_ title: String) -> ScriptItemViewController {
 
         // Create and return a generic switch view controller
+        let defaults: UserDefaults = UserDefaults.standard
         let controller: ScriptItemViewController = makeScriptController(title: title)
         controller.offImageName = "logo_generic"
         controller.onImageName = "logo_generic"
         controller.action = #selector(self.doScript(sender:))
+        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
         return controller
     }
 
@@ -894,9 +903,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func makeSwitchController(title: String) -> SwitchItemViewController {
 
         // Create and return a new base switch view controller
+        let defaults: UserDefaults = UserDefaults.standard
         let controller: SwitchItemViewController = SwitchItemViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = false
+        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
         return controller
     }
 
@@ -904,9 +915,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func makeScriptController(title: String) -> ScriptItemViewController {
 
         // Create and return a new base button view controller
+        let defaults: UserDefaults = UserDefaults.standard
         let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
         controller.text = title
         controller.state = true
+        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
         return controller
     }
 
@@ -927,7 +940,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                                   "com.bps.mnu.item-order",
                                   "com.bps.mnu.startup-launch",
                                   "com.bps.mnu.first-run",
-                                  "com.bps.mnu.new-term-tab"]
+                                  "com.bps.mnu.new-term-tab",
+                                  "com.bps.mnu.show-controls"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
                                    MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
@@ -935,22 +949,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                                   [],
                                   false,
                                   true,
-                                  false]
+                                  false,
+                                  true]
 
         assert(keyArray.count == valueArray.count)
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         defaults.synchronize()
-    }
-
-
-    func setTooltips() {
-
-        // Add tooltips to key UI items
-        appControlHelpButton.toolTip = "Get online help"
-        appControlQuitButton.toolTip = "Quit MNU"
-        appControlConfigureButton.toolTip = "Configure the items in the menu"
     }
 
 
@@ -1043,9 +1049,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func menuDidClose(_ menu: NSMenu) {
 
         // The menu has closed - tell the subviews
-        let nc = NotificationCenter.default
-        nc.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
-                object: self)
+        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
+                                        object: self)
     }
 }
 

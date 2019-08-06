@@ -34,7 +34,7 @@ class SwitchItemViewController: NSViewController {
 
     // MARK: - UI Outlets
     
-    @IBOutlet weak var itemSwitch: NSButton!
+    @IBOutlet weak var itemButton: NSButton!
     @IBOutlet weak var itemText: NSTextField!
     @IBOutlet weak var itemImage: NSImageView!
 
@@ -47,7 +47,9 @@ class SwitchItemViewController: NSViewController {
     var onImageName: String = ""
     var offImageName: String = ""
     var isHighlighted: Bool = false
+    var isControlHidden: Bool = false
 
+    
     // MARK: - Lifecycle Functions
 
     override func viewDidLoad() {
@@ -58,8 +60,9 @@ class SwitchItemViewController: NSViewController {
         // was instantiated. This is because the outlets can't be considered to be available
         // until 'viewDidLoad()' is called
         self.itemText.stringValue = self.text
-        self.itemSwitch.state = self.state ? NSControl.StateValue.on : NSControl.StateValue.off
-        self.itemSwitch.action = self.action
+        self.itemButton.state = self.state ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.itemButton.action = self.action
+        self.itemButton.isHidden = self.isControlHidden
         setImage(isOn: self.state)
 
         // Set the menu item view as a mouse tracking area
@@ -118,7 +121,7 @@ class SwitchItemViewController: NSViewController {
     override func mouseUp(with event: NSEvent) {
 
         // Make a click in the menu work like a click on the switch
-        self.itemSwitch.performClick(self)
+        self.itemButton.performClick(self)
     }
 
 

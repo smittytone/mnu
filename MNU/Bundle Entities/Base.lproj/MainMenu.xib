@@ -83,7 +83,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -282,12 +282,12 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
-                                            <rect key="frame" x="138" y="114" width="258" height="34"/>
+                                            <rect key="frame" x="138" y="111" width="258" height="54"/>
                                             <subviews>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
-                                                    <rect key="frame" x="-2" y="-2" width="262" height="18"/>
+                                                    <rect key="frame" x="-2" y="18" width="262" height="18"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="14" id="y0m-i8-oeE"/>
+                                                        <constraint firstAttribute="height" constant="14" id="LzR-yB-ywi"/>
                                                     </constraints>
                                                     <buttonCell key="cell" type="check" title="Execute Terminal commands in new tab" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6hj-XL-YC9">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -298,9 +298,9 @@
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
-                                                    <rect key="frame" x="-2" y="18" width="138" height="18"/>
+                                                    <rect key="frame" x="-2" y="38" width="138" height="18"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="14" id="cJa-ru-2Vz"/>
+                                                        <constraint firstAttribute="height" constant="14" id="Egy-R6-fun"/>
                                                     </constraints>
                                                     <buttonCell key="cell" type="check" title="Start MNU at Login" bezelStyle="regularSquare" imagePosition="left" inset="2" id="HGc-B0-vYh">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -310,22 +310,38 @@
                                                         <action selector="doToggleLaunchAtLoginWithSender:" target="qtv-Yg-ACO" id="JdV-tf-Quw"/>
                                                     </connections>
                                                 </button>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iol-Aa-G7M">
+                                                    <rect key="frame" x="-2" y="-2" width="262" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="tvh-Qt-SYK"/>
+                                                    </constraints>
+                                                    <buttonCell key="cell" type="check" title="Show menu item controls" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Ter-1U-8AP">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="doShowControlsWithSender:" target="qtv-Yg-ACO" id="IDj-Bb-1ZJ"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="4vZ-qc-dFq"/>
-                                                <constraint firstAttribute="height" constant="34" id="BfM-yl-Ijd"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="DnE-Zc-Nqq"/>
-                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="L4b-iR-i6p"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" id="PfL-6B-Jvv"/>
-                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="aXN-t5-XGl"/>
-                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mDI-9d-iRt" secondAttribute="trailing" constant="20" symbolic="YES" id="bzl-fn-gid"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="top" secondItem="Wit-jC-Lfb" secondAttribute="bottom" constant="6" id="3df-4S-qOK"/>
+                                                <constraint firstAttribute="trailing" secondItem="Iol-Aa-G7M" secondAttribute="trailing" id="8ct-nb-32v"/>
+                                                <constraint firstAttribute="height" constant="54" id="BfM-yl-Ijd"/>
+                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="I3d-10-rdg"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="OP2-de-oNb"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="gKg-XI-dNQ"/>
+                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="gf3-qx-AUL"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" id="ksU-si-XCg"/>
                                                 <constraint firstAttribute="width" constant="258" id="oBu-rh-a1R"/>
+                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="rrl-dw-Nvc"/>
+                                                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mDI-9d-iRt" secondAttribute="trailing" constant="20" symbolic="YES" id="vZR-St-B8a"/>
                                             </constraints>
                                         </customView>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="6sC-TM-JTF"/>
-                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" id="H91-14-Z3x"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" constant="-7.5" id="H91-14-Z3x"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -443,6 +459,7 @@
                 <outlet property="menuItemsTableView" destination="2ab-77-HWZ" id="l1v-fo-niw"/>
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
                 <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
+                <outlet property="prefsShowControlsButton" destination="Iol-Aa-G7M" id="0zT-j2-pw1"/>
                 <outlet property="view" destination="gNH-Un-C4x" id="QLw-3R-J2p"/>
                 <outlet property="windowTabView" destination="sBi-nr-qbJ" id="eDP-pV-A5S"/>
             </connections>
@@ -451,7 +468,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -628,7 +645,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>

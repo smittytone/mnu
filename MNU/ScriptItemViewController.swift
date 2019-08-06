@@ -47,7 +47,8 @@ class ScriptItemViewController: NSViewController {
     var onImageName: String = ""
     var offImageName: String = ""
     var isHighlighted: Bool = false
-    
+    var isControlHidden: Bool = false
+
 
     // MARK: - Lifecycle Functions
 
@@ -62,9 +63,9 @@ class ScriptItemViewController: NSViewController {
         self.itemButton.action = self.action
         self.itemButton.onImageName = "button_play_highlight"
         self.itemButton.offImageName = "button_play"
+        self.itemButton.isHidden = self.isControlHidden
         setImage(isOn: self.state)
-        self.itemButton.isHidden = true
-
+        
         // Set the menu item view as a mouse tracking area
         let trackingArea = NSTrackingArea.init(rect: self.view.bounds,
                                                options: [.activeAlways, .mouseEnteredAndExited],

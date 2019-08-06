@@ -7,8 +7,8 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="SwitchItemViewController" customModule="MNU" customModuleProvider="target">
             <connections>
+                <outlet property="itemButton" destination="sJs-3E-9dQ" id="Jlh-9T-gi4"/>
                 <outlet property="itemImage" destination="MCt-tL-lDr" id="zt3-1G-Cqp"/>
-                <outlet property="itemSwitch" destination="sJs-3E-9dQ" id="zaY-qS-4Wb"/>
                 <outlet property="itemText" destination="fax-Re-LeF" id="rGx-aW-oht"/>
                 <outlet property="view" destination="Hz6-mo-xeY" id="0bl-1N-x8E"/>
             </connections>
