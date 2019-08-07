@@ -27,10 +27,10 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="135" y="6" width="30" height="30"/>
+                    <rect key="frame" x="138" y="9" width="24" height="24"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="30" id="c0r-Mn-n9P"/>
-                        <constraint firstAttribute="width" constant="30" id="hpF-wL-kiw"/>
+                        <constraint firstAttribute="height" constant="24" id="c0r-Mn-n9P"/>
+                        <constraint firstAttribute="width" constant="24" id="hpF-wL-kiw"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="configure_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="ZUN-nM-V9E">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -40,25 +40,11 @@
                         <action selector="doConfigureWithSender:" target="Voe-Tx-rLC" id="dL7-4D-xpw"/>
                     </connections>
                 </button>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="250" y="6" width="30" height="30"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="30" id="RqO-ae-6va"/>
-                        <constraint firstAttribute="width" constant="30" id="jcC-ym-mg3"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="doHelpWithSender:" target="Voe-Tx-rLC" id="FSI-Sp-gdE"/>
-                    </connections>
-                </button>
                 <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="20" y="6" width="30" height="30"/>
+                    <rect key="frame" x="20" y="9" width="24" height="24"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="30" id="R1y-El-djd"/>
-                        <constraint firstAttribute="height" constant="30" id="p7Q-YT-gX1"/>
+                        <constraint firstAttribute="width" constant="24" id="R1y-El-djd"/>
+                        <constraint firstAttribute="height" constant="24" id="p7Q-YT-gX1"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -66,6 +52,20 @@
                     </buttonCell>
                     <connections>
                         <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
+                    </connections>
+                </button>
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
+                    <rect key="frame" x="256" y="9" width="24" height="24"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="24" id="RqO-ae-6va"/>
+                        <constraint firstAttribute="width" constant="24" id="jcC-ym-mg3"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="doHelpWithSender:" target="Voe-Tx-rLC" id="FSI-Sp-gdE"/>
                     </connections>
                 </button>
             </subviews>
@@ -83,7 +83,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -503,7 +503,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -680,7 +680,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
