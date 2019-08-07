@@ -117,7 +117,8 @@ class ConfigureViewController:  NSViewController,
 
     
     // MARK: - Action Functions
-
+    // MARK: Menu Items List Functions
+    
     @IBAction @objc func doCancel(sender: Any?) {
 
         // The user clicked 'Cancel', so hust close the configure window
@@ -219,25 +220,17 @@ class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc func doShowHelp(sender: Any?) {
-
-        // Show the 'Help' via the website
-        // TODO create web page
-        // TODO provide offline help
-        var path: String = "https://smittytone.github.io/mnu/index.html"
-        let button: NSButton = sender as! NSButton
-        path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
-        NSWorkspace.shared.open(URL.init(string:path)!)
-    }
-
-
+    // MARK: About... Pane Functions
+    
     @IBAction @objc func submitFeedback(sender: Any?) {
 
         // Get the feedback sheet view controller to show its sheet
         self.fbvc.showSheet()
     }
 
-
+    
+    // MARK: Preferences Pane Functions
+    
     @IBAction @objc func doToggleLaunchAtLogin(sender: Any?) {
 
         // The user has toggled the 'launch at login' checkbox, so send a suitable
@@ -273,7 +266,19 @@ class ConfigureViewController:  NSViewController,
                                         object: self)
     }
 
-
+    
+    @IBAction @objc func doShowHelp(sender: Any?) {
+        
+        // Show the 'Help' via the website
+        // TODO create web page
+        // TODO provide offline help
+        var path: String = "https://smittytone.github.io/mnu/index.html"
+        let button: NSButton = sender as! NSButton
+        path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
+        NSWorkspace.shared.open(URL.init(string:path)!)
+    }
+    
+    
     // MARK: - Notification Handlers
 
     @objc func processNewItem() {

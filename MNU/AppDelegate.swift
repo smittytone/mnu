@@ -1013,39 +1013,39 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
 
+    // MARK: - External Process Management Functions
+
     func runScript(_ code: String) {
-
-    #if DEBUG
+        
+        #if DEBUG
         NSLog("MNU running shell command \'\(code)\'")
-    #endif
-
+        #endif
+        
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
         var script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\")"
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
         if !doTermNewTab { script += "in tab 1 of window 1" }
         script += "\nend tell"
-
-    #if DEBUG
+        
+        #if DEBUG
         NSLog("MNU running AppleScript \'\(script)\'")
-    #endif
-
+        #endif
+        
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)
-
+        
         return
-
+        
         /*
-        let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
-        let result = ascript.executeAndReturnError(nil)
-        NSLog(result.stringValue ?? "N/A")
-        */
+         let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
+         let result = ascript.executeAndReturnError(nil)
+         NSLog(result.stringValue ?? "N/A")
+         */
     }
-
-
-    // MARK: - External Process Management Functions
-
+    
+    
     func killFinder(andDock: Bool) {
 
         // Set up a task to kill the macOS Finder and, optionally, the Dock

@@ -30,7 +30,9 @@
 import Cocoa
 
 
-class FeedbackSheetViewController: NSViewController, URLSessionDelegate, URLSessionDataDelegate {
+class FeedbackSheetViewController: NSViewController,
+                                   URLSessionDelegate,
+                                   URLSessionDataDelegate {
 
     // MARK: - UI Outlets
 
@@ -60,6 +62,7 @@ class FeedbackSheetViewController: NSViewController, URLSessionDelegate, URLSess
         }
     }
 
+    
     // MARK: - User Actions
 
     @IBAction @objc func doCancel(sender: Any?) {
@@ -125,6 +128,7 @@ class FeedbackSheetViewController: NSViewController, URLSessionDelegate, URLSess
         }
     }
 
+    
     // MARK: - URLSession Delegate Functions
 
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
@@ -153,19 +157,20 @@ class FeedbackSheetViewController: NSViewController, URLSessionDelegate, URLSess
         }
     }
 
+    
     // MARK: - Misc Functions
 
     func sendFeedbackError() {
 
-            // Present an error message specific to sending feedback
-            // This is called from multiple locations: if the initial request can't be created,
-            // there was a send failure, or a server error
-            let alert: NSAlert = NSAlert()
-            alert.messageText = "Feedback Could Not Be Sent"
-            alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."
-            alert.addButton(withTitle: "OK")
-            alert.beginSheetModal(for: self.feedbackSheet,
-                                  completionHandler: nil)
-        }
+        // Present an error message specific to sending feedback
+        // This is called from multiple locations: if the initial request can't be created,
+        // there was a send failure, or a server error
+        let alert: NSAlert = NSAlert()
+        alert.messageText = "Feedback Could Not Be Sent"
+        alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."
+        alert.addButton(withTitle: "OK")
+        alert.beginSheetModal(for: self.feedbackSheet,
+                              completionHandler: nil)
+    }
 
 }

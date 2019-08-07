@@ -181,9 +181,8 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
         if itemHasChanged {
             // Inform the configure window controller that there's a new item to list
             // NOTE The called code handles edited items too - it's not just for new items
-            let nc = NotificationCenter.default
-            nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
-                    object: self)
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
+                                            object: self)
         }
 
         // Close the sheet
@@ -213,6 +212,7 @@ class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
                               completionHandler: nil)
     }
 
+    
     // MARK: - NSTextFieldDelegate Functions
 
     func controlTextDidChange(_ obj: Notification) {

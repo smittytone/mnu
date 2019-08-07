@@ -32,7 +32,8 @@ import Cocoa
 
 class MenuItemView: NSView {
 
-    // A simple subclass of NSView to add the following property:
+    // A simple subclass of NSView to add the following property, which sets
+    // the background colour of the menu's NSMenuItems, ie. the hightlight
     
     var backgroundColour: NSColor? {
         get {
