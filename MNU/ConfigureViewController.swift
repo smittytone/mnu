@@ -30,7 +30,10 @@
 import Cocoa
 
 
-class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableViewDelegate {
+class ConfigureViewController:  NSViewController,
+                                NSTableViewDataSource,
+                                NSTableViewDelegate,
+                                NSWindowDelegate {
 
     // MARK: - UI Outlets
 
@@ -40,11 +43,13 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     @IBOutlet weak var menuItemsTableView: NSTableView!
     @IBOutlet weak var menuItemsCountText: NSTextField!
     @IBOutlet weak var aivc: AddUserItemViewController!
+    @IBOutlet weak var menuItemsHelpButton: NSButton!
 
     // Preferences Tab
     @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
     @IBOutlet weak var prefsNewTermTabButton: NSButton!
     @IBOutlet weak var prefsShowControlsButton: NSButton!
+    @IBOutlet weak var prefsHelpButton: NSButton!
 
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
@@ -105,9 +110,9 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Show the controller's own window in the centre of the display
         self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
-        self.configureWindow!.makeKeyAndOrderFront(nil)
-        //self.configureWindow!.orderFrontRegardless()
-        //self.configureWindow!.makeKey()
+        //self.configureWindow!.makeKeyAndOrderFront(nil)
+        self.configureWindow!.makeKey()
+        self.configureWindow!.orderFrontRegardless()
     }
 
     
@@ -126,6 +131,7 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         if self.hasChanged {
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
                                             object: self)
+            self.hasChanged = false
         }
 
         // DISABLED FROM BUILD 3
@@ -218,7 +224,10 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
         // Show the 'Help' via the website
         // TODO create web page
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#how-to-configure")!)
+        var path: String = "https://smittytone.github.io/mnu/index.html"
+        let button: NSButton = sender as! NSButton
+        path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
+        NSWorkspace.shared.open(URL.init(string:path)!)
     }
 
 
@@ -390,6 +399,33 @@ class ConfigureViewController: NSViewController, NSTableViewDataSource, NSTableV
     }
 
 
+    // MARK: - NSWindowDelegate Functions
+
+    func windowShouldClose(_ sender: NSWindow) -> Bool {
+
+        if self.hasChanged {
+            // There are unsaved changes - warn the user
+            let alert = NSAlert.init()
+            alert.messageText = "You have unapplied changed?"
+            alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure window?"
+            alert.addButton(withTitle: "Yes")
+            alert.addButton(withTitle: "No")
+            alert.beginSheetModal(for: self.configureWindow!) { (selection) in
+                if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
+                    // The user said yes, so add MNU to the login items system preference
+                    self.doSave(sender: nil)
+                }
+
+                self.configureWindow!.close()
+            }
+
+            return false
+        }
+
+        return true
+    }
+
+    
     // MARK: - Misc Functions
 
     func displayItemCount() {

@@ -58,6 +58,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var task: Process? = nil
     var doNewTermTab: Bool = false
 
+
     // MARK: - App Lifecycle Functions
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -495,12 +496,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @objc func createMenu() {
 
-        // Create the app's menu using the loaded defaults
+        // Create the app's menu when the app is run
         let defaults = UserDefaults.standard
         var index = 0
+
+        // Prepare the NSMenu
         self.appMenu = NSMenu.init(title: "MNU")
         self.appMenu!.autoenablesItems = false
         self.appMenu!.delegate = self
+
+        // Clear the items list
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
@@ -508,11 +513,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         if menuItems.count > 0 {
             // We have loaded Menu Items, in serialized form, so run through them,
-            // convert them to real objects and add them to the menu
+            // convert them to real objects, and add them to the menu
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
                     // Re-create each item's view controller according to its type
-                    // The first six items are the built-ins; the last covers user-defined items
+                    // The named items are the built-ins; the default covers user-defined items
+                    // NOTE We make entries for all items - even those which are hidden, as
+                    //      they may be shown by the user later
                     switch loadedItem.code {
                         case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                             loadedItem.controller = makeModeSwitchController()
@@ -533,24 +540,27 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Add the Menu Item to the list
                     self.items.append(loadedItem)
 
-                    // Unless the item is marked as hidden, create an NSMenuItem for it
+                    // If the item is not hidden, add it to the menu
                     if !loadedItem.isHidden {
-                        // Set NSMenuItem's view
                         // Create the NSMenuItem that will represent the MNU item
                         let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
                                                                    action: nil,
                                                                    keyEquivalent: "")
-                        
-                        // NOTE Cast to NSViewController as it's the parent of both types
+
+                        // Update the NSMenuItem with controller values
+                        // NOTE We need to duplicate here as though two view controllers are not
+                        //      totally identical
                         if loadedItem.type == MNU_CONSTANTS.TYPES.SWITCH {
                             let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
                             menuItem.view = controller.view
+                            menuItem.action = controller.action
                         } else {
                             let controller: ScriptItemViewController = loadedItem.controller as! ScriptItemViewController
                             menuItem.view = controller.view
+                            menuItem.action = controller.action
                         }
-                        
-                        // Add the NSMenuItem to the menu
+
+                        // Add the item's NSMenuItem to the NSMenu
                         self.appMenu!.addItem(menuItem)
                     }
                 } else {
@@ -638,18 +648,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     }
 
 
-    func addAppMenuItem() {
-
-        // Add the app's control bar item
-        let appItem: NSMenuItem = NSMenuItem.init(title: "APP-CONTROL",
-                                                  action: #selector(self.doHelp),
-                                                  keyEquivalent: "")
-        appItem.view = self.appControlView
-        appItem.target = self;
-        self.appMenu!.addItem(appItem)
-    }
-
-
     @objc func updateMenu() {
 
         // We have received a notification from the Confiure window controller that the list of
@@ -665,36 +663,52 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
 
+        // Are we displaying MenuItem controls?
         let defaults = UserDefaults.standard
+        let doHide = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
 
         for item in self.items {
+            // Create ann NSMenuItem that will display the current MNU item
+            // NOTE We do this even if the MSMenuItem will not be shown (because
+            //      the MenuItem is hidden) becuase we also update the view controllers
+            let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
+                                                       action: nil,
+                                                       keyEquivalent: "")
+
+            // Set the NSMenuItem's view to that maintained by the MNU item's controller
+            if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
+                // Set up the NSMenuItem for a script MenuItem
+                let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
+
+                // Show or hide the controller's button, based on preference (see above)
+                controller.isControlHidden = doHide
+                controller.itemButton.isHidden = controller.isControlHidden
+
+                // Set the NSMenuItem's view to the controller's
+                menuItem.view = controller.view
+
+                if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    // The controller for a user item may not have been assigned a selector yet,
+                    // so do it here just in case
+                    // TODO Check if this cam be removed
+                    controller.action = #selector(self.doScript(sender:))
+                    controller.itemButton.action = controller.action
+                    controller.itemText.stringValue = item.title
+                }
+            } else {
+                // Set up the NSMenuItem for a switch MenuItem
+                let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
+
+                // Show or hide the controller's button, based on preference (see above)
+                controller.isControlHidden = doHide
+                controller.itemButton.isHidden = controller.isControlHidden
+
+                // Set the NSMenuItem's view to the controller's
+                menuItem.view = controller.view
+            }
+
             // If the item is not hidden, add it to the menu
             if !item.isHidden {
-                // Create ann NSMenuItem that will display the current MNU item
-                let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                           action: nil,
-                                                           keyEquivalent: "")
-
-                // Set the NSMenuItem's view to that maintained by the MNU item's controller
-                if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
-                    let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
-                    controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-                    controller.itemButton.isHidden = controller.isControlHidden
-                    menuItem.view = controller.view
-
-                    if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                        // The controller for a user item may not have been assigned a selector yet, so do it here
-                        controller.action = #selector(self.doScript(sender:))
-                        controller.itemButton.action = controller.action
-                        controller.itemText.stringValue = item.title
-                    }
-                } else {
-                    let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
-                    controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-                    controller.itemButton.isHidden = controller.isControlHidden
-                    menuItem.view = controller.view
-                }
-
                 // Add the menu item
                 self.appMenu!.addItem(menuItem)
             }
@@ -702,6 +716,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
+    }
+
+
+    func addAppMenuItem() {
+
+        // Add the app's control bar item
+        // We always add this after creating or updating the menu
+        let appItem: NSMenuItem = NSMenuItem.init(title: "APP-CONTROL",
+                                                  action: #selector(self.doHelp),
+                                                  keyEquivalent: "")
+        appItem.view = self.appControlView
+        appItem.target = self;
+        self.appMenu!.addItem(appItem)
     }
 
 
@@ -989,7 +1016,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     func runScript(_ code: String) {
 
     #if DEBUG
-        NSLog("MNU running script \'\(code)\'")
+        NSLog("MNU running shell command \'\(code)\'")
     #endif
 
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
@@ -998,7 +1025,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
         if !doTermNewTab { script += "in tab 1 of window 1" }
         script += "\nend tell"
-        
+
+    #if DEBUG
+        NSLog("MNU running AppleScript \'\(script)\'")
+    #endif
+
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)

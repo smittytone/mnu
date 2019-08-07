@@ -26,25 +26,11 @@
             <rect key="frame" x="0.0" y="0.0" width="300" height="42"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
-                <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="20" y="10" width="22" height="22"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="22" id="8ig-PL-J2B"/>
-                        <constraint firstAttribute="height" constant="22" id="Sk6-4a-wJp"/>
-                    </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
-                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                        <font key="font" metaFont="system"/>
-                    </buttonCell>
-                    <connections>
-                        <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
-                    </connections>
-                </button>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="139" y="10" width="22" height="22"/>
+                    <rect key="frame" x="135" y="6" width="30" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="22" id="HVp-h8-uQx"/>
-                        <constraint firstAttribute="height" constant="22" id="yCa-lO-Sro"/>
+                        <constraint firstAttribute="height" constant="30" id="c0r-Mn-n9P"/>
+                        <constraint firstAttribute="width" constant="30" id="hpF-wL-kiw"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="configure_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="ZUN-nM-V9E">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -55,10 +41,10 @@
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
-                    <rect key="frame" x="258" y="10" width="22" height="22"/>
+                    <rect key="frame" x="250" y="6" width="30" height="30"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="22" id="Ip0-rX-zBg"/>
-                        <constraint firstAttribute="width" constant="22" id="rp6-zG-DW7"/>
+                        <constraint firstAttribute="height" constant="30" id="RqO-ae-6va"/>
+                        <constraint firstAttribute="width" constant="30" id="jcC-ym-mg3"/>
                     </constraints>
                     <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -68,14 +54,28 @@
                         <action selector="doHelpWithSender:" target="Voe-Tx-rLC" id="FSI-Sp-gdE"/>
                     </connections>
                 </button>
+                <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W" customClass="ScriptItemButton" customModule="MNU" customModuleProvider="target">
+                    <rect key="frame" x="20" y="6" width="30" height="30"/>
+                    <constraints>
+                        <constraint firstAttribute="width" constant="30" id="R1y-El-djd"/>
+                        <constraint firstAttribute="height" constant="30" id="p7Q-YT-gX1"/>
+                    </constraints>
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
+                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="system"/>
+                    </buttonCell>
+                    <connections>
+                        <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
+                    </connections>
+                </button>
             </subviews>
             <constraints>
-                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="20" id="3Ri-g6-hKn"/>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="91R-dz-jem"/>
-                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="Nhi-PO-iKt"/>
-                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="dGy-5j-Qm0"/>
-                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerX" secondItem="LQO-f4-D0U" secondAttribute="centerX" id="sUt-Yg-phP"/>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="txR-K9-wd1"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="AyD-i7-iCL"/>
+                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="HCa-Z1-XnM"/>
+                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="fAp-iW-MND"/>
+                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerX" secondItem="LQO-f4-D0U" secondAttribute="centerX" id="m22-GM-BeM"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="nyx-WN-03d"/>
+                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="20" id="vTT-CR-nml"/>
             </constraints>
             <point key="canvasLocation" x="-75" y="328"/>
         </customView>
@@ -338,10 +338,40 @@
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mDI-9d-iRt" secondAttribute="trailing" constant="20" symbolic="YES" id="vZR-St-B8a"/>
                                             </constraints>
                                         </customView>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lLj-TG-Lr5">
+                                            <rect key="frame" x="15" y="17" width="471" height="14"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="14" id="ghl-OU-fMA"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Preferences will be applied immediately" id="MNa-l4-0cB">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WdZ-qr-xzQ">
+                                            <rect key="frame" x="494" y="13" width="25" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="21" id="aTF-Qp-SNY"/>
+                                                <constraint firstAttribute="width" constant="21" id="rUd-uI-VSJ"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9hC-Wy-15V">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="JQ9-W6-fdS"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="6sC-TM-JTF"/>
+                                        <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="17" id="EpW-xW-ebO"/>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" constant="-7.5" id="H91-14-Z3x"/>
+                                        <constraint firstAttribute="bottom" secondItem="lLj-TG-Lr5" secondAttribute="bottom" constant="17" id="Oqd-73-wvc"/>
+                                        <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="lLj-TG-Lr5" secondAttribute="trailing" constant="12" id="eeE-NG-Y3a"/>
+                                        <constraint firstAttribute="trailing" secondItem="WdZ-qr-xzQ" secondAttribute="trailing" constant="17" id="fvd-zL-JGz"/>
+                                        <constraint firstItem="lLj-TG-Lr5" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="17" id="gLS-eG-jEO"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -448,6 +478,9 @@
                     <constraint firstItem="sBi-nr-qbJ" firstAttribute="leading" secondItem="gNH-Un-C4x" secondAttribute="leading" constant="20" id="mlN-7j-5Sr"/>
                 </constraints>
             </view>
+            <connections>
+                <outlet property="delegate" destination="qtv-Yg-ACO" id="IN3-oJ-gDM"/>
+            </connections>
             <point key="canvasLocation" x="65" y="54"/>
         </window>
         <viewController id="qtv-Yg-ACO" customClass="ConfigureViewController" customModule="MNU" customModuleProvider="target">
@@ -456,7 +489,9 @@
                 <outlet property="aivc" destination="8Wq-hu-xtq" id="3AS-kr-23V"/>
                 <outlet property="fbvc" destination="qsm-LN-R5T" id="HDV-ut-cSl"/>
                 <outlet property="menuItemsCountText" destination="LeE-FI-XfJ" id="mWA-3l-G0x"/>
+                <outlet property="menuItemsHelpButton" destination="tlC-mS-jce" id="wuj-aJ-aXu"/>
                 <outlet property="menuItemsTableView" destination="2ab-77-HWZ" id="l1v-fo-niw"/>
+                <outlet property="prefsHelpButton" destination="WdZ-qr-xzQ" id="1kv-J6-WMY"/>
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
                 <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
                 <outlet property="prefsShowControlsButton" destination="Iol-Aa-G7M" id="0zT-j2-pw1"/>
