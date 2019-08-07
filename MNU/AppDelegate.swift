@@ -540,26 +540,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Add the Menu Item to the list
                     self.items.append(loadedItem)
 
+                    // Create the NSMenuItem that will represent the MNU item
+                    let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
+                                                               action: nil,
+                                                               keyEquivalent: "")
+
+                    // Update the NSMenuItem with controller values
+                    // NOTE We need to duplicate here as though two view controllers are not
+                    //      totally identical
+                    if loadedItem.type == MNU_CONSTANTS.TYPES.SWITCH {
+                        let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
+                        menuItem.view = controller.view
+                        menuItem.action = controller.action
+                    } else {
+                        let controller: ScriptItemViewController = loadedItem.controller as! ScriptItemViewController
+                        menuItem.view = controller.view
+                        menuItem.action = controller.action
+                    }
+                    
                     // If the item is not hidden, add it to the menu
                     if !loadedItem.isHidden {
-                        // Create the NSMenuItem that will represent the MNU item
-                        let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
-                                                                   action: nil,
-                                                                   keyEquivalent: "")
-
-                        // Update the NSMenuItem with controller values
-                        // NOTE We need to duplicate here as though two view controllers are not
-                        //      totally identical
-                        if loadedItem.type == MNU_CONSTANTS.TYPES.SWITCH {
-                            let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
-                            menuItem.view = controller.view
-                            menuItem.action = controller.action
-                        } else {
-                            let controller: ScriptItemViewController = loadedItem.controller as! ScriptItemViewController
-                            menuItem.view = controller.view
-                            menuItem.action = controller.action
-                        }
-
                         // Add the item's NSMenuItem to the NSMenu
                         self.appMenu!.addItem(menuItem)
                     }
