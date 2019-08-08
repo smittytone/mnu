@@ -36,7 +36,7 @@ class ScriptItemViewController: NSViewController {
     
     @IBOutlet weak var itemButton: ScriptItemButton!
     @IBOutlet weak var itemText: NSTextField!
-    @IBOutlet weak var itemImage: NSImageView!
+    @IBOutlet weak var itemImage: ScriptItemImageView!
 
     
     // MARK: - Class Properties
@@ -61,6 +61,7 @@ class ScriptItemViewController: NSViewController {
         // until 'viewDidLoad()' is called
         self.itemText.stringValue = self.text
         self.itemButton.action = self.action
+        self.itemImage.controller = self
         self.itemButton.onImageName = "button_play_highlight"
         self.itemButton.offImageName = "button_play"
         self.itemButton.isHidden = self.isControlHidden

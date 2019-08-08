@@ -17,6 +17,7 @@
 		3B2691E322E59A9400F877AC /* AddUserItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B2691E222E59A9400F877AC /* AddUserItemViewController.swift */; };
 		3B279CC622E7D683005D037D /* MenuItemTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */; };
 		3B279CC822E7DD1E005D037D /* MenuItemTableCellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */; };
+		3B43FB3F22FBFFB7005FCA73 /* ScriptItemImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B43FB3E22FBFFB7005FCA73 /* ScriptItemImageView.swift */; };
 		3B68093F22F7333300042017 /* MenuItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B68093E22F7333300042017 /* MenuItemView.swift */; };
 		3BAD49D322F9C7D1007FD464 /* ScriptItemButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */; };
 		3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */; };
@@ -43,6 +44,7 @@
 		3B2691E222E59A9400F877AC /* AddUserItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemViewController.swift; sourceTree = "<group>"; };
 		3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellView.swift; sourceTree = "<group>"; };
 		3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellButton.swift; sourceTree = "<group>"; };
+		3B43FB3E22FBFFB7005FCA73 /* ScriptItemImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptItemImageView.swift; sourceTree = "<group>"; };
 		3B68093E22F7333300042017 /* MenuItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemView.swift; sourceTree = "<group>"; };
 		3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScriptItemButton.swift; sourceTree = "<group>"; };
 		3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				3BBEF08E22CEC634001D1CCB /* MenuItem.swift */,
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
 				3BAD49D222F9C7D1007FD464 /* ScriptItemButton.swift */,
+				3B43FB3E22FBFFB7005FCA73 /* ScriptItemImageView.swift */,
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
 				3B01F0DC22EBEBF30045A78A /* Bundle Entities */,
@@ -138,6 +141,7 @@
 				3B083B7322CC3C2E0025F081 /* Sources */,
 				3B083B7422CC3C2E0025F081 /* Frameworks */,
 				3B083B7522CC3C2E0025F081 /* Resources */,
+				3B43FB4122FC057F005FCA73 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -197,6 +201,26 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		3B43FB4122FC057F005FCA73 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildNum=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PRODUCT_SETTINGS_PATH}\")\nbuildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		3B083B7322CC3C2E0025F081 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -215,6 +239,7 @@
 				3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */,
 				3B68093F22F7333300042017 /* MenuItemView.swift in Sources */,
 				3B01F0DF22EC175C0045A78A /* FeedbackSheetViewController.swift in Sources */,
+				3B43FB3F22FBFFB7005FCA73 /* ScriptItemImageView.swift in Sources */,
 				3BAD49D322F9C7D1007FD464 /* ScriptItemButton.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

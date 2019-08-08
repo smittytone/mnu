@@ -30,7 +30,8 @@
 import Cocoa
 
 
-class MenuItem: NSObject, NSCopying {
+class MenuItem: NSObject,
+                NSCopying {
 
     // MARK: - Properties
 

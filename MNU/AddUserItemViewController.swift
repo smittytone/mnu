@@ -30,7 +30,8 @@
 import Cocoa
 
 
-class AddUserItemViewController: NSViewController, NSTextFieldDelegate {
+class AddUserItemViewController: NSViewController,
+                                 NSTextFieldDelegate {
 
     // MARK: - UI Outlets
 

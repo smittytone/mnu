@@ -33,6 +33,7 @@ import Cocoa
 class ScriptItemButton: NSButton {
     
     // MARK: - App Properties
+    
     var onImageName: String = ""
     var offImageName: String = ""
     
