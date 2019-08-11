@@ -33,16 +33,13 @@ import Cocoa
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
-    //@IBOutlet weak var window: NSWindow!
-    //@IBOutlet weak var myMenu: NSMenu!
-
     // MARK: - UI Outlets
 
-    @IBOutlet weak var appControlView: NSView!                      // The last view on the menu is the control bar
-    @IBOutlet weak var appControlQuitButton: ScriptItemButton!      // The Quit button
-    @IBOutlet weak var appControlConfigureButton: ScriptItemButton! // The Configure button
-    @IBOutlet weak var appControlHelpButton: ScriptItemButton!      // The Help button
-    @IBOutlet weak var cwvc: ConfigureViewController!               // The Configure window controller
+    @IBOutlet weak var appControlView: NSView!                  // The last view on the menu is the control bar
+    @IBOutlet weak var appControlQuitButton: NSButton!          // The Quit button
+    @IBOutlet weak var appControlConfigureButton: NSButton!     // The Configure button
+    @IBOutlet weak var appControlHelpButton: NSButton!          // The Help button
+    @IBOutlet weak var cwvc: ConfigureViewController!           // The Configure window controller
 
     
     // MARK: - App Properties
@@ -116,14 +113,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.appControlQuitButton.toolTip = "Click to quit MNU"
         self.appControlHelpButton.toolTip = "Click to view online help information"
         
-        // Set up the control bar button images
-        self.appControlConfigureButton.onImageName = "configure_button_icon_on"
-        self.appControlConfigureButton.offImageName = "configure_button_icon"
-        self.appControlHelpButton.onImageName = "help_button_icon_on"
-        self.appControlHelpButton.offImageName = "help_button_icon"
-        self.appControlQuitButton.onImageName = "close_button_icon_on"
-        self.appControlQuitButton.offImageName = "close_button_icon"
-
         // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
@@ -286,34 +275,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @IBAction @objc func doModeSwitch(sender: Any?) {
 
+        // Switch mode record
+        self.inDarkMode = !self.inDarkMode
+
+        // Update the NSMenuItem
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+
         // Set up the script that will switch the UI mode
         var arg: String = "tell application \"System Events\" to tell appearance preferences to set dark mode to "
-
-        // Modify the script according to user selection
-        let modeSwitch: NSButton = sender as! NSButton
-
-        if modeSwitch.state == NSControl.StateValue.off {
-            // Light Mode
-            arg += "false"
-            self.inDarkMode = false
-        } else {
-            // Dark mode
-            arg += "true"
-            self.inDarkMode = true
-        }
-
-        // Update the menu item image
-        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE) {
-            let controller = item.controller! as! SwitchItemViewController
-            controller.setImage(isOn: self.inDarkMode)
-        }
+        arg += self.inDarkMode ? "true" : "false"
 
         // Run the AppleScript
         let aps: NSAppleScript = NSAppleScript.init(source: arg)!
         aps.executeAndReturnError(nil)
-
-        // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
 
         // Run the task
         // NOTE This code is no longer required, but retain it for reference
@@ -327,31 +302,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let defaults: UserDefaults = UserDefaults.standard
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
 
-        // Has the user switched the desktop on or off?
-        let deskSwitch: NSButton = sender as! NSButton
+        self.useDesktop = !self.useDesktop
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
 
-        if deskSwitch.state == NSControl.StateValue.on {
+        if self.useDesktop {
             // Desktop is ON, so remove the 'CreateDesktop' key from 'com.apple.finder'
             defaultsDict.removeValue(forKey: "CreateDesktop")
-            self.useDesktop = true
         } else {
             // Desktop is OFF, so add the 'CreateDesktop' key, with value 0, to 'com.apple.finder'
             defaultsDict["CreateDesktop"] = 0
-            self.useDesktop = false
         }
 
         // Write the defaults back out
         defaults.setPersistentDomain(defaultsDict,
                                      forName: "com.apple.finder")
-
-        // Close the menu - required for controls within views added to menu items
-        //self.appMenu!.cancelTracking()
-
-        // Update the Menu Item image
-        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP) {
-            let controller = item.controller! as! SwitchItemViewController
-            controller.setImage(isOn: self.useDesktop)
-        }
 
         // Run the task to restart the Finder
         killFinder(andDock: false)
@@ -364,31 +329,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let defaults: UserDefaults = UserDefaults.standard
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
 
-        // Has the user switched the desktop on or off?
-        let hiddenSwitch: NSButton = sender as! NSButton
+        self.showHidden = !self.showHidden
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
 
-        if hiddenSwitch.state == NSControl.StateValue.on {
+        if self.showHidden {
             // Show Hidden is ON, so add the 'AppleShowAllFiles' key to 'com.apple.finder'
             defaultsDict["AppleShowAllFiles"] = "YES"
-            self.showHidden = true
         } else {
             // Show Hidden is OFF, so remove the 'AppleShowAllFiles' key from 'com.apple.finder'
             defaultsDict.removeValue(forKey: "AppleShowAllFiles")
-            self.showHidden = false
         }
 
         // Write the defaults back out
         defaults.setPersistentDomain(defaultsDict,
                                      forName: "com.apple.finder")
-
-        // Close the menu - required for controls within views added to menu items
-        //self.appMenu!.cancelTracking()
-
-        // Update the Menu Item image
-        if let item: MenuItem = itemWithTitle(MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN) {
-            let controller = item.controller! as! SwitchItemViewController
-            controller.setImage(isOn: self.showHidden)
-        }
 
         // Run the task to restart the Finder
         killFinder(andDock: false)
@@ -402,9 +357,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         //      and will fail (in Terminal) if it is not
         // TODO Check for installation of gitup and warn if it's missing
         runScript("gitup")
-
-        // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
     }
 
 
@@ -414,9 +366,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
         // TODO Check for installation of brew and warn if it's missing
         runScript("brew update")
-
-        // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
     }
 
 
@@ -426,30 +375,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
        // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
        // TODO Check for installation of brew and warn if it's missing
        runScript("brew upgrade")
-
-       // Close the menu - required for controls within views added to menu items
-       self.appMenu!.cancelTracking()
    }
 
     
     @IBAction @objc func doScript(sender: Any?) {
 
         // Get the source Menu Item that the menu button is linked to
-        let theButton: NSButton = sender as! NSButton
-        for item in self.items {
-            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                // The iterated Menu Item is a user-defined one
-                let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
-                if controller.itemButton == theButton {
-                    // The button clicked is the one this Menu Item's view controller references
-                    // so run the script associated with the Menu Item
-                    runScript(item.script)
-                }
-            }
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            runScript(item.script)
         }
-
-        // Close the menu - required for controls within views added to menu items
-        self.appMenu!.cancelTracking()
     }
 
 
@@ -498,7 +433,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Create the app's menu when the app is run
         let defaults = UserDefaults.standard
-        var index = 0
 
         // Prepare the NSMenu
         self.appMenu = NSMenu.init(title: "MNU")
@@ -516,52 +450,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             // convert them to real objects, and add them to the menu
             for item: String in menuItems {
                 if let loadedItem = dejsonize(item) {
-                    // Re-create each item's view controller according to its type
-                    // The named items are the built-ins; the default covers user-defined items
-                    // NOTE We make entries for all items - even those which are hidden, as
-                    //      they may be shown by the user later
-                    switch loadedItem.code {
-                        case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                            loadedItem.controller = makeModeSwitchController()
-                        case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                            loadedItem.controller = makeDesktopSwitchController()
-                        case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                            loadedItem.controller = makeHiddenFilesSwitchController()
-                        case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                            loadedItem.controller = makeGitScriptController()
-                        case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                            loadedItem.controller = makeBrewUpdateScriptController()
-                        case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                            loadedItem.controller = makeBrewUpgradeScriptController()
-                        default:
-                            loadedItem.controller = makeGenericScriptController(loadedItem.title)
-                    }
-
                     // Add the Menu Item to the list
                     self.items.append(loadedItem)
+                    let menuItem: NSMenuItem = makeNSMenuItem(loadedItem)
 
-                    // Create the NSMenuItem that will represent the MNU item
-                    let menuItem: NSMenuItem = NSMenuItem.init(title: loadedItem.title,
-                                                               action: nil,
-                                                               keyEquivalent: "")
-
-                    // Update the NSMenuItem with controller values
-                    // NOTE We need to duplicate here as though two view controllers are not
-                    //      totally identical
-                    if loadedItem.type == MNU_CONSTANTS.TYPES.SWITCH {
-                        let controller: SwitchItemViewController = loadedItem.controller as! SwitchItemViewController
-                        menuItem.view = controller.view
-                        menuItem.action = controller.action
-                    } else {
-                        let controller: ScriptItemViewController = loadedItem.controller as! ScriptItemViewController
-                        menuItem.view = controller.view
-                        menuItem.action = controller.action
-                    }
-                    
                     // If the item is not hidden, add it to the menu
                     if !loadedItem.isHidden {
                         // Add the item's NSMenuItem to the NSMenu
                         self.appMenu!.addItem(menuItem)
+                        self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
                     NSLog("Error in MNU.createMenu()(): Cound not deserialize \(item)")
@@ -577,32 +474,32 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
                     // Create and add a Light/Dark Mode MNU item
-                    newItem = makeModeSwitch(index)
+                    newItem = makeModeSwitch()
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
                     // Create and add a Desktop Usage MNU Item
-                    newItem = makeDesktopSwitch(index)
+                    newItem = makeDesktopSwitch()
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
                     // Create and add a Show Hidden Files item
-                    newItem = makeHiddenFilesSwitch(index)
+                    newItem = makeHiddenFilesSwitch()
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
                     // Create and add a Git Update item
-                    newItem = makeGitScript(index)
+                    newItem = makeGitScript()
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
                     // Create and add a Brew Upgrade item
-                    newItem = makeBrewUpgradeScript(index)
+                    newItem = makeBrewUpgradeScript()
                 }
 
                 if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
                     // Create and add a Brew Update item
-                    newItem = makeBrewUpdateScript(index)
+                    newItem = makeBrewUpdateScript()
                 }
 
                 if let item: MenuItem = newItem {
@@ -610,19 +507,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     self.items.append(item)
 
                     // Create the NSMenuItem that will represent the MNU item
-                    let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                               action: nil,
-                                                               keyEquivalent: "")
-
-                    // Set NSMenuItem's view
-                    // NOTE Cast to NSViewController as it's all our subclasses' parent
-                    let controller: NSViewController = item.controller as! NSViewController
-                    menuItem.view = controller.view
+                    let menuItem: NSMenuItem = makeNSMenuItem(item)
 
                     // Add the NSMenuItem to the menu
                     self.appMenu!.addItem(menuItem)
-                    //self.appMenu!.addItem(NSMenuItem.separator())
-                    index += 1
+                    self.appMenu!.addItem(NSMenuItem.separator())
                 }
             }
         }
@@ -663,59 +552,61 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
 
-        // Are we displaying MenuItem controls?
-        let defaults = UserDefaults.standard
-        let doHide = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-
         for item in self.items {
             // Create ann NSMenuItem that will display the current MNU item
             // NOTE We do this even if the MSMenuItem will not be shown (because
             //      the MenuItem is hidden) becuase we also update the view controllers
-            let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                       action: nil,
-                                                       keyEquivalent: "")
-
-            // Set the NSMenuItem's view to that maintained by the MNU item's controller
-            if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
-                // Set up the NSMenuItem for a script MenuItem
-                let controller: ScriptItemViewController = item.controller as! ScriptItemViewController
-
-                // Show or hide the controller's button, based on preference (see above)
-                controller.isControlHidden = doHide
-                controller.itemButton.isHidden = controller.isControlHidden
-
-                // Set the NSMenuItem's view to the controller's
-                menuItem.view = controller.view
-
-                if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                    // The controller for a user item may not have been assigned a selector yet,
-                    // so do it here just in case
-                    // TODO Check if this cam be removed
-                    controller.action = #selector(self.doScript(sender:))
-                    controller.itemButton.action = controller.action
-                    controller.itemText.stringValue = item.title
-                }
-            } else {
-                // Set up the NSMenuItem for a switch MenuItem
-                let controller: SwitchItemViewController = item.controller as! SwitchItemViewController
-
-                // Show or hide the controller's button, based on preference (see above)
-                controller.isControlHidden = doHide
-                controller.itemButton.isHidden = controller.isControlHidden
-
-                // Set the NSMenuItem's view to the controller's
-                menuItem.view = controller.view
-            }
+            let menuItem: NSMenuItem = makeNSMenuItem(item)
 
             // If the item is not hidden, add it to the menu
             if !item.isHidden {
                 // Add the menu item
                 self.appMenu!.addItem(menuItem)
+                self.appMenu!.addItem(NSMenuItem.separator())
             }
         }
 
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
+    }
+
+
+    func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
+
+        let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
+                                                   action: nil,
+                                                   keyEquivalent: "")
+        menuItem.representedObject = item
+
+        switch item.code {
+            case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
+                if self.disableDarkMode { menuItem.isEnabled = false }
+                menuItem.action = #selector(self.doModeSwitch(sender:))
+                menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+                menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+            case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
+                menuItem.action = #selector(self.doDesktopSwitch(sender:))
+                menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
+                menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+            case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
+                menuItem.action = #selector(self.doShowHiddenFilesSwitch(sender:))
+                menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
+                menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+            case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
+                menuItem.action = #selector(self.doGit(sender:))
+                menuItem.image = NSImage.init(named: "logo_github")
+            case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
+                menuItem.action = #selector(self.doBrewUpdate(sender:))
+                menuItem.image = NSImage.init(named: "logo_brew_update")
+            case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
+                menuItem.action = #selector(self.doBrewUpgrade(sender:))
+                menuItem.image = NSImage.init(named: "logo_brew_upgrade")
+            default:
+                menuItem.action = #selector(self.doScript(sender:))
+                menuItem.image = NSImage.init(named: "logo_generic")
+        }
+
+        return menuItem
     }
 
 
@@ -734,220 +625,79 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: Dark Mode Switching
 
-    func makeModeSwitch(_ index: Int) -> MenuItem {
+    func makeModeSwitch() -> MenuItem {
 
         // Make and return a stock UI mode switch
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
-        newItem.index = index
-
-        // Create its controller
-        let controller: SwitchItemViewController = makeModeSwitchController()
-        newItem.controller = controller
-
-        // If we're running on a version of macOS that doesn't do Dark Mode, grey out
-        // the control and disable the switch
-        if (self.disableDarkMode) {
-            controller.itemButton.isEnabled = false
-            controller.itemText.textColor = NSColor.secondaryLabelColor
-            controller.itemImage.alphaValue = 0.4
-        }
-
         return newItem
-    }
-
-
-    func makeModeSwitchController() -> SwitchItemViewController {
-
-        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE)
-        controller.offImageName = "light_mode_icon"
-        controller.onImageName = "dark_mode_icon"
-        controller.state = self.inDarkMode
-        controller.action = #selector(self.doModeSwitch(sender:))
-        return controller
     }
 
 
     // MARK: Desktop Usage Switching
 
-    func makeDesktopSwitch(_ index: Int) -> MenuItem {
+    func makeDesktopSwitch() -> MenuItem {
 
         // Make and return a stock desktop usage mode switch
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
-        newItem.index = index
-
-        // Create its controller
-        let controller: SwitchItemViewController = makeDesktopSwitchController()
-        newItem.controller = controller
         return newItem
-    }
-
-
-    func makeDesktopSwitchController() -> SwitchItemViewController {
-
-        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP)
-        controller.onImageName = "desktop_icon_on"
-        controller.offImageName = "desktop_icon_off"
-        controller.state = self.useDesktop
-        controller.action = #selector(self.doDesktopSwitch(sender:))
-        return controller
     }
 
 
     // MARK: Show Hidden Files Switching
 
-    func makeHiddenFilesSwitch(_ index: Int) -> MenuItem {
+    func makeHiddenFilesSwitch() -> MenuItem {
 
         // Make and return a stock desktop usage mode switch
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
-        newItem.index = index
-
-        // Create its controller
-        let controller: SwitchItemViewController = makeHiddenFilesSwitchController()
-        newItem.controller = controller
         return newItem
-    }
-
-
-    func makeHiddenFilesSwitchController() -> SwitchItemViewController {
-
-        let controller: SwitchItemViewController = makeSwitchController(title: MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN)
-        controller.onImageName = "hidden_files_icon_on"
-        controller.offImageName = "hidden_files_icon_off"
-        controller.state = self.showHidden
-        controller.action = #selector(self.doShowHiddenFilesSwitch(sender:))
-        return controller
     }
 
 
     // MARK: Update Git Trigger
 
-    func makeGitScript(_ index: Int) -> MenuItem {
+    func makeGitScript() -> MenuItem {
 
         // Make and return a stock Git Update item
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-        newItem.index = index
-
-        // Create its controller
-        let controller: ScriptItemViewController = makeGitScriptController()
-        newItem.controller = controller
         return newItem
-    }
-
-
-    func makeGitScriptController() -> ScriptItemViewController {
-
-        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.GIT)
-        controller.offImageName = "logo_github"
-        controller.onImageName = "logo_github"
-        controller.action = #selector(self.doGit(sender:))
-        return controller
     }
 
 
     // MARK: Update Brew Trigger
 
-    func makeBrewUpdateScript(_ index: Int) -> MenuItem {
+    func makeBrewUpdateScript() -> MenuItem {
 
         // Make and return a stock Brew Update item
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-        newItem.index = index
-
-        // Create its controller
-        let controller: ScriptItemViewController = makeBrewUpdateScriptController()
-        newItem.controller = controller
         return newItem
-    }
-
-
-    func makeBrewUpdateScriptController() -> ScriptItemViewController {
-
-        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE)
-        controller.offImageName = "logo_brew_update"
-        controller.onImageName = "logo_brew_update"
-        controller.action = #selector(self.doBrewUpdate(sender:))
-        return controller
     }
 
 
     // MARK: Upgrade Brew Trigger
 
-    func makeBrewUpgradeScript(_ index: Int) -> MenuItem {
+    func makeBrewUpgradeScript() -> MenuItem {
 
-            // Make and return a stock Brew Update item
-            let newItem = MenuItem()
-            newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
-            newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
-            newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-            newItem.index = index
-
-            // Create its controller
-            let controller: ScriptItemViewController = makeBrewUpgradeScriptController()
-            newItem.controller = controller
-            return newItem
-        }
-
-
-    func makeBrewUpgradeScriptController() -> ScriptItemViewController {
-
-        let controller: ScriptItemViewController = makeScriptController(title: MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE)
-        controller.offImageName = "logo_brew_upgrade"
-        controller.onImageName = "logo_brew_upgrade"
-        controller.action = #selector(self.doBrewUpgrade(sender:))
-        return controller
-    }
-
-
-    // MARK: User-defined Script Handler
-    
-    func makeGenericScriptController(_ title: String) -> ScriptItemViewController {
-
-        // Create and return a generic switch view controller
-        let defaults: UserDefaults = UserDefaults.standard
-        let controller: ScriptItemViewController = makeScriptController(title: title)
-        controller.offImageName = "logo_generic"
-        controller.onImageName = "logo_generic"
-        controller.action = #selector(self.doScript(sender:))
-        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-        return controller
-    }
-
-
-    func makeSwitchController(title: String) -> SwitchItemViewController {
-
-        // Create and return a new base switch view controller
-        let defaults: UserDefaults = UserDefaults.standard
-        let controller: SwitchItemViewController = SwitchItemViewController.init(nibName: nil, bundle: nil)
-        controller.text = title
-        controller.state = false
-        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-        return controller
-    }
-
-
-    func makeScriptController(title: String) -> ScriptItemViewController {
-
-        // Create and return a new base button view controller
-        let defaults: UserDefaults = UserDefaults.standard
-        let controller: ScriptItemViewController = ScriptItemViewController.init(nibName: nil, bundle: nil)
-        controller.text = title
-        controller.state = true
-        controller.isControlHidden = !(defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool)
-        return controller
+        // Make and return a stock Brew Update item
+        let newItem = MenuItem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
+        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        return newItem
     }
 
 
