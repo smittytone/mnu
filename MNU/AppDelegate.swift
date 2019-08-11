@@ -443,25 +443,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
-        let menuItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
+        let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
-        if menuItems.count > 0 {
-            // We have loaded Menu Items, in serialized form, so run through them,
-            // convert them to real objects, and add them to the menu
-            for item: String in menuItems {
-                if let loadedItem = dejsonize(item) {
+        if loadedItems.count > 0 {
+            // We have loaded a set of Menu Items, in serialized form, so run through the list to
+            // convert the serializations into real objects: Menu Items and their rewpresentative
+            // NSMenuItems
+            for loadedItem: String in loadedItems {
+                if let itemInstance = dejsonize(loadedItem) {
                     // Add the Menu Item to the list
-                    self.items.append(loadedItem)
-                    let menuItem: NSMenuItem = makeNSMenuItem(loadedItem)
+                    self.items.append(itemInstance)
+                    let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
 
                     // If the item is not hidden, add it to the menu
-                    if !loadedItem.isHidden {
+                    if !itemInstance.isHidden {
                         // Add the item's NSMenuItem to the NSMenu
                         self.appMenu!.addItem(menuItem)
                         self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
-                    NSLog("Error in MNU.createMenu()(): Cound not deserialize \(item)")
+                    NSLog("Error in MNU.createMenu()(): Cound not deserialize \(loadedItem)")
                     presentError()
                 }
             }
@@ -506,10 +507,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                     // Add the menu item to the list
                     self.items.append(item)
 
-                    // Create the NSMenuItem that will represent the MNU item
+                    // Create the NSMenuItem that will represent the Menu Item
                     let menuItem: NSMenuItem = makeNSMenuItem(item)
 
-                    // Add the NSMenuItem to the menu
+                    // Add the NSMenuItem to the NSMenu
                     self.appMenu!.addItem(menuItem)
                     self.appMenu!.addItem(NSMenuItem.separator())
                 }
@@ -540,9 +541,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     @objc func updateMenu() {
 
         // We have received a notification from the Confiure window controller that the list of
-        // Menu Items has changed in some way, so rebuild the menu
+        // Menu Items has changed in some way, so rebuild the menu from scratch
         if let itemList: MenuItemList = cwvc.menuItems {
-            self.items.removeAll()
             self.items = itemList.items
         }
 
@@ -553,14 +553,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.appMenu!.removeAllItems()
 
         for item in self.items {
-            // Create ann NSMenuItem that will display the current MNU item
-            // NOTE We do this even if the MSMenuItem will not be shown (because
-            //      the MenuItem is hidden) becuase we also update the view controllers
+            // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
-            // If the item is not hidden, add it to the menu
+            // If the item is not hidden, add it to the NSMenu
             if !item.isHidden {
-                // Add the menu item
                 self.appMenu!.addItem(menuItem)
                 self.appMenu!.addItem(NSMenuItem.separator())
             }
@@ -573,11 +570,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
 
+        // Create and return an NSMenuItem for the specified Menu Item instance
         let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
                                                    action: nil,
                                                    keyEquivalent: "")
         menuItem.representedObject = item
 
+        // Make item-specific changes
         switch item.code {
             case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                 if self.disableDarkMode { menuItem.isEnabled = false }
@@ -734,20 +733,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         defaults.synchronize()
-    }
-
-
-    func itemWithTitle(_ title: String) -> MenuItem? {
-
-        // Return the Menu Item whose title matches the passed one
-        // TODO Probably should use a UUID rather than the title
-        for item in self.items {
-            if item.title == title {
-                return item
-            }
-        }
-
-        return nil
     }
 
 
