@@ -54,6 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     var task: Process? = nil
     var doNewTermTab: Bool = false
+    var showImages: Bool = false
 
 
     // MARK: - App Lifecycle Functions
@@ -121,6 +122,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                        selector: #selector(self.enableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-enabled"),
                        object: cwvc)
+
         nc.addObserver(self,
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
@@ -277,7 +279,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Update the NSMenuItem
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-        menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+        if self.showImages {
+            menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+        }
 
         // Set up the script that will switch the UI mode
         var arg: String = "tell application \"System Events\" to tell appearance preferences to set dark mode to "
@@ -301,7 +305,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Update the NSMenuItem
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
-        menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+        if self.showImages {
+            menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+        }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
         let defaults: UserDefaults = UserDefaults.standard
@@ -332,7 +338,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Update the NSMenuItem
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
-        menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+        if self.showImages {
+            menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+        }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
         let defaults: UserDefaults = UserDefaults.standard
@@ -438,6 +446,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Create the app's menu when the app is run
         let defaults = UserDefaults.standard
+        self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
 
         // Prepare the NSMenu
         self.appMenu = NSMenu.init(title: "MNU")
@@ -551,6 +560,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
             self.items = itemList.items
         }
 
+        // Check for prefs changes
+        let defaults = UserDefaults.standard
+        self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
+
         // Mark the fact that the menu has changed (so it can be saved on exit)
         self.hasChanged = true
 
@@ -585,32 +598,48 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         switch item.code {
             case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                 if self.disableDarkMode { menuItem.isEnabled = false }
-                menuItem.action = #selector(self.doModeSwitch(sender:))
                 menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-                menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
             case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
                 menuItem.action = #selector(self.doDesktopSwitch(sender:))
                 menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
-                menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
             case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
                 menuItem.action = #selector(self.doShowHiddenFilesSwitch(sender:))
                 menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
-                menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
             case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
                 menuItem.action = #selector(self.doGit(sender:))
-                menuItem.image = NSImage.init(named: "logo_github")
             case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
                 menuItem.action = #selector(self.doBrewUpdate(sender:))
-                menuItem.image = NSImage.init(named: "logo_brew_update")
             case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                 menuItem.action = #selector(self.doBrewUpgrade(sender:))
-                menuItem.image = NSImage.init(named: "logo_brew_update")
             default:
                 menuItem.action = #selector(self.doScript(sender:))
-                menuItem.image = NSImage.init(named: "logo_generic")
+        }
+
+        if self.showImages {
+            switch item.code {
+                case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
+                    menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+                case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
+                    menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
+                    menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
+                    menuItem.image = NSImage.init(named: "logo_github")
+                case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
+                    menuItem.image = NSImage.init(named: "logo_brew_update")
+                case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
+                    menuItem.image = NSImage.init(named: "logo_brew_update")
+                default:
+                    menuItem.image = NSImage.init(named: "logo_generic")
+            }
         }
 
         return menuItem
+    }
+
+
+    func setImages() {
+
     }
 
 
