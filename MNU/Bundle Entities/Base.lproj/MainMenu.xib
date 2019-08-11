@@ -315,7 +315,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="14" id="tvh-Qt-SYK"/>
                                                     </constraints>
-                                                    <buttonCell key="cell" type="check" title="Show menu item controls" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Ter-1U-8AP">
+                                                    <buttonCell key="cell" type="check" title="Show menu item controls" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="Ter-1U-8AP">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>

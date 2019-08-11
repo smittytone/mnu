@@ -81,6 +81,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // and the the other states of supported switches
         let defaults: UserDefaults = UserDefaults.standard
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain)!
+
         if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
             self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
         }
@@ -93,11 +94,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         if let doShowHidden = defaultsDict["AppleShowAllFiles"] {
             self.showHidden = (doShowHidden as! String == "YES") ? true : false
         }
-
-        // MARK: DEBUG SWITCHES
-        // Uncomment the next two lines to wipe stored prefs
-        //defaults.set([], forKey: "com.bps.mnu.item-order")
-        //defaults.set(true, forKey: "com.bps.mnu.first-run")
 
         // Register preferences
         registerPreferences()
@@ -281,6 +277,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Update the NSMenuItem
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
+        menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
 
         // Set up the script that will switch the UI mode
         var arg: String = "tell application \"System Events\" to tell appearance preferences to set dark mode to "
@@ -298,20 +295,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @IBAction @objc func doDesktopSwitch(sender: Any?) {
 
+        // Switch the stored state
+        self.useDesktop = !self.useDesktop
+
+        // Update the NSMenuItem
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
+        menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+
         // Get the defaults for Finder as this contains the 'use desktop' option
         let defaults: UserDefaults = UserDefaults.standard
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
-
-        self.useDesktop = !self.useDesktop
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
 
         if self.useDesktop {
             // Desktop is ON, so remove the 'CreateDesktop' key from 'com.apple.finder'
             defaultsDict.removeValue(forKey: "CreateDesktop")
         } else {
             // Desktop is OFF, so add the 'CreateDesktop' key, with value 0, to 'com.apple.finder'
-            defaultsDict["CreateDesktop"] = 0
+            defaultsDict["CreateDesktop"] = "0"
         }
 
         // Write the defaults back out
@@ -325,13 +326,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     @IBAction @objc func doShowHiddenFilesSwitch(sender: Any?) {
 
+        // Switch the stored state
+        self.showHidden = !self.showHidden
+
+        // Update the NSMenuItem
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
+        menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+
         // Get the defaults for Finder as this contains the 'use desktop' option
         let defaults: UserDefaults = UserDefaults.standard
         var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
-
-        self.showHidden = !self.showHidden
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
 
         if self.showHidden {
             // Show Hidden is ON, so add the 'AppleShowAllFiles' key to 'com.apple.finder'
@@ -599,7 +604,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 menuItem.image = NSImage.init(named: "logo_brew_update")
             case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                 menuItem.action = #selector(self.doBrewUpgrade(sender:))
-                menuItem.image = NSImage.init(named: "logo_brew_upgrade")
+                menuItem.image = NSImage.init(named: "logo_brew_update")
             default:
                 menuItem.action = #selector(self.doScript(sender:))
                 menuItem.image = NSImage.init(named: "logo_generic")
