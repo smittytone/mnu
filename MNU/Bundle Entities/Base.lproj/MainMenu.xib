@@ -23,16 +23,16 @@
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customView id="LQO-f4-D0U">
-            <rect key="frame" x="0.0" y="0.0" width="222" height="34"/>
+            <rect key="frame" x="0.0" y="0.0" width="140" height="34"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP">
-                    <rect key="frame" x="100" y="6" width="22" height="22"/>
+                    <rect key="frame" x="60" y="7" width="20" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="22" id="c0r-Mn-n9P"/>
-                        <constraint firstAttribute="width" constant="22" id="hpF-wL-kiw"/>
+                        <constraint firstAttribute="height" constant="20" id="eop-Za-25d"/>
+                        <constraint firstAttribute="width" constant="20" id="fFs-jA-X5F"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="configure_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="ZUN-nM-V9E">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="button_configure" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="ZUN-nM-V9E">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -41,12 +41,12 @@
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
-                    <rect key="frame" x="180" y="6" width="22" height="22"/>
+                    <rect key="frame" x="100" y="7" width="20" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="height" constant="22" id="RqO-ae-6va"/>
-                        <constraint firstAttribute="width" constant="22" id="jcC-ym-mg3"/>
+                        <constraint firstAttribute="width" constant="20" id="5LM-m6-Vdl"/>
+                        <constraint firstAttribute="height" constant="20" id="HXD-2d-G31"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="help_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="button_help" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="HJ6-eL-rlL">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -55,12 +55,12 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
-                    <rect key="frame" x="20" y="6" width="22" height="22"/>
+                    <rect key="frame" x="20" y="7" width="20" height="20"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="22" id="R1y-El-djd"/>
-                        <constraint firstAttribute="height" constant="22" id="p7Q-YT-gX1"/>
+                        <constraint firstAttribute="width" constant="20" id="3vs-bo-sv0"/>
+                        <constraint firstAttribute="height" constant="20" id="g9t-yj-ziS"/>
                     </constraints>
-                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="close_button_icon" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
+                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="button_close" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="nPm-1d-LIV">
                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                         <font key="font" metaFont="system"/>
                     </buttonCell>
@@ -70,20 +70,20 @@
                 </button>
             </subviews>
             <constraints>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="AyD-i7-iCL"/>
-                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="HCa-Z1-XnM"/>
-                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="fAp-iW-MND"/>
-                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerX" secondItem="LQO-f4-D0U" secondAttribute="centerX" id="m22-GM-BeM"/>
-                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="nyx-WN-03d"/>
-                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="20" id="vTT-CR-nml"/>
+                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerX" secondItem="LQO-f4-D0U" secondAttribute="centerX" id="BOT-HW-nlB"/>
+                <constraint firstItem="HNC-XV-ioA" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="StG-iI-KQP"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="leading" secondItem="LQO-f4-D0U" secondAttribute="leading" constant="20" id="bdf-N5-Cam"/>
+                <constraint firstItem="d0n-TZ-J0W" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="gtu-cb-GVb"/>
+                <constraint firstItem="s7c-vc-KUP" firstAttribute="centerY" secondItem="LQO-f4-D0U" secondAttribute="centerY" id="ku9-Vi-1b8"/>
+                <constraint firstAttribute="trailing" secondItem="HNC-XV-ioA" secondAttribute="trailing" constant="20" id="uFe-uc-LEp"/>
             </constraints>
-            <point key="canvasLocation" x="-114" y="328"/>
+            <point key="canvasLocation" x="-155" y="328"/>
         </customView>
         <window title="Configure MNU" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="d1y-yZ-vmh">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -119,7 +119,7 @@
                                             <rect key="frame" x="17" y="72" width="500" height="177"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
                                                 <rect key="frame" x="1" y="1" width="498" height="175"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="22" rowSizeStyle="systemDefault" viewBased="YES" id="2ab-77-HWZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="175"/>
@@ -503,7 +503,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -680,7 +680,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -795,9 +795,9 @@ Gw
         </window>
     </objects>
     <resources>
-        <image name="close_button_icon" width="30" height="30"/>
-        <image name="configure_button_icon" width="30" height="30"/>
-        <image name="help_button_icon" width="30" height="30"/>
+        <image name="button_close" width="30" height="30"/>
+        <image name="button_configure" width="30" height="30"/>
+        <image name="button_help" width="30" height="30"/>
         <image name="logo_app" width="32" height="32"/>
     </resources>
 </document>
