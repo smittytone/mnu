@@ -35,7 +35,8 @@ class MenuItemTableCellView: NSTableCellView {
     // This table cell view simply has a couple of extra items we want to make accessible
     
     @IBOutlet weak var title: NSTextField!
-    @IBOutlet weak var button: MenuItemTableCellButton!
-    @IBOutlet weak var editButton: MenuItemTableCellButton!
+    @IBOutlet weak var buttonA: MenuItemTableCellButton!
+    @IBOutlet weak var buttonB: MenuItemTableCellButton!
+    @IBOutlet weak var buttonC: MenuItemTableCellButton!
     
 }

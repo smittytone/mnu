@@ -319,24 +319,33 @@ class ConfigureViewController:  NSViewController,
         if let items = self.menuItems {
             let item: MenuItem = items.items[row]
             let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
+            
             if cell != nil {
+                // Configure the cell's title and its three buttons
+                // NOTE 'buttonA' is the right-most button
+                cell!.title.stringValue = item.title
+                
+                cell!.buttonA.image = NSImage.init(named: "NSStopProgressFreestandingTemplate")
+                cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
+                cell!.buttonA.menuItem = item
+                cell!.buttonA.toolTip = "Delete Item"
+                
+                cell!.buttonB.image = NSImage.init(named: "NSActionTemplate")
+                cell!.buttonB.action = #selector(self.doEditScript(sender:))
+                cell!.buttonB.menuItem = item
+                cell!.buttonB.toolTip = "Edit Item"
+                
+                cell!.buttonC.image = NSImage.init(named: (item.isHidden ? "NSStatusUnavailable" : "NSStatusAvailable"))
+                cell!.buttonC.action = #selector(self.doShowHideSwitch(sender:))
+                cell!.buttonC.menuItem = item
+                cell!.buttonC.toolTip = "Show/Hide Item"
+                
                 if item.type == MNU_CONSTANTS.TYPES.SWITCH || (item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER) {
-                    // This is a built-in switch, so change the button to 'show/hide'
-                    cell!.button.title = item.isHidden ? "Show" : "Hide"
-                    cell!.button.action = #selector(self.doShowHideSwitch(sender:))
-                    cell!.editButton.isHidden = true
+                    // This is a built-in switch, so disable the edit, delete buttons
+                    cell!.buttonB.isEnabled = false
+                    cell!.buttonA.isEnabled = false
                 }
 
-                if item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                    // This is a user-created script item, so set the button to 'delete'
-                    cell!.button.title = "Delete"
-                    cell!.button.action = #selector(self.doDeleteScript(sender:))
-                    cell!.editButton.action = #selector(self.doEditScript(sender:))
-                    cell!.editButton.menuItem = item
-                }
-                
-                cell!.title.stringValue = item.title
-                cell!.button.menuItem = item
                 return cell
             }
         }
