@@ -597,6 +597,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         switch item.code {
             case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                 if self.disableDarkMode { menuItem.isEnabled = false }
+                menuItem.action = #selector(self.doModeSwitch(sender:))
                 menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
             case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
                 menuItem.action = #selector(self.doDesktopSwitch(sender:))
@@ -625,20 +626,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
                     menuItem.image = NSImage.init(named: "logo_github")
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                    menuItem.image = NSImage.init(named: "logo_brew_update")
+                    menuItem.image = NSImage.init(named: "logo_brew")
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                    menuItem.image = NSImage.init(named: "logo_brew_update")
+                    menuItem.image = NSImage.init(named: "logo_brew")
                 default:
                     menuItem.image = NSImage.init(named: "logo_generic")
             }
         }
 
         return menuItem
-    }
-
-
-    func setImages() {
-
     }
 
 
