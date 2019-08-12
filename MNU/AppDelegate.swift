@@ -237,7 +237,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
         // Generate a simple JSON string serialization of the specified Menu Item object
         var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
-        json += "\"code\":\(item.code),\"index\":\(item.index),"
+        json += "\"code\":\(item.code),"
         json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
         return json
     }
@@ -256,7 +256,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
                 newItem.script = dict!["script"] as! String
                 newItem.type = dict!["type"] as! Int
                 newItem.code = dict!["code"] as! Int
-                newItem.index = dict!["index"] as! Int
                 newItem.isHidden = dict!["hidden"] as! Bool
                 return newItem
             } catch {
