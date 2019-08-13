@@ -31,6 +31,7 @@ import Cocoa
 
 
 class ConfigureViewController:  NSViewController,
+                                NSTabViewDelegate,
                                 NSTableViewDataSource,
                                 NSTableViewDelegate,
                                 NSWindowDelegate {
@@ -69,6 +70,9 @@ class ConfigureViewController:  NSViewController,
     override func viewDidLoad() {
 
         super.viewDidLoad()
+        
+        // Ask out window to make us first responder (for key presses)
+        self.view.window!.makeFirstResponder(self)
 
         // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([mnuPasteboardType])
@@ -82,8 +86,8 @@ class ConfigureViewController:  NSViewController,
 
         // Set the add user item view controller's parent window
         self.configureWindow = self.view.window!
-        self.aivc.parentWindow = self.configureWindow!
-        self.fbvc.parentWindow = self.configureWindow!
+        //self.aivc.parentWindow = self.configureWindow!
+        //self.fbvc.parentWindow = self.configureWindow!
         
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
@@ -117,6 +121,14 @@ class ConfigureViewController:  NSViewController,
         // SEE https://stackoverflow.com/questions/7460092/nswindow-makekeyandorderfront-makes-window-appear-but-not-key-or-front
         NSApp.activate(ignoringOtherApps: true)
     }
+    
+    
+    override func resignFirstResponder() -> Bool {
+        
+        // Make sure we can continue to track key events
+        return false
+    }
+
 
     
     // MARK: - Action Functions
@@ -150,6 +162,7 @@ class ConfigureViewController:  NSViewController,
         // ready to accept a new item
         self.aivc.isEditing = false
         self.aivc.currentMenuItems = self.menuItems
+        self.aivc.parentWindow = self.configureWindow!
         self.aivc.showSheet()
     }
 
@@ -178,6 +191,7 @@ class ConfigureViewController:  NSViewController,
             // Populate the sheet's fields for editing
             self.aivc.newMenuItem = item
             self.aivc.isEditing = true
+            self.aivc.parentWindow = self.configureWindow!
             
             // Tell the add user item view controller to display its sheet
             self.aivc.showSheet()
@@ -228,6 +242,7 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func submitFeedback(sender: Any?) {
 
         // Get the feedback sheet view controller to show its sheet
+        self.fbvc.parentWindow = self.configureWindow!
         self.fbvc.showSheet()
     }
 
@@ -468,5 +483,60 @@ class ConfigureViewController:  NSViewController,
 
         // Display the text
         menuItemsCountText.stringValue = "Menu has \(countText) \(itemText) visible out of \(total)"
+    }
+    
+    
+    // MARK: - Key Event Handling Functions
+    
+    override func keyDown(with event: NSEvent) {
+        
+        // Catch key events to trap ESC (close window) and arrows (cycle through tabs)
+        
+        if event.keyCode == MNU_CONSTANTS.MENU_ESC_KEY {
+            // ESC key pressed
+            // Make sure the sheets aren't visible and close
+            if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
+                doCancel(sender: self)
+            }
+            
+            return
+        }
+        
+        if (event.keyCode == MNU_CONSTANTS.MENU_ARR_KEY) {
+            // Right Arrow key pressed
+            // Cycle through the tabs in that direction
+            if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
+                if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
+                    let index = self.windowTabView.indexOfTabViewItem(selectedTab)
+                    if index == 2 {
+                        self.windowTabView.selectTabViewItem(at: 0)
+                        return
+                    }
+                }
+                
+                self.windowTabView.selectNextTabViewItem(self)
+                return
+            }
+        }
+        
+        if (event.keyCode == MNU_CONSTANTS.MENU_ARL_KEY) {
+            // Left Arrow key pressed
+            // Cycle through the tabs in that direction
+            if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
+                if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
+                    let index = self.windowTabView.indexOfTabViewItem(selectedTab)
+                    if index == 0 {
+                        self.windowTabView.selectTabViewItem(at: 2)
+                        return
+                    }
+                }
+                
+                self.windowTabView.selectPreviousTabViewItem(self)
+                return
+            }
+        }
+        
+        // Pass on allow other key events
+        super.keyDown(with: event)
     }
 }

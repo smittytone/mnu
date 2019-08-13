@@ -69,6 +69,7 @@ class FeedbackSheetViewController: NSViewController,
 
         // User has clicked 'Cancel', so just close the sheet
         self.parentWindow!.endSheet(self.feedbackSheet)
+        self.parentWindow = nil
     }
 
 
@@ -125,6 +126,7 @@ class FeedbackSheetViewController: NSViewController,
             }
         } else {
             self.parentWindow!.endSheet(self.feedbackSheet)
+            self.parentWindow = nil
         }
     }
 

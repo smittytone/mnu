@@ -101,6 +101,7 @@ class AddUserItemViewController: NSViewController,
         // User has clicked 'Cancel', so just close the sheet
 
         self.parentWindow!.endSheet(addItemSheet)
+        self.parentWindow = nil
     }
 
 
@@ -178,6 +179,7 @@ class AddUserItemViewController: NSViewController,
 
         // Close the sheet
         self.parentWindow!.endSheet(addItemSheet)
+        self.parentWindow = nil
     }
 
 

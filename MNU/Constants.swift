@@ -62,4 +62,7 @@ struct MNU_CONSTANTS {
     }
 
     static let MENU_TEXT_LEN        = 30
+    static let MENU_ESC_KEY         = 53
+    static let MENU_ARR_KEY         = 124
+    static let MENU_ARL_KEY         = 123
 }

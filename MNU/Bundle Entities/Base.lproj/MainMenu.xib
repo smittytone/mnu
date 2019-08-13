@@ -482,6 +482,9 @@
                                 </view>
                             </tabViewItem>
                         </tabViewItems>
+                        <connections>
+                            <outlet property="delegate" destination="qtv-Yg-ACO" id="Jos-Oy-DZq"/>
+                        </connections>
                     </tabView>
                 </subviews>
                 <constraints>
