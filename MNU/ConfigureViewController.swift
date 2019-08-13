@@ -486,7 +486,7 @@ class ConfigureViewController:  NSViewController,
         let countText = count == 0 ? "no" : "\(count)"
 
         // Display the text
-        menuItemsCountText.stringValue = "Menu has \(countText) \(itemText) visible out of \(total)"
+        menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) visible out of \(total)"
     }
     
     
