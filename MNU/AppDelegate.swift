@@ -31,7 +31,9 @@ import Cocoa
 
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
+class AppDelegate: NSObject,
+                   NSApplicationDelegate,
+                   NSMenuDelegate {
 
     // MARK: - UI Outlets
 
@@ -55,6 +57,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
     var task: Process? = nil
     var doNewTermTab: Bool = false
     var showImages: Bool = false
+    var optionClick: Bool = false
 
 
     // MARK: - App Lifecycle Functions
@@ -564,7 +567,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
 
         // Mark the fact that the menu has changed (so it can be saved on exit)
-        self.hasChanged = true
+        // provided that we're not just showing the alternative view
+        if !self.optionClick {
+            self.hasChanged = true
+        }
 
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
@@ -575,6 +581,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
             // If the item is not hidden, add it to the NSMenu
             if !item.isHidden {
+                self.appMenu!.addItem(menuItem)
+                self.appMenu!.addItem(NSMenuItem.separator())
+            } else if self.optionClick {
+                // However, on an option-click show ALL the items anyway
                 self.appMenu!.addItem(menuItem)
                 self.appMenu!.addItem(NSMenuItem.separator())
             }
@@ -847,5 +857,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                         object: self)
     }
+
+
+    func menuWillOpen(_ menu: NSMenu) {
+
+        // Check to see if the Option key was down when the menu was clicked
+        if NSEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) {
+            // Option key held down, so refresh the menu with the alternative view
+            self.optionClick = true
+            updateMenu()
+        } else if self.optionClick {
+            // Last click, the option key was held down, so this time we
+            // need to rebuild the menu to show it without the standard view
+            self.optionClick = false
+            updateMenu()
+        }
+    }
+
 }
+
+
 
