@@ -110,9 +110,12 @@ class ConfigureViewController:  NSViewController,
         // Show the controller's own window in the centre of the display
         self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
-        //self.configureWindow!.makeKeyAndOrderFront(nil)
-        self.configureWindow!.makeKey()
-        self.configureWindow!.orderFrontRegardless()
+        self.configureWindow!.makeKeyAndOrderFront(nil)
+        //self.configureWindow!.makeKey()
+        //self.configureWindow!.orderFrontRegardless()
+        // The following is required to bring the window to the front properly
+        // SEE https://stackoverflow.com/questions/7460092/nswindow-makekeyandorderfront-makes-window-appear-but-not-key-or-front
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     
