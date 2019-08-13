@@ -36,8 +36,8 @@ class FeedbackSheetViewController: NSViewController,
 
     // MARK: - UI Outlets
 
+    @IBOutlet var feedbackSheet: NSWindow!
     @IBOutlet weak var feedbackText: NSTextField!
-    @IBOutlet weak var feedbackSheet: NSWindow!
     @IBOutlet weak var connectionProgress: NSProgressIndicator!
     
 

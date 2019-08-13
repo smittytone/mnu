@@ -35,11 +35,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - UI Outlets
 
-    @IBOutlet var appControlView: NSView!                  // The last view on the menu is the control bar
+    @IBOutlet var appControlView: NSView!                       // The last view on the menu is the control bar
     @IBOutlet weak var appControlQuitButton: NSButton!          // The Quit button
     @IBOutlet weak var appControlConfigureButton: NSButton!     // The Configure button
     @IBOutlet weak var appControlHelpButton: NSButton!          // The Help button
-    @IBOutlet weak var cwvc: ConfigureViewController!           // The Configure window controller
+    @IBOutlet var cwvc: ConfigureViewController!                // The Configure window controller
 
     
     // MARK: - App Properties

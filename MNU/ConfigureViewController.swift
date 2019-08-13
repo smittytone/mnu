@@ -43,7 +43,7 @@ class ConfigureViewController:  NSViewController,
     // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
     @IBOutlet weak var menuItemsCountText: NSTextField!
-    @IBOutlet weak var aivc: AddUserItemViewController!
+    @IBOutlet var aivc: AddUserItemViewController!
     @IBOutlet weak var menuItemsHelpButton: NSButton!
 
     // Preferences Tab
@@ -54,7 +54,7 @@ class ConfigureViewController:  NSViewController,
 
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
-    @IBOutlet weak var fbvc: FeedbackSheetViewController!
+    @IBOutlet var fbvc: FeedbackSheetViewController!
     
 
     // MARK: - Class Properties
