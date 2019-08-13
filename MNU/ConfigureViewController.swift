@@ -490,7 +490,7 @@ class ConfigureViewController:  NSViewController,
     
     override func keyDown(with event: NSEvent) {
         
-        // Catch key events to trap ESC (close window) and arrows (cycle through tabs)
+        // Catch key events to trap ESC (close window), arrows (cycle through tabs), CMD-M (minimize)
         
         if event.keyCode == MNU_CONSTANTS.MENU_ESC_KEY {
             // ESC key pressed
@@ -534,6 +534,13 @@ class ConfigureViewController:  NSViewController,
                 self.windowTabView.selectPreviousTabViewItem(self)
                 return
             }
+        }
+        
+        if event.keyCode == 46 && event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
+            // CMD-M pressed
+            // Minimize the window
+            self.configureWindow!.miniaturize(self)
+            return
         }
         
         // Pass on allow other key events
