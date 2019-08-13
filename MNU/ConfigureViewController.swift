@@ -137,7 +137,7 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func doCancel(sender: Any?) {
 
         // The user clicked 'Cancel', so hust close the configure window
-        self.configureWindow!.close()
+        self.configureWindow!.performClose(sender)
     }
 
 
@@ -438,17 +438,21 @@ class ConfigureViewController:  NSViewController,
         if self.hasChanged {
             // There are unsaved changes - warn the user
             let alert = NSAlert.init()
-            alert.messageText = "You have unapplied changed?"
-            alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure window?"
+            alert.messageText = "You have unapplied changes"
+            alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
             alert.addButton(withTitle: "Yes")
             alert.addButton(withTitle: "No")
+            alert.addButton(withTitle: "Cancel")
             alert.beginSheetModal(for: self.configureWindow!) { (selection) in
                 if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
-                    // The user said yes, so add MNU to the login items system preference
+                    // The user said YES, so add MNU to the login items system preference
                     self.doSave(sender: nil)
                 }
-
-                self.configureWindow!.close()
+                
+                if selection != NSApplication.ModalResponse.alertThirdButtonReturn {
+                    // The user said NO, so add MNU to the login items system preference
+                    self.configureWindow!.close()
+                }
             }
 
             return false
