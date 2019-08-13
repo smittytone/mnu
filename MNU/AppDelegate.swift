@@ -35,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
 
     // MARK: - UI Outlets
 
-    @IBOutlet weak var appControlView: NSView!                  // The last view on the menu is the control bar
+    @IBOutlet var appControlView: NSView!                  // The last view on the menu is the control bar
     @IBOutlet weak var appControlQuitButton: NSButton!          // The Quit button
     @IBOutlet weak var appControlConfigureButton: NSButton!     // The Configure button
     @IBOutlet weak var appControlHelpButton: NSButton!          // The Help button
@@ -643,10 +643,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSMenuDelegate {
         // Add the app's control bar item
         // We always add this after creating or updating the menu
         let appItem: NSMenuItem = NSMenuItem.init(title: "APP-CONTROL",
-                                                  action: #selector(self.doHelp),
+                                                  action: nil,
                                                   keyEquivalent: "")
         appItem.view = self.appControlView
-        appItem.target = self;
+        appItem.target = self
         self.appMenu!.addItem(appItem)
     }
 
