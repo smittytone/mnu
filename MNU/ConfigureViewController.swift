@@ -164,15 +164,15 @@ class ConfigureViewController:  NSViewController,
         // TODO Calculate the number of DISPLAYED items and limit that rather than the total
         if let items = self.menuItems {
             if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
+                // Limit reached - warn the user
                 let alert: NSAlert = NSAlert()
                 alert.messageText = "You have already added the maximum number of items to MNU"
                 alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
                 alert.addButton(withTitle: "OK")
                 alert.beginSheetModal(for: self.configureWindow!,
                                       completionHandler: nil)
+                return
             }
-            
-            return
         }
         
         // Tell the Add User Item view controller to display its own sheet as
