@@ -215,6 +215,7 @@
                                                         <connections>
                                                             <outlet property="dataSource" destination="qtv-Yg-ACO" id="Jx3-mI-nf8"/>
                                                             <outlet property="delegate" destination="qtv-Yg-ACO" id="yQs-Jo-Bge"/>
+                                                            <outlet property="menu" destination="eSk-5e-nAc" id="trH-cv-nhk"/>
                                                         </connections>
                                                     </tableView>
                                                 </subviews>
@@ -809,6 +810,32 @@ Gw
             </view>
             <point key="canvasLocation" x="736" y="-242"/>
         </window>
+        <menu title="Config Window Contextual" showsStateColumn="NO" autoenablesItems="NO" id="eSk-5e-nAc">
+            <items>
+                <menuItem title="Show/Hide" id="SWJ-Ox-epa">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doContextShowHideWithSender:" target="qtv-Yg-ACO" id="hsS-vl-PdN"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Edit" id="wi6-s2-PFl">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doContextEditScriptWithSender:" target="qtv-Yg-ACO" id="itT-cH-qRx"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Delete" id="E3i-Wu-7kY">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doContextDeleteScriptWithSender:" target="qtv-Yg-ACO" id="BeT-L0-FFF"/>
+                    </connections>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="delegate" destination="qtv-Yg-ACO" id="OaP-65-Ir8"/>
+            </connections>
+            <point key="canvasLocation" x="423" y="-271"/>
+        </menu>
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>

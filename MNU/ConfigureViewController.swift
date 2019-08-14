@@ -34,7 +34,8 @@ class ConfigureViewController:  NSViewController,
                                 NSTabViewDelegate,
                                 NSTableViewDataSource,
                                 NSTableViewDelegate,
-                                NSWindowDelegate {
+                                NSWindowDelegate,
+                                NSMenuDelegate {
 
     // MARK: - UI Outlets
 
@@ -165,70 +166,115 @@ class ConfigureViewController:  NSViewController,
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.showSheet()
     }
+    
+    @IBAction @objc func doContextShowHide(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        let item: MenuItem = menuItem.representedObject as! MenuItem
+        doShowHide(item)
+    }
 
-
+    
     @objc func doShowHideSwitch(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
         if let item: MenuItem = button.menuItem {
-            // Flip the item's recorded state and update the table
-            item.isHidden = !item.isHidden
-            self.hasChanged = true
-
-            // Reload the table data and update the status line
-            self.menuItemsTableView.reloadData()
-            displayItemCount()
+            doShowHide(item)
         }
     }
+    
+    
+    func doShowHide(_ item: MenuItem) {
+        
+        // Flip the item's recorded state and update the table
+        item.isHidden = !item.isHidden
+        self.hasChanged = true
+        
+        // Reload the table data and update the status line
+        self.menuItemsTableView.reloadData()
+        displayItemCount()
+    }
 
-
+    
+    @IBAction func doContextEditScript (sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        let item: MenuItem = menuItem.representedObject as! MenuItem
+        doEdit(item)
+    }
+    
+    
     @objc func doEditScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
         if let item: MenuItem = button.menuItem {
-            // Populate the sheet's fields for editing
-            self.aivc.newMenuItem = item
-            self.aivc.isEditing = true
-            self.aivc.parentWindow = self.configureWindow!
-            
-            // Tell the add user item view controller to display its sheet
-            self.aivc.showSheet()
+            doEdit(item)
         }
     }
 
-
+    
+    func doEdit(_ item: MenuItem) {
+        
+        // Populate the sheet's fields for editing
+        self.aivc.newMenuItem = item
+        self.aivc.isEditing = true
+        self.aivc.parentWindow = self.configureWindow!
+        
+        // Tell the add user item view controller to display its sheet
+        self.aivc.showSheet()
+    }
+    
+    
+    @IBAction @objc func doContextDeleteScript(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doDelete(item)
+        }
+    }
+    
+    
     @objc func doDeleteScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
         if let item: MenuItem = button.menuItem {
-            // Present an alert to warn the user about deleting the Menu Item
-            let alert: NSAlert = NSAlert()
-            alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
-            alert.addButton(withTitle: "Yes")
-            alert.addButton(withTitle: "No")
-            alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
-                if response == NSApplication.ModalResponse.alertFirstButtonReturn {
-                    // The user clicked 'Yes' so find the item referenced by the button,
-                    // and remove it from the configure window controller's list
-                    if let list = self.menuItems {
-                        if list.items.count > 0 {
-                            var index = -1
-                            for i in 0..<list.items.count {
-                                let anItem: MenuItem = list.items[i]
-                                if anItem == item {
-                                    index = i
-                                    break
-                                }
+            doDelete(item)
+        }
+    }
+    
+    
+    func doDelete(_ item: MenuItem) {
+        
+        // Present an alert to warn the user about deleting the Menu Item
+        let alert: NSAlert = NSAlert()
+        alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user clicked 'Yes' so find the item referenced by the button,
+                // and remove it from the configure window controller's list
+                if let list = self.menuItems {
+                    if list.items.count > 0 {
+                        var index = -1
+                        for i in 0..<list.items.count {
+                            let anItem: MenuItem = list.items[i]
+                            if anItem == item {
+                                index = i
+                                break
                             }
-
-                            if index != -1 {
-                                list.items.remove(at: index)
-                                self.hasChanged = true
-                                self.menuItemsTableView.reloadData()
-                            }
+                        }
+                        
+                        if index != -1 {
+                            list.items.remove(at: index)
+                            self.hasChanged = true
+                            self.menuItemsTableView.reloadData()
                         }
                     }
                 }
@@ -550,4 +596,46 @@ class ConfigureViewController:  NSViewController,
         // Pass on allow other key events
         super.keyDown(with: event)
     }
+    
+    
+    // MARK: - NSMenuDelegate Functions
+    
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        
+        // We come here before displaying the NSTableView's set contextual menu
+        // (its 'menu' property, set in Interface Builder) in order to update
+        // the menu's items for the Menu Item clicked on
+        
+        // Get the NSTableView row that the user clicked
+        let clickedRow: Int = self.menuItemsTableView.clickedRow
+        
+        if clickedRow > -1 {
+            // If the click was on a valid row, use that index to
+            // get the MenuItem represented at the clicked row
+            if let items = self.menuItems {
+                let item: MenuItem = items.items[clickedRow]
+                // Set the contextual menu's three items (Show/Hide, Edit, Delete)
+                // to point to the Menu Item represented at the clicked row
+                menu.item(at: 0)!.representedObject = item
+                menu.item(at: 1)!.representedObject = item
+                menu.item(at: 2)!.representedObject = item
+                
+                // Contextualise the Show/Hide menu item's title
+                menu.item(at: 0)?.title = item.isHidden ? "Show" : "Hide"
+                
+                // Assume all of the NSMenuItems are required...
+                menu.item(at: 0)!.isEnabled = true
+                menu.item(at: 1)!.isEnabled = true
+                menu.item(at: 2)!.isEnabled = true
+                
+                // ... but disabled those that are not needed by the Menu Item
+                // (ie. it represents a built-in item)
+                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    menu.item(at: 1)!.isEnabled = false
+                    menu.item(at: 2)!.isEnabled = false
+                }
+            }
+        }
+    }
+
 }
