@@ -23,11 +23,11 @@
         </customObject>
         <customObject id="YLy-65-1bz" customClass="NSFontManager"/>
         <customView id="LQO-f4-D0U">
-            <rect key="frame" x="0.0" y="0.0" width="140" height="34"/>
+            <rect key="frame" x="0.0" y="0.0" width="140" height="28"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s7c-vc-KUP">
-                    <rect key="frame" x="60" y="7" width="20" height="20"/>
+                    <rect key="frame" x="60" y="4" width="20" height="20"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="eop-Za-25d"/>
                         <constraint firstAttribute="width" constant="20" id="fFs-jA-X5F"/>
@@ -41,7 +41,7 @@
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
-                    <rect key="frame" x="100" y="7" width="20" height="20"/>
+                    <rect key="frame" x="100" y="4" width="20" height="20"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="20" id="5LM-m6-Vdl"/>
                         <constraint firstAttribute="height" constant="20" id="HXD-2d-G31"/>
@@ -55,7 +55,7 @@
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
-                    <rect key="frame" x="20" y="7" width="20" height="20"/>
+                    <rect key="frame" x="20" y="4" width="20" height="20"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="20" id="3vs-bo-sv0"/>
                         <constraint firstAttribute="height" constant="20" id="g9t-yj-ziS"/>

@@ -589,6 +589,16 @@ class AppDelegate: NSObject,
                 self.appMenu!.addItem(NSMenuItem.separator())
             }
         }
+        
+        // No items being shown? Then add a note about it!
+        if self.appMenu!.items.count < 1 {
+            let noteItem: NSMenuItem = NSMenuItem.init(title: "You have hidden all your items!",
+                                                       action: #selector(doConfigure(sender:)),
+                                                       keyEquivalent: "")
+            noteItem.isEnabled = false
+            self.appMenu!.addItem(noteItem)
+            self.appMenu!.addItem(NSMenuItem.separator())
+        }
 
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
