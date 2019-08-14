@@ -158,7 +158,23 @@ class ConfigureViewController:  NSViewController,
 
     
     @IBAction @objc func doNewScriptItem(sender: Any?) {
-
+        
+        // Check that the user has not added too many items already
+        // current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'
+        // TODO Calculate the number of DISPLAYED items and limit that rather than the total
+        if let items = self.menuItems {
+            if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
+                let alert: NSAlert = NSAlert()
+                alert.messageText = "You have already added the maximum number of items to MNU"
+                alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
+                alert.addButton(withTitle: "OK")
+                alert.beginSheetModal(for: self.configureWindow!,
+                                      completionHandler: nil)
+            }
+            
+            return
+        }
+        
         // Tell the Add User Item view controller to display its own sheet as
         // ready to accept a new item
         self.aivc.isEditing = false
@@ -166,6 +182,7 @@ class ConfigureViewController:  NSViewController,
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.showSheet()
     }
+    
     
     @IBAction @objc func doContextShowHide(sender: Any) {
         
