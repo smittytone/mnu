@@ -39,22 +39,22 @@ class ConfigureViewController:  NSViewController,
 
     // MARK: - UI Outlets
 
-    @IBOutlet weak var windowTabView: NSTabView!
+    @IBOutlet var windowTabView: NSTabView!
 
     // Menu Items Tab
-    @IBOutlet weak var menuItemsTableView: NSTableView!
-    @IBOutlet weak var menuItemsCountText: NSTextField!
+    @IBOutlet var menuItemsTableView: NSTableView!
+    @IBOutlet var menuItemsCountText: NSTextField!
     @IBOutlet var aivc: AddUserItemViewController!
-    @IBOutlet weak var menuItemsHelpButton: NSButton!
+    @IBOutlet var menuItemsHelpButton: NSButton!
 
     // Preferences Tab
-    @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
-    @IBOutlet weak var prefsNewTermTabButton: NSButton!
-    @IBOutlet weak var prefsShowControlsButton: NSButton!
-    @IBOutlet weak var prefsHelpButton: NSButton!
+    @IBOutlet var prefsLaunchAtLoginButton: NSButton!
+    @IBOutlet var prefsNewTermTabButton: NSButton!
+    @IBOutlet var prefsShowControlsButton: NSButton!
+    @IBOutlet var prefsHelpButton: NSButton!
 
     // About... Tab
-    @IBOutlet weak var aboutVersionText: NSTextField!
+    @IBOutlet var aboutVersionText: NSTextField!
     @IBOutlet var fbvc: FeedbackSheetViewController!
     
 

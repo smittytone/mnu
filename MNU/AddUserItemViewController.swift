@@ -36,11 +36,11 @@ class AddUserItemViewController: NSViewController,
     // MARK: - UI Outlets
 
     @IBOutlet var addItemSheet: NSWindow!
-    @IBOutlet weak var itemScriptText: NSTextField!
-    @IBOutlet weak var menuTitleText: NSTextField!
-    @IBOutlet weak var textCount: NSTextField!
-    @IBOutlet weak var titleText: NSTextField!
-    @IBOutlet weak var saveButton: NSButton!
+    @IBOutlet var itemScriptText: NSTextField!
+    @IBOutlet var menuTitleText: NSTextField!
+    @IBOutlet var textCount: NSTextField!
+    @IBOutlet var titleText: NSTextField!
+    @IBOutlet var saveButton: NSButton!
 
 
     // MARK: - Class Properties

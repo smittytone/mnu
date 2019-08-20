@@ -37,12 +37,8 @@ class AppDelegate: NSObject,
 
     // MARK: - UI Outlets
 
-    @IBOutlet var appControlView: NSView!                       // The last view on the menu is the control bar
-    @IBOutlet weak var appControlQuitButton: NSButton!          // The Quit button
-    @IBOutlet weak var appControlConfigureButton: NSButton!     // The Configure button
-    @IBOutlet weak var appControlHelpButton: NSButton!          // The Help button
     @IBOutlet var cwvc: ConfigureViewController!                // The Configure window controller
-
+    @IBOutlet var acvc: MenuControlsViewController!             // The control bar view controller
     
     // MARK: - App Properties
 
@@ -108,11 +104,6 @@ class AppDelegate: NSObject,
         // Create the app's menu
         createMenu()
 
-        // Set up the control bar button tooltips
-        self.appControlConfigureButton.toolTip = "Click to configure MNU"
-        self.appControlQuitButton.toolTip = "Click to quit MNU"
-        self.appControlHelpButton.toolTip = "Click to view online help information"
-        
         // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
@@ -130,6 +121,11 @@ class AppDelegate: NSObject,
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
                        object: cwvc)
+
+        nc.addObserver(self,
+                       selector: #selector(self.showConfigureWindow),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
+                       object: acvc)
     }
 
 
@@ -389,23 +385,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doQuit(sender: Any?) {
-
-        // Quit the app
-        NSApp.terminate(self)
-    }
-
-
-    @IBAction @objc func doHelp(sender: Any?) {
-
-        // Show the 'Help' via the website
-        // TODO create web page
-        // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html")!)
-    }
-
-
-    @IBAction @objc func doConfigure(sender: Any?) {
+    @objc func showConfigureWindow() {
 
         // Duplicate the current item list to pass on to the configure window view controller
         let list: MenuItemList = MenuItemList()
@@ -579,7 +559,7 @@ class AppDelegate: NSObject,
         // No items being shown? Then add a note about it!
         if self.appMenu!.items.count < 1 {
             let noteItem: NSMenuItem = NSMenuItem.init(title: "You have hidden all your items!",
-                                                       action: #selector(doConfigure(sender:)),
+                                                       action: #selector(self.showConfigureWindow),
                                                        keyEquivalent: "")
             noteItem.isEnabled = false
             self.appMenu!.addItem(noteItem)
@@ -648,12 +628,9 @@ class AppDelegate: NSObject,
 
         // Add the app's control bar item
         // We always add this after creating or updating the menu
-        let appItem: NSMenuItem = NSMenuItem.init(title: "APP-CONTROL",
-                                                  action: nil,
-                                                  keyEquivalent: "")
-        appItem.view = self.appControlView
-        appItem.target = self
-        self.appMenu!.addItem(appItem)
+        if let appItem = self.acvc.controlMenuItem {
+            self.appMenu!.addItem(appItem)
+        }
     }
 
 

@@ -14,10 +14,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="Voe-Tx-rLC" customClass="AppDelegate" customModule="MNU" customModuleProvider="target">
             <connections>
-                <outlet property="appControlConfigureButton" destination="s7c-vc-KUP" id="hAl-Uu-nTE"/>
-                <outlet property="appControlHelpButton" destination="HNC-XV-ioA" id="uYE-90-upK"/>
-                <outlet property="appControlQuitButton" destination="d0n-TZ-J0W" id="3Ou-H5-aAx"/>
-                <outlet property="appControlView" destination="LQO-f4-D0U" id="fMs-sX-JJN"/>
+                <outlet property="acvc" destination="6lM-F5-yZG" id="BdO-ag-KoO"/>
                 <outlet property="cwvc" destination="qtv-Yg-ACO" id="Inf-oR-edV"/>
             </connections>
         </customObject>
@@ -37,7 +34,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="doConfigureWithSender:" target="Voe-Tx-rLC" id="dL7-4D-xpw"/>
+                        <action selector="doConfigureWithSender:" target="6lM-F5-yZG" id="MVl-Ut-vhS"/>
                     </connections>
                 </button>
                 <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
@@ -51,7 +48,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="doHelpWithSender:" target="Voe-Tx-rLC" id="FSI-Sp-gdE"/>
+                        <action selector="doHelpWithSender:" target="6lM-F5-yZG" id="tXA-d2-C7L"/>
                     </connections>
                 </button>
                 <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="d0n-TZ-J0W">
@@ -65,7 +62,7 @@
                         <font key="font" metaFont="system"/>
                     </buttonCell>
                     <connections>
-                        <action selector="doQuitWithSender:" target="Voe-Tx-rLC" id="Cra-gY-NMs"/>
+                        <action selector="doQuitWithSender:" target="6lM-F5-yZG" id="gkt-nl-Cza"/>
                     </connections>
                 </button>
             </subviews>
@@ -83,7 +80,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -520,7 +517,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -697,7 +694,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -810,6 +807,15 @@ Gw
             </view>
             <point key="canvasLocation" x="736" y="-242"/>
         </window>
+        <viewController id="6lM-F5-yZG" customClass="MenuControlsViewController" customModule="MNU" customModuleProvider="target">
+            <connections>
+                <outlet property="appControlConfigureButton" destination="s7c-vc-KUP" id="buX-YD-6Aw"/>
+                <outlet property="appControlHelpButton" destination="HNC-XV-ioA" id="FTm-IB-wDe"/>
+                <outlet property="appControlQuitButton" destination="d0n-TZ-J0W" id="1kg-J9-gIu"/>
+                <outlet property="appControlView" destination="LQO-f4-D0U" id="XP3-Ya-bgz"/>
+                <outlet property="view" destination="LQO-f4-D0U" id="rOr-eP-948"/>
+            </connections>
+        </viewController>
         <menu title="Config Window Contextual" showsStateColumn="NO" autoenablesItems="NO" id="eSk-5e-nAc">
             <items>
                 <menuItem title="Show/Hide" id="SWJ-Ox-epa">
