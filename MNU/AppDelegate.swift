@@ -769,11 +769,11 @@ class AppDelegate: NSObject,
         #endif
         
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it
-        var script: String = "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\")"
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
-        if !doTermNewTab { script += "in tab 1 of window 1" }
-        script += "\nend tell"
+        let tabSection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
+
+        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(code)\")\(tabSection)\nelse\ndo script (\"\(code)\")\nend if\nend tell"
         
         #if DEBUG
         NSLog("MNU running AppleScript \'\(script)\'")
