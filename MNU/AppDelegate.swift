@@ -194,29 +194,15 @@ class AppDelegate: NSObject,
     }
 
 
+    // MARK: - Auto-start Functions
+
     func toggleStartupLaunch(doTurnOn: Bool) {
 
         // Enable or disable (depending on the value of 'doTurnOn') the launching
         // of MNU at user login. This is activated by a notification from the
         // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
-        if doTurnOn {
-            // Turn on auto-start on login
-            let appPath: String = Bundle.main.bundlePath
-            if let script: String = Bundle.main.path(forResource: "AddToLogin",
-                                                     ofType: "scpt") {
-                runProcess(app: "/usr/bin/osascript",
-                           with: [script, appPath],
-                           doBlock: true)
-            }
-        } else {
-            // Turn off auto-start on login
-            if let script: String = Bundle.main.path(forResource: "RemoveLogin",
-                                                     ofType: "scpt") {
-                runProcess(app: "/usr/bin/osascript",
-                           with: [script],
-                           doBlock: true)
-            }
-        }
+        runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"),
+                        doAddPath: doTurnOn)
     }
 
 
@@ -827,6 +813,24 @@ class AppDelegate: NSObject,
          let result = ascript.executeAndReturnError(nil)
          NSLog(result.stringValue ?? "N/A")
          */
+    }
+
+
+    func runBundleScript(named scriptName: String, doAddPath: Bool) {
+
+        // Load and run the named script from the application bundle
+
+        if let script: String = Bundle.main.path(forResource: scriptName,
+                                                 ofType: "scpt") {
+            let appPath: String = Bundle.main.bundlePath
+            var args: [String] = [script]
+            if doAddPath { args.append(appPath) }
+
+            // Run the process
+            runProcess(app: "/usr/bin/osascript",
+                       with: args,
+                       doBlock: true)
+        }
     }
     
     
