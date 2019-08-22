@@ -410,18 +410,21 @@ class ConfigureViewController:  NSViewController,
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.menuItem = item
                 cell!.buttonA.toolTip = "Delete Item"
+                cell!.buttonA.isEnabled = true
                 
                 cell!.buttonB.image = NSImage.init(named: "NSActionTemplate")
                 cell!.buttonB.action = #selector(self.doEditScript(sender:))
                 cell!.buttonB.menuItem = item
                 cell!.buttonB.toolTip = "Edit Item"
+                cell!.buttonB.isEnabled = true
                 
                 cell!.buttonC.image = NSImage.init(named: (item.isHidden ? "NSStatusUnavailable" : "NSStatusAvailable"))
                 cell!.buttonC.action = #selector(self.doShowHideSwitch(sender:))
                 cell!.buttonC.menuItem = item
                 cell!.buttonC.toolTip = "Show/Hide Item"
+                cell!.buttonC.isEnabled = true
                 
-                if item.type == MNU_CONSTANTS.TYPES.SWITCH || (item.type == MNU_CONSTANTS.TYPES.SCRIPT && item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER) {
+                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
                     cell!.buttonA.isEnabled = false

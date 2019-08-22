@@ -31,7 +31,8 @@ import Cocoa
 
 
 class AddUserItemViewController: NSViewController,
-                                 NSTextFieldDelegate {
+                                 NSTextFieldDelegate,
+                                 NSPopoverDelegate {
 
     // MARK: - UI Outlets
 
@@ -42,6 +43,9 @@ class AddUserItemViewController: NSViewController,
     @IBOutlet var titleText: NSTextField!
     @IBOutlet var saveButton: NSButton!
 
+    @IBOutlet var iconButton: AddUserItemIconButton!
+    @IBOutlet var iconPopoverController: AddUserItemIconsController!
+
 
     // MARK: - Class Properties
 
@@ -49,6 +53,8 @@ class AddUserItemViewController: NSViewController,
     var currentMenuItems: MenuItemList? = nil
     var parentWindow: NSWindow? = nil
     var isEditing: Bool = false
+    var iconPopover: NSPopover? = nil
+    var currentIconIndex: Int = 0
 
     
     // MARK: - Lifecycle Functions
@@ -59,6 +65,12 @@ class AddUserItemViewController: NSViewController,
 
         // Set the name length indicator
         self.textCount.stringValue = "\(menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
+
+        // Assemble the image matrix
+        makeIconMatrix()
+
+        // Make sure the matrix controller knows which button was clicked on
+        self.iconPopoverController.button = self.iconButton
     }
 
 
@@ -80,6 +92,7 @@ class AddUserItemViewController: NSViewController,
                 self.menuTitleText.stringValue = item.title
                 self.saveButton.title = "Update"
                 self.titleText.stringValue = "Edit This Terminal Command"
+                self.iconButton.image = self.iconPopoverController.icons.object(at: item.iconIndex) as? NSImage
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
@@ -151,6 +164,7 @@ class AddUserItemViewController: NSViewController,
             newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
+            newItem.iconIndex = self.iconButton.index
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -166,6 +180,11 @@ class AddUserItemViewController: NSViewController,
                 if item.script != self.itemScriptText.stringValue {
                     itemHasChanged = true
                     item.script = self.itemScriptText.stringValue
+                }
+
+                if item.iconIndex != self.iconButton.index {
+                    itemHasChanged = true
+                    item.iconIndex = self.iconButton.index
                 }
             }
         }
@@ -189,6 +208,15 @@ class AddUserItemViewController: NSViewController,
         // TODO create web page
         // TODO provide offline help
         NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#add-edit")!)
+    }
+
+
+    @IBAction @objc  func doShowIcons(sender: Any) {
+
+        // Show the icon matrix
+        self.iconPopover!.show(relativeTo: self.iconButton.bounds,
+                               of: self.iconButton,
+                               preferredEdge: NSRectEdge.maxY)
     }
 
 
@@ -227,5 +255,23 @@ class AddUserItemViewController: NSViewController,
             return;
         }
     }
+
+
+
+
+    func makeIconMatrix() {
+
+        // Assemble the popover if it hasn't been assembled yet
+        if self.iconPopover == nil {
+            self.iconPopover = NSPopover.init()
+            self.iconPopover!.contentViewController = self.iconPopoverController
+            self.iconPopover!.delegate = self
+            self.iconPopover!.behavior = NSPopover.Behavior.transient
+            self.iconPopoverController.button = self.iconButton
+            self.iconButton.icons = self.iconPopoverController.icons
+        }
+    }
+
+
 
 }

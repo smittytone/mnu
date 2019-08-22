@@ -640,6 +640,32 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-Df-MOS">
+                        <rect key="frame" x="18" y="79" width="164" height="17"/>
+                        <constraints>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="67" id="AhB-ka-7z8"/>
+                            <constraint firstAttribute="height" constant="17" id="knu-iD-wM5"/>
+                        </constraints>
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Menu icon (click to select)" id="7vC-gn-aJ8">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <button translatesAutoresizingMaskIntoConstraints="NO" id="mU3-js-THC" customClass="AddUserItemIconButton" customModule="MNU" customModuleProvider="target">
+                        <rect key="frame" x="188" y="76" width="20" height="20"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="20" id="5cs-Go-4Hy"/>
+                            <constraint firstAttribute="width" constant="20" id="Ssc-n9-xwL"/>
+                        </constraints>
+                        <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="logo_generic" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="TtH-FU-8bF">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="doShowIconsWithSender:" target="8Wq-hu-xtq" id="eww-DT-ntE"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="v9D-Om-6Ns" secondAttribute="trailing" constant="20" id="1BB-s2-cdM"/>
@@ -658,16 +684,20 @@ Gw
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="top" secondItem="luN-mo-wfm" secondAttribute="bottom" constant="8" id="K07-mr-EJ1"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="N5p-wj-63E"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="SEp-aZ-qQR"/>
+                    <constraint firstItem="mU3-js-THC" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" constant="8" id="dmM-qL-2Xd"/>
                     <constraint firstAttribute="trailing" secondItem="PIQ-xd-jED" secondAttribute="trailing" constant="20" id="f2f-Zc-pRw"/>
                     <constraint firstAttribute="bottom" secondItem="WiG-6V-3VE" secondAttribute="bottom" constant="20" id="hCg-2a-Ll8"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="hKK-Rd-F5s"/>
+                    <constraint firstItem="mU3-js-THC" firstAttribute="leading" secondItem="TZc-Df-MOS" secondAttribute="trailing" constant="8" id="k1F-3T-6aO"/>
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="lDu-cX-2AX"/>
                     <constraint firstItem="WiG-6V-3VE" firstAttribute="leading" secondItem="Jm6-VI-8yC" secondAttribute="trailing" constant="12" id="pGg-79-wsz"/>
                     <constraint firstAttribute="trailing" secondItem="oWJ-xC-IC0" secondAttribute="trailing" constant="20" id="q47-5Q-erD"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="top" secondItem="kbT-Jg-8jd" secondAttribute="top" constant="12" id="tmL-kk-dAT"/>
+                    <constraint firstItem="TZc-Df-MOS" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="vkd-IZ-2qV"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="top" secondItem="Bc4-ey-6Gh" secondAttribute="bottom" constant="16" id="wIs-ee-yxj"/>
                     <constraint firstAttribute="trailing" secondItem="3GM-GK-4Xv" secondAttribute="trailing" constant="20" id="wX2-QX-wv0"/>
                     <constraint firstItem="luN-mo-wfm" firstAttribute="top" secondItem="3GM-GK-4Xv" secondAttribute="bottom" constant="8" id="zhN-5I-t2N"/>
+                    <constraint firstItem="TZc-Df-MOS" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" constant="8" id="zs6-pW-tbL"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="736" y="193"/>
@@ -675,6 +705,8 @@ Gw
         <viewController id="8Wq-hu-xtq" customClass="AddUserItemViewController" customModule="MNU" customModuleProvider="target">
             <connections>
                 <outlet property="addItemSheet" destination="wEA-E7-gG6" id="HSB-zg-B31"/>
+                <outlet property="iconButton" destination="mU3-js-THC" id="zQq-Ds-qnD"/>
+                <outlet property="iconPopoverController" destination="vBD-l2-SeN" id="isX-Z1-Im8"/>
                 <outlet property="itemScriptText" destination="3GM-GK-4Xv" id="0sH-hp-YAp"/>
                 <outlet property="menuTitleText" destination="PIQ-xd-jED" id="wYa-Xc-ULU"/>
                 <outlet property="saveButton" destination="WiG-6V-3VE" id="U7R-my-MQ1"/>
@@ -816,6 +848,18 @@ Gw
                 <outlet property="view" destination="LQO-f4-D0U" id="rOr-eP-948"/>
             </connections>
         </viewController>
+        <viewController id="vBD-l2-SeN" userLabel="Popover View Controller" customClass="AddUserItemIconsController" customModule="MNU" customModuleProvider="target">
+            <connections>
+                <outlet property="collectionView" destination="ecd-BA-2ts" id="YQO-CR-5H4"/>
+                <outlet property="view" destination="ecd-BA-2ts" id="ff6-3c-bcb"/>
+            </connections>
+        </viewController>
+        <popover id="u3O-7s-2mr">
+            <connections>
+                <outlet property="contentViewController" destination="vBD-l2-SeN" id="XA0-4h-z6i"/>
+                <outlet property="delegate" destination="8Wq-hu-xtq" id="Wel-Rh-7gQ"/>
+            </connections>
+        </popover>
         <menu title="Config Window Contextual" showsStateColumn="NO" autoenablesItems="NO" id="eSk-5e-nAc">
             <items>
                 <menuItem title="Show/Hide" id="SWJ-Ox-epa">
@@ -842,6 +886,38 @@ Gw
             </connections>
             <point key="canvasLocation" x="423" y="-271"/>
         </menu>
+        <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-PJ-SnZ">
+            <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
+            <clipView key="contentView" id="ziH-fv-EY4">
+                <rect key="frame" x="1" y="1" width="122" height="122"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <subviews>
+                    <collectionView id="ecd-BA-2ts">
+                        <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
+                        <collectionViewGridLayout key="collectionViewLayout" id="b8y-dY-qq6">
+                            <size key="minimumItemSize" width="20" height="20"/>
+                            <size key="maximumItemSize" width="20" height="20"/>
+                        </collectionViewGridLayout>
+                        <color key="primaryBackgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        <connections>
+                            <outlet property="dataSource" destination="vBD-l2-SeN" id="NRg-qH-Cp0"/>
+                            <outlet property="delegate" destination="vBD-l2-SeN" id="vOf-ae-XZx"/>
+                        </connections>
+                    </collectionView>
+                </subviews>
+                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+            </clipView>
+            <scroller key="horizontalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="YES" id="ZfY-DV-ZsY">
+                <rect key="frame" x="-100" y="-100" width="88" height="16"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <scroller key="verticalScroller" hidden="YES" wantsLayer="YES" verticalHuggingPriority="750" horizontal="NO" id="jnx-Xz-drc">
+                <rect key="frame" x="77" y="1" width="16" height="88"/>
+                <autoresizingMask key="autoresizingMask"/>
+            </scroller>
+            <point key="canvasLocation" x="542" y="-150"/>
+        </scrollView>
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
@@ -851,5 +927,6 @@ Gw
         <image name="button_configure" width="30" height="30"/>
         <image name="button_help" width="30" height="30"/>
         <image name="logo_app" width="32" height="32"/>
+        <image name="logo_generic" width="20" height="20"/>
     </resources>
 </document>

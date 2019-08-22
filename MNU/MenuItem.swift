@@ -41,8 +41,9 @@ class MenuItem: NSObject,
     var script: String = ""             // For user items, the bash command it will run
     var isNew: Bool = false             // Set to true when a user item is added
     var isHidden: Bool = false          // Set to true when a switch item is hidden by the user
+    var iconIndex: Int = 0
 
-    
+
     // MARK: NSCopying Functions
 
     func copy(with zone: NSZone? = nil) -> Any {
@@ -54,6 +55,7 @@ class MenuItem: NSObject,
         itemCopy.script = self.script
         itemCopy.isNew = self.isNew
         itemCopy.isHidden = self.isHidden
+        itemCopy.iconIndex = self.iconIndex
         return itemCopy
     }
 

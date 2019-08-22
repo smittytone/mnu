@@ -222,7 +222,7 @@ class AppDelegate: NSObject,
 
         // Generate a simple JSON string serialization of the specified Menu Item object
         var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
-        json += "\"code\":\(item.code),"
+        json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
         json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
         return json
     }
@@ -242,6 +242,11 @@ class AppDelegate: NSObject,
                 newItem.type = dict!["type"] as! Int
                 newItem.code = dict!["code"] as! Int
                 newItem.isHidden = dict!["hidden"] as! Bool
+
+                // New items
+                let iconIndex = dict!["icon"] as? Int
+                newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
+
                 return newItem
             } catch {
                 NSLog("Error in MNU.dejsonize(): \(error.localizedDescription)")
@@ -431,11 +436,18 @@ class AppDelegate: NSObject,
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
             // convert the serializations into real objects: Menu Items and their rewpresentative
             // NSMenuItems
+            let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
+
             for loadedItem: String in loadedItems {
                 if let itemInstance = dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
+
+                    // Set the custom image
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                        menuItem.image = icons.object(at: itemInstance.iconIndex) as? NSImage
+                    }
 
                     // If the item is not hidden, add it to the menu
                     if !itemInstance.isHidden {
@@ -522,6 +534,8 @@ class AppDelegate: NSObject,
 
     @objc func updateMenu() {
 
+        let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
+
         // We have received a notification from the Confiure window controller that the list of
         // Menu Items has changed in some way, so rebuild the menu from scratch
         if let itemList: MenuItemList = cwvc.menuItems {
@@ -544,6 +558,10 @@ class AppDelegate: NSObject,
         for item in self.items {
             // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
+
+            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+            }
 
             // If the item is not hidden, add it to the NSMenu
             if !item.isHidden {
