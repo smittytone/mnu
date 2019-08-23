@@ -36,6 +36,8 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Python script")
         self.tooltips.append("Node script")
         self.tooltips.append("Rust script")
+        self.tooltips.append("Bash script")
+        self.tooltips.append("AppleScript")
 
         // Configure the collection view
         configureCollectionView()

@@ -88,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				3B083B7922CC3C2E0025F081 /* MNU */,
+				3B083B7822CC3C2E0025F081 /* Products */,
 			);
 			sourceTree = "<group>";
 		};
@@ -97,7 +98,6 @@
 				3B083B7722CC3C2E0025F081 /* MNU.app */,
 			);
 			name = Products;
-			path = ..;
 			sourceTree = "<group>";
 		};
 		3B083B7922CC3C2E0025F081 /* MNU */ = {
@@ -120,7 +120,6 @@
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
 				3B01F0DC22EBEBF30045A78A /* Bundle Entities */,
-				3B083B7822CC3C2E0025F081 /* Products */,
 			);
 			path = MNU;
 			sourceTree = "<group>";
