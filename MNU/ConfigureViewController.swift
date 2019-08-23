@@ -71,9 +71,10 @@ class ConfigureViewController:  NSViewController,
     override func viewDidLoad() {
 
         super.viewDidLoad()
-        
-        // Ask out window to make us first responder (for key presses)
-        self.view.window!.makeFirstResponder(self)
+
+        // Ask our window to make the  first responder (for key presses)
+        self.configureWindow = self.view.window
+        self.configureWindow!.makeFirstResponder(self)
 
         // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([self.mnuPasteboardType])
@@ -86,9 +87,6 @@ class ConfigureViewController:  NSViewController,
                        name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                        object: nil)
 
-        // Set the add user item view controller's parent window
-        self.configureWindow = self.view.window!
-        
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
         self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
@@ -526,34 +524,6 @@ class ConfigureViewController:  NSViewController,
     }
 
     
-    // MARK: - Misc Functions
-
-    func displayItemCount() {
-
-        // Update the count of current menu items
-        var total = 0
-        var count = 0
-
-        if let list: MenuItemList = self.menuItems {
-            if list.items.count > 0 {
-                total = list.items.count
-                for item: MenuItem in list.items {
-                    if !item.isHidden {
-                        count += 1
-                    }
-                }
-            }
-        }
-
-        // Handle plurals in the text correctly, and subsitite 'no' for '0'
-        let itemText = count == 1 ? "item" : "items"
-        let countText = count == 0 ? "no" : "\(count)"
-
-        // Display the text
-        menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) visible out of \(total)"
-    }
-    
-    
     // MARK: - Key Event Handling Functions
     
     override func keyDown(with event: NSEvent) {
@@ -655,5 +625,48 @@ class ConfigureViewController:  NSViewController,
             }
         }
     }
+
+
+    // MARK: - NSTabViewDelegate Functions
+
+    func tabView(_ tabView: NSTabView, didSelect tabViewItem: NSTabViewItem?) {
+
+        // Catch tab view changes to prevent the view controller from being
+        // dropped from the window's responder chain. We need to do this in
+        // order to ensure the view controller continues to handle the key down
+        // events it is watching out for.
+        self.configureWindow!.makeFirstResponder(self)
+    }
+
+
+    // MARK: - Misc Functions
+
+    func displayItemCount() {
+
+        // Update the count of current menu items
+        var total = 0
+        var count = 0
+
+        if let list: MenuItemList = self.menuItems {
+            if list.items.count > 0 {
+                total = list.items.count
+                for item: MenuItem in list.items {
+                    if !item.isHidden {
+                        count += 1
+                    }
+                }
+            }
+        }
+
+        // Handle plurals in the text correctly, and subsitite 'no' for '0'
+        let itemText = count == 1 ? "item" : "items"
+        let countText = count == 0 ? "no" : "\(count)"
+
+        // Display the text
+        menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) visible out of \(total)"
+    }
+
+
+
 
 }
