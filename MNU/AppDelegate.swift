@@ -564,7 +564,7 @@ class AppDelegate: NSObject,
             // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
-            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER && self.showImages {
                 menuItem.image = icons.object(at: item.iconIndex) as? NSImage
             }
 
@@ -639,7 +639,7 @@ class AppDelegate: NSObject,
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                     menuItem.image = NSImage.init(named: "logo_brew")
                 default:
-                    menuItem.image = NSImage.init(named: "logo_generic")
+                    menuItem.image = nil
             }
         }
 

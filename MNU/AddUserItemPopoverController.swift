@@ -30,14 +30,17 @@ class AddUserItemPopoverController: NSViewController,
         super.viewDidLoad()
 
         // Add icon tooltips
-        self.tooltips.append("Generic script")
-        self.tooltips.append("Brew script")
-        self.tooltips.append("Git script")
-        self.tooltips.append("Python script")
-        self.tooltips.append("Node script")
-        self.tooltips.append("Rust script")
-        self.tooltips.append("Bash script")
+        self.tooltips.append("Hash Bang")
+        self.tooltips.append("Brew")
+        self.tooltips.append("GitHub")
+        self.tooltips.append("Python")
+        self.tooltips.append("Node")
+        self.tooltips.append("Rust")
+        self.tooltips.append("Bash")
         self.tooltips.append("AppleScript")
+        self.tooltips.append("Document")
+        self.tooltips.append("Settings")
+        self.tooltips.append("Folder")
 
         // Configure the collection view
         configureCollectionView()

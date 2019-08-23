@@ -108,6 +108,12 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_as")
         self.icons.add(image!)
+        image = NSImage.init(named: "logo_doc")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_cog")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_dir")
+        self.icons.add(image!)
     }
 
 
@@ -134,6 +140,8 @@ class AddUserItemViewController: NSViewController,
             self.menuTitleText.stringValue = ""
             self.saveButton.title = "Add"
             self.titleText.stringValue = "Add A New Terminal Command"
+            self.iconButton.image = self.icons.object(at: 0) as? NSImage
+            self.iconButton.index = 0
         } else {
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
@@ -141,7 +149,8 @@ class AddUserItemViewController: NSViewController,
                 self.menuTitleText.stringValue = item.title
                 self.saveButton.title = "Update"
                 self.titleText.stringValue = "Edit This Terminal Command"
-                self.iconButton.image = self.iconPopoverController.icons.object(at: item.iconIndex) as? NSImage
+                self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
+                self.iconButton.index = item.iconIndex
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
