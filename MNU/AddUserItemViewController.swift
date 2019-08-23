@@ -42,9 +42,8 @@ class AddUserItemViewController: NSViewController,
     @IBOutlet var textCount: NSTextField!
     @IBOutlet var titleText: NSTextField!
     @IBOutlet var saveButton: NSButton!
-
     @IBOutlet var iconButton: AddUserItemIconButton!
-    @IBOutlet var iconPopoverController: AddUserItemIconsController!
+    @IBOutlet var iconPopoverController: AddUserItemPopoverController!
 
 
     // MARK: - Class Properties
@@ -54,9 +53,9 @@ class AddUserItemViewController: NSViewController,
     var parentWindow: NSWindow? = nil
     var isEditing: Bool = false
     var iconPopover: NSPopover? = nil
-    var currentIconIndex: Int = 0
+    var icons: NSMutableArray = NSMutableArray.init()
 
-    
+
     // MARK: - Lifecycle Functions
 
     override func viewDidLoad() {
@@ -66,11 +65,57 @@ class AddUserItemViewController: NSViewController,
         // Set the name length indicator
         self.textCount.stringValue = "\(menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
 
-        // Assemble the image matrix
+        // Set up the custom script icons - these will be accessed by other objects, including
+        // 'iconButton' and 'iconPopoverController'
         makeIconMatrix()
 
-        // Make sure the matrix controller knows which button was clicked on
+        // Configure the AddUserItemsIconController
         self.iconPopoverController.button = self.iconButton
+        self.iconPopoverController.icons = self.icons
+
+        // Set up and confiure the NSPopover
+        makePopover()
+
+        // Set up notifications
+        // 'com.bps.mnu.select-image' is sent by the AddUserItemViewController when an icon is selected
+        let nc = NotificationCenter.default
+        nc.addObserver(self,
+                       selector: #selector(updateButtonIcon(_:)),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
+                       object: self.iconPopoverController)
+    }
+
+
+    func makeIconMatrix() {
+
+        // Build the array of icons that we will use for the popover selector and the button
+        // that triggers its appearance
+        // NOTE There should be 16 icons in total in this release
+
+        var image: NSImage? = NSImage.init(named: "logo_generic")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_brew")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_github")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_python")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_node")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_rust")
+        self.icons.add(image!)
+    }
+
+
+    func makePopover() {
+
+        // Assemble the popover if it hasn't been assembled yet
+        if self.iconPopover == nil {
+            self.iconPopover = NSPopover.init()
+            self.iconPopover!.contentViewController = self.iconPopoverController
+            self.iconPopover!.delegate = self
+            self.iconPopover!.behavior = NSPopover.Behavior.transient
+        }
     }
 
 
@@ -103,6 +148,19 @@ class AddUserItemViewController: NSViewController,
         if let window = self.parentWindow {
             window.beginSheet(self.addItemSheet,
                               completionHandler: nil)
+        }
+    }
+
+
+    @objc func updateButtonIcon(_ note: Notification) {
+
+        // When we receive a notification from the popover controller that an icon has been selected,
+        // we come here and set the button's image to that icon
+        if let obj = note.object {
+            // Decode the notifiction object
+            let index = obj as! NSNumber
+            self.iconButton.image = self.icons.object(at: index.intValue) as? NSImage
+            self.iconButton.index = index.intValue
         }
     }
 
@@ -255,23 +313,5 @@ class AddUserItemViewController: NSViewController,
             return;
         }
     }
-
-
-
-
-    func makeIconMatrix() {
-
-        // Assemble the popover if it hasn't been assembled yet
-        if self.iconPopover == nil {
-            self.iconPopover = NSPopover.init()
-            self.iconPopover!.contentViewController = self.iconPopoverController
-            self.iconPopover!.delegate = self
-            self.iconPopover!.behavior = NSPopover.Behavior.transient
-            self.iconPopoverController.button = self.iconButton
-            self.iconButton.icons = self.iconPopoverController.icons
-        }
-    }
-
-
 
 }

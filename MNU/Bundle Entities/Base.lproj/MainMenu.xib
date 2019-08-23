@@ -848,7 +848,7 @@ Gw
                 <outlet property="view" destination="LQO-f4-D0U" id="rOr-eP-948"/>
             </connections>
         </viewController>
-        <viewController id="vBD-l2-SeN" userLabel="Popover View Controller" customClass="AddUserItemIconsController" customModule="MNU" customModuleProvider="target">
+        <viewController id="vBD-l2-SeN" userLabel="Popover View Controller" customClass="AddUserItemPopoverController" customModule="MNU" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="ecd-BA-2ts" id="YQO-CR-5H4"/>
                 <outlet property="view" destination="ecd-BA-2ts" id="ff6-3c-bcb"/>

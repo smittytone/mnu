@@ -19,7 +19,7 @@
 		3B787A8F230EECA800468D3F /* AddUserItemIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */; };
 		3B787A94230EF0B400468D3F /* AddUserItemCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */; };
 		3B787A95230EF0B400468D3F /* AddUserItemCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */; };
-		3B787A97230F132500468D3F /* AddUserItemIconsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A96230F132500468D3F /* AddUserItemIconsController.swift */; };
+		3B787A97230F132500468D3F /* AddUserItemPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */; };
 		3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */; };
 		3BBEF08D22CEC02F001D1CCB /* MenuItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */; };
 		3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08E22CEC634001D1CCB /* MenuItem.swift */; };
@@ -44,7 +44,7 @@
 		3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemIconButton.swift; sourceTree = "<group>"; };
 		3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemCollectionViewItem.swift; sourceTree = "<group>"; };
 		3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddUserItemCollectionViewItem.xib; sourceTree = "<group>"; };
-		3B787A96230F132500468D3F /* AddUserItemIconsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemIconsController.swift; sourceTree = "<group>"; };
+		3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemPopoverController.swift; sourceTree = "<group>"; };
 		3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureViewController.swift; sourceTree = "<group>"; };
 		3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemList.swift; sourceTree = "<group>"; };
 		3BBEF08E22CEC634001D1CCB /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -109,7 +109,7 @@
 				3B213445230C388900F7EE06 /* MenuControlsViewController.swift */,
 				3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */,
 				3B2691E222E59A9400F877AC /* AddUserItemViewController.swift */,
-				3B787A96230F132500468D3F /* AddUserItemIconsController.swift */,
+				3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */,
 				3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */,
 				3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */,
 				3B01F0DE22EC175C0045A78A /* FeedbackSheetViewController.swift */,
@@ -219,7 +219,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3B787A97230F132500468D3F /* AddUserItemIconsController.swift in Sources */,
+				3B787A97230F132500468D3F /* AddUserItemPopoverController.swift in Sources */,
 				3B279CC822E7DD1E005D037D /* MenuItemTableCellButton.swift in Sources */,
 				3B01F0E122EC20080045A78A /* Secrets.swift in Sources */,
 				3BBEF08D22CEC02F001D1CCB /* MenuItemList.swift in Sources */,
