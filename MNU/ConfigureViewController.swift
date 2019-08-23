@@ -76,7 +76,8 @@ class ConfigureViewController:  NSViewController,
         self.view.window!.makeFirstResponder(self)
 
         // Set up the table view for drag and drop reordering
-        self.menuItemsTableView.registerForDraggedTypes([mnuPasteboardType])
+        self.menuItemsTableView.registerForDraggedTypes([self.mnuPasteboardType])
+        self.menuItemsTableView.delegate = self
 
         // Watch for notifications of changes sent by the add user item view controller
         let nc = NotificationCenter.default
@@ -87,8 +88,6 @@ class ConfigureViewController:  NSViewController,
 
         // Set the add user item view controller's parent window
         self.configureWindow = self.view.window!
-        //self.aivc.parentWindow = self.configureWindow!
-        //self.fbvc.parentWindow = self.configureWindow!
         
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
@@ -116,8 +115,6 @@ class ConfigureViewController:  NSViewController,
         self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
         self.configureWindow!.makeKeyAndOrderFront(nil)
-        //self.configureWindow!.makeKey()
-        //self.configureWindow!.orderFrontRegardless()
         // The following is required to bring the window to the front properly
         // SEE https://stackoverflow.com/questions/7460092/nswindow-makekeyandorderfront-makes-window-appear-but-not-key-or-front
         NSApp.activate(ignoringOtherApps: true)
@@ -127,7 +124,8 @@ class ConfigureViewController:  NSViewController,
     override func resignFirstResponder() -> Bool {
         
         // Make sure we can continue to track key events
-        return false
+        // NOTE Current disabled (to restore table drag'n'drop)
+        return true
     }
 
 
@@ -408,22 +406,22 @@ class ConfigureViewController:  NSViewController,
                 
                 cell!.buttonA.image = NSImage.init(named: "NSStopProgressFreestandingTemplate")
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
-                cell!.buttonA.menuItem = item
                 cell!.buttonA.toolTip = "Delete Item"
                 cell!.buttonA.isEnabled = true
-                
+                cell!.buttonA.menuItem = item
+
                 cell!.buttonB.image = NSImage.init(named: "NSActionTemplate")
                 cell!.buttonB.action = #selector(self.doEditScript(sender:))
-                cell!.buttonB.menuItem = item
                 cell!.buttonB.toolTip = "Edit Item"
                 cell!.buttonB.isEnabled = true
-                
+                cell!.buttonB.menuItem = item
+
                 cell!.buttonC.image = NSImage.init(named: (item.isHidden ? "NSStatusUnavailable" : "NSStatusAvailable"))
                 cell!.buttonC.action = #selector(self.doShowHideSwitch(sender:))
-                cell!.buttonC.menuItem = item
                 cell!.buttonC.toolTip = "Show/Hide Item"
                 cell!.buttonC.isEnabled = true
-                
+                cell!.buttonC.menuItem = item
+
                 if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
@@ -443,7 +441,7 @@ class ConfigureViewController:  NSViewController,
         if let items = self.menuItems {
             let item: MenuItem = items.items[row]
             let pasteboardItem = NSPasteboardItem()
-            pasteboardItem.setString(item.title, forType: mnuPasteboardType)
+            pasteboardItem.setString(item.title, forType: self.mnuPasteboardType)
             return pasteboardItem
         }
 
@@ -464,7 +462,7 @@ class ConfigureViewController:  NSViewController,
     func tableView(_ tableView: NSTableView, acceptDrop info: NSDraggingInfo, row: Int, dropOperation: NSTableView.DropOperation) -> Bool {
         guard
             let item = info.draggingPasteboard.pasteboardItems?.first,
-            let itemTitle = item.string(forType: mnuPasteboardType)
+            let itemTitle = item.string(forType: self.mnuPasteboardType)
             else { return false }
 
         var originalRow = -1

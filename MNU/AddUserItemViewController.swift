@@ -82,7 +82,7 @@ class AddUserItemViewController: NSViewController,
         nc.addObserver(self,
                        selector: #selector(updateButtonIcon(_:)),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
-                       object: self.iconPopoverController)
+                       object: nil)
     }
 
 

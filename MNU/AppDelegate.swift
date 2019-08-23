@@ -95,6 +95,11 @@ class AppDelegate: NSObject,
             self.showHidden = (doShowHidden as! String == "YES") ? true : false
         }
 
+        // MARK: DEBUG SWITCHES
+        // Uncomment the next two lines to wipe stored prefs
+        //defaults.set([], forKey: "com.bps.mnu.item-order")
+        //defaults.set(true, forKey: "com.bps.mnu.first-run")
+
         // Register preferences
         registerPreferences()
 
