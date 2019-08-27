@@ -104,6 +104,8 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_rust")
         self.icons.add(image!)
+        image = NSImage.init(named: "logo_perl")
+        self.icons.add(image!)
         image = NSImage.init(named: "logo_bash")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_as")

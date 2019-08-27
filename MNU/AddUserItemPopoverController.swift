@@ -36,6 +36,7 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Python")
         self.tooltips.append("Node")
         self.tooltips.append("Rust")
+        self.tooltips.append("Perl")
         self.tooltips.append("Bash")
         self.tooltips.append("AppleScript")
         self.tooltips.append("Document")
