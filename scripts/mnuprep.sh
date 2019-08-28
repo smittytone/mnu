@@ -22,7 +22,7 @@ destFolder="$HOME/Desktop"
 extension="png"
 argIsAValue=0
 args=(-s -d)
-m_a_sizes=(20 64)
+m_a_sizes=(20 64 30)
 
 
 # Process the arguments
