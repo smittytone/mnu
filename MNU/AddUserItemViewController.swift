@@ -106,7 +106,7 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_rust")
         self.icons.add(image!)
-        image = NSImage.init(named: "logo_perl")
+        image = NSImage.init(named: "picon_perl")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_as")
         self.icons.add(image!)
