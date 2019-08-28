@@ -64,7 +64,8 @@ class ConfigureViewController:  NSViewController,
     var configureWindow: NSWindow? = nil
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
     var hasChanged: Bool = false
-
+    var isVisible: Bool = false
+    
 
     // MARK: - Lifecycle Functions
 
@@ -104,8 +105,17 @@ class ConfigureViewController:  NSViewController,
 
         // Update the menu item list count indicator
         displayItemCount()
+        super.viewDidAppear()
     }
 
+    
+    override func viewDidAppear() {
+        
+        // Update the visibility state
+        self.isVisible = true
+        super.viewDidAppear()
+    }
+    
     
     func show() {
 
@@ -135,6 +145,9 @@ class ConfigureViewController:  NSViewController,
 
         // The user clicked 'Cancel', so hust close the configure window
         self.configureWindow!.performClose(sender)
+        
+        // Update the visibility state
+        self.isVisible = false
     }
 
 

@@ -135,6 +135,17 @@ class AppDelegate: NSObject,
     }
 
 
+    func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
+        
+        // TODO SEE https://forums.macrumors.com/threads/terminate-while-nssheet-isvisible-solved.522228/
+        if self.cwvc.isVisible && self.cwvc.aivc.parentWindow != nil {
+            return NSApplication.TerminateReply.terminateCancel
+        }
+        
+        return NSApplication.TerminateReply.terminateNow
+    }
+    
+    
     func applicationWillTerminate(_ aNotification: Notification) {
 
         if self.hasChanged {
