@@ -104,7 +104,9 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_node")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_rust")
+        image = NSImage.init(named: "logo_perl")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_bash")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_as")
         self.icons.add(image!)
@@ -118,7 +120,7 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_cog")
         self.icons.add(image!)
-        
+
     }
 
 
@@ -264,7 +266,7 @@ class AddUserItemViewController: NSViewController,
                 }
             }
         }
-        
+
         if itemHasChanged {
             // Inform the configure window controller that there's a new item to list
             // NOTE The called code handles edited items too - it's not just for new items
@@ -309,7 +311,7 @@ class AddUserItemViewController: NSViewController,
                               completionHandler: nil)
     }
 
-    
+
     // MARK: - NSTextFieldDelegate Functions
 
     func controlTextDidChange(_ obj: Notification) {

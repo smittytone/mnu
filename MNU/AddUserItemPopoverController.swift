@@ -24,7 +24,7 @@ class AddUserItemPopoverController: NSViewController,
 
 
     // MARK: - Lifecycle Methods
-    
+
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -37,13 +37,15 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Python")
         self.tooltips.append("Node")
         self.tooltips.append("Rust")
+        self.tooltips.append("Perl")
+        self.tooltips.append("Bash")
         self.tooltips.append("AppleScript")
         self.tooltips.append("CoffeeScript")
         self.tooltips.append("Document")
         self.tooltips.append("Folder")
         self.tooltips.append("Image")
         self.tooltips.append("Settings")
-        
+
         // Configure the collection view
         configureCollectionView()
     }
