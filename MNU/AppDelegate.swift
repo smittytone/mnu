@@ -275,9 +275,7 @@ class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
-            if let sourceImage: NSImage = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon")) {
-                menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-            }
+            menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
         }
 
         // Set up the script that will switch the UI mode
@@ -303,9 +301,7 @@ class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
         if self.showImages {
-            if let sourceImage: NSImage = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on")) {
-                menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-            }
+            menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
@@ -338,9 +334,7 @@ class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
         if self.showImages {
-            if let sourceImage: NSImage = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on")) {
-                menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-            }
+            menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
@@ -461,9 +455,7 @@ class AppDelegate: NSObject,
 
                     // Set the custom image
                     if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                        if let sourceImage: NSImage = icons.object(at: itemInstance.iconIndex) as? NSImage {
-                            menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                        }
+                        menuItem.image = icons.object(at: itemInstance.iconIndex) as? NSImage
                     }
 
                     // If the item is not hidden, add it to the menu
@@ -577,9 +569,7 @@ class AppDelegate: NSObject,
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
             if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER && self.showImages {
-                if let sourceImage: NSImage = icons.object(at: item.iconIndex) as? NSImage {
-                    menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                }
+                menuItem.image = icons.object(at: item.iconIndex) as? NSImage
             }
 
             // If the item is not hidden, add it to the NSMenu
@@ -641,29 +631,17 @@ class AppDelegate: NSObject,
         if self.showImages {
             switch item.code {
                 case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                    if let sourceImage: NSImage = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon")) {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                   menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
                 case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                    if let sourceImage: NSImage = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on")) {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                    menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
                 case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                    if let sourceImage: NSImage = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on")) {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                    menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
                 case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                    if let sourceImage: NSImage = NSImage.init(named: "logo_github") {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                    menuItem.image = NSImage.init(named: "logo_github")
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                    if let sourceImage: NSImage = NSImage.init(named: "logo_brew") {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                    menuItem.image = NSImage.init(named: "logo_brew")
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                    if let sourceImage: NSImage = NSImage.init(named: "logo_brew") {
-                        menuItem.image = resizeImageForMenu(image: sourceImage, w: 20, h: 20)
-                    }
+                    menuItem.image = NSImage.init(named: "logo_brew")
                 default:
                     menuItem.image = nil
             }
@@ -844,23 +822,6 @@ class AppDelegate: NSObject,
         alert.informativeText = "Please check the details in your computer's log."
         alert.addButton(withTitle: "OK")
         alert.runModal()
-    }
-
-
-    func resizeImageForMenu(image: NSImage, w: Int, h: Int) -> NSImage {
-
-        // Resize large UI Images for the menu
-        // SEE https://stackoverflow.com/questions/11949250/how-to-resize-nsimage/42915296#42915296
-        let destSize = NSMakeSize(CGFloat(w), CGFloat(h))
-        let newImage = NSImage(size: destSize)
-        newImage.lockFocus()
-        image.draw(in: NSMakeRect(0, 0, destSize.width, destSize.height),
-                   from: NSMakeRect(0, 0, image.size.width, image.size.height),
-                   operation: NSCompositingOperation.sourceOver,
-                   fraction: CGFloat(1))
-        newImage.unlockFocus()
-        newImage.size = destSize
-        return NSImage(data: newImage.tiffRepresentation!)!
     }
 
 
