@@ -691,6 +691,8 @@ class AppDelegate: NSObject,
         
         var image: NSImage? = NSImage.init(named: "logo_generic")
         self.icons.add(image!)
+        image = NSImage.init(named: "logo_bash")
+        self.icons.add(image!)
         image = NSImage.init(named: "logo_brew")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_github")
@@ -701,7 +703,7 @@ class AppDelegate: NSObject,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_rust")
         self.icons.add(image!)
-        image = NSImage.init(named: "logo_bash")
+        image = NSImage.init(named: "logo_perl")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_as")
         self.icons.add(image!)
@@ -709,12 +711,13 @@ class AppDelegate: NSObject,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_doc")
         self.icons.add(image!)
-        image = NSImage.init(named: "logo_cog")
-        self.icons.add(image!)
         image = NSImage.init(named: "logo_dir")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_pic")
         self.icons.add(image!)
+        image = NSImage.init(named: "logo_cog")
+        self.icons.add(image!)
+        
     }
     
     
