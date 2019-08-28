@@ -40,10 +40,12 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Perl")
         self.tooltips.append("AppleScript")
         self.tooltips.append("CoffeeScript")
+        self.tooltips.append("JavaScript")
         self.tooltips.append("Document")
         self.tooltips.append("Folder")
         self.tooltips.append("Image")
         self.tooltips.append("Settings")
+        self.tooltips.append("Mac")
 
         // Configure the collection view
         configureCollectionView()

@@ -112,6 +112,8 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_coffee")
         self.icons.add(image!)
+        image = NSImage.init(named: "picon_js")
+        self.icons.add(image!)
         image = NSImage.init(named: "picon_doc")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_dir")
@@ -120,7 +122,8 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_cog")
         self.icons.add(image!)
-
+        image = NSImage.init(named: "picon_mac")
+        self.icons.add(image!)
     }
 
 

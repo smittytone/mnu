@@ -698,6 +698,8 @@ class AppDelegate: NSObject,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_coffee")
         self.icons.add(image!)
+        image = NSImage.init(named: "logo_js")
+        self.icons.add(image!)
         image = NSImage.init(named: "logo_doc")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_dir")
@@ -706,7 +708,8 @@ class AppDelegate: NSObject,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_cog")
         self.icons.add(image!)
-        
+        image = NSImage.init(named: "logo_mac")
+        self.icons.add(image!)
     }
     
     
