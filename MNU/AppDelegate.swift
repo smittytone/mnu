@@ -54,7 +54,8 @@ class AppDelegate: NSObject,
     var doNewTermTab: Bool = false
     var showImages: Bool = false
     var optionClick: Bool = false
-
+    var icons: NSMutableArray = NSMutableArray.init()
+    
 
     // MARK: - App Lifecycle Functions
 
@@ -425,7 +426,10 @@ class AppDelegate: NSObject,
         // Create the app's menu when the app is run
         let defaults = UserDefaults.standard
         self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
-
+        
+        // Load the icons
+        makeIconMatrix()
+        
         // Prepare the NSMenu
         self.appMenu = NSMenu.init(title: "MNU")
         self.appMenu!.autoenablesItems = false
@@ -441,7 +445,7 @@ class AppDelegate: NSObject,
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
             // convert the serializations into real objects: Menu Items and their rewpresentative
             // NSMenuItems
-            let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
+            //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
 
             for loadedItem: String in loadedItems {
                 if let itemInstance = dejsonize(loadedItem) {
@@ -539,7 +543,7 @@ class AppDelegate: NSObject,
 
     @objc func updateMenu() {
 
-        let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
+        //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
 
         // We have received a notification from the Confiure window controller that the list of
         // Menu Items has changed in some way, so rebuild the menu from scratch
@@ -656,7 +660,42 @@ class AppDelegate: NSObject,
         }
     }
 
-
+    
+    func makeIconMatrix() {
+        
+        // Build the array of icons that we will use for the popover selector and the button
+        // that triggers its appearance
+        // NOTE There should be 16 icons in total in this release
+        
+        var image: NSImage? = NSImage.init(named: "logo_generic")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_brew")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_github")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_python")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_node")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_rust")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_bash")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_as")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_coffee")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_doc")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_cog")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_dir")
+        self.icons.add(image!)
+        image = NSImage.init(named: "logo_pic")
+        self.icons.add(image!)
+    }
+    
+    
     // MARK: Dark Mode Switching
 
     func makeModeSwitch() -> MenuItem {

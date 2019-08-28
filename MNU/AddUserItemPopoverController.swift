@@ -31,17 +31,19 @@ class AddUserItemPopoverController: NSViewController,
 
         // Add icon tooltips
         self.tooltips.append("Hash Bang")
+        self.tooltips.append("Bash")
         self.tooltips.append("Brew")
         self.tooltips.append("GitHub")
         self.tooltips.append("Python")
         self.tooltips.append("Node")
         self.tooltips.append("Rust")
-        self.tooltips.append("Bash")
         self.tooltips.append("AppleScript")
+        self.tooltips.append("CoffeeScript")
         self.tooltips.append("Document")
-        self.tooltips.append("Settings")
         self.tooltips.append("Folder")
-
+        self.tooltips.append("Image")
+        self.tooltips.append("Settings")
+        
         // Configure the collection view
         configureCollectionView()
     }
@@ -64,11 +66,13 @@ class AddUserItemPopoverController: NSViewController,
 
         // Configure the collection view's flow layout manager
         let gridLayout = NSCollectionViewGridLayout.init()
-        gridLayout.maximumItemSize = NSMakeSize(28, 28)
-        gridLayout.minimumItemSize = NSMakeSize(28, 28)
+        gridLayout.maximumItemSize = NSMakeSize(64, 64)
+        gridLayout.minimumItemSize = NSMakeSize(64, 64)
         gridLayout.maximumNumberOfRows = 4
         gridLayout.maximumNumberOfColumns = 4
-        gridLayout.minimumInteritemSpacing = 2.0
+        gridLayout.minimumInteritemSpacing = 7.0
+        gridLayout.minimumLineSpacing = 7.0
+        gridLayout.margins = NSEdgeInsetsMake(4.0, 4.0, 4.0, 4.0)
 
         // Add the grid layout to the collection view and configure the collection view
         self.collectionView.collectionViewLayout = gridLayout

@@ -80,7 +80,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -516,7 +516,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -725,7 +725,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -886,13 +886,13 @@ Gw
             <point key="canvasLocation" x="423" y="-271"/>
         </menu>
         <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-PJ-SnZ">
-            <rect key="frame" x="0.0" y="0.0" width="124" height="124"/>
+            <rect key="frame" x="0.0" y="0.0" width="288" height="288"/>
             <clipView key="contentView" id="ziH-fv-EY4">
-                <rect key="frame" x="1" y="1" width="122" height="122"/>
+                <rect key="frame" x="1" y="1" width="286" height="286"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
-                        <rect key="frame" x="0.0" y="0.0" width="122" height="122"/>
+                        <rect key="frame" x="0.0" y="0.0" width="286" height="286"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                         <collectionViewGridLayout key="collectionViewLayout" id="b8y-dY-qq6">
                             <size key="minimumItemSize" width="20" height="20"/>
@@ -915,7 +915,7 @@ Gw
                 <rect key="frame" x="77" y="1" width="16" height="88"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
-            <point key="canvasLocation" x="542" y="-150"/>
+            <point key="canvasLocation" x="645" y="-18"/>
         </scrollView>
     </objects>
     <resources>
