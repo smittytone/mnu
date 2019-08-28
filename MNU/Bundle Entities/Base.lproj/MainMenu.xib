@@ -80,7 +80,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -516,7 +516,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -652,10 +652,10 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button translatesAutoresizingMaskIntoConstraints="NO" id="mU3-js-THC" customClass="AddUserItemIconButton" customModule="MNU" customModuleProvider="target">
-                        <rect key="frame" x="188" y="76" width="20" height="20"/>
+                        <rect key="frame" x="188" y="72" width="32" height="32"/>
                         <constraints>
-                            <constraint firstAttribute="height" constant="20" id="5cs-Go-4Hy"/>
-                            <constraint firstAttribute="width" constant="20" id="Ssc-n9-xwL"/>
+                            <constraint firstAttribute="height" constant="32" id="5cs-Go-4Hy"/>
+                            <constraint firstAttribute="width" constant="32" id="Ssc-n9-xwL"/>
                         </constraints>
                         <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="logo_generic" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="TtH-FU-8bF">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -683,7 +683,7 @@ Gw
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="top" secondItem="luN-mo-wfm" secondAttribute="bottom" constant="8" id="K07-mr-EJ1"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="N5p-wj-63E"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="SEp-aZ-qQR"/>
-                    <constraint firstItem="mU3-js-THC" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" constant="8" id="dmM-qL-2Xd"/>
+                    <constraint firstItem="mU3-js-THC" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" id="dmM-qL-2Xd"/>
                     <constraint firstAttribute="trailing" secondItem="PIQ-xd-jED" secondAttribute="trailing" constant="20" id="f2f-Zc-pRw"/>
                     <constraint firstAttribute="bottom" secondItem="WiG-6V-3VE" secondAttribute="bottom" constant="20" id="hCg-2a-Ll8"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="hKK-Rd-F5s"/>
@@ -725,7 +725,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
