@@ -73,8 +73,8 @@ class AddUserItemPopoverController: NSViewController,
         gridLayout.minimumItemSize = NSMakeSize(64, 64)
         gridLayout.maximumNumberOfRows = 4
         gridLayout.maximumNumberOfColumns = 4
-        gridLayout.minimumInteritemSpacing = 7.0
-        gridLayout.minimumLineSpacing = 7.0
+        gridLayout.minimumInteritemSpacing = 0.0
+        gridLayout.minimumLineSpacing = 0.0
         gridLayout.margins = NSEdgeInsetsMake(4.0, 4.0, 4.0, 4.0)
 
         // Add the grid layout to the collection view and configure the collection view

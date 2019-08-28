@@ -1,9 +1,9 @@
 
 /*
- AddUserItemCollectionViewItem.swift
+ AddUserItemCollectionView.swift
  MNU
 
- Created by Tony Smith on 22/08/2019.
+ Created by Tony Smith on 28/08/2019.
  Copyright © 2019 Tony Smith. All rights reserved.
 
  MIT License
@@ -30,47 +30,41 @@
 import Cocoa
 
 
-class AddUserItemCollectionViewItem: NSCollectionViewItem {
-
+class AddUserItemCollectionView: NSView {
 
     // MARK: - Class Properties
-    var index: Int = -1
 
-    var image: NSImage? {
-        didSet {
-            guard isViewLoaded else { return }
+    var isSelected: Bool = false
 
-            if let image = image {
-                imageView?.image = image
+
+    // MARK: - Graphics Functions
+
+    override func draw(_ dirtyRect: NSRect) {
+
+        super.draw(dirtyRect)
+
+        if let gc: NSGraphicsContext = NSGraphicsContext.current {
+            // Lock the context
+            gc.saveGraphicsState()
+
+            // Set the colours we'll be using - just use fill so we
+            // get colour coming through the image
+            if isSelected {
+                NSColor.controlAccentColor.setFill()
             } else {
-                imageView?.image = nil
+                NSColor.clear.setFill()
             }
+
+            // Make the circle
+            let rect: NSRect = NSMakeRect(0, 0, 64, 64)
+            let highlightCircle: NSBezierPath = NSBezierPath()
+            highlightCircle.lineWidth = 4.0
+            highlightCircle.appendOval(in: rect)
+            highlightCircle.fill()
+
+            // Unlock the context
+            gc.restoreGraphicsState()
         }
     }
-
-    override var isSelected: Bool {
-
-        didSet {
-            // Cast the item's view as our custom class then tell the view
-            // whether it is selected or not, and to redew
-            let auicv: AddUserItemCollectionView = self.view as! AddUserItemCollectionView
-            auicv.isSelected = isSelected
-            auicv.needsDisplay = true
-        }
-    }
-
-
-    // MARK: - Lifecycle Functions
     
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
-        // REMOVED 1.0.0 (180)
-        // view.wantsLayer = true
-        // view.layer?.backgroundColor = NSColor.clear.cgColor
-        // view.layer?.borderColor = NSColor.controlAccentColor.cgColor
-        // view.layer?.borderWidth = 0.0
-    }
-
 }
