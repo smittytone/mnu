@@ -22,8 +22,39 @@ destFolder="$HOME/Desktop"
 extension="png"
 argIsAValue=0
 args=(-s -d)
-m_a_sizes=(20 64 30)
+# Set required sizes (@2x will be created too:
+# 20 - Menu icon
+# 64 - Popover icon
+m_a_sizes=(20 64)
 
+# Functions
+m_a_make() {
+    # Make MNU script icons
+    for size in ${m_a_sizes[@]}; do
+        # Set the destination file name
+        destFile=${1%.*}
+
+        # Set the destination extension lowercase
+        extension=${1##*.}
+        extension=${extension,,}
+
+        # Make the standard-size image
+        make "$1" "$destFolder/$destFile-$size.$extension" "$size"
+
+        # Make the retina-size image (@2x)
+        retinaSize=$(($size * 2))
+        make "$1" "$destFolder/$destFile-$size@2x.$extension" "$retinaSize"
+    done
+}
+
+make() {
+    # Generic function to copy source to new file and then resize the copy using SIPS
+    # $1 - The source image file
+    # $2 - The destination image file
+    # $3 - The destination image size (width and height)
+    cp "$1" "$2"
+    sips "$2" -Z "$3" -i > /dev/null
+}
 
 # Process the arguments
 argCount=0
@@ -62,34 +93,6 @@ do
         exit 1
     fi
 done
-
-m_a_make() {
-    # Make MNU script icons
-    for size in ${m_a_sizes[@]}; do
-        # Set the destination file name
-        destFile=${1%.*}
-
-        # Set the destination extension lowercase
-        extension=${1##*.}
-        extension=${extension,,}
-
-        # Make the standard-size image
-        make "$1" "$destFolder/$destFile-$size.$extension" "$size"
-
-        # Make the retina-size image (@2x)
-        retinaSize=$(($size * 2))
-        make "$1" "$destFolder/$destFile-$size@2x.$extension" "$retinaSize"
-    done
-}
-
-make() {
-    # Generic function to copy source to new file and then resize the copy using SIPS
-    # $1 - The source image file
-    # $2 - The destination image file
-    # $3 - The destination image size (width and height)
-    cp "$1" "$2"
-    sips "$2" -Z "$3" -i > /dev/null
-}
 
 # Make sure we have a source image
 if [ "$sourceFolder" != "UNSET" ]; then
