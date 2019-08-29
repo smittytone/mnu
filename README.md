@@ -8,7 +8,7 @@ Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graph
 
 ## To Do ##
 
-- Refactor menu creation/updating
+- Pre-release testing
 
 ## Release Notes ##
 
