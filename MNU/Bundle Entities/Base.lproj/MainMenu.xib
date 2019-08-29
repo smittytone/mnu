@@ -886,13 +886,13 @@ Gw
             <point key="canvasLocation" x="423" y="-271"/>
         </menu>
         <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-PJ-SnZ">
-            <rect key="frame" x="0.0" y="0.0" width="266" height="266"/>
+            <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
-                <rect key="frame" x="1" y="1" width="264" height="264"/>
+                <rect key="frame" x="1" y="1" width="334" height="334"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
-                        <rect key="frame" x="0.0" y="0.0" width="264" height="264"/>
+                        <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
                         <collectionViewGridLayout key="collectionViewLayout" id="b8y-dY-qq6">
                             <size key="minimumItemSize" width="20" height="20"/>

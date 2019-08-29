@@ -34,18 +34,27 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Bash")
         self.tooltips.append("Brew")
         self.tooltips.append("GitHub")
+        self.tooltips.append("GitLab")
         self.tooltips.append("Python")
         self.tooltips.append("Node")
         self.tooltips.append("Rust")
+        self.tooltips.append("Java")
+        self.tooltips.append("Lua")
         self.tooltips.append("Perl")
+        self.tooltips.append("Ruby")
         self.tooltips.append("AppleScript")
         self.tooltips.append("CoffeeScript")
+        self.tooltips.append("PHP")
         self.tooltips.append("JavaScript")
+        self.tooltips.append("Docker")
         self.tooltips.append("Document")
         self.tooltips.append("Folder")
         self.tooltips.append("Image")
         self.tooltips.append("Settings")
+        self.tooltips.append("Sync")
+        self.tooltips.append("Power")
         self.tooltips.append("Mac")
+        self.tooltips.append("X: The Unknown")
 
         // Configure the collection view
         configureCollectionView()
@@ -71,8 +80,8 @@ class AddUserItemPopoverController: NSViewController,
         let gridLayout = NSCollectionViewGridLayout.init()
         gridLayout.maximumItemSize = NSMakeSize(64, 64)
         gridLayout.minimumItemSize = NSMakeSize(64, 64)
-        gridLayout.maximumNumberOfRows = 4
-        gridLayout.maximumNumberOfColumns = 4
+        gridLayout.maximumNumberOfRows = 5
+        gridLayout.maximumNumberOfColumns = 5
         gridLayout.minimumInteritemSpacing = 0.0
         gridLayout.minimumLineSpacing = 0.0
         gridLayout.margins = NSEdgeInsetsMake(4.0, 4.0, 4.0, 4.0)
