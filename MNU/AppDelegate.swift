@@ -647,7 +647,7 @@ class AppDelegate: NSObject,
                     menuItem.image = NSImage.init(named: "logo_brew")
                 default:
                     // Default is a user-added (ie. custom) item
-                    menuItem.image = icons.object(at: itemInstance.iconIndex) as? NSImage
+                    menuItem.image = icons.object(at: item.iconIndex) as? NSImage
             }
         }
 
