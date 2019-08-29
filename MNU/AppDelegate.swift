@@ -464,11 +464,6 @@ class AppDelegate: NSObject,
                     self.items.append(itemInstance)
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
 
-                    // Set the custom image
-                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                        menuItem.image = icons.object(at: itemInstance.iconIndex) as? NSImage
-                    }
-
                     // If the item is not hidden, add it to the menu
                     if !itemInstance.isHidden {
                         // Add the item's NSMenuItem to the NSMenu
@@ -482,6 +477,7 @@ class AppDelegate: NSObject,
             }
         } else {
             // No serialized items are present, so assemble a list based on the default values
+            // NOTE This will typically only be called on first run (we save the order after that)
             let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
 
             for itemCode in defaultItems {
@@ -579,10 +575,6 @@ class AppDelegate: NSObject,
             // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
-            if item.code == MNU_CONSTANTS.ITEMS.SCRIPT.USER && self.showImages {
-                menuItem.image = icons.object(at: item.iconIndex) as? NSImage
-            }
-
             // If the item is not hidden, add it to the NSMenu
             if !item.isHidden {
                 self.appMenu!.addItem(menuItem)
@@ -594,9 +586,9 @@ class AppDelegate: NSObject,
             }
         }
         
-        // No items being shown? Then add a note about it!
+        // No items being shown at all? Then add a note about it!
         if self.appMenu!.items.count < 1 {
-            let noteItem: NSMenuItem = NSMenuItem.init(title: "You have hidden all your items!",
+            let noteItem: NSMenuItem = NSMenuItem.init(title: "You have hidden all your items",
                                                        action: #selector(self.showConfigureWindow),
                                                        keyEquivalent: "")
             noteItem.isEnabled = false
@@ -654,7 +646,8 @@ class AppDelegate: NSObject,
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                     menuItem.image = NSImage.init(named: "logo_brew")
                 default:
-                    menuItem.image = nil
+                    // Default is a user-added (ie. custom) item
+                    menuItem.image = icons.object(at: itemInstance.iconIndex) as? NSImage
             }
         }
 
