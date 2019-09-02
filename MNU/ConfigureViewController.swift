@@ -132,7 +132,7 @@ class ConfigureViewController:  NSViewController,
     override func resignFirstResponder() -> Bool {
         
         // Make sure we can continue to track key events
-        // NOTE Current disabled (to restore table drag'n'drop)
+        // NOTE Currently disabled (to restore table drag'n'drop)
         return true
     }
 
