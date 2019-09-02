@@ -134,10 +134,10 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3B083B8522CC3C300025F081 /* Build configuration list for PBXNativeTarget "MNU" */;
 			buildPhases = (
+				3B43FB4122FC057F005FCA73 /* ShellScript */,
 				3B083B7322CC3C2E0025F081 /* Sources */,
 				3B083B7422CC3C2E0025F081 /* Frameworks */,
 				3B083B7522CC3C2E0025F081 /* Resources */,
-				3B43FB4122FC057F005FCA73 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -212,7 +212,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildNum=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PRODUCT_SETTINGS_PATH}\")\nbuildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
+			shellScript = "buildNum=$(</Users/smitty/Documents/GitHub/mnu/mnu_build)\n#buildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
