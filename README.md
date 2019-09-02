@@ -18,3 +18,7 @@ Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graph
 ## Copyright ##
 
 MNU is copyright &copy; 2019, Tony Smith.
+
+## Licence ##
+
+MNU’s source code is issued under the [MIT Licence](./LICENSE). MNU’s graphics are not included in the source code.
