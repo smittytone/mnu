@@ -3,15 +3,19 @@
 
 # Prep MNU images
 #
-# Version 1.0.0
+# Version 1.0.1
 
 # Function to show help info - keeps this out of the code
-function showHelp() {
+showHelp() {
     echo -e "\nIcon Maker\n"
     echo -e "Usage:\n  iconprep [-p path] [-d path] [-t type]\n"
     echo    "Options:"
     echo    "  -s / --source       [path]  The path of the source image(s). Default: ~/Downloads"
     echo    "  -d / --destination  [path]  The path to the target folder. Default: ~/Desktop"
+    echo    "  -t / --type         [type]  The type of icon:"
+    echo    "                                  0 - Menu icons (default)"
+    echo    "                                  1 - Popover icons"
+    echo    "                                  2 - About screen app logo"
     echo    "  -h / --help                 This help screen"
     echo
 }
@@ -21,30 +25,34 @@ sourceFolder="$HOME/Downloads"
 destFolder="$HOME/Desktop"
 extension="png"
 argIsAValue=0
+iconType=0
 args=(-s -d)
 # Set required sizes (@2x will be created too:
 # 20 - Menu icon
 # 64 - Popover icon
-m_a_sizes=(20 64)
+# 32 - About screen icon
+m_a_sizes=(20 64 32)
 
 # Functions
 m_a_make() {
     # Make MNU script icons
-    for size in ${m_a_sizes[@]}; do
-        # Set the destination file name
-        destFile=${1%.*}
+    size=${m_a_sizes[$iconType]}
 
-        # Set the destination extension lowercase
-        extension=${1##*.}
-        extension=${extension,,}
+    # Set the destination file name
+    destFile=${1%.*}
 
-        # Make the standard-size image
-        make "$1" "$destFolder/$destFile-$size.$extension" "$size"
+    # Set the destination extension lowercase
+    extension=${1##*.}
+    extension=${extension,,}
 
-        # Make the retina-size image (@2x)
-        retinaSize=$(($size * 2))
-        make "$1" "$destFolder/$destFile-$size@2x.$extension" "$retinaSize"
-    done
+    # Make the standard-size image
+    make "$1" "$destFolder/$destFile-$size.$extension" "$size"
+    echo "Writing icon size $size x $size"
+
+    # Make the retina-size image (@2x)
+    retinaSize=$(($size * 2))
+    make "$1" "$destFolder/$destFile-$size@2x.$extension" "$retinaSize"
+    echo "Writing icon size $retinaSize x $retinaSize ($size@2x)"
 }
 
 make() {
@@ -72,6 +80,7 @@ do
         case "$argIsAValue" in
             1)  sourceFolder=$arg ;;
             2)  destFolder=$arg ;;
+            3)  iconType=$arg ;;
             *) echo "Error: Unknown argument" exit 1 ;;
         esac
 
@@ -81,6 +90,8 @@ do
             argIsAValue=1
         elif [[ $arg = "-d" || $arg = "--destination" ]]; then
             argIsAValue=2
+        elif [[ $arg = "-t" || $arg = "--type" ]]; then
+            argIsAValue=3
         elif [[ $arg = "-h" || $arg = "--help" ]]; then
             showHelp
             exit 0
