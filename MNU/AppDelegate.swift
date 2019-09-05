@@ -48,7 +48,6 @@ class AppDelegate: NSObject,
     var useDesktop: Bool = false                // Is the Finder using the desktop (true) or not (false)
     var showHidden: Bool = false                // Is the Finder showing hidden files (true) or not (false)
     var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
-    var hasChanged: Bool = false                // Has the user changed the menu entries at all?
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     var task: Process? = nil
     var doNewTermTab: Bool = false
@@ -148,22 +147,8 @@ class AppDelegate: NSObject,
     
     func applicationWillTerminate(_ aNotification: Notification) {
 
-        if self.hasChanged {
-            // Store the current state of the menu if it has changed
-            // NOTE We convert Menu Item objects into basic JSON strings and save
-            //      these into an array that we will use to recreate the Menu Item list
-            //      at next start up. This is because Strings can be PLIST'ed whereas
-            //      custom objects cannot
-            var savedItems: [Any] = []
-
-            for item: MenuItem in self.items {
-                savedItems.append(jsonize(item))
-            }
-
-            let defaults = UserDefaults.standard
-            defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
-            defaults.synchronize()
-        }
+        // Save the current menu
+        saveItems()
 
         // Disable notification listening (to be tidy)
         NotificationCenter.default.removeObserver(self)
@@ -272,6 +257,25 @@ class AppDelegate: NSObject,
         }
 
         return nil
+    }
+    
+    
+    func saveItems() {
+        
+        // Store the current state of the menu if it has changed
+        // NOTE We convert Menu Item objects into basic JSON strings and save
+        //      these into an array that we will use to recreate the Menu Item list
+        //      at next start up. This is because Strings can be PLIST'ed whereas
+        //      custom objects cannot
+        var savedItems: [Any] = []
+        
+        for item: MenuItem in self.items {
+            savedItems.append(jsonize(item))
+        }
+        
+        let defaults = UserDefaults.standard
+        defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
+        defaults.synchronize()
     }
 
 
@@ -562,12 +566,6 @@ class AppDelegate: NSObject,
         let defaults = UserDefaults.standard
         self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
 
-        // Mark the fact that the menu has changed (so it can be saved on exit)
-        // provided that we're not just showing the alternative view
-        if !self.optionClick {
-            self.hasChanged = true
-        }
-
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
 
@@ -598,6 +596,16 @@ class AppDelegate: NSObject,
 
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
+        
+        // If we're not updating the menu to show the alternative view,
+        // save the update menu item list, otherwise reset the option-click
+        // flag for next time
+        if !self.optionClick {
+            saveItems()
+        } else {
+            // Reset the option flag
+            self.optionClick = false
+        }
     }
 
 
