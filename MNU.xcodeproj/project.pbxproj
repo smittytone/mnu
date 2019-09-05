@@ -212,7 +212,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildNum=$(</Users/smitty/Documents/GitHub/mnu/mnu_build)\n#buildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
+			shellScript = "buildNum=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PRODUCT_SETTINGS_PATH}\")\nbuildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
