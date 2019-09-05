@@ -602,9 +602,6 @@ class AppDelegate: NSObject,
         // flag for next time
         if !self.optionClick {
             saveItems()
-        } else {
-            // Reset the option flag
-            self.optionClick = false
         }
     }
 
