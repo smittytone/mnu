@@ -112,11 +112,11 @@ class AppDelegate: NSObject,
         // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
-                       selector: #selector(self.updateMenu),
+                       selector: #selector(self.updateAndSaveMenu),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
                        object: cwvc)
 
-        // Watch for changes to the startup launch preferemce
+        // Watch for changes to the startup launch preference
         nc.addObserver(self,
                        selector: #selector(self.enableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-enabled"),
@@ -126,19 +126,52 @@ class AppDelegate: NSObject,
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
                        object: cwvc)
-
+        
+        // Watch for an 'it's OK to quit' message from the Configure Window
+        // NOTE This is issued in response to an attempt to quit the app when the Configure
+        //      Window has unapplied changes, which will interrupt the termination flow -
+        //      this puts it back on track by calling 'performTermination()'
+        nc.addObserver(self,
+                       selector: #selector(self.performTermination),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
+                       object: cwvc)
+        
+        // Watch for the appearance of the Configure Window
+        // NOTE This is sent by the Menu Controls view controller
         nc.addObserver(self,
                        selector: #selector(self.showConfigureWindow),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
                        object: acvc)
     }
 
-
+    
+    @objc func performTermination() {
+        
+        // Tell the application can now terminate, following the issuing of a
+        // NSApplication.TerminateReply.terminateLater (see 'applicationShouldTerminate()')
+        let me = NSApplication.shared
+        me.reply(toApplicationShouldTerminate: true)
+    }
+    
+    
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         
-        // TODO SEE https://forums.macrumors.com/threads/terminate-while-nssheet-isvisible-solved.522228/
+        // This prevents the app closing when the user clicks the Quit control, if the
+        // Configure Window is visible and is either presenting the Add Item sheet
         if self.cwvc.isVisible && self.cwvc.aivc.parentWindow != nil {
             return NSApplication.TerminateReply.terminateCancel
+        }
+        
+        // This prevents the app closing when the user clicks the Quit control, if the Configure
+        // Window has unapplied changes
+        if self.cwvc.isVisible && self.cwvc.hasChanged {
+            // Close the menu - required for controls within views added to menu items
+            self.appMenu!.cancelTrackingWithoutAnimation()
+            
+            // Set the Configure Window for one last apperance
+            self.cwvc.lastChance = true
+            self.cwvc.doCancel(sender: self)
+            return NSApplication.TerminateReply.terminateLater
         }
         
         return NSApplication.TerminateReply.terminateNow
@@ -147,7 +180,7 @@ class AppDelegate: NSObject,
     
     func applicationWillTerminate(_ aNotification: Notification) {
 
-        // Save the current menu
+        // Save the current menu - this is redundant and may be removed
         saveItems()
 
         // Disable notification listening (to be tidy)
@@ -553,32 +586,26 @@ class AppDelegate: NSObject,
 
 
     @objc func updateMenu() {
-
-        //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
-
-        // We have received a notification from the Confiure window controller that the list of
-        // Menu Items has changed in some way, so rebuild the menu from scratch
-        if let itemList: MenuItemList = cwvc.menuItems {
-            self.items = itemList.items
-        }
-
-        // Check for prefs changes
+        
+        // Redraw the menu based on the current list of items
+        // NOTE If 'optionClick' has been set, we show all items, even if they would normally
+        //      be hidden from view via the Configure Window
+        
+        // Check for a prefs changes
         let defaults = UserDefaults.standard
         self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
 
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
-
+        
+        // Iteratre through the menu items, creating NSMenuItems to represent the visible ones
         for item in self.items {
             // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
             // If the item is not hidden, add it to the NSMenu
-            if !item.isHidden {
-                self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
-            } else if self.optionClick {
-                // However, on an option-click show ALL the items anyway
+            // However, on an option-click show ALL the items anyway
+            if !item.isHidden || self.optionClick {
                 self.appMenu!.addItem(menuItem)
                 self.appMenu!.addItem(NSMenuItem.separator())
             }
@@ -596,14 +623,24 @@ class AppDelegate: NSObject,
 
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem()
-        
-        // If we're not updating the menu to show the alternative view,
-        // save the update menu item list, otherwise reset the option-click
-        // flag for next time
-        if !self.optionClick {
-            saveItems()
-        }
     }
+    
+    
+    @objc func updateAndSaveMenu() {
+        
+        // We have received a notification from the Configure Window's controller that the
+        // list of Menu Items has changed in some way, so rebuild the menu from scratch
+        if let itemList: MenuItemList = cwvc.menuItems {
+            self.items = itemList.items
+        }
+        
+        // Regenerate the menu
+        updateMenu()
+        
+        // Save the update menu item list
+        saveItems()
+    }
+    
 
 
     func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
@@ -949,12 +986,15 @@ class AppDelegate: NSObject,
 
         // Check to see if the Option key was down when the menu was clicked
         if NSEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) {
-            // Option key held down, so refresh the menu with the alternative view
-            self.optionClick = true
-            updateMenu()
+            // Option key held down for the time, so refresh the menu with the alternative view
+            // If this is a follow-on option-click, don't rebuild the menu
+            if !self.optionClick {
+                self.optionClick = true
+                updateMenu()
+            }
         } else if self.optionClick {
-            // Last click, the option key was held down, so this time we
-            // need to rebuild the menu to show it without the standard view
+            // Last click, the option key was held down, but this time it is not.
+            // We need to rebuild the menu to show it without the standard view
             self.optionClick = false
             updateMenu()
         }

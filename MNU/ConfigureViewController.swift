@@ -65,6 +65,7 @@ class ConfigureViewController:  NSViewController,
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
     var hasChanged: Bool = false
     var isVisible: Bool = false
+    var lastChance: Bool = false
     
 
     // MARK: - Lifecycle Functions
@@ -509,7 +510,9 @@ class ConfigureViewController:  NSViewController,
     // MARK: - NSWindowDelegate Functions
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-
+        
+        // Before the Configure Window closes, check for un-applied changes
+        // NOTE This follows from any call to 'doCancel()'
         if self.hasChanged {
             // There are unsaved changes - warn the user
             let alert = NSAlert.init()
@@ -517,7 +520,10 @@ class ConfigureViewController:  NSViewController,
             alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
             alert.addButton(withTitle: "Yes")
             alert.addButton(withTitle: "No")
-            alert.addButton(withTitle: "Cancel")
+            if !self.lastChance {
+                alert.addButton(withTitle: "Cancel")
+            }
+            
             alert.beginSheetModal(for: self.configureWindow!) { (selection) in
                 if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
                     // The user said YES, so add MNU to the login items system preference
@@ -525,8 +531,13 @@ class ConfigureViewController:  NSViewController,
                 }
                 
                 if selection != NSApplication.ModalResponse.alertThirdButtonReturn {
-                    // The user said NO, so add MNU to the login items system preference
+                    // The user said YES or NO, so close the window
                     self.configureWindow!.close()
+                    if self.lastChance {
+                        // We're bailing, so inform the host app we can quit at last
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
+                                                        object: self)
+                    }
                 }
             }
 
@@ -678,8 +689,5 @@ class ConfigureViewController:  NSViewController,
         // Display the text
         menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) visible out of \(total)"
     }
-
-
-
 
 }
