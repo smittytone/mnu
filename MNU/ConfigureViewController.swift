@@ -89,12 +89,6 @@ class ConfigureViewController:  NSViewController,
                        name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
                        object: nil)
 
-        // Set up the Preferences section
-        let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
-        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
-        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
-
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
@@ -103,10 +97,22 @@ class ConfigureViewController:  NSViewController,
 
 
     override func viewWillAppear() {
-
+        
+        super.viewDidAppear()
+        
+        // FROM 1.0.0: move from the app delegate
+        // Update the item table
+        self.menuItemsTableView.reloadData()
+        
         // Update the menu item list count indicator
         displayItemCount()
-        super.viewDidAppear()
+        
+        // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
+        // Set up the Preferences section
+        let defaults: UserDefaults = UserDefaults.standard
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
     }
 
     
@@ -121,9 +127,11 @@ class ConfigureViewController:  NSViewController,
     func show() {
 
         // Show the controller's own window in the centre of the display
+        // NOTE This triggers calls to 'viewWillAppear()', 'viewdidAppear()', etc.
         self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
         self.configureWindow!.makeKeyAndOrderFront(nil)
+        
         // The following is required to bring the window to the front properly
         // SEE https://stackoverflow.com/questions/7460092/nswindow-makekeyandorderfront-makes-window-appear-but-not-key-or-front
         NSApp.activate(ignoringOtherApps: true)

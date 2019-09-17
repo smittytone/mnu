@@ -457,7 +457,8 @@ class AppDelegate: NSObject,
         }
 
         self.cwvc.menuItems = list
-        self.cwvc.menuItemsTableView.reloadData()
+        // FROM 1.0.1 - move the following line to the view controller
+        // self.cwvc.menuItemsTableView.reloadData()
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
