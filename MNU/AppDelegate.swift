@@ -577,7 +577,7 @@ class AppDelegate: NSObject,
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
-            let version: String = ProcessInfo.processInfo.environment["MARKETING_VER"] ?? "9.9.9"
+            let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
             self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version)"
             self.statusItem!.isVisible = true
         } else {
