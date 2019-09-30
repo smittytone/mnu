@@ -577,7 +577,8 @@ class AppDelegate: NSObject,
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
-            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion 1.0.0"
+            let version: String = ProcessInfo.processInfo.environment["MARKETING_VER"] ?? "9.9.9"
+            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version)"
             self.statusItem!.isVisible = true
         } else {
             NSLog("Error in MNU.createMenu()(): Could not initialise menu")
