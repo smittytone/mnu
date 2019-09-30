@@ -1,4 +1,4 @@
-# MNU 1.0.0 #
+# MNU 1.0.1 #
 
 Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
@@ -12,6 +12,8 @@ Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graph
 
 ## Release Notes ##
 
+- 1.0.1 &mdash; *Unreleased*
+    - Minor improvements.
 - 1.0.0 &mdash; *17 September 2019*
     - Initial public release.
 
