@@ -10,6 +10,7 @@ Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graph
 
 - 1.0.1 &mdash; *Unreleased*
     - Minor improvements.
+    - Show correct version in MNU menu bar tooltip.
 - 1.0.0 &mdash; *17 September 2019*
     - Initial public release.
 
