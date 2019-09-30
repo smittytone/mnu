@@ -6,10 +6,6 @@ Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
 Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPGs).
 
-## To Do ##
-
-- Pre-release testing
-
 ## Release Notes ##
 
 - 1.0.1 &mdash; *Unreleased*
