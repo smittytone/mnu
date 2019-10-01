@@ -6,7 +6,7 @@ Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
 Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPGs).
 
-The script `restart.sh` is used to kill an existing app instance after re-installation.
+The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
 ## Release Notes ##
 
