@@ -12,6 +12,7 @@ The script `restart.sh` is used to kill an existing app instance after re-instal
 
 - 1.0.1 &mdash; *Unreleased*
     - Minor improvements.
+    - Show correct version in MNU menu bar tooltip.
 - 1.0.0 &mdash; *17 September 2019*
     - Initial public release.
 
