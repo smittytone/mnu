@@ -46,6 +46,8 @@ class ConfigureViewController:  NSViewController,
     @IBOutlet var menuItemsCountText: NSTextField!
     @IBOutlet var aivc: AddUserItemViewController!
     @IBOutlet var menuItemsHelpButton: NSButton!
+    // FROM 1.1.0
+    @IBOutlet var extrasButton: NSButton!
 
     // Preferences Tab
     @IBOutlet var prefsLaunchAtLoginButton: NSButton!
@@ -66,6 +68,8 @@ class ConfigureViewController:  NSViewController,
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
+    // FROM 1.1.0
+    var extrasMenu: NSMenu? = nil
     
 
     // MARK: - Lifecycle Functions
@@ -93,6 +97,14 @@ class ConfigureViewController:  NSViewController,
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
         aboutVersionText.stringValue = "Version \(version) (\(build))"
+        
+        // FROM 1.1.0
+        // Prepare the extras... button
+        self.extrasMenu = NSMenu()
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Export Items...", action: #selector(self.doExport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Import Items...", action: #selector(self.doImport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.separator())
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
     }
 
 
@@ -144,8 +156,7 @@ class ConfigureViewController:  NSViewController,
         // NOTE Currently disabled (to restore table drag'n'drop)
         return true
     }
-
-
+    
     
     // MARK: - Action Functions
     // MARK: Menu Items List Functions
@@ -317,7 +328,7 @@ class ConfigureViewController:  NSViewController,
         }
     }
 
-
+    
     // MARK: About... Pane Functions
     
     @IBAction @objc func submitFeedback(sender: Any?) {
@@ -369,12 +380,82 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func doShowHelp(sender: Any?) {
         
         // Show the 'Help' via the website
-        // TODO create web page
         // TODO provide offline help
         var path: String = "https://smittytone.github.io/mnu/index.html"
         let button: NSButton = sender as! NSButton
         path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
         NSWorkspace.shared.open(URL.init(string:path)!)
+    }
+    
+    
+    @IBAction @objc func doShowExtras(sender: NSButton) {
+
+        // FROM 1.1.0
+        // Pop up the import/export buttons
+        let buttonPosition = NSPoint(x: 0, y: sender.frame.height + 6)
+        self.extrasMenu!.popUp(positioning: nil,
+                               at: buttonPosition,
+                               in: sender)
+    }
+    
+    
+    @objc func doExtraHelp() {
+        
+        // FROM 1.1.0
+        // Just call the existing 'doShowHelp()' function as if we were a button
+        doShowHelp(sender: self.extrasButton)
+    }
+    
+    
+    @objc func doExport() {
+        
+        // FROM 1.1.0
+        // Create a save panel for the expor operation...
+        let savePanel = NSSavePanel.init()
+        savePanel.allowedFileTypes = ["json"]
+        savePanel.allowsOtherFileTypes = false
+        savePanel.canCreateDirectories = true
+        savePanel.nameFieldStringValue = "MNUItems"
+        
+        // ...and show it
+        savePanel.beginSheetModal(for: self.view.window!) { (response) in
+            
+            if response == NSApplication.ModalResponse.OK {
+                // The user clicked the Save button
+                if let targetUrl = savePanel.url {
+                    // Create a JSON string representation of the menu data
+                    var dataString: String = "{\"data\":["
+                    var count: Int = 0
+                    for item: MenuItem in self.menuItems!.items {
+                        dataString += Serializer.jsonize(item)
+                        count += 1
+                        if count < self.menuItems!.items.count {
+                            dataString += ","
+                        }
+                    }
+                    
+                    dataString += "]}"
+                    
+                    // Convert the string to data for saving
+                    let fileData: Data = dataString.data(using: String.Encoding.utf8)!
+                    
+                    // Save the data
+                    let fm: FileManager = FileManager.default
+                    let success = fm.createFile(atPath: targetUrl.path,
+                                                contents:fileData,
+                                                attributes: nil)
+                    if !success {
+                        // POST WARNING
+                    }
+                }
+            }
+        }
+    }
+    
+    
+    @objc func doImport() {
+        
+        
     }
     
     

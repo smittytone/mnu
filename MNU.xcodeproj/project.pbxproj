@@ -21,6 +21,7 @@
 		3B787A94230EF0B400468D3F /* AddUserItemCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */; };
 		3B787A95230EF0B400468D3F /* AddUserItemCollectionViewItem.xib in Resources */ = {isa = PBXBuildFile; fileRef = 3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */; };
 		3B787A97230F132500468D3F /* AddUserItemPopoverController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */; };
+		3B9180B323439E3B00A5CE3B /* Serializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B9180B223439E3A00A5CE3B /* Serializer.swift */; };
 		3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */; };
 		3BBEF08D22CEC02F001D1CCB /* MenuItemList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */; };
 		3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF08E22CEC634001D1CCB /* MenuItem.swift */; };
@@ -47,6 +48,7 @@
 		3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemCollectionViewItem.swift; sourceTree = "<group>"; };
 		3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddUserItemCollectionViewItem.xib; sourceTree = "<group>"; };
 		3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemPopoverController.swift; sourceTree = "<group>"; };
+		3B9180B223439E3A00A5CE3B /* Serializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializer.swift; sourceTree = "<group>"; };
 		3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureViewController.swift; sourceTree = "<group>"; };
 		3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemList.swift; sourceTree = "<group>"; };
 		3BBEF08E22CEC634001D1CCB /* MenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItem.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */,
 				3BBEF08E22CEC634001D1CCB /* MenuItem.swift */,
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
+				3B9180B223439E3A00A5CE3B /* Serializer.swift */,
 				3B083B8822CC3FD40025F081 /* Assets.xcassets */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
 				3B01F0DC22EBEBF30045A78A /* Bundle Entities */,
@@ -134,7 +137,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3B083B8522CC3C300025F081 /* Build configuration list for PBXNativeTarget "MNU" */;
 			buildPhases = (
-				3B43FB4122FC057F005FCA73 /* ShellScript */,
 				3B083B7322CC3C2E0025F081 /* Sources */,
 				3B083B7422CC3C2E0025F081 /* Frameworks */,
 				3B083B7522CC3C2E0025F081 /* Resources */,
@@ -196,26 +198,6 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3B43FB4122FC057F005FCA73 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "buildNum=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PRODUCT_SETTINGS_PATH}\")\nbuildNum=$(($buildNum + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNum\" \"${PRODUCT_SETTINGS_PATH}\"\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		3B083B7322CC3C2E0025F081 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -226,6 +208,7 @@
 				3B01F0E122EC20080045A78A /* Secrets.swift in Sources */,
 				3BBEF08D22CEC02F001D1CCB /* MenuItemList.swift in Sources */,
 				3B2691E322E59A9400F877AC /* AddUserItemViewController.swift in Sources */,
+				3B9180B323439E3B00A5CE3B /* Serializer.swift in Sources */,
 				3B663CE12316D4570020A1DB /* AddUserItemCollectionView.swift in Sources */,
 				3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */,
 				3B213446230C388900F7EE06 /* MenuControlsViewController.swift in Sources */,
@@ -374,7 +357,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
@@ -382,7 +365,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -398,7 +381,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 8;
+				CURRENT_PROJECT_VERSION = 120;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
@@ -406,7 +389,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MARKETING_VERSION = 1.0.1;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

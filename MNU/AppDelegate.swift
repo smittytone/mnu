@@ -303,7 +303,7 @@ class AppDelegate: NSObject,
         var savedItems: [Any] = []
         
         for item: MenuItem in self.items {
-            savedItems.append(jsonize(item))
+            savedItems.append(Serializer.jsonize(item))
         }
         
         let defaults = UserDefaults.standard
@@ -497,7 +497,7 @@ class AppDelegate: NSObject,
             //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
 
             for loadedItem: String in loadedItems {
-                if let itemInstance = dejsonize(loadedItem) {
+                if let itemInstance = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
