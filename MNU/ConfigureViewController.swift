@@ -45,7 +45,7 @@ class ConfigureViewController:  NSViewController,
     @IBOutlet var menuItemsTableView: NSTableView!
     @IBOutlet var menuItemsCountText: NSTextField!
     @IBOutlet var aivc: AddUserItemViewController!
-    @IBOutlet var menuItemsHelpButton: NSButton!
+    @IBOutlet var menuItemsAddButton: NSButton!
     // FROM 1.1.0
     @IBOutlet var extrasButton: NSButton!
 
@@ -105,6 +105,11 @@ class ConfigureViewController:  NSViewController,
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Import Items...", action: #selector(self.doImport), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.separator())
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
+
+        // FROM 1.1.0
+        // Add tooltips
+        self.menuItemsAddButton.toolTip = "Add a new menu item"
+        self.extrasButton.toolTip = "Click here for further actions"
     }
 
 
@@ -478,6 +483,7 @@ class ConfigureViewController:  NSViewController,
         let openPanel: NSOpenPanel = NSOpenPanel()
         openPanel.allowedFileTypes = ["json"]
         openPanel.allowsOtherFileTypes = false
+        openPanel.allowsMultipleSelection = false
         openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
 
         // ...and show it
