@@ -31,6 +31,7 @@ import Foundation
 
 
 struct Serializer {
+
     
     static func jsonize(_ item: MenuItem) -> String {
 
@@ -45,8 +46,7 @@ struct Serializer {
     static func dejsonize(_ json: String) -> MenuItem? {
 
         // Recreate a Menu Item object from our simple JSON serialization
-        // NOTE We still need to create 'controller' properties, and this is done later
-        //      See 'updateMenu()'
+        // Convert JSON string to data
         if let data = json.data(using: .utf8) {
             do {
                 let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
@@ -66,6 +66,46 @@ struct Serializer {
             }
         }
 
+        // Failure condition
+        return nil
+    }
+
+
+    static func dejsonizeAll(_ jsonData: Data) -> MenuItemList? {
+
+        // Unpack a full JSON file - ie. a menu list archive
+        // First, create a new menu
+        let newMenu: MenuItemList = MenuItemList()
+
+        do {
+            // Convert the JSON data to a dictionary, and get the 'data' key's array value
+            let dict: [String: Any]? = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
+            let items: [Any] = dict!["data"] as! [Any]
+
+            // Run through the array's elements, converting each to a MenuItem
+            for item: Any in items {
+                let newItem = MenuItem()
+                let srcItem: [String:Any] = item as! [String:Any]
+                newItem.title = srcItem["title"] as! String
+                newItem.script = srcItem["script"] as! String
+                newItem.type = srcItem["type"] as! Int
+                newItem.code = srcItem["code"] as! Int
+                newItem.isHidden = srcItem["hidden"] as! Bool
+
+                let iconIndex = srcItem["icon"] as? Int
+                newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
+
+                // Add the menu item to the new array
+                newMenu.items.append(newItem)
+            }
+
+            // Finally, return the new MenuItemList
+            return newMenu
+        } catch {
+            NSLog("Error in Serializer.dejsonizeAll(): \(error.localizedDescription)")
+        }
+
+        // Failure condition
         return nil
     }
 }

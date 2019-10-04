@@ -328,7 +328,27 @@ class ConfigureViewController:  NSViewController,
         }
     }
 
-    
+
+    @IBAction @objc func doShowExtras(sender: NSButton) {
+
+        // FROM 1.1.0
+        // Pop up the import/export buttons
+        let buttonPosition = NSPoint(x: 0, y: sender.frame.height + 6)
+        self.extrasMenu!.popUp(positioning: nil,
+                               at: buttonPosition,
+                               in: sender)
+    }
+
+
+    @objc func doExtraHelp() {
+
+        // FROM 1.1.0
+        // Just call the existing 'doShowHelp()' function as if we were a button
+        doShowHelp(sender: self.extrasButton)
+    }
+
+
+
     // MARK: About... Pane Functions
     
     @IBAction @objc func submitFeedback(sender: Any?) {
@@ -388,35 +408,19 @@ class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc func doShowExtras(sender: NSButton) {
+    // MARK: - List Import/Export Functions
 
-        // FROM 1.1.0
-        // Pop up the import/export buttons
-        let buttonPosition = NSPoint(x: 0, y: sender.frame.height + 6)
-        self.extrasMenu!.popUp(positioning: nil,
-                               at: buttonPosition,
-                               in: sender)
-    }
-    
-    
-    @objc func doExtraHelp() {
-        
-        // FROM 1.1.0
-        // Just call the existing 'doShowHelp()' function as if we were a button
-        doShowHelp(sender: self.extrasButton)
-    }
-    
-    
     @objc func doExport() {
         
         // FROM 1.1.0
-        // Create a save panel for the expor operation...
-        let savePanel = NSSavePanel.init()
+        // Create a save panel for the export operation...
+        let savePanel: NSSavePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["json"]
         savePanel.allowsOtherFileTypes = false
         savePanel.canCreateDirectories = true
         savePanel.nameFieldStringValue = "MNUItems"
-        
+        savePanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+
         // ...and show it
         savePanel.beginSheetModal(for: self.view.window!) { (response) in
             
@@ -425,6 +429,7 @@ class ConfigureViewController:  NSViewController,
                 if let targetUrl = savePanel.url {
                     // Create a JSON string representation of the menu data
                     var dataString: String = "{\"data\":["
+
                     var count: Int = 0
                     for item: MenuItem in self.menuItems!.items {
                         dataString += Serializer.jsonize(item)
@@ -437,25 +442,74 @@ class ConfigureViewController:  NSViewController,
                     dataString += "]}"
                     
                     // Convert the string to data for saving
-                    let fileData: Data = dataString.data(using: String.Encoding.utf8)!
+                    if let fileData: Data = dataString.data(using: String.Encoding.utf16) {
                     
-                    // Save the data
-                    let fm: FileManager = FileManager.default
-                    let success = fm.createFile(atPath: targetUrl.path,
-                                                contents:fileData,
-                                                attributes: nil)
-                    if !success {
-                        // POST WARNING
+                        // Save the data
+                        let fm: FileManager = FileManager.default
+                        let success = fm.createFile(atPath: targetUrl.path,
+                                                    contents:fileData,
+                                                    attributes: nil)
+                        if !success {
+                            self.showExportAlert()
+                        }
+                    } else {
+                        // Could not convert the JSON string to UTF-16 data
+                        self.showExportAlert()
                     }
                 }
             }
         }
     }
+
+
+    func showExportAlert() {
+
+        // FROM 1.1.0
+        // Multi-use call from 'doExport()'
+        showAlert("File Export Error",
+                  "Sorry, but the menu items back-up file could not be created. Please try again.")
+    }
     
     
     @objc func doImport() {
         
-        
+        // FROM 1.1.0
+        // Create an open panel for the import operation...
+        let openPanel: NSOpenPanel = NSOpenPanel()
+        openPanel.allowedFileTypes = ["json"]
+        openPanel.allowsOtherFileTypes = false
+        openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+
+        // ...and show it
+        openPanel.beginSheetModal(for: self.view.window!) { (response) in
+
+            if response == NSApplication.ModalResponse.OK {
+                // The user clicked the Save button
+                if let targetUrl = openPanel.url {
+                    // Load the data if we have a valid file URL
+                    do {
+                        let fileData: Data = try Data.init(contentsOf: targetUrl)
+                        let newMenu: MenuItemList? = Serializer.dejsonizeAll(fileData)
+
+                        if newMenu != nil {
+                            // If we have a valid menu loaded, retain it
+                            // and update the UI
+                            self.menuItems = newMenu
+                            self.hasChanged = true
+                            self.menuItemsTableView.reloadData()
+                        } else {
+                            // Show Error message
+                            self.showAlert("File Import Error",
+                                           "Sorry, but the menu items back-up file could not be processed. Is it a MNU file?")
+                        }
+                    } catch {
+                        // Post Warning
+                        self.showAlert("File Import Error",
+                                       "Sorry, but the menu items back-up file could not be loaded from disk. Is it a MNU file?")
+                    }
+                }
+            }
+        }
     }
     
     
@@ -777,6 +831,18 @@ class ConfigureViewController:  NSViewController,
 
         // Display the text
         menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) out of \(total) (Option-click the menu to show all items)"
+    }
+
+
+    func showAlert(_ title: String, _ message: String) {
+
+        // Present an alert to warn the user about deleting the Menu Item
+        let alert: NSAlert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.addButton(withTitle: "OK")
+        alert.beginSheetModal(for: self.view.window!,
+                              completionHandler: nil)
     }
 
 }
