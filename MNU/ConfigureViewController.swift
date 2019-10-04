@@ -45,9 +45,10 @@ class ConfigureViewController:  NSViewController,
     @IBOutlet var menuItemsTableView: NSTableView!
     @IBOutlet var menuItemsCountText: NSTextField!
     @IBOutlet var aivc: AddUserItemViewController!
-    @IBOutlet var menuItemsAddButton: NSButton!
     // FROM 1.1.0
     @IBOutlet var extrasButton: NSButton!
+    @IBOutlet var menuItemsAddButton: NSButton!
+    @IBOutlet var applyChangesButton: NSButton!
 
     // Preferences Tab
     @IBOutlet var prefsLaunchAtLoginButton: NSButton!
@@ -58,6 +59,9 @@ class ConfigureViewController:  NSViewController,
     // About... Tab
     @IBOutlet var aboutVersionText: NSTextField!
     @IBOutlet var fbvc: FeedbackSheetViewController!
+    // FROM 1.1.0
+    @IBOutlet var feedbackButton: NSButton!
+    
     
 
     // MARK: - Class Properties
@@ -107,9 +111,19 @@ class ConfigureViewController:  NSViewController,
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
 
         // FROM 1.1.0
-        // Add tooltips
+        // Add tooltips: Menu Items Tab
         self.menuItemsAddButton.toolTip = "Add a new menu item"
         self.extrasButton.toolTip = "Click here for further actions"
+        self.applyChangesButton.toolTip = "Click to apply any changes you have made"
+        
+        // Preferences Tab
+        self.prefsHelpButton.toolTip = "Click here for help with this tab"
+        self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
+        self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
+        self.prefsShowControlsButton.toolTip = "Check to display images alongside MNU menu items"
+        
+        // About... Tab
+        self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
     }
 
 
@@ -130,6 +144,10 @@ class ConfigureViewController:  NSViewController,
         self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
         self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
         self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
+        
+        // FROM 1.1.0
+        // Disable/enable the Apply button until changes are made
+        self.applyChangesButton.isEnabled = self.hasChanged
     }
 
     
@@ -242,6 +260,7 @@ class ConfigureViewController:  NSViewController,
         // Flip the item's recorded state and update the table
         item.isHidden = !item.isHidden
         self.hasChanged = true
+        self.applyChangesButton.isEnabled = true
         
         // Reload the table data and update the status line
         self.menuItemsTableView.reloadData()
@@ -325,6 +344,7 @@ class ConfigureViewController:  NSViewController,
                         if index != -1 {
                             list.items.remove(at: index)
                             self.hasChanged = true
+                            self.applyChangesButton.isEnabled = true
                             self.menuItemsTableView.reloadData()
                         }
                     }
@@ -490,6 +510,7 @@ class ConfigureViewController:  NSViewController,
                             // and update the UI
                             self.menuItems = newMenu
                             self.hasChanged = true
+                            self.applyChangesButton.isEnabled = true
                             self.menuItemsTableView.reloadData()
                         } else {
                             // Show Error message
@@ -524,6 +545,7 @@ class ConfigureViewController:  NSViewController,
             }
 
             self.hasChanged = true
+            self.applyChangesButton.isEnabled = true
             self.menuItemsTableView.reloadData()
             displayItemCount()
         }
