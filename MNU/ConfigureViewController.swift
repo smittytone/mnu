@@ -433,27 +433,15 @@ class ConfigureViewController:  NSViewController,
                 // The user clicked the Save button
                 if let targetUrl = savePanel.url {
                     // Create a JSON string representation of the menu data
-                    var dataString: String = "{\"data\":["
+                    let dataString: String = Serializer.jsonizeAll(self.menuItems!)
 
-                    var count: Int = 0
-                    for item: MenuItem in self.menuItems!.items {
-                        dataString += Serializer.jsonize(item)
-                        count += 1
-                        if count < self.menuItems!.items.count {
-                            dataString += ","
-                        }
-                    }
-                    
-                    dataString += "]}"
-                    
                     // Convert the string to data for saving
                     if let fileData: Data = dataString.data(using: String.Encoding.utf16) {
                     
                         // Save the data
-                        let fm: FileManager = FileManager.default
-                        let success = fm.createFile(atPath: targetUrl.path,
-                                                    contents:fileData,
-                                                    attributes: nil)
+                        let success = FileManager.default.createFile(atPath: targetUrl.path,
+                                                                     contents:fileData,
+                                                                     attributes: nil)
                         if !success {
                             self.showExportAlert()
                         }

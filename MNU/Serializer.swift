@@ -35,11 +35,32 @@ struct Serializer {
     
     static func jsonize(_ item: MenuItem) -> String {
 
-        // Generate a simple JSON string serialization of the specified Menu Item object
+        // Generate a simple JSON serialization of the specified Menu Item object
         var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
         json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
         json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
         return json
+    }
+    
+    
+    static func jsonizeAll(_ list: MenuItemList) -> String {
+            
+        // Generatae a full JSON string containing the full list of menu items
+        // The top level object, 'data', is an array of all of the Menu Item
+        // JSON strings
+        var jsonString: String = "{\"data\":["
+        var count: Int = 0
+        
+        for item: MenuItem in list.items {
+            jsonString += Serializer.jsonize(item)
+            count += 1
+            if count < list.items.count {
+                jsonString += ","
+            }
+        }
+        
+        jsonString += "]}"
+        return jsonString
     }
 
 
