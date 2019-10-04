@@ -253,6 +253,7 @@ class AppDelegate: NSObject,
 
     // MARK: - Loading And Saving Serialization Functions
 
+    /*
     func jsonize(_ item: MenuItem) -> String {
 
         // Generate a simple JSON string serialization of the specified Menu Item object
@@ -291,7 +292,7 @@ class AppDelegate: NSObject,
 
         return nil
     }
-    
+    */
     
     func saveItems() {
         
