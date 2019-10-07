@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -268,9 +268,24 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-04-17X">
+                                            <rect key="frame" x="15" y="13" width="25" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="21" id="frB-tM-YBM"/>
+                                                <constraint firstAttribute="height" constant="21" id="vak-bp-amd"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wKr-OW-4wl">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="Rb3-tv-hJo"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="trailing" secondItem="3gR-ck-alF" secondAttribute="trailing" constant="17" id="AKS-Pq-jIP"/>
+                                        <constraint firstItem="nVn-04-17X" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="AxV-7r-ihc"/>
                                         <constraint firstItem="YRU-ni-WJW" firstAttribute="top" secondItem="Oh6-vd-bZK" secondAttribute="top" constant="12" id="Ekt-xS-3dU"/>
                                         <constraint firstAttribute="trailing" secondItem="YRU-ni-WJW" secondAttribute="trailing" constant="17" id="G1b-fN-0vD"/>
                                         <constraint firstItem="cw2-9R-dHW" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" id="IHA-hX-LB6"/>
@@ -282,6 +297,7 @@
                                         <constraint firstItem="Xos-L3-Lxi" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" id="jPn-Dp-fty"/>
                                         <constraint firstAttribute="bottom" secondItem="3gR-ck-alF" secondAttribute="bottom" constant="17" id="kct-0P-JHE"/>
                                         <constraint firstItem="cw2-9R-dHW" firstAttribute="leading" secondItem="Xos-L3-Lxi" secondAttribute="trailing" id="lQC-2g-5RR"/>
+                                        <constraint firstAttribute="bottom" secondItem="nVn-04-17X" secondAttribute="bottom" constant="17" id="tza-pl-bsb"/>
                                         <constraint firstAttribute="trailing" secondItem="LeE-FI-XfJ" secondAttribute="trailing" constant="17" id="yAb-JF-ku2"/>
                                     </constraints>
                                 </view>
@@ -511,6 +527,7 @@
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
                 <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
                 <outlet property="prefsShowControlsButton" destination="Iol-Aa-G7M" id="0zT-j2-pw1"/>
+                <outlet property="showHelpButton" destination="nVn-04-17X" id="Xac-Af-wW0"/>
                 <outlet property="view" destination="gNH-Un-C4x" id="QLw-3R-J2p"/>
                 <outlet property="windowTabView" destination="sBi-nr-qbJ" id="eDP-pV-A5S"/>
             </connections>
@@ -519,7 +536,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="270"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="270"/>
             <value key="maxSize" type="size" width="560" height="270"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
@@ -728,7 +745,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -892,7 +909,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>

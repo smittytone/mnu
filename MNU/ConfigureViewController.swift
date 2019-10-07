@@ -44,6 +44,7 @@ class ConfigureViewController:  NSViewController,
     // Menu Items Tab
     @IBOutlet var menuItemsTableView: NSTableView!
     @IBOutlet var menuItemsCountText: NSTextField!
+    @IBOutlet var showHelpButton: NSButton!
     @IBOutlet var aivc: AddUserItemViewController!
     // FROM 1.1.0
     @IBOutlet var extrasButton: NSButton!
@@ -105,17 +106,18 @@ class ConfigureViewController:  NSViewController,
         // FROM 1.1.0
         // Prepare the extras... button
         self.extrasMenu = NSMenu()
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Export Items...", action: #selector(self.doExport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU Items...", action: #selector(self.doExport), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Import Items...", action: #selector(self.doImport), keyEquivalent: ""))
-        self.extrasMenu!.addItem(NSMenuItem.separator())
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
+        //self.extrasMenu!.addItem(NSMenuItem.separator())
+        //self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
 
         // FROM 1.1.0
         // Add tooltips: Menu Items Tab
         self.menuItemsAddButton.toolTip = "Add a new menu item"
         self.extrasButton.toolTip = "Click here for further actions"
         self.applyChangesButton.toolTip = "Click to apply any changes you have made"
-        
+        self.showHelpButton.toolTip = "Click here for help with this tab"
+
         // Preferences Tab
         self.prefsHelpButton.toolTip = "Click here for help with this tab"
         self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
@@ -358,7 +360,8 @@ class ConfigureViewController:  NSViewController,
 
         // FROM 1.1.0
         // Pop up the import/export buttons
-        let buttonPosition = NSPoint(x: 0, y: sender.frame.height + 6)
+        let yDelta: CGFloat = 4.0
+        let buttonPosition = NSPoint(x: 0, y: yDelta + sender.frame.size.height)
         self.extrasMenu!.popUp(positioning: nil,
                                at: buttonPosition,
                                in: sender)
