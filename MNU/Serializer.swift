@@ -3,7 +3,7 @@
    Serializer.swift
    MNU
 
-   Created by Tony Smith on 01/10/2019..
+   Created by Tony Smith on 01/10/2019.
    Copyright © 2019 Tony Smith. All rights reserved.
 
    MIT License
@@ -66,22 +66,14 @@ struct Serializer {
 
     static func dejsonize(_ json: String) -> MenuItem? {
 
-        // Recreate a Menu Item object from our simple JSON serialization
+        // Recreate a Menu Item object from our simple JSON serialization and return it,
+        // or nil to indicate failure
+
         // Convert JSON string to data
         if let data = json.data(using: .utf8) {
             do {
-                let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                let newItem = MenuItem()
-                newItem.title = dict!["title"] as! String
-                newItem.script = dict!["script"] as! String
-                newItem.type = dict!["type"] as! Int
-                newItem.code = dict!["code"] as! Int
-                newItem.isHidden = dict!["hidden"] as! Bool
-
-                // New items
-                let iconIndex = dict!["icon"] as? Int
-                newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
-                return newItem
+                let dict: [String: Any] = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                return makeNewItem(dict)
             } catch {
                 NSLog("Error in Serializer.dejsonize(): \(error.localizedDescription)")
             }
@@ -94,39 +86,52 @@ struct Serializer {
 
     static func dejsonizeAll(_ jsonData: Data) -> MenuItemList? {
 
-        // Unpack a full JSON file - ie. a menu list archive
+        // Unpack a full JSON file - ie. a menu list archive and return it,
+        // or nil to indicate failure
+        
         // First, create a new menu
         let newMenu: MenuItemList = MenuItemList()
 
         do {
             // Convert the JSON data to a dictionary, and get the 'data' key's array value
-            let dict: [String: Any]? = try JSONSerialization.jsonObject(with: jsonData, options: []) as? [String: Any]
-            let items: [Any] = dict!["data"] as! [Any]
+            let dict: [String: Any] = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+            if let dataItems = dict["data"] {
+                // Run through the array's elements, converting each to a MenuItem
+                let items: [Any] = dataItems as! [Any]
 
-            // Run through the array's elements, converting each to a MenuItem
-            for item: Any in items {
-                let newItem = MenuItem()
-                let srcItem: [String:Any] = item as! [String:Any]
-                newItem.title = srcItem["title"] as! String
-                newItem.script = srcItem["script"] as! String
-                newItem.type = srcItem["type"] as! Int
-                newItem.code = srcItem["code"] as! Int
-                newItem.isHidden = srcItem["hidden"] as! Bool
+                for item: Any in items {
+                    let srcItem: [String:Any] = item as! [String:Any]
+                    newMenu.items.append(makeNewItem(srcItem))
+                }
 
-                let iconIndex = srcItem["icon"] as? Int
-                newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
-
-                // Add the menu item to the new array
-                newMenu.items.append(newItem)
+                // Finally, return the new MenuItemList
+                return newMenu
+            } else {
+                // Error reading expected JSON condition
+                NSLog("Error in Serializer.dejsonizeAll(): No 'data' field")
+                return nil
             }
-
-            // Finally, return the new MenuItemList
-            return newMenu
         } catch {
             NSLog("Error in Serializer.dejsonizeAll(): \(error.localizedDescription)")
         }
 
         // Failure condition
         return nil
+    }
+
+
+    static private func makeNewItem(_ dict: [String:Any]) -> MenuItem {
+
+        // Generate and return a Mene Item from a dictionary, providing
+        // default values in the case of missing fields
+        let newItem = MenuItem()
+        let iconIndex = dict["icon"] as? Int
+        newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
+        newItem.title = dict["title"] as? String ?? "Unknown"
+        newItem.script = dict["script"] as? String ?? ""
+        newItem.type = dict["type"] as? Int ?? 1
+        newItem.code = dict["code"] as? Int ?? 20
+        newItem.isHidden = dict["hidden"] as? Bool ?? false
+        return newItem
     }
 }
