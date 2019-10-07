@@ -376,7 +376,6 @@ class ConfigureViewController:  NSViewController,
     }
 
 
-
     // MARK: About... Pane Functions
     
     @IBAction @objc func submitFeedback(sender: Any?) {
