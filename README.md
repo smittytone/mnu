@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.0.1 &mdash; *Unreleased*
+- 1.0.1 &mdash; *9 October 2019*
     - Minor improvements.
     - Show correct version in MNU menu bar tooltip.
 - 1.0.0 &mdash; *17 September 2019*
