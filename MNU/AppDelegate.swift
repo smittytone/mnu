@@ -457,7 +457,8 @@ class AppDelegate: NSObject,
         }
 
         self.cwvc.menuItems = list
-        self.cwvc.menuItemsTableView.reloadData()
+        // FROM 1.0.1 - move the following line to the view controller
+        // self.cwvc.menuItemsTableView.reloadData()
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
@@ -576,7 +577,8 @@ class AppDelegate: NSObject,
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
-            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion 1.0.0"
+            let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version)"
             self.statusItem!.isVisible = true
         } else {
             NSLog("Error in MNU.createMenu()(): Could not initialise menu")

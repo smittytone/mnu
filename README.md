@@ -1,4 +1,4 @@
-# MNU 1.0.0 #
+# MNU 1.0.1 #
 
 Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
@@ -6,12 +6,13 @@ Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
 Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPGs).
 
-## To Do ##
-
-- Pre-release testing
+The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
 ## Release Notes ##
 
+- 1.0.1 &mdash; *9 October 2019*
+    - Minor improvements.
+    - Show correct version in MNU menu bar tooltip.
 - 1.0.0 &mdash; *17 September 2019*
     - Initial public release.
 
