@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+# This postinstall script is run on macOS .pkg installer
 
 # Get MNU running instance
 pid=`ps -A | grep -m1 MNU | grep -v grep`

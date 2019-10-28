@@ -1,4 +1,4 @@
-# MNU 1.0.1 #
+# MNU 1.1.0 #
 
 Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
@@ -10,6 +10,11 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.1.0 &mdash; *28 October 2019*
+    - Add an extra controls button to the Configure window:
+        - Export a JSON representation of the current menu item lits for backup and/or sync across Macs.
+        - Import JSON backups.
+    - Add tooltips to key UI items.
 - 1.0.1 &mdash; *9 October 2019*
     - Minor improvements.
     - Show correct version in MNU menu bar tooltip.

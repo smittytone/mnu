@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15400" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14490.70"/>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15400"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -98,13 +99,13 @@
                                     <rect key="frame" x="10" y="33" width="534" height="261"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Xos-L3-Lxi">
-                                            <rect key="frame" x="11" y="10" width="100" height="32"/>
+                                        <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xos-L3-Lxi">
+                                            <rect key="frame" x="17" y="45" width="28" height="28"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="bpH-UL-pgs"/>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="88" id="gQ2-C5-MbI"/>
+                                                <constraint firstAttribute="height" constant="26" id="4UZ-Fq-Y8O"/>
+                                                <constraint firstAttribute="width" constant="28" id="QLB-UV-Ib6"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="push" title="Add Item" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -228,31 +229,6 @@
                                                 <autoresizingMask key="autoresizingMask"/>
                                             </scroller>
                                         </scrollView>
-                                        <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="tlC-mS-jce">
-                                            <rect key="frame" x="255" y="13" width="25" height="25"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" constant="21" id="EJ7-KV-4fr"/>
-                                                <constraint firstAttribute="height" constant="21" id="e3j-Nh-949"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="UFB-EM-L2F">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="iD0-Pp-a2M"/>
-                                            </connections>
-                                        </button>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LeE-FI-XfJ">
-                                            <rect key="frame" x="15" y="50" width="504" height="14"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="14" id="YAA-4w-X97"/>
-                                            </constraints>
-                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" title="x items" id="bp2-lR-3Ea">
-                                                <font key="font" metaFont="smallSystem"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3gR-ck-alF">
                                             <rect key="frame" x="423" y="10" width="100" height="32"/>
                                             <constraints>
@@ -267,22 +243,62 @@
                                                 <action selector="doSaveWithSender:" target="qtv-Yg-ACO" id="ru7-sN-Ktb"/>
                                             </connections>
                                         </button>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cw2-9R-dHW">
+                                            <rect key="frame" x="45" y="45" width="28" height="28"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="28" id="DzS-U6-A1R"/>
+                                                <constraint firstAttribute="height" constant="26" id="hrC-EV-17u"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="smallSquare" bezelStyle="smallSquare" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KyX-O1-NTg">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="doShowExtrasWithSender:" target="qtv-Yg-ACO" id="htR-iz-eBf"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="LeE-FI-XfJ">
+                                            <rect key="frame" x="83" y="52" width="436" height="14"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="14" id="eSL-a2-jTo"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" title="x items" id="bp2-lR-3Ea">
+                                                <font key="font" metaFont="smallSystem"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-04-17X">
+                                            <rect key="frame" x="15" y="13" width="25" height="25"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" constant="21" id="frB-tM-YBM"/>
+                                                <constraint firstAttribute="height" constant="21" id="vak-bp-amd"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wKr-OW-4wl">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="Rb3-tv-hJo"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="trailing" secondItem="LeE-FI-XfJ" secondAttribute="trailing" constant="17" id="564-qq-3ig"/>
-                                        <constraint firstAttribute="bottom" secondItem="Xos-L3-Lxi" secondAttribute="bottom" constant="17" id="56R-mV-Jph"/>
                                         <constraint firstAttribute="trailing" secondItem="3gR-ck-alF" secondAttribute="trailing" constant="17" id="AKS-Pq-jIP"/>
-                                        <constraint firstItem="Xos-L3-Lxi" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="BTO-qp-r1H"/>
+                                        <constraint firstItem="nVn-04-17X" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="AxV-7r-ihc"/>
                                         <constraint firstItem="YRU-ni-WJW" firstAttribute="top" secondItem="Oh6-vd-bZK" secondAttribute="top" constant="12" id="Ekt-xS-3dU"/>
                                         <constraint firstAttribute="trailing" secondItem="YRU-ni-WJW" secondAttribute="trailing" constant="17" id="G1b-fN-0vD"/>
-                                        <constraint firstAttribute="bottom" secondItem="tlC-mS-jce" secondAttribute="bottom" constant="17" id="H56-5E-tFH"/>
+                                        <constraint firstItem="cw2-9R-dHW" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" id="IHA-hX-LB6"/>
+                                        <constraint firstItem="3gR-ck-alF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="20" symbolic="YES" id="PxU-wq-6az"/>
+                                        <constraint firstItem="LeE-FI-XfJ" firstAttribute="leading" secondItem="cw2-9R-dHW" secondAttribute="trailing" constant="12" id="VWD-OY-P8L"/>
                                         <constraint firstItem="YRU-ni-WJW" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="VgL-c6-2Uw"/>
-                                        <constraint firstItem="tlC-mS-jce" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="Xos-L3-Lxi" secondAttribute="trailing" constant="12" symbolic="YES" id="WRI-C0-izG"/>
-                                        <constraint firstItem="LeE-FI-XfJ" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" constant="8" id="bVQ-z5-ZU4"/>
-                                        <constraint firstItem="3gR-ck-alF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="tlC-mS-jce" secondAttribute="trailing" constant="12" symbolic="YES" id="hoX-mM-ZBu"/>
+                                        <constraint firstItem="Xos-L3-Lxi" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="YbU-3W-iQF"/>
+                                        <constraint firstItem="LeE-FI-XfJ" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" constant="6" id="e0N-nm-1T1"/>
+                                        <constraint firstItem="Xos-L3-Lxi" firstAttribute="top" secondItem="YRU-ni-WJW" secondAttribute="bottom" id="jPn-Dp-fty"/>
                                         <constraint firstAttribute="bottom" secondItem="3gR-ck-alF" secondAttribute="bottom" constant="17" id="kct-0P-JHE"/>
-                                        <constraint firstItem="tlC-mS-jce" firstAttribute="centerX" secondItem="Oh6-vd-bZK" secondAttribute="centerX" id="qgb-a3-mQv"/>
-                                        <constraint firstItem="LeE-FI-XfJ" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="17" id="tT2-od-zgp"/>
+                                        <constraint firstItem="cw2-9R-dHW" firstAttribute="leading" secondItem="Xos-L3-Lxi" secondAttribute="trailing" id="lQC-2g-5RR"/>
+                                        <constraint firstAttribute="bottom" secondItem="nVn-04-17X" secondAttribute="bottom" constant="17" id="tza-pl-bsb"/>
+                                        <constraint firstAttribute="trailing" secondItem="LeE-FI-XfJ" secondAttribute="trailing" constant="17" id="yAb-JF-ku2"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -452,7 +468,8 @@
                                             </constraints>
                                             <textFieldCell key="cell" refusesFirstResponder="YES" allowsUndo="NO" alignment="center" id="Ndt-gO-aw4">
                                                 <font key="font" metaFont="miniSystem"/>
-                                                <mutableString key="title">The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and  non-infringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software. Organizaion logotypes used in menu icons remain the property of their respective organizations.  This software in no way claims ownership of those logotypes, and use of those logotypes does not imply any recommendation of this software by the owner organizations.</mutableString>
+                                                <mutableString key="title">The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and  non-infringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of
+contract, tort or otherwise, arising from, out of or in connection with the software or the use or  other dealings in the software. Organizaion logotypes used in menu icons remain the property of their respective organizations.  This software in no way claims ownership of those logotypes, and use of those logotypes does not imply any recommendation of this software by the owner organizations.</mutableString>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -500,14 +517,18 @@
             <connections>
                 <outlet property="aboutVersionText" destination="pOe-I6-BRt" id="EM7-lv-YAa"/>
                 <outlet property="aivc" destination="8Wq-hu-xtq" id="3AS-kr-23V"/>
+                <outlet property="applyChangesButton" destination="3gR-ck-alF" id="4RC-Ko-geL"/>
+                <outlet property="extrasButton" destination="cw2-9R-dHW" id="2Xo-Qv-FI3"/>
                 <outlet property="fbvc" destination="qsm-LN-R5T" id="HDV-ut-cSl"/>
+                <outlet property="feedbackButton" destination="Kva-xe-wg0" id="777-Nv-Nbl"/>
+                <outlet property="menuItemsAddButton" destination="Xos-L3-Lxi" id="JFx-vY-oET"/>
                 <outlet property="menuItemsCountText" destination="LeE-FI-XfJ" id="mWA-3l-G0x"/>
-                <outlet property="menuItemsHelpButton" destination="tlC-mS-jce" id="wuj-aJ-aXu"/>
                 <outlet property="menuItemsTableView" destination="2ab-77-HWZ" id="l1v-fo-niw"/>
                 <outlet property="prefsHelpButton" destination="WdZ-qr-xzQ" id="1kv-J6-WMY"/>
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
                 <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
                 <outlet property="prefsShowControlsButton" destination="Iol-Aa-G7M" id="0zT-j2-pw1"/>
+                <outlet property="showHelpButton" destination="nVn-04-17X" id="Xac-Af-wW0"/>
                 <outlet property="view" destination="gNH-Un-C4x" id="QLw-3R-J2p"/>
                 <outlet property="windowTabView" destination="sBi-nr-qbJ" id="eDP-pV-A5S"/>
             </connections>
@@ -883,13 +904,13 @@ Gw
             <connections>
                 <outlet property="delegate" destination="qtv-Yg-ACO" id="OaP-65-Ir8"/>
             </connections>
-            <point key="canvasLocation" x="423" y="-271"/>
+            <point key="canvasLocation" x="246" y="-281"/>
         </menu>
         <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-PJ-SnZ">
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
@@ -915,11 +936,13 @@ Gw
                 <rect key="frame" x="247" y="1" width="16" height="262"/>
                 <autoresizingMask key="autoresizingMask"/>
             </scroller>
-            <point key="canvasLocation" x="727" y="-199"/>
+            <point key="canvasLocation" x="922" y="-200"/>
         </scrollView>
     </objects>
     <resources>
         <image name="NSActionTemplate" width="14" height="14"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
+        <image name="NSSmartBadgeTemplate" width="14" height="14"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSStopProgressFreestandingTemplate" width="14" height="14"/>
         <image name="button_close" width="20" height="20"/>

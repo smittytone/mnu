@@ -253,6 +253,7 @@ class AppDelegate: NSObject,
 
     // MARK: - Loading And Saving Serialization Functions
 
+    /*
     func jsonize(_ item: MenuItem) -> String {
 
         // Generate a simple JSON string serialization of the specified Menu Item object
@@ -291,7 +292,7 @@ class AppDelegate: NSObject,
 
         return nil
     }
-    
+    */
     
     func saveItems() {
         
@@ -303,7 +304,7 @@ class AppDelegate: NSObject,
         var savedItems: [Any] = []
         
         for item: MenuItem in self.items {
-            savedItems.append(jsonize(item))
+            savedItems.append(Serializer.jsonize(item))
         }
         
         let defaults = UserDefaults.standard
@@ -497,7 +498,7 @@ class AppDelegate: NSObject,
             //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
 
             for loadedItem: String in loadedItems {
-                if let itemInstance = dejsonize(loadedItem) {
+                if let itemInstance = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
@@ -906,7 +907,6 @@ class AppDelegate: NSObject,
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
         let tabSection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
-
         let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(code)\")\(tabSection)\nelse\ndo script (\"\(code)\")\nend if\nend tell"
         
         #if DEBUG

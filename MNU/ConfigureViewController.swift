@@ -44,8 +44,12 @@ class ConfigureViewController:  NSViewController,
     // Menu Items Tab
     @IBOutlet var menuItemsTableView: NSTableView!
     @IBOutlet var menuItemsCountText: NSTextField!
+    @IBOutlet var showHelpButton: NSButton!
     @IBOutlet var aivc: AddUserItemViewController!
-    @IBOutlet var menuItemsHelpButton: NSButton!
+    // FROM 1.1.0
+    @IBOutlet var extrasButton: NSButton!
+    @IBOutlet var menuItemsAddButton: NSButton!
+    @IBOutlet var applyChangesButton: NSButton!
 
     // Preferences Tab
     @IBOutlet var prefsLaunchAtLoginButton: NSButton!
@@ -56,6 +60,9 @@ class ConfigureViewController:  NSViewController,
     // About... Tab
     @IBOutlet var aboutVersionText: NSTextField!
     @IBOutlet var fbvc: FeedbackSheetViewController!
+    // FROM 1.1.0
+    @IBOutlet var feedbackButton: NSButton!
+    
     
 
     // MARK: - Class Properties
@@ -66,6 +73,8 @@ class ConfigureViewController:  NSViewController,
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
+    // FROM 1.1.0
+    var extrasMenu: NSMenu? = nil
     
 
     // MARK: - Lifecycle Functions
@@ -93,6 +102,30 @@ class ConfigureViewController:  NSViewController,
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
         aboutVersionText.stringValue = "Version \(version) (\(build))"
+        
+        // FROM 1.1.0
+        // Prepare the extras... button
+        self.extrasMenu = NSMenu()
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU Items...", action: #selector(self.doExport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Import Items...", action: #selector(self.doImport), keyEquivalent: ""))
+        //self.extrasMenu!.addItem(NSMenuItem.separator())
+        //self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
+
+        // FROM 1.1.0
+        // Add tooltips: Menu Items Tab
+        self.menuItemsAddButton.toolTip = "Add a new menu item"
+        self.extrasButton.toolTip = "Click here for further actions"
+        self.applyChangesButton.toolTip = "Click to apply any changes you have made"
+        self.showHelpButton.toolTip = "Click here for help with this tab"
+
+        // Preferences Tab
+        self.prefsHelpButton.toolTip = "Click here for help with this tab"
+        self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
+        self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
+        self.prefsShowControlsButton.toolTip = "Check to display images alongside MNU menu items"
+        
+        // About... Tab
+        self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
     }
 
 
@@ -113,6 +146,10 @@ class ConfigureViewController:  NSViewController,
         self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
         self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
         self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
+        
+        // FROM 1.1.0
+        // Disable/enable the Apply button until changes are made
+        self.applyChangesButton.isEnabled = self.hasChanged
     }
 
     
@@ -144,8 +181,7 @@ class ConfigureViewController:  NSViewController,
         // NOTE Currently disabled (to restore table drag'n'drop)
         return true
     }
-
-
+    
     
     // MARK: - Action Functions
     // MARK: Menu Items List Functions
@@ -226,6 +262,7 @@ class ConfigureViewController:  NSViewController,
         // Flip the item's recorded state and update the table
         item.isHidden = !item.isHidden
         self.hasChanged = true
+        self.applyChangesButton.isEnabled = true
         
         // Reload the table data and update the status line
         self.menuItemsTableView.reloadData()
@@ -309,12 +346,33 @@ class ConfigureViewController:  NSViewController,
                         if index != -1 {
                             list.items.remove(at: index)
                             self.hasChanged = true
+                            self.applyChangesButton.isEnabled = true
                             self.menuItemsTableView.reloadData()
                         }
                     }
                 }
             }
         }
+    }
+
+
+    @IBAction @objc func doShowExtras(sender: NSButton) {
+
+        // FROM 1.1.0
+        // Pop up the import/export buttons
+        let yDelta: CGFloat = 4.0
+        let buttonPosition = NSPoint(x: 0, y: yDelta + sender.frame.size.height)
+        self.extrasMenu!.popUp(positioning: nil,
+                               at: buttonPosition,
+                               in: sender)
+    }
+
+
+    @objc func doExtraHelp() {
+
+        // FROM 1.1.0
+        // Just call the existing 'doShowHelp()' function as if we were a button
+        doShowHelp(sender: self.extrasButton)
     }
 
 
@@ -369,12 +427,106 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func doShowHelp(sender: Any?) {
         
         // Show the 'Help' via the website
-        // TODO create web page
         // TODO provide offline help
         var path: String = "https://smittytone.github.io/mnu/index.html"
         let button: NSButton = sender as! NSButton
         path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
         NSWorkspace.shared.open(URL.init(string:path)!)
+    }
+    
+    
+    // MARK: - List Import/Export Functions
+
+    @objc func doExport() {
+        
+        // FROM 1.1.0
+        // Create a save panel for the export operation...
+        let savePanel: NSSavePanel = NSSavePanel()
+        savePanel.allowedFileTypes = ["json"]
+        savePanel.allowsOtherFileTypes = false
+        savePanel.canCreateDirectories = true
+        savePanel.nameFieldStringValue = "MNUItems"
+        savePanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+
+        // ...and show it
+        savePanel.beginSheetModal(for: self.view.window!) { (response) in
+            
+            if response == NSApplication.ModalResponse.OK {
+                // The user clicked the Save button
+                if let targetUrl = savePanel.url {
+                    // Create a JSON string representation of the menu data
+                    let dataString: String = Serializer.jsonizeAll(self.menuItems!)
+
+                    // Convert the string to data for saving
+                    if let fileData: Data = dataString.data(using: String.Encoding.utf16) {
+                    
+                        // Save the data
+                        let success = FileManager.default.createFile(atPath: targetUrl.path,
+                                                                     contents:fileData,
+                                                                     attributes: nil)
+                        if !success {
+                            self.showExportAlert()
+                        }
+                    } else {
+                        // Could not convert the JSON string to UTF-16 data
+                        self.showExportAlert()
+                    }
+                }
+            }
+        }
+    }
+
+
+    func showExportAlert() {
+
+        // FROM 1.1.0
+        // Multi-use call from 'doExport()'
+        showAlert("File Export Error",
+                  "Sorry, but the menu items back-up file could not be created. Please try again.")
+    }
+    
+    
+    @objc func doImport() {
+        
+        // FROM 1.1.0
+        // Create an open panel for the import operation...
+        let openPanel: NSOpenPanel = NSOpenPanel()
+        openPanel.allowedFileTypes = ["json"]
+        openPanel.allowsOtherFileTypes = false
+        openPanel.allowsMultipleSelection = false
+        openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+
+        // ...and show it
+        openPanel.beginSheetModal(for: self.view.window!) { (response) in
+
+            if response == NSApplication.ModalResponse.OK {
+                // The user clicked the Save button
+                if let targetUrl = openPanel.url {
+                    // Load the data if we have a valid file URL
+                    do {
+                        let fileData: Data = try Data.init(contentsOf: targetUrl)
+                        let newMenu: MenuItemList? = Serializer.dejsonizeAll(fileData)
+
+                        if newMenu != nil {
+                            // If we have a valid menu loaded, retain it
+                            // and update the UI
+                            self.menuItems = newMenu
+                            self.hasChanged = true
+                            self.applyChangesButton.isEnabled = true
+                            self.menuItemsTableView.reloadData()
+                        } else {
+                            // Show Error message
+                            self.showAlert("File Import Error",
+                                           "Sorry, but the menu items back-up file could not be processed. Is it a MNU file?")
+                        }
+                    } catch {
+                        // Post Warning
+                        self.showAlert("File Import Error",
+                                       "Sorry, but the menu items back-up file could not be loaded from disk. Is it a MNU file?")
+                    }
+                }
+            }
+        }
     }
     
     
@@ -395,6 +547,7 @@ class ConfigureViewController:  NSViewController,
             }
 
             self.hasChanged = true
+            self.applyChangesButton.isEnabled = true
             self.menuItemsTableView.reloadData()
             displayItemCount()
         }
@@ -696,6 +849,18 @@ class ConfigureViewController:  NSViewController,
 
         // Display the text
         menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) out of \(total) (Option-click the menu to show all items)"
+    }
+
+
+    func showAlert(_ title: String, _ message: String) {
+
+        // Present an alert to warn the user about deleting the Menu Item
+        let alert: NSAlert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.addButton(withTitle: "OK")
+        alert.beginSheetModal(for: self.view.window!,
+                              completionHandler: nil)
     }
 
 }
