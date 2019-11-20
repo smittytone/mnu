@@ -58,15 +58,8 @@ playground.xcworkspace
 .DS_Store
 
 Art/*
-Art-Source/*
-Experimental/*
-Squinter/*.pem
-Squinter/Images.xcassets/*
-Squinter/*.icns
-Squinter/*.otf
-#SquinterHelp/*
-SquinterTests/*
 Third-Party-Code/*
+pkgscripts/
 
 ## UNUSED
 
