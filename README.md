@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.1.1 *Unreleased*
+- 1.1.1 *20 November 2019*
     - Add app restart script for installer package.
 - 1.1.0 *28 October 2019*
     - Add an extra controls button to the Configure window:
