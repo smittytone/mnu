@@ -170,7 +170,6 @@ class ConfigureViewController:  NSViewController,
         self.configureWindow!.makeKeyAndOrderFront(nil)
         
         // The following is required to bring the window to the front properly
-        // SEE https://stackoverflow.com/questions/7460092/nswindow-makekeyandorderfront-makes-window-appear-but-not-key-or-front
         NSApp.activate(ignoringOtherApps: true)
     }
     
