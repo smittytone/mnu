@@ -133,7 +133,7 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_dir")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_pic")
+        image = NSImage.init(named: "picon_app")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_cog")
         self.icons.add(image!)
@@ -293,6 +293,13 @@ class AddUserItemViewController: NSViewController,
                     itemHasChanged = true
                     item.iconIndex = self.iconButton.index
                 }
+                
+                // ADDED 1.2.0
+                let newType: Int = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
+                if newType != item.type {
+                    item.type = newType
+                    itemHasChanged = true
+                }
             }
         }
 
@@ -314,7 +321,7 @@ class AddUserItemViewController: NSViewController,
         // Show the 'Help' via the website
         // TODO create web page
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#add-edit")!)
+        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#how-to-add-and-edit-your-own-menu-items")!)
     }
 
 

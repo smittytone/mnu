@@ -758,7 +758,7 @@ class AppDelegate: NSObject,
         self.icons.add(image!)
         image = NSImage.init(named: "logo_dir")
         self.icons.add(image!)
-        image = NSImage.init(named: "logo_pic")
+        image = NSImage.init(named: "logo_app")
         self.icons.add(image!)
         image = NSImage.init(named: "logo_cog")
         self.icons.add(image!)

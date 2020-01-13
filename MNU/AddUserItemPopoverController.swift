@@ -68,7 +68,7 @@ class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Docker")
         self.tooltips.append("Document")
         self.tooltips.append("Folder")
-        self.tooltips.append("Image")
+        self.tooltips.append("Application")
         self.tooltips.append("Settings")
         self.tooltips.append("Sync")
         self.tooltips.append("Power")

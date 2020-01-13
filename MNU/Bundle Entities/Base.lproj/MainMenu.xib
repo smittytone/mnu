@@ -445,7 +445,7 @@
                                                 <constraint firstAttribute="width" constant="32" id="G2J-Sg-pdH"/>
                                                 <constraint firstAttribute="height" constant="32" id="H9G-jj-sDg"/>
                                             </constraints>
-                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="logo_app" id="Lzc-XU-SPm"/>
+                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="icon_app" id="Lzc-XU-SPm"/>
                                         </imageView>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kva-xe-wg0">
                                             <rect key="frame" x="200" y="10" width="134" height="27"/>
@@ -962,7 +962,7 @@ Gw
         <image name="button_close" width="20" height="20"/>
         <image name="button_configure" width="20" height="20"/>
         <image name="button_help" width="20" height="20"/>
-        <image name="logo_app" width="32" height="32"/>
+        <image name="icon_app" width="32" height="32"/>
         <image name="logo_generic" width="20" height="20"/>
     </resources>
 </document>
