@@ -429,7 +429,7 @@ class ConfigureViewController:  NSViewController,
         // TODO provide offline help
         var path: String = "https://smittytone.github.io/mnu/index.html"
         let button: NSButton = sender as! NSButton
-        path += button == self.prefsHelpButton ? "#prefs" : "#how-to-configure"
+        path += button == self.prefsHelpButton ? "#mnu-preferences" : "#how-to-configure-mnu"
         NSWorkspace.shared.open(URL.init(string:path)!)
     }
     

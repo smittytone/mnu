@@ -44,6 +44,9 @@ class AddUserItemViewController: NSViewController,
     @IBOutlet var saveButton: NSButton!
     @IBOutlet var iconButton: AddUserItemIconButton!
     @IBOutlet var iconPopoverController: AddUserItemPopoverController!
+    
+    // FROM 1.2.0
+    @IBOutlet var openCheck: NSButton!
 
 
     // MARK: - Class Properties
@@ -170,6 +173,8 @@ class AddUserItemViewController: NSViewController,
             self.titleText.stringValue = "Add A New Terminal Command"
             self.iconButton.image = self.icons.object(at: 0) as? NSImage
             self.iconButton.index = 0
+            self.textCount.stringValue = "0/30"
+            self.openCheck.state = NSControl.StateValue.off
         } else {
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
@@ -179,6 +184,8 @@ class AddUserItemViewController: NSViewController,
                 self.titleText.stringValue = "Edit This Terminal Command"
                 self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
                 self.iconButton.index = item.iconIndex
+                self.textCount.stringValue = "\(item.title.count)/30"
+                self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? NSControl.StateValue.off : NSControl.StateValue.on
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
@@ -222,6 +229,7 @@ class AddUserItemViewController: NSViewController,
         // Save a new script item, or update an existing one (if we are editing)
 
         var itemHasChanged: Bool = false
+        let isOpenAction: Bool = self.openCheck.state == NSControl.StateValue.on
 
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
@@ -260,7 +268,7 @@ class AddUserItemViewController: NSViewController,
             let newItem = MenuItem()
             newItem.script = self.itemScriptText.stringValue
             newItem.title = self.menuTitleText.stringValue
-            newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+            newItem.type = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
             newItem.iconIndex = self.iconButton.index

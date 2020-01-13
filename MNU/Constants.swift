@@ -50,6 +50,7 @@ struct MNU_CONSTANTS {
     struct TYPES {
         static let SWITCH           = 0
         static let SCRIPT           = 1
+        static let OPEN             = 2
     }
 
     struct BUILT_IN_TITLES {

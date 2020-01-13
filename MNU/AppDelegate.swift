@@ -440,7 +440,11 @@ class AppDelegate: NSObject,
         // Get the source Menu Item that the menu button is linked to
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            runScript(item.script)
+            if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
+                runScript(item.script)
+            } else {
+                openApp(item.script)
+            }
         }
     }
 
@@ -926,7 +930,33 @@ class AppDelegate: NSObject,
          */
     }
 
-
+    
+    func openApp(_ appName: String) {
+        
+        // ADDED 1.2.0
+        // Don't present the Terminal; just open the named app directly
+        
+        #if DEBUG
+        NSLog("MNU opening app \'\(appName)\'")
+        #endif
+        
+        // Make sure the name has '.app' appended (if not already present) and has a path
+        var an: NSString = appName as NSString
+        if !an.contains(".app") { an = an.appendingFormat("%@", ".app") }
+        if !an.contains("/Applications") { an = NSString.init(format: "/Applications/%@", an) }
+        
+        #if DEBUG
+        NSLog("MNU running script \'open \(an)\'")
+        #endif
+        
+        runProcess(app: "/usr/bin/open",
+                   with: [an as String],
+                   doBlock: false)
+        
+        return
+    }
+    
+    
     func runBundleScript(named scriptName: String, doAddPath: Bool) {
 
         // Load and run the named script from the application bundle
