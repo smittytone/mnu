@@ -11,7 +11,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 ## Release Notes ##
 
 - 1.2.0 *Unreleased*
-    - Add ability to launch apps.
+    - Add ability to launch named apps.
+    - Better handling of duplicate menu item titles.
 - 1.1.1 *20 November 2019*
     - Add app restart script for installer package.
 - 1.1.0 *28 October 2019*
