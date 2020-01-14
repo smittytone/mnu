@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 24/07/2019.
-    Copyright © 2019 Tony Smith. All rights reserved.
+    Copyright © 2019-20 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -245,25 +245,9 @@ class AddUserItemViewController: NSViewController,
         }
 
         if !self.isEditing {
-            // Check that we have a unique menu label
-            if let list: MenuItemList = self.currentMenuItems {
-                if list.items.count > 0 {
-                    var got: Bool = false
-                    for item: MenuItem in list.items {
-                        if item.title == self.menuTitleText.stringValue {
-                            got = true
-                            break
-                        }
-                    }
-
-                    if got {
-                        // The label is in use, so warn the user and exit the save
-                        showAlert("Menu Label Already In Use", "You must enter a unique label for the command’s menu entry. If you don’t want to set one at this time, click OK then Cancel")
-                        return
-                    }
-                }
-            }
-
+            // Check for a duplicate menu title
+            if !checkLabel() { return }
+            
             // Create a Menu Item and set its values
             let newItem = MenuItem()
             newItem.script = self.itemScriptText.stringValue
@@ -280,6 +264,10 @@ class AddUserItemViewController: NSViewController,
             // Save the updated fields
             if let item = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
+                    // ADDED 1.2.0
+                    // Check for a duplicate menu title
+                    if !checkLabel() { return }
+                    
                     itemHasChanged = true
                     item.title = self.menuTitleText.stringValue
                 }
@@ -315,7 +303,34 @@ class AddUserItemViewController: NSViewController,
         self.parentWindow = nil
     }
 
+    
+    func checkLabel() -> Bool {
+        
+        // ADDED 1.2.0
+        // Moved from 'doSave()'
+        // Check that we have a unique menu label
+        if let list: MenuItemList = self.currentMenuItems {
+            if list.items.count > 0 {
+                var got: Bool = false
+                for item: MenuItem in list.items {
+                    if item.title == self.menuTitleText.stringValue {
+                        got = true
+                        break
+                    }
+                }
 
+                if got {
+                    // The label is in use, so warn the user and exit the save
+                    showAlert("Menu Label Already In Use", "You must enter a unique label for the command’s menu entry. If you don’t want to set one at this time, click OK then Cancel")
+                    return false
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    
     @IBAction @objc func doShowHelp(sender: Any?) {
 
         // Show the 'Help' via the website
