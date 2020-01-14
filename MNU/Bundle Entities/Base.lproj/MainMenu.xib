@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15702" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="15705" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="15705"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -629,7 +629,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="14" id="x4M-Hf-dj3"/>
                         </constraints>
-                        <buttonCell key="cell" type="check" title="Check this box if you just wish to open the named application" bezelStyle="regularSquare" imagePosition="leading" inset="2" id="hNT-ID-jQC">
+                        <buttonCell key="cell" type="check" title="Check this box if you just want MNU to open the named application" bezelStyle="regularSquare" imagePosition="leading" inset="2" id="hNT-ID-jQC">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -673,7 +673,7 @@ Gw
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-Df-MOS">
                         <rect key="frame" x="18" y="59" width="168" height="17"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="164" id="6Bi-OO-i6s"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="6Bi-OO-i6s"/>
                             <constraint firstAttribute="height" constant="17" id="E2t-BM-Xjl"/>
                         </constraints>
                         <textFieldCell key="cell" lineBreakMode="clipping" title="Menu icon (click to select):" id="7vC-gn-aJ8">
@@ -924,7 +924,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
