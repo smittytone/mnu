@@ -1,4 +1,4 @@
-# MNU 1.2.0 #
+# MNU 1.2.1 #
 
 Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.2.1 *Unreleased*
+    - Add copy, cut, paste, select all, undo and redo to the **Add/Edit User Item** text fields.
 - 1.2.0 *14 January 2020*
     - Add ability to launch named apps.
     - Better handling of duplicate menu item titles.
