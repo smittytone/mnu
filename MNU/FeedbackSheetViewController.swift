@@ -44,7 +44,7 @@ class FeedbackSheetViewController: NSViewController,
     // MARK: - Class Properties
 
     var parentWindow: NSWindow? = nil
-    var feedbackTask: URLSessionTask? = nil
+    private var feedbackTask: URLSessionTask? = nil
 
 
     // MARK: - Lifecycle Functions
