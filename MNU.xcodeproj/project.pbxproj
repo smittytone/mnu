@@ -28,6 +28,7 @@
 		3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BBEF09022CECC00001D1CCB /* Constants.swift */; };
 		3BC6F64622EBE252004FBF22 /* AddToLogin.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 3BC6F64522EBE252004FBF22 /* AddToLogin.scpt */; };
 		3BC6F64822EBE61F004FBF22 /* RemoveLogin.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 3BC6F64722EBE61F004FBF22 /* RemoveLogin.scpt */; };
+		3BCBFD6623DF426A0018C0BC /* AddUserItemTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCBFD6523DF426A0018C0BC /* AddUserItemTextField.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +56,7 @@
 		3BBEF09022CECC00001D1CCB /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		3BC6F64522EBE252004FBF22 /* AddToLogin.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AddToLogin.scpt; sourceTree = "<group>"; };
 		3BC6F64722EBE61F004FBF22 /* RemoveLogin.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RemoveLogin.scpt; sourceTree = "<group>"; };
+		3BCBFD6523DF426A0018C0BC /* AddUserItemTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemTextField.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +115,7 @@
 				3B213445230C388900F7EE06 /* MenuControlsViewController.swift */,
 				3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */,
 				3B2691E222E59A9400F877AC /* AddUserItemViewController.swift */,
+				3BCBFD6523DF426A0018C0BC /* AddUserItemTextField.swift */,
 				3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */,
 				3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */,
 				3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */,
@@ -213,6 +216,7 @@
 				3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */,
 				3B213446230C388900F7EE06 /* MenuControlsViewController.swift in Sources */,
 				3B279CC622E7D683005D037D /* MenuItemTableCellView.swift in Sources */,
+				3BCBFD6623DF426A0018C0BC /* AddUserItemTextField.swift in Sources */,
 				3B787A94230EF0B400468D3F /* AddUserItemCollectionViewItem.swift in Sources */,
 				3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */,
 				3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */,
@@ -357,7 +361,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 124;
+				CURRENT_PROJECT_VERSION = 125;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
@@ -381,7 +385,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 124;
+				CURRENT_PROJECT_VERSION = 125;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";

@@ -67,6 +67,12 @@ struct MNU_CONSTANTS {
     static let MENU_ESC_KEY         = 53
     static let MENU_ARR_KEY         = 124
     static let MENU_ARL_KEY         = 123
+    static let MENU_COPY_KEY        = "c"
+    static let MENU_CUT_KEY         = "x"
+    static let MENU_PASTE_KEY       = "v"
+    static let MENU_SELECT_ALL_KEY  = "a"
+    static let MENU_UNDO_KEY        = "z"
+    static let MENU_REDO_KEY        = "Z"
     
     static let MAX_ITEM_COUNT       = 25
 }

@@ -128,7 +128,7 @@
                                                         <tableColumns>
                                                             <tableColumn width="495" minWidth="40" maxWidth="1000" id="Ws8-ne-vin">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
-                                                                    <font key="font" metaFont="menu" size="11"/>
+                                                                    <font key="font" metaFont="message" size="11"/>
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
                                                                 </tableHeaderCell>
@@ -263,7 +263,7 @@
                                                 <constraint firstAttribute="height" constant="14" id="eSL-a2-jTo"/>
                                             </constraints>
                                             <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" title="x items" id="bp2-lR-3Ea">
-                                                <font key="font" metaFont="menu" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -370,7 +370,7 @@
                                                 <constraint firstAttribute="height" constant="14" id="ghl-OU-fMA"/>
                                             </constraints>
                                             <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Preferences will be applied immediately" id="MNa-l4-0cB">
-                                                <font key="font" metaFont="menu" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -434,7 +434,7 @@
                                                 <constraint firstAttribute="height" constant="16" id="KeS-Dk-eaH"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="center" title="Version 0.0.0 (0)" id="ALn-k5-85P">
-                                                <font key="font" metaFont="menu" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -602,7 +602,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv">
+                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="195" width="520" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
@@ -645,7 +645,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIQ-xd-jED">
+                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIQ-xd-jED" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="108" width="520" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="aEg-bQ-JbT"/>
@@ -665,7 +665,7 @@ Gw
                             <constraint firstAttribute="height" constant="16" id="PEd-OH-UEu"/>
                         </constraints>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="30/30" id="bbm-ZX-iFe">
-                            <font key="font" metaFont="menu" size="11"/>
+                            <font key="font" metaFont="message" size="11"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -829,7 +829,7 @@ Gw
                             <constraint firstAttribute="height" constant="40" id="aIn-SS-uIm"/>
                         </constraints>
                         <textFieldCell key="cell" controlSize="small" selectable="YES" id="jWx-f8-ELM">
-                            <font key="font" metaFont="menu" size="11"/>
+                            <font key="font" metaFont="message" size="11"/>
                             <string key="title">We respect your privacy and we will not record or store any supplied email addresses, use them for marketing purposes, or pass them to third-parties.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
