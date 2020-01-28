@@ -583,7 +583,8 @@ class AppDelegate: NSObject,
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
             let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version)"
+            let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+            self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version) (\(build))"
             self.statusItem!.isVisible = true
         } else {
             NSLog("Error in MNU.createMenu()(): Could not initialise menu")
