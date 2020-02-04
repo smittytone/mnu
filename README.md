@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.2.1 *Unreleased*
+- 1.2.1 *4 February 2020*
     - Add copy, cut, paste, select all, undo and redo to the **Add/Edit User Item** text fields.
 - 1.2.0 *14 January 2020*
     - Add ability to launch named apps.
