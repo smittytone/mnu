@@ -48,6 +48,9 @@ class AddUserItemViewController: NSViewController,
     // FROM 1.2.0
     @IBOutlet var openCheck: NSButton!
 
+    // FROM 1.2.2
+    @IBOutlet var directCheck: NSButton!
+
 
     // MARK: - Class Properties
 
@@ -186,6 +189,7 @@ class AddUserItemViewController: NSViewController,
                 self.iconButton.index = item.iconIndex
                 self.textCount.stringValue = "\(item.title.count)/30"
                 self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? NSControl.StateValue.off : NSControl.StateValue.on
+                self.directCheck.state = item.isDirect ? NSControl.StateValue.on : NSControl.StateValue.off
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
@@ -230,7 +234,7 @@ class AddUserItemViewController: NSViewController,
 
         var itemHasChanged: Bool = false
         let isOpenAction: Bool = self.openCheck.state == NSControl.StateValue.on
-
+        
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
             // The field is blank, so warn the user
@@ -256,6 +260,8 @@ class AddUserItemViewController: NSViewController,
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
             newItem.iconIndex = self.iconButton.index
+            // Added 1.2.2
+            newItem.isDirect = self.directCheck.state == NSControl.StateValue.on
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -287,6 +293,12 @@ class AddUserItemViewController: NSViewController,
                 if newType != item.type {
                     item.type = newType
                     itemHasChanged = true
+                }
+
+                // ADDED 1.2.2
+                if (self.directCheck.state == NSControl.StateValue.on) != item.isDirect {
+                    itemHasChanged = true
+                    item.isDirect = self.directCheck.state == NSControl.StateValue.on
                 }
             }
         }

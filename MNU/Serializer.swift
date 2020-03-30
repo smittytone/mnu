@@ -38,7 +38,8 @@ struct Serializer {
         // Generate a simple JSON serialization of the specified Menu Item object
         var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
         json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
-        json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
+        json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden),"
+        json += "\"direct\": \(item.isDirect)}"
         return json
     }
     
@@ -132,6 +133,7 @@ struct Serializer {
         newItem.type = dict["type"] as? Int ?? 1
         newItem.code = dict["code"] as? Int ?? 20
         newItem.isHidden = dict["hidden"] as? Bool ?? false
+        newItem.isDirect = dict["direct"] as? Bool ?? false
         return newItem
     }
 }

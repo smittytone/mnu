@@ -41,7 +41,9 @@ class MenuItem: NSObject,
     var script: String = ""             // For user items, the bash command it will run
     var isNew: Bool = false             // Set to true when a user item is added
     var isHidden: Bool = false          // Set to true when a switch item is hidden by the user
-    var iconIndex: Int = 0
+    var iconIndex: Int = 0              // Icon reference value (where applicable)
+    // FROM 1.2.2
+    var isDirect: Bool = false          // Does the command not appear in the Terminal?
 
 
     // MARK: NSCopying Functions
@@ -56,6 +58,7 @@ class MenuItem: NSObject,
         itemCopy.isNew = self.isNew
         itemCopy.isHidden = self.isHidden
         itemCopy.iconIndex = self.iconIndex
+        itemCopy.isDirect = self.isDirect
         return itemCopy
     }
 

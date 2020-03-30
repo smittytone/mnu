@@ -441,7 +441,11 @@ class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
             if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
-                runScript(item.script)
+                if item.isDirect {
+                    runScriptDirect(item.script)
+                } else {
+                    runScript(item.script)
+                }
             } else {
                 openApp(item.script)
             }
@@ -902,6 +906,28 @@ class AppDelegate: NSObject,
 
     // MARK: - External Process Management Functions
 
+    func runScriptDirect(_ code: String) {
+
+        let parts = (code as NSString).components(separatedBy: " ")
+        let app: String = parts[0]
+        var args = [String]()
+
+        // TODO Removed solo-space 'parts' items, watching for those
+        //      in quotes
+
+        if parts.count > 1 {
+            // Copy args beyond index 0s
+            for i in 1..<parts.count {
+                args.append(parts[i])
+            }
+        }
+
+        runProcess(app: app,
+                   with: (args.count > 0 ? args : []),
+        doBlock: false)
+    }
+
+
     func runScript(_ code: String) {
         
         #if DEBUG
@@ -921,8 +947,6 @@ class AppDelegate: NSObject,
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)
-        
-        return
         
         /*
          let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
