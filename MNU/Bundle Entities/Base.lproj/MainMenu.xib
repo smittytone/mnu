@@ -537,10 +537,10 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="322"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
-            <value key="minSize" type="size" width="560" height="270"/>
-            <value key="maxSize" type="size" width="560" height="270"/>
-            <value key="minFullScreenContentSize" type="size" width="560" height="270"/>
-            <value key="maxFullScreenContentSize" type="size" width="560" height="270"/>
+            <value key="minSize" type="size" width="560" height="322"/>
+            <value key="maxSize" type="size" width="560" height="322"/>
+            <value key="minFullScreenContentSize" type="size" width="560" height="322"/>
+            <value key="maxFullScreenContentSize" type="size" width="560" height="322"/>
             <view key="contentView" id="kbT-Jg-8jd">
                 <rect key="frame" x="0.0" y="0.0" width="560" height="322"/>
                 <autoresizingMask key="autoresizingMask"/>
