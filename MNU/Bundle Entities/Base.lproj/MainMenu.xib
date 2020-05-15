@@ -262,7 +262,7 @@
                                                 <constraint firstAttribute="height" constant="14" id="eSL-a2-jTo"/>
                                             </constraints>
                                             <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="left" title="x items" id="bp2-lR-3Ea">
-                                                <font key="font" metaFont="label" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -309,19 +309,6 @@
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
                                             <rect key="frame" x="138" y="111" width="258" height="54"/>
                                             <subviews>
-                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
-                                                    <rect key="frame" x="-2" y="18" width="262" height="18"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="14" id="LzR-yB-ywi"/>
-                                                    </constraints>
-                                                    <buttonCell key="cell" type="check" title="Execute Terminal commands in new tab" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6hj-XL-YC9">
-                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
-                                                        <font key="font" metaFont="system"/>
-                                                    </buttonCell>
-                                                    <connections>
-                                                        <action selector="doSetTermPrefWithSender:" target="qtv-Yg-ACO" id="COU-Ji-Ib9"/>
-                                                    </connections>
-                                                </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
                                                     <rect key="frame" x="-2" y="38" width="138" height="18"/>
                                                     <constraints>
@@ -336,9 +323,9 @@
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iol-Aa-G7M">
-                                                    <rect key="frame" x="-2" y="-2" width="262" height="18"/>
+                                                    <rect key="frame" x="-2" y="18" width="262" height="18"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="14" id="tvh-Qt-SYK"/>
+                                                        <constraint firstAttribute="height" constant="14" id="JCj-3L-JRB"/>
                                                     </constraints>
                                                     <buttonCell key="cell" type="check" title="Show menu item images" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Ter-1U-8AP">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -348,18 +335,31 @@
                                                         <action selector="doShowControlsWithSender:" target="qtv-Yg-ACO" id="IDj-Bb-1ZJ"/>
                                                     </connections>
                                                 </button>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
+                                                    <rect key="frame" x="-2" y="-2" width="262" height="18"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="14" id="Mlh-OB-ORP"/>
+                                                    </constraints>
+                                                    <buttonCell key="cell" type="check" title="Execute Terminal commands in new tab" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6hj-XL-YC9">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <connections>
+                                                        <action selector="doSetTermPrefWithSender:" target="qtv-Yg-ACO" id="COU-Ji-Ib9"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="top" secondItem="Wit-jC-Lfb" secondAttribute="bottom" constant="6" id="3df-4S-qOK"/>
-                                                <constraint firstAttribute="trailing" secondItem="Iol-Aa-G7M" secondAttribute="trailing" id="8ct-nb-32v"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="4gz-zc-ZOw"/>
                                                 <constraint firstAttribute="height" constant="54" id="BfM-yl-Ijd"/>
                                                 <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="I3d-10-rdg"/>
-                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="OP2-de-oNb"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="gKg-XI-dNQ"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="IGN-3b-YgB"/>
+                                                <constraint firstAttribute="trailing" secondItem="Iol-Aa-G7M" secondAttribute="trailing" id="Ley-7z-j0x"/>
+                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="SzE-Ly-Myw"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" id="dRY-5v-fVb"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="Iol-Aa-G7M" secondAttribute="bottom" constant="6" id="ens-2d-tkC"/>
                                                 <constraint firstItem="mDI-9d-iRt" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="gf3-qx-AUL"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" id="ksU-si-XCg"/>
                                                 <constraint firstAttribute="width" constant="258" id="oBu-rh-a1R"/>
-                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="rrl-dw-Nvc"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="mDI-9d-iRt" secondAttribute="trailing" constant="20" symbolic="YES" id="vZR-St-B8a"/>
                                             </constraints>
                                         </customView>
@@ -369,7 +369,7 @@
                                                 <constraint firstAttribute="height" constant="14" id="ghl-OU-fMA"/>
                                             </constraints>
                                             <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Preferences will be applied immediately" id="MNa-l4-0cB">
-                                                <font key="font" metaFont="label" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -433,7 +433,7 @@
                                                 <constraint firstAttribute="height" constant="16" id="KeS-Dk-eaH"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="center" title="Version 0.0.0 (0)" id="ALn-k5-85P">
-                                                <font key="font" metaFont="label" size="11"/>
+                                                <font key="font" metaFont="message" size="11"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -664,7 +664,7 @@ Gw
                             <constraint firstAttribute="height" constant="16" id="zbG-iz-GfB"/>
                         </constraints>
                         <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="30/30" id="bbm-ZX-iFe">
-                            <font key="font" metaFont="label" size="11"/>
+                            <font key="font" metaFont="message" size="11"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -846,7 +846,7 @@ Gw
                             <constraint firstAttribute="height" constant="40" id="aIn-SS-uIm"/>
                         </constraints>
                         <textFieldCell key="cell" controlSize="small" selectable="YES" id="jWx-f8-ELM">
-                            <font key="font" metaFont="label" size="11"/>
+                            <font key="font" metaFont="message" size="11"/>
                             <string key="title">We respect your privacy and we will not record or store any supplied email addresses, use them for marketing purposes, or pass them to third-parties.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
