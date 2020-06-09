@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -33,13 +33,13 @@
 
 /* Begin PBXFileReference section */
 		3B01F0DE22EC175C0045A78A /* FeedbackSheetViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackSheetViewController.swift; sourceTree = "<group>"; };
-		3B01F0E022EC20080045A78A /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = ../../../../OneDrive/Programming/mnu/Secrets.swift; sourceTree = "<group>"; };
+		3B01F0E022EC20080045A78A /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = /Users/smitty/OneDrive/Programming/mnu/Secrets.swift; sourceTree = "<absolute>"; };
 		3B083B7722CC3C2E0025F081 /* MNU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B083B7F22CC3C300025F081 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		3B083B8122CC3C300025F081 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "/Users/smitty/Documents/GitHub/mnu/MNU/Bundle Entities/Info.plist"; sourceTree = "<absolute>"; };
 		3B083B8222CC3C300025F081 /* MNU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MNU.entitlements; path = "/Users/smitty/Documents/GitHub/mnu/MNU/Bundle Entities/MNU.entitlements"; sourceTree = "<absolute>"; };
-		3B083B8822CC3FD40025F081 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../../OneDrive/Programming/mnu/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		3B083B8822CC3FD40025F081 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../OneDrive/Programming/mnu/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		3B213445230C388900F7EE06 /* MenuControlsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuControlsViewController.swift; sourceTree = "<group>"; };
 		3B2691E222E59A9400F877AC /* AddUserItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemViewController.swift; sourceTree = "<group>"; };
 		3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellView.swift; sourceTree = "<group>"; };
@@ -169,7 +169,7 @@
 				};
 			};
 			buildConfigurationList = 3B083B7222CC3C2E0025F081 /* Build configuration list for PBXProject "MNU" */;
-			compatibilityVersion = "Xcode 9.3";
+			compatibilityVersion = "Xcode 10.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -361,7 +361,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
@@ -385,7 +385,7 @@
 				CODE_SIGN_IDENTITY = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 127;
+				CURRENT_PROJECT_VERSION = 128;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
