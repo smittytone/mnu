@@ -37,12 +37,16 @@ struct Serializer {
 
         // Generate a simple JSON serialization of the specified Menu Item object
 
-        // TODO Fix for escapable characters
+        var json: String = ""
+        let dict: [String:Any] = dictionise(item)
 
-        var json = "{\"title\":\"\(item.title)\",\"type\":\(item.type),"
-        json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
-        json += "\"script\":\"\(item.script)\",\"hidden\":\(item.isHidden),"
-        json += "\"direct\":\(item.isDirect)}"
+        do {
+            let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.sortedKeys)
+            json = String.init(data: data, encoding: String.Encoding.utf8) ?? ""
+        } catch {
+            NSLog("Menu item \(item.title) could not be serialized")
+        }
+
         return json
     }
     
@@ -52,19 +56,42 @@ struct Serializer {
         // Generatae a full JSON string containing the full list of menu items
         // The top level object, 'data', is an array of all of the Menu Item
         // JSON strings
-        var jsonString: String = "{\"data\":["
-        var count: Int = 0
-        
+
+        var jsonString: String = ""
+
+        var dict: [String:[[String:Any]]] = [:]
+        dict["data"] = [[String:Any]]()
+
         for item: MenuItem in list.items {
-            jsonString += Serializer.jsonize(item)
-            count += 1
-            if count < list.items.count {
-                jsonString += ","
-            }
+            let itemDict: [String:Any] = dictionise(item)
+            dict["data"]?.append(itemDict)
         }
-        
-        jsonString += "]}"
+
+        do {
+            let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.sortedKeys)
+            jsonString = String.init(data: data, encoding: String.Encoding.utf8) ?? ""
+        } catch {
+            NSLog("Could not serialize MNU items")
+        }
+
         return jsonString
+    }
+
+
+    private static func dictionise(_ item: MenuItem) -> [String:Any] {
+
+        // Convert a single MenuItem into a dictionary
+
+        var dict: [String:Any] = [:]
+        dict["title"] = item.title
+        dict["type"] = item.type
+        dict["code"] = item.code
+        dict["icon"] = item.iconIndex
+        dict["script"] = item.script
+        dict["hidden"] = item.isHidden
+        dict["direct"] = item.isDirect
+
+        return dict
     }
 
 
@@ -128,6 +155,7 @@ struct Serializer {
 
         // Generate and return a Mene Item from a dictionary, providing
         // default values in the case of missing fields
+
         let newItem = MenuItem()
         let iconIndex = dict["icon"] as? Int
         newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
@@ -139,4 +167,5 @@ struct Serializer {
         newItem.isDirect = dict["direct"] as? Bool ?? false
         return newItem
     }
+    
 }
