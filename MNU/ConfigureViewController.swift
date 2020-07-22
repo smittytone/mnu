@@ -457,7 +457,7 @@ class ConfigureViewController:  NSViewController,
                     let dataString: String = Serializer.jsonizeAll(self.menuItems!)
 
                     // Convert the string to data for saving
-                    if let fileData: Data = dataString.data(using: String.Encoding.utf16) {
+                    if let fileData: Data = dataString.data(using: String.Encoding.utf8) {
                     
                         // Save the data
                         let success = FileManager.default.createFile(atPath: targetUrl.path,
