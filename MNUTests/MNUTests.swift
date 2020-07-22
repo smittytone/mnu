@@ -169,4 +169,59 @@ class MNUTests: XCTestCase {
         self.appDelegate.makeIconMatrix()
         XCTAssert(icons.count == list.count)
     }
+
+
+    // MARK: JSON Method Tests
+
+    func testSerializerJsonize() throws {
+
+        let item: MenuItem = MenuItem()
+        var result: String = Serializer.jsonize(item)
+        print(result)
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}"#)
+
+        item.script = "open \"test\";"
+        result = Serializer.jsonize(item)
+        print(result)
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1}"#)
+    }
+
+
+    func testSerializerJsonizeAll() throws {
+
+        let item: MenuItem = MenuItem()
+        let items: MenuItemList = MenuItemList()
+        items.items.append(item)
+        let result: String = Serializer.jsonizeAll(items)
+        print(result)
+        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}]}"#)
+    }
+
+
+    func testSerializerDejsonize() throws {
+
+        let jsonString: String = #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1}"#
+        let menuItem: MenuItem? = Serializer.dejsonize(jsonString)
+        if let item: MenuItem = menuItem {
+            XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == -1 && item.script == "open \"test\";")
+        } else {
+            XCTAssertNotNil(menuItem)
+        }
+    }
+
+
+    func testSerializerDejsonizeAll() throws {
+
+        let jsonString: String = #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}]}"#
+        if let jsonData: Data = jsonString.data(using: String.Encoding.utf8) {
+            let menuItems: MenuItemList? = Serializer.dejsonizeAll(jsonData)
+            if let items: MenuItemList = menuItems {
+                let item = items.items[0]
+                XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == -1 && item.script == "")
+            } else {
+                XCTAssertNotNil(menuItems)
+            }
+        }
+    }
+
 }
