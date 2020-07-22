@@ -54,7 +54,9 @@ class AppDelegate: NSObject,
     var showImages: Bool = false
     var optionClick: Bool = false
     var icons: NSMutableArray = NSMutableArray.init()
-    
+    // FROM 1.3.0
+    var reloadDefaults: Bool = false
+
 
     // MARK: - App Lifecycle Functions
 
@@ -253,47 +255,6 @@ class AppDelegate: NSObject,
 
     // MARK: - Loading And Saving Serialization Functions
 
-    /*
-    func jsonize(_ item: MenuItem) -> String {
-
-        // Generate a simple JSON string serialization of the specified Menu Item object
-        var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
-        json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
-        json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden)}"
-        return json
-    }
-
-
-    func dejsonize(_ json: String) -> MenuItem? {
-
-        // Recreate a Menu Item object from our simple JSON serialization
-        // NOTE We still need to create 'controller' properties, and this is done later
-        //      See 'updateMenu()'
-        if let data = json.data(using: .utf8) {
-            do {
-                let dict: [String: Any]? = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any]
-                let newItem = MenuItem()
-                newItem.title = dict!["title"] as! String
-                newItem.script = dict!["script"] as! String
-                newItem.type = dict!["type"] as! Int
-                newItem.code = dict!["code"] as! Int
-                newItem.isHidden = dict!["hidden"] as! Bool
-
-                // New items
-                let iconIndex = dict!["icon"] as? Int
-                newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
-
-                return newItem
-            } catch {
-                NSLog("Error in MNU.dejsonize(): \(error.localizedDescription)")
-                presentError()
-            }
-        }
-
-        return nil
-    }
-    */
-    
     func saveItems() {
         
         // Store the current state of the menu if it has changed
@@ -502,7 +463,7 @@ class AppDelegate: NSObject,
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
         let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
-        if loadedItems.count > 0 {
+        if !reloadDefaults && loadedItems.count > 0 {
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
             // convert the serializations into real objects: Menu Items and their rewpresentative
             // NSMenuItems
@@ -521,8 +482,30 @@ class AppDelegate: NSObject,
                         self.appMenu!.addItem(NSMenuItem.separator())
                     }
                 } else {
-                    NSLog("Error in MNU.createMenu()(): Cound not deserialize \(loadedItem)")
-                    presentError()
+                    // FROM 1.3.0
+                    // We couldn't load the saved list of MNU items, so ask the user what to do
+                    DispatchQueue.main.async {
+                        let alert: NSAlert = NSAlert.init()
+                        alert.messageText = "Stored MNU items are damanged"
+                        alert.informativeText = "Do you wish to continue with the default items?"
+                        alert.addButton(withTitle: "Continue")
+                        alert.addButton(withTitle: "Quit")
+                        let response: NSApplication.ModalResponse = alert.runModal()
+
+                        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                            // User chose to reload defaults
+                            self.reloadDefaults = true
+                            self.createMenu()
+                        } else {
+                            // User chose to quit
+                            NSApplication.shared.terminate(self)
+                        }
+                    }
+
+                    // NSLog("Error in MNU.createMenu()(): Cound not deserialize \(loadedItem)")
+                    // presentError()
+
+                    return
                 }
             }
         } else {
@@ -575,6 +558,9 @@ class AppDelegate: NSObject,
                     self.appMenu!.addItem(NSMenuItem.separator())
                 }
             }
+
+            // FROM 1.3.0
+            self.reloadDefaults = false
         }
 
         // Finnally, add the app menu
@@ -728,57 +714,59 @@ class AppDelegate: NSObject,
         // Build the array of icons that we will use for the popover selector and the button
         // that triggers its appearance
         // NOTE There should be 16 icons in total in this release
-        
-        var image: NSImage? = NSImage.init(named: "logo_generic")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_bash")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_brew")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_github")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_gitlab")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_python")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_node")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_java")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_lua")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_rust")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_perl")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_ruby")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_as")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_coffee")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_php")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_js")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_docker")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_doc")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_dir")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_app")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_cog")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_sync")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_power")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_mac")
-        self.icons.add(image!)
-        image = NSImage.init(named: "logo_x")
-        self.icons.add(image!)
+
+        if self.icons.count == 0 {
+            var image: NSImage? = NSImage.init(named: "logo_generic")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_bash")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_brew")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_github")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_gitlab")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_python")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_node")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_java")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_lua")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_rust")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_perl")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_ruby")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_as")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_coffee")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_php")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_js")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_docker")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_doc")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_dir")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_app")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_cog")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_sync")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_power")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_mac")
+            self.icons.add(image!)
+            image = NSImage.init(named: "logo_x")
+            self.icons.add(image!)
+        }
     }
     
     
