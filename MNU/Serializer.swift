@@ -36,10 +36,13 @@ struct Serializer {
     static func jsonize(_ item: MenuItem) -> String {
 
         // Generate a simple JSON serialization of the specified Menu Item object
-        var json = "{\"title\": \"\(item.title)\",\"type\": \(item.type),"
+
+        // TODO Fix for escapable characters
+
+        var json = "{\"title\":\"\(item.title)\",\"type\":\(item.type),"
         json += "\"code\":\(item.code),\"icon\":\(item.iconIndex),"
-        json += "\"script\":\"\(item.script)\",\"hidden\": \(item.isHidden),"
-        json += "\"direct\": \(item.isDirect)}"
+        json += "\"script\":\"\(item.script)\",\"hidden\":\(item.isHidden),"
+        json += "\"direct\":\(item.isDirect)}"
         return json
     }
     
