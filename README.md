@@ -12,6 +12,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 - 1.3.0 *Unreleased*
     - Update code to avoid deprecated calls.
+    - Better recovery when the MNU item list is damaged.
+    - Better serialization and deserialization.
     - Add tests.
 - 1.2.2 *9 June 2020*
     - Add ability to run items directly, without a shell.
