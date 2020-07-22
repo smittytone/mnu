@@ -442,6 +442,9 @@ class AppDelegate: NSObject,
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
             if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
                 if item.isDirect {
+                    // FROM 1.3.0
+                    // Switch to new method
+                    //runCallDirect(item.script)
                     runScriptDirect(item.script)
                 } else {
                     runScript(item.script)
@@ -713,6 +716,7 @@ class AppDelegate: NSObject,
 
         // Add the app's control bar item
         // We always add this after creating or updating the menu
+
         if let appItem = self.acvc.controlMenuItem {
             self.appMenu!.addItem(appItem)
         }
@@ -822,11 +826,13 @@ class AppDelegate: NSObject,
     func makeGitScript() -> MenuItem {
 
         // Make and return a stock Git Update item
+
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
         return newItem
+        
     }
 
 
@@ -835,6 +841,7 @@ class AppDelegate: NSObject,
     func makeBrewUpdateScript() -> MenuItem {
 
         // Make and return a stock Brew Update item
+
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
@@ -848,6 +855,7 @@ class AppDelegate: NSObject,
     func makeBrewUpgradeScript() -> MenuItem {
 
         // Make and return a stock Brew Update item
+
         let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
@@ -896,11 +904,22 @@ class AppDelegate: NSObject,
 
         // Present a basic alert if an internal, non fatal error occurred.
         // This is primarily a debugging tool
-        let alert = NSAlert.init()
-        alert.messageText = "Sorry, an internal error occurred"
-        alert.informativeText = "Please check the details in your computer's log."
-        alert.addButton(withTitle: "OK")
-        alert.runModal()
+        showError("Sorry, an internal error occurred", "Please check the details in your computer's log.")
+    }
+
+
+    func showError(_ head: String, _ text: String) {
+
+        // FROM 1.3.0
+        // Show an error modal dialog on the main (UI) thread
+
+        DispatchQueue.main.async {
+            let alert: NSAlert = NSAlert.init()
+            alert.messageText = head
+            alert.informativeText = text
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+        }
     }
 
 
@@ -908,51 +927,74 @@ class AppDelegate: NSObject,
 
     func runScriptDirect(_ code: String) {
 
+        // Run command line apps direct, without Terminal
+
+        #if DEBUG
+        NSLog("MNU running direct command \'\(code)\'")
+        #endif
+
+        // FROM 1.3.0 - Make sure we have a command to run
+        if code.count == 0 {
+            showError("Command Error", "The MNU item has no command entered.")
+            return
+        }
+
+        // Decode the passed string into the app and arguments
+        // For example:
+        //   '/usr/local/bin/pdfmaker -f jpg -s /Users/z/source -d /users/z/target'
+        // becomes:
+        //   'parts': ['/usr/local/bin/pdfmaker', '-f', 'jpg', '-s', '/Users/z/source', '-d', '/users/z/target']
         let parts = (code as NSString).components(separatedBy: " ")
+
+        // FROM 1.3.0 - Just in case that didn't quite work...
+        if parts.count == 0 {
+            showError("Command Error", "The command triggerd by the MNU item was malformed and couldn’t be run. Please check your code.")
+            return
+        }
+
+        // TODO Add limited quoting
+
+        // Get the app and its arguments
         let app: String = parts[0]
         var args = [String]()
 
-        // TODO Removed solo-space 'parts' items, watching for those
-        //      in quotes
-
         if parts.count > 1 {
-            // Copy args beyond index 0s
+            // Copy args beyond index 0 (the app)
             for i in 1..<parts.count {
                 args.append(parts[i])
             }
         }
 
+        // Run the process
+        // NOTE This time we wait for its conclusion
         runProcess(app: app,
                    with: (args.count > 0 ? args : []),
-        doBlock: false)
+                   doBlock: true)
     }
 
 
     func runScript(_ code: String) {
-        
+
+        // Run a command line app in the Terminal
+
         #if DEBUG
         NSLog("MNU running shell command \'\(code)\'")
         #endif
         
-        // Add the supplied script code ('code') to the boilerplate AppleScript and run it
+        // Add the supplied script code ('code') to the boilerplate AppleScript and run it,
+        // in a new Terminal tab if that is required by the user
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
-        let tabSection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
-        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(code)\")\(tabSection)\nelse\ndo script (\"\(code)\")\nend if\nend tell"
+        let tabSelection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
+        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(code)\")\(tabSelection)\nelse\ndo script (\"\(code)\")\nend if\nend tell"
         
         #if DEBUG
-        NSLog("MNU running AppleScript \'\(script)\'")
+        NSLog("MNU running AppleScript:\n\(script)")
         #endif
         
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
                    doBlock: false)
-        
-        /*
-         let ascript: NSAppleScript = NSAppleScript.init(source: "tell application \"Terminal\"\nactivate\ndo script (\"\(code)\") in tab 1 of window 1\nend tell")!
-         let result = ascript.executeAndReturnError(nil)
-         NSLog(result.stringValue ?? "N/A")
-         */
     }
 
     
@@ -966,19 +1008,19 @@ class AppDelegate: NSObject,
         #endif
         
         // Make sure the name has '.app' appended (if not already present) and has a path
-        var an: NSString = appName as NSString
-        if !an.contains(".app") { an = an.appendingFormat("%@", ".app") }
-        if !an.contains("/Applications") { an = NSString.init(format: "/Applications/%@", an) }
-        
+        var name: NSString = appName as NSString
+        if !name.contains(".app") { name = name.appendingFormat("%@", ".app") }
+        if !name.contains("/Applications") { name = NSString.init(format: "/Applications/%@", name) }
+
+        // TODO Check app existence rather than wait for open to fail
+
         #if DEBUG
-        NSLog("MNU running script \'open \(an)\'")
+        NSLog("MNU running script \'open \(name)\'")
         #endif
         
         runProcess(app: "/usr/bin/open",
-                   with: [an as String],
+                   with: [name as String],
                    doBlock: false)
-        
-        return
     }
     
     
@@ -1000,32 +1042,56 @@ class AppDelegate: NSObject,
     }
     
     
-    func killFinder(andDock: Bool) {
-
-        // Set up a task to kill the macOS Finder and, optionally, the Dock
-        var args: [String] =  ["Finder"]
-        if andDock { args.append("Dock") }
-        runProcess(app: "/usr/bin/killall", with: args, doBlock: true)
-    }
-
-
     func runProcess(app path: String, with args: [String], doBlock: Bool) {
 
         // Generic task creation and run function
+        // FROM 1.3.0 - remove deprecated methods:
+        //   'launchPath()' -> 'executableURL',
+        //   'launch()' -> 'run()'
+
         let task: Process = Process()
-        task.launchPath = path
+        task.executableURL = URL.init(fileURLWithPath: path)
         if args.count > 0 { task.arguments = args }
 
         // Pipe out the output to avoid putting it in the log
-        let pipe = Pipe()
-        task.standardOutput = pipe
+        let outputPipe = Pipe()
+        task.standardOutput = outputPipe
 
-        task.launch()
+        do {
+            try task.run()
+        } catch {
+            // The script exited with an error -- most likely it doesn't exist
+            showError("Command Error", "The app called by the MNU item doesn’t exist. Please check your code.")
+            return
+        }
+
+        // Get the output
+        // let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
 
         if doBlock {
             // Block until the task has completed (short tasks ONLY)
             task.waitUntilExit()
         }
+
+        if !task.isRunning {
+            if (task.terminationStatus != 0) {
+                self.showError("Command Error", "The MNU item’s command failed. Please check your code for bad arguments.")
+            }
+        }
+    }
+
+
+    func killFinder(andDock: Bool) {
+
+        // Set up a task to kill the macOS Finder and, optionally, the Dock
+
+        var args: [String] =  ["Finder"]
+        if andDock { args.append("Dock") }
+
+        // Run the process
+        runProcess(app: "/usr/bin/killall",
+                   with: args,
+                   doBlock: true)
     }
 
 
