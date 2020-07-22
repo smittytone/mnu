@@ -173,7 +173,7 @@ class AddUserItemViewController: NSViewController,
             self.itemScriptText.stringValue = ""
             self.menuTitleText.stringValue = ""
             self.saveButton.title = "Add"
-            self.titleText.stringValue = "Add A New Terminal Command"
+            self.titleText.stringValue = "Add A New Command"
             self.iconButton.image = self.icons.object(at: 0) as? NSImage
             self.iconButton.index = 0
             self.textCount.stringValue = "0/30"
@@ -184,7 +184,7 @@ class AddUserItemViewController: NSViewController,
                 self.itemScriptText.stringValue = item.script
                 self.menuTitleText.stringValue = item.title
                 self.saveButton.title = "Update"
-                self.titleText.stringValue = "Edit This Terminal Command"
+                self.titleText.stringValue = "Edit This Command"
                 self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
                 self.iconButton.index = item.iconIndex
                 self.textCount.stringValue = "\(item.title.count)/30"
@@ -238,7 +238,7 @@ class AddUserItemViewController: NSViewController,
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
             // The field is blank, so warn the user
-            showAlert("Missing Terminal Command", "You must enter a Terminal command. If you don’t want to set one at this time, click OK then Cancel")
+            showAlert("Missing Command", "You must enter a command. If you don’t want to set one at this time, click OK then Cancel")
             return
         }
 
@@ -348,7 +348,7 @@ class AddUserItemViewController: NSViewController,
         // Show the 'Help' via the website
         // TODO create web page
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.github.io/mnu/index.html#how-to-add-and-edit-your-own-menu-items")!)
+        NSWorkspace.shared.open(URL.init(string:"https://smittytone.net/mnu/index.html#how-to-add-and-edit-your-own-menu-items")!)
     }
 
 

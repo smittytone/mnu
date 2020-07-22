@@ -43,6 +43,8 @@ class AddUserItemTextField: NSTextField {
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
         
         // For key down events, check for a modifier, and then check the key itself
+        // This adds support for cut, copy and paste to the Add/Edit User Item sheet text fields
+        
         if event.type == NSEvent.EventType.keyDown {
             if (event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue) == commandKey {
                 switch event.charactersIgnoringModifiers! {
