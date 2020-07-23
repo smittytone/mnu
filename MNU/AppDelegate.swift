@@ -968,13 +968,20 @@ class AppDelegate: NSObject,
         #if DEBUG
         NSLog("MNU running shell command \'\(code)\'")
         #endif
-        
+
+        // FROM 1.3.0
+        // Convert the script string to an NSString so we can run 'replacingOccurrences()'
+        // to replace escaped double-quotes (\") to individual escaped characters (\\ and \").
+        // This will fix the quoting issue, hopefully
+        var escapedCode: NSString = code as NSString
+        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it,
         // in a new Terminal tab if that is required by the user
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
         let tabSelection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
-        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(code)\")\(tabSelection)\nelse\ndo script (\"\(code)\")\nend if\nend tell"
+        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
         
         #if DEBUG
         NSLog("MNU running AppleScript:\n\(script)")
