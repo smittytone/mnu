@@ -69,6 +69,19 @@ class MNUTests: XCTestCase {
 
     func testRunScript() throws {
 
+        let codeSample = "cd $HOME; rm test.txt; echo TEST > test.txt"
+        self.appDelegate.runScript(codeSample)
+
+        let expectation = XCTestExpectation(description: "Script run")
+
+        let _ = Timer.scheduledTimer(withTimeInterval: allowedOpenTime, repeats: false) { (firedTimer) in
+            let fm = FileManager.default
+            let npath: NSString = "~/test.txt"
+            XCTAssert(fm.fileExists(atPath: npath.expandingTildeInPath))
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: allowedOpenTime * 3)
     }
 
     
@@ -171,6 +184,22 @@ class MNUTests: XCTestCase {
     }
 
 
+    func testKillFinder() throws {
+
+        let expectation = XCTestExpectation(description: "Finder killed")
+
+        let _ = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { (firedTimer) in
+            let launchedApp = NSRunningApplication.runningApplications(withBundleIdentifier: "com.apple.Finder")
+            XCTAssert(launchedApp.count == 0)
+            expectation.fulfill()
+        }
+
+        self.appDelegate.killFinder(andDock: false)
+
+        wait(for: [expectation], timeout: allowedOpenTime * 3)
+    }
+
+
     // MARK: JSON Method Tests
 
     func testSerializerJsonize() throws {
@@ -223,5 +252,8 @@ class MNUTests: XCTestCase {
             }
         }
     }
+
+
+
 
 }
