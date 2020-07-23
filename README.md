@@ -37,7 +37,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Copyright ##
 
-MNU is copyright &copy; 20, Tony Smith.
+MNU is copyright &copy; 2020, Tony Smith.
 
 ## Licence ##
 
