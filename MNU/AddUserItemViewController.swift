@@ -346,7 +346,6 @@ class AddUserItemViewController: NSViewController,
     @IBAction @objc func doShowHelp(sender: Any?) {
 
         // Show the 'Help' via the website
-        // TODO create web page
         // TODO provide offline help
         NSWorkspace.shared.open(URL.init(string:"https://smittytone.net/mnu/index.html#how-to-add-and-edit-your-own-menu-items")!)
     }

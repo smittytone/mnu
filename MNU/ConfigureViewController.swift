@@ -467,7 +467,7 @@ class ConfigureViewController:  NSViewController,
                             self.showExportAlert()
                         }
                     } else {
-                        // Could not convert the JSON string to UTF-16 data
+                        // Could not convert the JSON string to UTF-8 data
                         self.showExportAlert()
                     }
                 }
@@ -598,6 +598,11 @@ class ConfigureViewController:  NSViewController,
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
                     cell!.buttonA.isEnabled = false
+                    
+                    // FROM 1.3.0
+                    // Change tooltips for built-ins
+                    cell!.buttonB.toolTip = "Built-in items can’t be edited"
+                    cell!.buttonA.toolTip = "Built-in items can’t be deleted"
                 }
 
                 return cell
