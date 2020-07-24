@@ -969,12 +969,8 @@ class AppDelegate: NSObject,
         NSLog("MNU running shell command \'\(code)\'")
         #endif
 
-        // FROM 1.3.0
-        // Convert the script string to an NSString so we can run 'replacingOccurrences()'
-        // to replace escaped double-quotes (\") to individual escaped characters (\\ and \").
-        // This will fix the quoting issue, hopefully
-        var escapedCode: NSString = code as NSString
-        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        // Handle escapable characters
+        let escapedCode: NSString = escaper(code)
 
         // Add the supplied script code ('code') to the boilerplate AppleScript and run it,
         // in a new Terminal tab if that is required by the user
@@ -992,7 +988,22 @@ class AppDelegate: NSObject,
                    doBlock: false)
     }
 
-    
+
+    func escaper(_ unescapedString: String) -> NSString {
+
+        // FROM 1.3.0
+        // Convert the script string to an NSString so we can run 'replacingOccurrences()'
+        // to replace escaped double-quotes (\") to individual escaped characters (\\ and \").
+        // This will fix the quoting issue, hopefully
+
+        var escapedCode: NSString = unescapedString as NSString
+        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
+        escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
+        return escapedCode
+    }
+
+
     func openApp(_ appName: String) {
         
         // ADDED 1.2.0

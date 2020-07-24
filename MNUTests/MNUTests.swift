@@ -34,6 +34,16 @@ class MNUTests: XCTestCase {
         }
     }
 
+    // MARK: Escaper Function Tests
+
+    func testEscaper() throws {
+
+        // Happy path
+        XCTAssert("echo \\\"You \\\\`have `ls | wc -l` files in `pwd`\\\"" == self.appDelegate.escaper("echo \"You \\`have `ls | wc -l` files in `pwd`\""))
+        XCTAssert("echo \\\"$GIT\\\"" == self.appDelegate.escaper("echo \"$GIT\""))
+        XCTAssert("echo \'\\\"$GIT\\\"\'" == self.appDelegate.escaper("echo '\"$GIT\"'"))
+    }
+
 
     // MARK: Process Management Function Tests
 
