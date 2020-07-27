@@ -1062,6 +1062,16 @@ class AppDelegate: NSObject,
         // Pipe out the output to avoid putting it in the log
         let outputPipe = Pipe()
         task.standardOutput = outputPipe
+        //task.standardError = outputPipe
+
+        // Collect the output
+        var outString: String = ""
+        let outputHandle = outputPipe.fileHandleForReading
+        outputHandle.readabilityHandler = { fshandle in
+            if let line = String(data: fshandle.availableData, encoding: String.Encoding.utf8) {
+                outString += line
+            }
+        }
 
         do {
             try task.run()
@@ -1081,7 +1091,12 @@ class AppDelegate: NSObject,
 
         if !task.isRunning {
             if (task.terminationStatus != 0) {
-                self.showError("Command Error", "The MNU item’s command failed. Please check your code for bad arguments.")
+                // Command failed
+                if outString.count > 0 {
+                    self.showError("Command Error", "The MNU item’s command reported an error: \(outString)")
+                } else {
+                    self.showError("Command Error", "The MNU item’s command reported an error.\nExit code \(task.terminationStatus)")
+                }
             }
         }
     }
