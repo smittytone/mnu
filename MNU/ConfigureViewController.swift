@@ -131,7 +131,7 @@ class ConfigureViewController:  NSViewController,
 
     override func viewWillAppear() {
         
-        super.viewDidAppear()
+        super.viewWillAppear()
         
         // FROM 1.0.0: move from the app delegate
         // Update the item table
@@ -154,7 +154,7 @@ class ConfigureViewController:  NSViewController,
 
     
     override func viewDidAppear() {
-        
+
         // Update the visibility state
         self.isVisible = true
         super.viewDidAppear()
@@ -168,6 +168,7 @@ class ConfigureViewController:  NSViewController,
         self.windowTabView.selectTabViewItem(at: 0)
         self.configureWindow!.center()
         self.configureWindow!.makeKeyAndOrderFront(nil)
+        self.applyChangesButton.isEnabled = false
         
         // The following is required to bring the window to the front properly
         NSApp.activate(ignoringOtherApps: true)

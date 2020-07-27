@@ -223,6 +223,8 @@ class AddUserItemViewController: NSViewController,
 
         // User has clicked 'Cancel', so just close the sheet
 
+        self.itemScriptText.stringValue = ""
+        self.menuTitleText.stringValue = ""
         self.parentWindow!.endSheet(addItemSheet)
         self.parentWindow = nil
     }
@@ -311,6 +313,8 @@ class AddUserItemViewController: NSViewController,
         }
 
         // Close the sheet
+        self.itemScriptText.stringValue = ""
+        self.menuTitleText.stringValue = ""
         self.parentWindow!.endSheet(addItemSheet)
         self.parentWindow = nil
     }
