@@ -994,12 +994,20 @@ class AppDelegate: NSObject,
         // FROM 1.3.0
         // Convert the script string to an NSString so we can run 'replacingOccurrences()'
         // to replace escaped double-quotes (\") to individual escaped characters (\\ and \").
-        // This will fix the quoting issue, hopefully
+        // NOTE We look for user-escaped quotes first, remove them and and re-add them back
+        //      at the end
 
         var escapedCode: NSString = unescapedString as NSString
+        // Look for user-escaped DQs and temporarily hide them
+        escapedCode = escapedCode.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") as NSString
+        // Look for auto-escaped DQs
         escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        // Look for user-escaped $ symbols
         escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
+        // Look for user-escaped ` symbols
         escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
+        // Put back user-escaped DQs
+        escapedCode = escapedCode.replacingOccurrences(of: "!-USER-ESCAPED-D-QUOTES-!", with: "\\\\\\\"") as NSString
         return escapedCode
     }
 

@@ -38,10 +38,18 @@ class MNUTests: XCTestCase {
 
     func testEscaper() throws {
 
-        // Happy path
-        XCTAssert("echo \\\"You \\\\`have `ls | wc -l` files in `pwd`\\\"" == self.appDelegate.escaper("echo \"You \\`have `ls | wc -l` files in `pwd`\""))
+        // Happy paths
+
+        // Plain DQs: echo "$GIT"
         XCTAssert("echo \\\"$GIT\\\"" == self.appDelegate.escaper("echo \"$GIT\""))
+        // Escape tick in plain DQs: echo "You \`have `ls | wc -l` files in `pwd`"
+        XCTAssert("echo \\\"You \\\\`have `ls | wc -l` files in `pwd`\\\"" == self.appDelegate.escaper("echo \"You \\`have `ls | wc -l` files in `pwd`\""))
+        // Escape $ in plain DQs: echo "The value of \$HOME is $HOME"
+        XCTAssert("echo \\\"The value of \\\\$HOME is $HOME\\\"" == self.appDelegate.escaper("echo \"The value of \\$HOME is $HOME\""))
+        // escape DQs within SQs: echo '"GIT"'
         XCTAssert("echo \'\\\"$GIT\\\"\'" == self.appDelegate.escaper("echo '\"$GIT\"'"))
+        // escape DQs within DQs: echo "\"zz\""
+        XCTAssert("echo \\\"\\\\\\\"zz\\\\\\\"\\\"" == self.appDelegate.escaper("echo \"\\\"zz\\\"\""))
     }
 
 
@@ -79,7 +87,7 @@ class MNUTests: XCTestCase {
 
     func testRunScript() throws {
 
-        let codeSample = "cd $HOME; rm test.txt; echo TEST > test.txt"
+        let codeSample = "cd \"$HOME\"; rm test.txt; echo TEST > test.txt"
         self.appDelegate.runScript(codeSample)
 
         let expectation = XCTestExpectation(description: "Script run")
