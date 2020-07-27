@@ -992,17 +992,20 @@ class AppDelegate: NSObject,
     func escaper(_ unescapedString: String) -> NSString {
 
         // FROM 1.3.0
-        // Convert the script string to an NSString so we can run 'replacingOccurrences()'
-        // to replace escaped double-quotes (\") to individual escaped characters (\\ and \").
-        // NOTE We look for user-escaped quotes first, remove them and and re-add them back
-        //      at the end
+        // Process the user's code string to double-escape
+        // For example, if the user enters [echo "$GIT"] (square brackets indicate text field)
+        // then the string becomes "echo \"$GIT\"", but because this will be inserted into
+        // another string (see 'runScript()') within escaped double-quotes, we have to double-escape
+        // everything, ie. make the string "echo \\\"$GIT\\\"". osascript then correctly interprets
+        // all the escapes
 
+        // Convert the script string to an NSString so we can run 'replacingOccurrences()'
         var escapedCode: NSString = unescapedString as NSString
         // Look for user-escaped DQs and temporarily hide them
         escapedCode = escapedCode.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") as NSString
         // Look for auto-escaped DQs
         escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
-        // Look for user-escaped $ symbols
+        // Look for user-escaped $ symbols: \$ -> \\$ -> \\\\$
         escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
         // Look for user-escaped ` symbols
         escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
