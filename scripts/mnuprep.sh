@@ -2,7 +2,7 @@
 
 # Prep MNU images
 #
-# Version 1.0.1
+# Version 1.0.2
 
 # Function to show help info - keeps this out of the code
 showHelp() {
@@ -103,6 +103,12 @@ do
         exit 1
     fi
 done
+
+# Make sure icon types are correct
+if [[ $iconType -lt 0 || $iconType -gt 2 ]]; then
+    echo "Incorrect icon type specified (0-2)"
+    exit 1
+fi
 
 # Make sure we have a source image
 if [ "$sourceFolder" != "UNSET" ]; then
