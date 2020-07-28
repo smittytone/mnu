@@ -203,6 +203,7 @@ class ConfigureViewController:  NSViewController,
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
                                             object: self)
             self.hasChanged = false
+            self.applyChangesButton.isEnabled = false
         }
 
         // DISABLED FROM BUILD 3
@@ -234,6 +235,8 @@ class ConfigureViewController:  NSViewController,
         self.aivc.isEditing = false
         self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
+        self.aivc.itemScriptText.stringValue = ""
+        self.aivc.menuTitleText.stringValue = ""
         self.aivc.showSheet()
     }
     
@@ -295,6 +298,8 @@ class ConfigureViewController:  NSViewController,
         self.aivc.newMenuItem = item
         self.aivc.isEditing = true
         self.aivc.parentWindow = self.configureWindow!
+        self.aivc.itemScriptText.stringValue = ""
+        self.aivc.menuTitleText.stringValue = ""
         
         // Tell the add user item view controller to display its sheet
         self.aivc.showSheet()

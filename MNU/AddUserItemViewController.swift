@@ -178,6 +178,7 @@ class AddUserItemViewController: NSViewController,
             self.iconButton.index = 0
             self.textCount.stringValue = "0/30"
             self.openCheck.state = NSControl.StateValue.off
+            self.directCheck.state = NSControl.StateValue.off
         } else {
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
@@ -223,8 +224,6 @@ class AddUserItemViewController: NSViewController,
 
         // User has clicked 'Cancel', so just close the sheet
 
-        self.itemScriptText.stringValue = ""
-        self.menuTitleText.stringValue = ""
         self.parentWindow!.endSheet(addItemSheet)
         self.parentWindow = nil
     }
@@ -313,10 +312,9 @@ class AddUserItemViewController: NSViewController,
         }
 
         // Close the sheet
-        self.itemScriptText.stringValue = ""
-        self.menuTitleText.stringValue = ""
         self.parentWindow!.endSheet(addItemSheet)
         self.parentWindow = nil
+        self.isEditing = false
     }
 
     
@@ -355,7 +353,7 @@ class AddUserItemViewController: NSViewController,
     }
 
 
-    @IBAction @objc  func doShowIcons(sender: Any) {
+    @IBAction @objc func doShowIcons(sender: Any) {
 
         // Show the icon matrix
         self.iconPopover!.show(relativeTo: self.iconButton.bounds,
