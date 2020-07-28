@@ -98,39 +98,46 @@ class AddUserItemViewController: NSViewController,
         // that triggers its appearance
         // NOTE There should be 16 icons in total in this release
 
+        // ROW 0 - Shell
         var image: NSImage? = NSImage.init(named: "picon_generic")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_bash")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_brew")
+        image = NSImage.init(named: "picon_z")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_github")
+        image = NSImage.init(named: "picon_code")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_gitlab")
+        image = NSImage.init(named: "picon_git")
         self.icons.add(image!)
+
+        // ROW 1 - Scripts
         image = NSImage.init(named: "picon_python")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_node")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_java")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_lua")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_rust")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_perl")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_ruby")
-        self.icons.add(image!)
         image = NSImage.init(named: "picon_as")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_ts")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_coffee")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_php")
+
+        // ROW 2 - Services, Misc
+        image = NSImage.init(named: "picon_github")
         self.icons.add(image!)
-        image = NSImage.init(named: "picon_js")
+        image = NSImage.init(named: "picon_gitlab")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_brew")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_docker")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_php")
+        self.icons.add(image!)
+
+        // ROW 3 - Files
+        image = NSImage.init(named: "picon_web")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_cloud")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_doc")
         self.icons.add(image!)
@@ -138,6 +145,8 @@ class AddUserItemViewController: NSViewController,
         self.icons.add(image!)
         image = NSImage.init(named: "picon_app")
         self.icons.add(image!)
+
+        // ROW 0 - Mac
         image = NSImage.init(named: "picon_cog")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_sync")

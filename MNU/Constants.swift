@@ -58,8 +58,8 @@ struct MNU_CONSTANTS {
         static let DESKTOP          = "Show Files on Desktop"
         static let SHOW_HIDDEN      = "Show Hidden Files"
         static let GIT              = "Update Git"
-        static let BREW_UPDATE      = "Update Brew"
-        static let BREW_UPGRADE     = "Upgrade Brew"
+        static let BREW_UPDATE      = "Update Homebrew"
+        static let BREW_UPGRADE     = "Upgrade Homebrew"
     }
 
     static let MENU_TEXT_LEN        = 30
