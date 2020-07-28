@@ -465,10 +465,9 @@ class AppDelegate: NSObject,
 
         if !reloadDefaults && loadedItems.count > 0 {
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
-            // convert the serializations into real objects: Menu Items and their rewpresentative
+            // convert the serializations into real objects: Menu Items and their representative
             // NSMenuItems
-            //let icons: NSMutableArray = self.cwvc.aivc.iconPopoverController.icons
-
+            
             for loadedItem: String in loadedItems {
                 if let itemInstance = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
@@ -483,13 +482,13 @@ class AppDelegate: NSObject,
                     }
                 } else {
                     // FROM 1.3.0
-                    // We couldn't load the saved list of MNU items, so ask the user what to do
+                    // We couldn't load one of the saved list of MNU items, so ask the user what to do
                     DispatchQueue.main.async {
                         let alert: NSAlert = NSAlert.init()
                         alert.messageText = "Stored MNU items are damanged"
                         alert.informativeText = "Do you wish to continue with the default items?"
                         alert.addButton(withTitle: "Continue")
-                        alert.addButton(withTitle: "Quit")
+                        alert.addButton(withTitle: "Quit MNU")
                         let response: NSApplication.ModalResponse = alert.runModal()
 
                         if response == NSApplication.ModalResponse.alertFirstButtonReturn {
@@ -1068,21 +1067,24 @@ class AppDelegate: NSObject,
 
         let task: Process = Process()
         task.executableURL = URL.init(fileURLWithPath: path)
+        /*
+        task.launchPath = path;
+        */
         if args.count > 0 { task.arguments = args }
 
         // Pipe out the output to avoid putting it in the log
         let outputPipe = Pipe()
         task.standardOutput = outputPipe
-        //task.standardError = outputPipe
+        task.standardError = outputPipe
 
-        // Collect the output
+        /*let outputHandle = outputPipe.fileHandleForReading
+        // WARNING THIS LEADS TO EXCESS CPU USAGE DURING RUN
         var outString: String = ""
-        let outputHandle = outputPipe.fileHandleForReading
         outputHandle.readabilityHandler = { fshandle in
             if let line = String(data: fshandle.availableData, encoding: String.Encoding.utf8) {
                 outString += line
             }
-        }
+        }*/
 
         do {
             try task.run()
@@ -1092,8 +1094,9 @@ class AppDelegate: NSObject,
             return
         }
 
-        // Get the output
-        // let outputData = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        /*
+        task.launch()
+        */
 
         if doBlock {
             // Block until the task has completed (short tasks ONLY)
@@ -1102,7 +1105,16 @@ class AppDelegate: NSObject,
 
         if !task.isRunning {
             if (task.terminationStatus != 0) {
-                // Command failed
+                // Command failed -- collect the output if there is any
+                // DOES THIS EVEN WORK?
+                let outputHandle = outputPipe.fileHandleForReading
+                var outString: String = ""
+                if outputHandle.availableData.count > 0 {
+                    if let line = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
+                        outString = line
+                    }
+                }
+
                 if outString.count > 0 {
                     self.showError("Command Error", "The MNU item’s command reported an error: \(outString)")
                 } else {
