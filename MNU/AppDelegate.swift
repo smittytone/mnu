@@ -478,7 +478,9 @@ class AppDelegate: NSObject,
                     if !itemInstance.isHidden {
                         // Add the item's NSMenuItem to the NSMenu
                         self.appMenu!.addItem(menuItem)
-                        self.appMenu!.addItem(NSMenuItem.separator())
+
+                        // FROM 1.3.0 -- Only add a separator if we're showing images
+                        if self.showImages { self.appMenu!.addItem(NSMenuItem.separator()) }
                     }
                 } else {
                     // FROM 1.3.0
@@ -562,8 +564,8 @@ class AppDelegate: NSObject,
             self.reloadDefaults = false
         }
 
-        // Finnally, add the app menu
-        addAppMenuItem()
+        // Finally, add the app menu
+        addAppMenuItem(!self.showImages)
 
         // Now add the app menu to the macOS menu bar
         let bar: NSStatusBar = NSStatusBar.system
@@ -607,7 +609,9 @@ class AppDelegate: NSObject,
             // However, on an option-click show ALL the items anyway
             if !item.isHidden || self.optionClick {
                 self.appMenu!.addItem(menuItem)
-                self.appMenu!.addItem(NSMenuItem.separator())
+
+                // FROM 1.3.0 -- Only add a separator if we're showing images
+                if self.showImages { self.appMenu!.addItem(NSMenuItem.separator()) }
             }
         }
         
@@ -622,7 +626,7 @@ class AppDelegate: NSObject,
         }
 
         // Finally, add the app menu item at the end of the menu
-        addAppMenuItem()
+        addAppMenuItem(!self.showImages)
     }
     
     
@@ -697,12 +701,15 @@ class AppDelegate: NSObject,
     }
 
 
-    func addAppMenuItem() {
+    func addAppMenuItem(_ doSeparate: Bool) {
 
         // Add the app's control bar item
         // We always add this after creating or updating the menu
+        // FROM 1.3.0 - Add a 'show separator' parameter
 
         if let appItem = self.acvc.controlMenuItem {
+            // FROM 1.3.0 - Add a separator if we're NOT showing item images
+            if doSeparate { self.appMenu!.addItem(NSMenuItem.separator()) }
             self.appMenu!.addItem(appItem)
         }
     }
@@ -712,7 +719,7 @@ class AppDelegate: NSObject,
         
         // Build the array of icons that we will use for the popover selector and the button
         // that triggers its appearance
-        // NOTE There should be 16 icons in total in this release
+        // NOTE There should be 25 icons in total in this release
 
         if self.icons.count == 0 {
             var image: NSImage? = NSImage.init(named: "logo_generic")
