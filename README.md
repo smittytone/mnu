@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.3.0 *Unreleased*
+- 1.3.0 *06 August 2020*
     - Preliminary support for double-quotes in Terminal commands.
     - Update code to avoid deprecated calls.
     - Better recovery when the MNU item list is damaged.
