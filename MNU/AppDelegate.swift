@@ -56,6 +56,8 @@ class AppDelegate: NSObject,
     var icons: NSMutableArray = NSMutableArray.init()
     // FROM 1.3.0
     var reloadDefaults: Bool = false
+    // FROM 1.3.1
+    var isElevenPlus: Bool = false
 
 
     // MARK: - App Lifecycle Functions
@@ -76,6 +78,10 @@ class AppDelegate: NSObject,
             alert.runModal()
             self.disableDarkMode = true
         }
+
+        // Are we running on Big Sur?
+        self.isElevenPlus = sysVer.majorVersion >= 11
+        self.cwvc.isElevenPlus = self.isElevenPlus
 
         // Set the default values for the states we control
         self.inDarkMode = false
@@ -119,18 +125,18 @@ class AppDelegate: NSObject,
         nc.addObserver(self,
                        selector: #selector(self.updateAndSaveMenu),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
-                       object: cwvc)
+                       object: self.cwvc)
 
         // Watch for changes to the startup launch preference
         nc.addObserver(self,
                        selector: #selector(self.enableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-enabled"),
-                       object: cwvc)
+                       object: self.cwvc)
 
         nc.addObserver(self,
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
-                       object: cwvc)
+                       object: self.cwvc)
         
         // Watch for an 'it's OK to quit' message from the Configure Window
         // NOTE This is issued in response to an attempt to quit the app when the Configure
@@ -139,14 +145,14 @@ class AppDelegate: NSObject,
         nc.addObserver(self,
                        selector: #selector(self.performTermination),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
-                       object: cwvc)
+                       object: self.cwvc)
         
         // Watch for the appearance of the Configure Window
         // NOTE This is sent by the Menu Controls view controller
         nc.addObserver(self,
                        selector: #selector(self.showConfigureWindow),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
-                       object: acvc)
+                       object: self.acvc)
     }
 
     
@@ -438,6 +444,9 @@ class AppDelegate: NSObject,
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
+
+        // FROM 1.3.1
+        self.cwvc.isElevenPlus = self.isElevenPlus
 
         // Tell the configure window controller to show its window
         self.cwvc.show()

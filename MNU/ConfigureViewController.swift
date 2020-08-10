@@ -75,6 +75,8 @@ class ConfigureViewController:  NSViewController,
     var lastChance: Bool = false
     // FROM 1.1.0
     var extrasMenu: NSMenu? = nil
+    // FROM 1.3.1
+    var isElevenPlus: Bool = false
     
 
     // MARK: - Lifecycle Functions
@@ -133,6 +135,11 @@ class ConfigureViewController:  NSViewController,
         
         super.viewWillAppear()
         
+        // FROM 1.3.1
+        // Scale up table view row height according to macOS version
+        self.menuItemsTableView.rowSizeStyle = .custom
+        self.menuItemsTableView.rowHeight = isElevenPlus ? 24.0 : 18.0;
+
         // FROM 1.0.0: move from the app delegate
         // Update the item table
         self.menuItemsTableView.reloadData()
