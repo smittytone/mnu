@@ -64,7 +64,10 @@ class AppDelegate: NSObject,
 
         // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
-        if sysVer.minorVersion < 14 {
+
+        // FROM 1.3.1
+        // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
+        if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
             // Wrong version, so present a warnin message
             let alert = NSAlert.init()
             alert.messageText = "Unsupported version of macOS"
