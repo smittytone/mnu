@@ -48,7 +48,7 @@
 		3B083B7722CC3C2E0025F081 /* MNU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MNU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B083B7A22CC3C2E0025F081 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3B083B7F22CC3C300025F081 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		3B083B8122CC3C300025F081 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "/Users/smitty/Documents/GitHub/mnu/MNU/Bundle Entities/Info.plist"; sourceTree = "<absolute>"; };
+		3B083B8122CC3C300025F081 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = "/Users/smitty/GitHub/mnu/MNU/Bundle Entities/Info.plist"; sourceTree = "<absolute>"; };
 		3B083B8222CC3C300025F081 /* MNU.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = MNU.entitlements; path = "/Users/smitty/GitHub/mnu/MNU/Bundle Entities/MNU.entitlements"; sourceTree = "<absolute>"; };
 		3B083B8822CC3FD40025F081 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = ../../OneDrive/Programming/mnu/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		3B213445230C388900F7EE06 /* MenuControlsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuControlsViewController.swift; sourceTree = "<group>"; };
@@ -434,6 +434,7 @@
 		3B083B8622CC3C300025F081 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MNU/Bundle Entities/MNU.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -447,7 +448,9 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.3.1;
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -458,6 +461,7 @@
 		3B083B8722CC3C300025F081 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MNU/Bundle Entities/MNU.entitlements";
 				CODE_SIGN_IDENTITY = "Developer ID Application";
@@ -471,6 +475,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
 				MARKETING_VERSION = 1.3.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";

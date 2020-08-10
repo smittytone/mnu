@@ -677,10 +677,10 @@ class ConfigureViewController:  NSViewController,
             items.items.remove(at: originalRow)
             items.items.insert(anItem, at: newRow)
 
-            hasChanged = true
+            self.hasChanged = true
 
             // FROM 1.3.1 - bugfix: enable Apply button
-            applyChangesButton.isEnabled = true
+            self.applyChangesButton.isEnabled = true
             
             return true
         }
