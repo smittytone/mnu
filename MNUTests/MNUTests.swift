@@ -177,7 +177,7 @@ class MNUTests: XCTestCase {
     func testMakeBrewDateScript() throws {
 
         let menuItem: MenuItem = self.appDelegate.makeBrewUpdateScript()
-        XCTAssert(menuItem.title == "Update Brew")
+        XCTAssert(menuItem.title == "Update Homebrew")
         XCTAssert(menuItem.code == 11)
         XCTAssert(menuItem.type == 1)
     }
@@ -185,7 +185,7 @@ class MNUTests: XCTestCase {
     func testMakeBrewUpgradeScript() throws {
 
         let menuItem: MenuItem = self.appDelegate.makeBrewUpgradeScript()
-        XCTAssert(menuItem.title == "Upgrade Brew")
+        XCTAssert(menuItem.title == "Upgrade Homebrew")
         XCTAssert(menuItem.code == 12)
         XCTAssert(menuItem.type == 1)
     }
