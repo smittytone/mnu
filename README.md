@@ -1,4 +1,4 @@
-# MNU 1.3.1 #
+# MNU 1.4.0 #
 
 Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
 
@@ -10,8 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.3.1 *Unreleased*
-    - Preliminary Big Sur support.
+- 1.4.0 *Unreleased*
+    - Big Sur support.
     - Preliminary Apple Silicon support.
 - 1.3.0 *06 August 2020*
     - Preliminary support for double-quotes in Terminal commands.
