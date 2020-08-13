@@ -249,7 +249,7 @@
                                                 <constraint firstAttribute="height" constant="26" id="4UZ-Fq-Y8O"/>
                                                 <constraint firstAttribute="width" constant="27" id="QLB-UV-Ib6"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="plus" catalog="system" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
+                                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -972,6 +972,7 @@ Gw
         </scrollView>
     </objects>
     <resources>
+        <image name="NSAddTemplate" width="15" height="13"/>
         <image name="NSSmartBadgeTemplate" width="14" height="14"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSStopProgressFreestandingTemplate" width="15" height="15"/>
@@ -980,6 +981,5 @@ Gw
         <image name="button_help" width="20" height="20"/>
         <image name="icon_app" width="32" height="32"/>
         <image name="logo_generic" width="20" height="20"/>
-        <image name="plus" catalog="system" width="15" height="13"/>
     </resources>
 </document>
