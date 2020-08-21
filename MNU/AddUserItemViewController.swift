@@ -358,7 +358,7 @@ class AddUserItemViewController: NSViewController,
 
         // Show the 'Help' via the website
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:"https://smittytone.net/mnu/index.html#how-to-add-and-edit-your-own-menu-items")!)
+        NSWorkspace.shared.open(URL.init(string:MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items")!)
     }
 
 
