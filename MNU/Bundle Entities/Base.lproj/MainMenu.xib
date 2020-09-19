@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17147" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="17156" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17147"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="17156"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -139,7 +139,7 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="464" y="-1" width="20" height="22"/>
+                                                                                <rect key="frame" x="464" y="2" width="20" height="16"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="16" id="h6B-xK-5s8"/>
                                                                                     <constraint firstAttribute="width" constant="20" id="pBK-CP-Rrf"/>
@@ -155,7 +155,7 @@
                                                                                     <constraint firstAttribute="width" constant="20" id="ovZ-5b-31K"/>
                                                                                     <constraint firstAttribute="height" constant="16" id="t48-ai-TjM"/>
                                                                                 </constraints>
-                                                                                <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="zLg-ls-krn">
+                                                                                <buttonCell key="cell" type="inline" bezelStyle="inline" image="button_configure" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="zLg-ls-krn">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="smallSystemBold"/>
                                                                                 </buttonCell>
@@ -216,7 +216,7 @@
                                             </scroller>
                                         </scrollView>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="3gR-ck-alF">
-                                            <rect key="frame" x="422" y="10" width="102" height="33"/>
+                                            <rect key="frame" x="423" y="10" width="100" height="32"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="21" id="rIm-1A-LYo"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="88" id="skB-sT-TzI"/>
@@ -230,7 +230,7 @@
                                             </connections>
                                         </button>
                                         <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-04-17X">
-                                            <rect key="frame" x="15" y="13" width="25" height="26"/>
+                                            <rect key="frame" x="15" y="13" width="25" height="25"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="21" id="frB-tM-YBM"/>
                                                 <constraint firstAttribute="height" constant="21" id="vak-bp-amd"/>
@@ -244,7 +244,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xos-L3-Lxi">
-                                            <rect key="frame" x="16" y="56" width="29" height="29"/>
+                                            <rect key="frame" x="17" y="57" width="27" height="27"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="26" id="4UZ-Fq-Y8O"/>
                                                 <constraint firstAttribute="width" constant="27" id="QLB-UV-Ib6"/>
@@ -258,12 +258,12 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cw2-9R-dHW">
-                                            <rect key="frame" x="44" y="56" width="29" height="29"/>
+                                            <rect key="frame" x="45" y="57" width="27" height="27"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="27" id="DzS-U6-A1R"/>
                                                 <constraint firstAttribute="height" constant="26" id="hrC-EV-17u"/>
                                             </constraints>
-                                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSSmartBadgeTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KyX-O1-NTg">
+                                            <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="button_configure" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KyX-O1-NTg">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                 <font key="font" metaFont="system"/>
                                             </buttonCell>
@@ -537,7 +537,7 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="322"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="322"/>
             <value key="maxSize" type="size" width="560" height="322"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="322"/>
@@ -547,7 +547,7 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WiG-6V-3VE">
-                        <rect key="frame" x="475" y="13" width="72" height="33"/>
+                        <rect key="frame" x="481" y="13" width="65" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="53" id="hva-Kf-3lJ"/>
                             <constraint firstAttribute="height" constant="21" id="ogm-CU-McQ"/>
@@ -561,7 +561,7 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jm6-VI-8yC">
-                        <rect key="frame" x="389" y="13" width="88" height="33"/>
+                        <rect key="frame" x="399" y="13" width="82" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="Wc2-JK-AIW"/>
                             <constraint firstAttribute="height" constant="21" id="YBQ-uZ-DoC"/>
@@ -578,7 +578,7 @@ Gw
                         </connections>
                     </button>
                     <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nMY-bY-KwO">
-                        <rect key="frame" x="18" y="16" width="25" height="26"/>
+                        <rect key="frame" x="18" y="16" width="25" height="25"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="6Sv-BS-j5j"/>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="21" id="Ie4-x2-l6N"/>
@@ -625,7 +625,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RJf-rp-4EB">
-                        <rect key="frame" x="18" y="210" width="522" height="16"/>
+                        <rect key="frame" x="18" y="209" width="524" height="18"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="14" id="x4M-Hf-dj3"/>
                         </constraints>
@@ -687,7 +687,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ujx-c9-tjN">
-                        <rect key="frame" x="18" y="190" width="518" height="16"/>
+                        <rect key="frame" x="18" y="189" width="520" height="18"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="14" id="LlL-8Q-0Pp"/>
                         </constraints>
@@ -778,7 +778,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="877"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -788,7 +788,7 @@ Gw
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XDv-wN-O6x">
-                        <rect key="frame" x="462" y="13" width="85" height="33"/>
+                        <rect key="frame" x="463" y="13" width="83" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="71" id="0rd-fM-ufm"/>
                             <constraint firstAttribute="height" constant="21" id="kd5-9R-lwX"/>
@@ -802,7 +802,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DCm-xq-FFu">
-                        <rect key="frame" x="376" y="13" width="88" height="33"/>
+                        <rect key="frame" x="381" y="13" width="82" height="32"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="0R4-8q-8et"/>
                             <constraint firstAttribute="height" constant="21" id="eVA-QY-jfq"/>
@@ -972,10 +972,9 @@ Gw
         </scrollView>
     </objects>
     <resources>
-        <image name="NSAddTemplate" width="15" height="13"/>
-        <image name="NSSmartBadgeTemplate" width="14" height="14"/>
+        <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
-        <image name="NSStopProgressFreestandingTemplate" width="15" height="15"/>
+        <image name="NSStopProgressFreestandingTemplate" width="14" height="14"/>
         <image name="button_close" width="20" height="20"/>
         <image name="button_configure" width="20" height="20"/>
         <image name="button_help" width="20" height="20"/>
