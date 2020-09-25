@@ -1,6 +1,6 @@
 # MNU 1.4.0 #
 
-Please see [the MNU web site](https://smittytone.github.io/mnu/index.html).
+Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
 ### Scripts ###
 
