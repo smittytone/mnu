@@ -1,4 +1,4 @@
-# MNU 1.4.0 #
+# MNU 1.4.1 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -9,6 +9,8 @@ Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graph
 The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
 ## Release Notes ##
+
+- 1.4.1 *Unreleased*
 
 - 1.4.0 *21 September 2020*
     - Big Sur support.
