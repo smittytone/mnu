@@ -11,7 +11,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 ## Release Notes ##
 
 - 1.4.1 *Unreleased*
-
+    - Minor improvements.w
 - 1.4.0 *21 September 2020*
     - Big Sur support.
     - Preliminary Apple Silicon support.
