@@ -1,4 +1,4 @@
-# MNU 1.4.2 #
+# MNU 1.4.3 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.4.3 *Unreleased*
+    - Apple Silicon support.
 - 1.4.2 *23 October 2020*
     - Packaging update.
 - 1.4.1 *Not released*
