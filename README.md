@@ -4,14 +4,16 @@ Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
 ### Scripts ###
 
-Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPGs).
+Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPEGs).
 
 The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
 ## Release Notes ##
 
 - 1.4.4 *Unreleased*
-    - Fix table rendering oddness.
+    - Big Sur UI fixes:
+        - Fix table rendering oddness.
+        - Fix control spacing oddness.
 - 1.4.3 *17 November 2020*
     - Apple Silicon support.
 - 1.4.2 *23 October 2020*
