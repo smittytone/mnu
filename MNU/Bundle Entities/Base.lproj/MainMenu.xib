@@ -312,7 +312,7 @@
                                             </connections>
                                         </button>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
-                                            <rect key="frame" x="131" y="91" width="272" height="74"/>
+                                            <rect key="frame" x="131" y="108" width="272" height="74"/>
                                             <subviews>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
                                                     <rect key="frame" x="-2" y="51" width="274" height="20"/>
@@ -367,11 +367,11 @@
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="17" id="EpW-xW-ebO"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="top" secondItem="RX0-XS-Gl5" secondAttribute="top" constant="74" id="F7E-UA-32R"/>
                                         <constraint firstAttribute="bottom" secondItem="lLj-TG-Lr5" secondAttribute="bottom" constant="17" id="Oqd-73-wvc"/>
                                         <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="lLj-TG-Lr5" secondAttribute="trailing" constant="12" id="eeE-NG-Y3a"/>
                                         <constraint firstAttribute="trailing" secondItem="WdZ-qr-xzQ" secondAttribute="trailing" constant="17" id="fvd-zL-JGz"/>
                                         <constraint firstItem="lLj-TG-Lr5" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="17" id="gLS-eG-jEO"/>
-                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" id="xzX-0o-gaG"/>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="zbj-d8-Xyi"/>
                                     </constraints>
                                 </view>
