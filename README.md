@@ -1,4 +1,4 @@
-# MNU 1.4.5 #
+# MNU 1.4.6 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.4.6 *Unreleased*
+    - Fix scrunched **Configure MNU** menu items table.
 - 1.4.5 *2 December 2020*
     - Minor icon tweak; no code changes.
 - 1.4.4 *30 November 2020*
