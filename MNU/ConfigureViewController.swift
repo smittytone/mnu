@@ -77,6 +77,8 @@ class ConfigureViewController:  NSViewController,
     var extrasMenu: NSMenu? = nil
     // FROM 1.3.1
     var isElevenPlus: Bool = false
+
+    private var systemVersion: Int = 10
     
 
     // MARK: - Lifecycle Functions
@@ -85,6 +87,12 @@ class ConfigureViewController:  NSViewController,
 
         super.viewDidLoad()
 
+        // FROM 1.4.6
+        // Get the OS version so we can set the table view row height and cell image scaling
+        // according to whether we're on Catalina or under, or Big Sur and up
+        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
+        self.systemVersion = sysVer.majorVersion
+
         // Ask our window to make the  first responder (for key presses)
         self.configureWindow = self.view.window
         self.configureWindow!.makeFirstResponder(self)
@@ -92,6 +100,7 @@ class ConfigureViewController:  NSViewController,
         // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([self.mnuPasteboardType])
         self.menuItemsTableView.delegate = self
+        self.menuItemsTableView.rowSizeStyle = .custom
 
         // Watch for notifications of changes sent by the add user item view controller
         let nc = NotificationCenter.default
@@ -593,18 +602,21 @@ class ConfigureViewController:  NSViewController,
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.toolTip = "Delete Item"
                 cell!.buttonA.isEnabled = true
+                cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage.init(named: "NSActionTemplate")
                 cell!.buttonB.action = #selector(self.doEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit Item"
                 cell!.buttonB.isEnabled = true
+                cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonB.menuItem = item
 
                 cell!.buttonC.image = NSImage.init(named: (item.isHidden ? "NSStatusUnavailable" : "NSStatusAvailable"))
                 cell!.buttonC.action = #selector(self.doShowHideSwitch(sender:))
                 cell!.buttonC.toolTip = "Show/Hide Item"
                 cell!.buttonC.isEnabled = true
+                cell!.buttonC.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonC.menuItem = item
 
                 if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
@@ -623,6 +635,14 @@ class ConfigureViewController:  NSViewController,
         }
 
         return nil
+    }
+
+
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+
+        // FROM 1.4.6
+        // Set the table row height based on host OS major version
+        return self.systemVersion > 10 ? 32.0 : 26.0
     }
 
 
@@ -869,7 +889,7 @@ class ConfigureViewController:  NSViewController,
         let countText = count == 0 ? "no" : "\(count)"
 
         // Display the text
-        menuItemsCountText.stringValue = "MNU is showing \(countText) \(itemText) out of \(total) (Option-click the menu to show all items)"
+        menuItemsCountText.stringValue = "MNU is showing \(countText) of \(total) \(itemText) (Option-click the menu to show all items)"
     }
 
 
