@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 05/07/2019.
-    Copyright © 2020 Tony Smith. All rights reserved.
+    Copyright © 2021 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -77,7 +77,9 @@ class ConfigureViewController:  NSViewController,
     var extrasMenu: NSMenu? = nil
     // FROM 1.3.1
     var isElevenPlus: Bool = false
-
+    // FROM 1.4.7
+    var appDelegate: AppDelegate? = nil
+    
     private var systemVersion: Int = 10
     
 
@@ -246,8 +248,9 @@ class ConfigureViewController:  NSViewController,
             }
         }
         
-        // Tell the Add User Item view controller to display its own sheet as
-        // ready to accept a new item
+        // Tell the Add User Item view controller to display its own sheet
+        // and be ready to accept the entry of a new item
+        self.aivc.appDelegate = self.appDelegate
         self.aivc.isEditing = false
         self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
@@ -269,6 +272,7 @@ class ConfigureViewController:  NSViewController,
     @objc func doShowHideSwitch(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
         if let item: MenuItem = button.menuItem {
             doShowHide(item)
@@ -279,6 +283,7 @@ class ConfigureViewController:  NSViewController,
     func doShowHide(_ item: MenuItem) {
         
         // Flip the item's recorded state and update the table
+        
         item.isHidden = !item.isHidden
         self.hasChanged = true
         self.applyChangesButton.isEnabled = true
@@ -292,6 +297,7 @@ class ConfigureViewController:  NSViewController,
     @IBAction func doContextEditScript (sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
+        
         let menuItem: NSMenuItem = sender as! NSMenuItem
         let item: MenuItem = menuItem.representedObject as! MenuItem
         doEdit(item)
@@ -301,6 +307,7 @@ class ConfigureViewController:  NSViewController,
     @objc func doEditScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
         if let item: MenuItem = button.menuItem {
             doEdit(item)
@@ -310,14 +317,15 @@ class ConfigureViewController:  NSViewController,
     
     func doEdit(_ item: MenuItem) {
         
-        // Populate the sheet's fields for editing
+        // Tell the add user item view controller to display its sheet
+        // and to opulate the sheet's fields for editing an existing item
+        self.aivc.appDelegate = self.appDelegate
         self.aivc.newMenuItem = item
         self.aivc.isEditing = true
+        self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.itemScriptText.stringValue = ""
         self.aivc.menuTitleText.stringValue = ""
-        
-        // Tell the add user item view controller to display its sheet
         self.aivc.showSheet()
     }
     
@@ -325,6 +333,7 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func doContextDeleteScript(sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
+        
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
             doDelete(item)

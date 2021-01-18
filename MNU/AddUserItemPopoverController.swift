@@ -4,7 +4,7 @@
    MNU
 
    Created by Tony Smith on 22/08/2019.
-   Copyright © 2020 Tony Smith. All rights reserved.
+   Copyright © 2021 Tony Smith. All rights reserved.
 
    MIT License
    Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -100,6 +100,7 @@ class AddUserItemPopoverController: NSViewController,
     func configureCollectionView() {
 
         // Configure the collection view's flow layout manager
+        
         let gridLayout = NSCollectionViewGridLayout.init()
         gridLayout.maximumItemSize = NSMakeSize(64, 64)
         gridLayout.minimumItemSize = NSMakeSize(64, 64)
@@ -123,6 +124,7 @@ class AddUserItemPopoverController: NSViewController,
     func numberOfSections(in collectionView: NSCollectionView) -> Int {
 
         // Only one section in this collection
+        
         return 1
     }
 
@@ -130,6 +132,7 @@ class AddUserItemPopoverController: NSViewController,
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
 
         // Just return the number of icons we have
+        
         return self.icons.count
     }
 
@@ -137,6 +140,7 @@ class AddUserItemPopoverController: NSViewController,
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
 
         // Create (or retrieve) an AddUserItemCollectionViewItem instance and configure it
+        
         let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
                                            for: indexPath)
         guard let collectionViewItem = item as? AddUserItemCollectionViewItem else { return item }
@@ -146,7 +150,9 @@ class AddUserItemPopoverController: NSViewController,
 
         // Increase the icon index
         self.count += 1
-        if self.count == self.icons.count { self.count = 0 }
+        if self.count == self.icons.count {
+            self.count = 0
+        }
 
         return item
     }
@@ -156,6 +162,7 @@ class AddUserItemPopoverController: NSViewController,
 
         // Identify the selected icon and notify the parent AddUserItemViewController so that it can
         // update its icon button (which triggers the popup containing this collection)
+        
         for index in indexPaths {
             if let obj = collectionView.item(at: index) {
                 // Send the selected item's index to the AddUserItemViewController

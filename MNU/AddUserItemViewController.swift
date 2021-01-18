@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 24/07/2019.
-    Copyright © 2020 Tony Smith. All rights reserved.
+    Copyright © 2021 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -60,6 +60,8 @@ class AddUserItemViewController: NSViewController,
     var isEditing: Bool = false
     var iconPopover: NSPopover? = nil
     var icons: NSMutableArray = NSMutableArray.init()
+    // FROM 1.4.7
+    var appDelegate: AppDelegate? = nil
 
 
     // MARK: - Lifecycle Functions
@@ -163,6 +165,7 @@ class AddUserItemViewController: NSViewController,
     func makePopover() {
 
         // Assemble the popover if it hasn't been assembled yet
+        
         if self.iconPopover == nil {
             self.iconPopover = NSPopover.init()
             self.iconPopover!.contentViewController = self.iconPopoverController
@@ -177,18 +180,9 @@ class AddUserItemViewController: NSViewController,
         // Present the controller's sheet, customising it to either display an existing
         // Menu Item's details for editing, or empty fields for a new Menu Item
 
-        if !self.isEditing {
-            // Clear the new user item sheet's input fields first
-            self.itemScriptText.stringValue = ""
-            self.menuTitleText.stringValue = ""
-            self.saveButton.title = "Add"
-            self.titleText.stringValue = "Add A New Command"
-            self.iconButton.image = self.icons.object(at: 0) as? NSImage
-            self.iconButton.index = 0
-            self.textCount.stringValue = "0/30"
-            self.openCheck.state = NSControl.StateValue.off
-            self.directCheck.state = NSControl.StateValue.off
-        } else {
+        if self.isEditing {
+            // We are presenting an existing item, so get it and populate
+            // the sheet's fields accordingly
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
                 self.itemScriptText.stringValue = item.script
@@ -198,18 +192,29 @@ class AddUserItemViewController: NSViewController,
                 self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
                 self.iconButton.index = item.iconIndex
                 self.textCount.stringValue = "\(item.title.count)/30"
-                self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? NSControl.StateValue.off : NSControl.StateValue.on
-                self.directCheck.state = item.isDirect ? NSControl.StateValue.on : NSControl.StateValue.off
+                self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? .off : .on
+                self.directCheck.state = item.isDirect ? .on : .off
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
             }
+        } else {
+            // We are presenting a new item, so create it and
+            // clear the sheet's input fields
+            self.itemScriptText.stringValue = ""
+            self.menuTitleText.stringValue = ""
+            self.saveButton.title = "Add"
+            self.titleText.stringValue = "Add A New Command"
+            self.iconButton.image = self.icons.object(at: 0) as? NSImage
+            self.iconButton.index = 0
+            self.textCount.stringValue = "0/30"
+            self.openCheck.state = .off
+            self.directCheck.state = .off
         }
 
         // Present the sheet
         if let window = self.parentWindow {
-            window.beginSheet(self.addItemSheet,
-                              completionHandler: nil)
+            window.beginSheet(self.addItemSheet, completionHandler: nil)
         }
     }
 
@@ -218,6 +223,7 @@ class AddUserItemViewController: NSViewController,
 
         // When we receive a notification from the popover controller that an icon has been selected,
         // we come here and set the button's image to that icon
+        
         if let obj = note.object {
             // Decode the notifiction object
             let index = obj as! NSNumber
@@ -243,7 +249,7 @@ class AddUserItemViewController: NSViewController,
         // Save a new script item, or update an existing one (if we are editing)
 
         var itemHasChanged: Bool = false
-        let isOpenAction: Bool = self.openCheck.state == NSControl.StateValue.on
+        let isOpenAction: Bool = self.openCheck.state == .on
         
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
@@ -258,30 +264,24 @@ class AddUserItemViewController: NSViewController,
             return
         }
 
-        if !self.isEditing {
-            // Check for a duplicate menu title
-            if !checkLabel() { return }
-            
-            // Create a Menu Item and set its values
-            let newItem = MenuItem()
-            newItem.script = self.itemScriptText.stringValue
-            newItem.title = self.menuTitleText.stringValue
-            newItem.type = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
-            newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
-            newItem.isNew = true
-            newItem.iconIndex = self.iconButton.index
-            // Added 1.2.2
-            newItem.isDirect = self.directCheck.state == NSControl.StateValue.on
-
-            // Store the new menu item
-            self.newMenuItem = newItem
-            itemHasChanged = true
-        } else {
+        // FROM 1.4.7
+        // If we've created an 'open' action, check that the target exists
+        if isOpenAction {
+            if let ad = appDelegate {
+                if ad.getAppPath(self.itemScriptText.stringValue) == nil {
+                    showAlert("The app ‘\(self.itemScriptText.stringValue)’ cannot be found", "Please check that you have it installed on your Mac.")
+                    return
+                }
+            }
+        }
+        
+        if self.isEditing {
             // Save the updated fields
             if let item = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
                     // ADDED 1.2.0
-                    // Check for a duplicate menu title
+                    // Check for a duplicate menu title if the
+                    // menu title has been changed
                     if !checkLabel() { return }
                     
                     itemHasChanged = true
@@ -306,11 +306,33 @@ class AddUserItemViewController: NSViewController,
                 }
 
                 // ADDED 1.2.2
-                if (self.directCheck.state == NSControl.StateValue.on) != item.isDirect {
+                if (self.directCheck.state == .on) != item.isDirect {
                     itemHasChanged = true
-                    item.isDirect = self.directCheck.state == NSControl.StateValue.on
+                    item.isDirect = self.directCheck.state == .on
                 }
+                
+                // FROM 1.4.7
+                // For 'open' actions, make sure the target app exists
+                
             }
+        } else {
+            // Check for a duplicate menu title
+            if !checkLabel() { return }
+            
+            // Create a Menu Item and set its values
+            let newItem = MenuItem()
+            newItem.script = self.itemScriptText.stringValue
+            newItem.title = self.menuTitleText.stringValue
+            newItem.type = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
+            newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
+            newItem.isNew = true
+            newItem.iconIndex = self.iconButton.index
+            // Added 1.2.2
+            newItem.isDirect = self.directCheck.state == .on
+
+            // Store the new menu item
+            self.newMenuItem = newItem
+            itemHasChanged = true
         }
 
         if itemHasChanged {
@@ -332,6 +354,7 @@ class AddUserItemViewController: NSViewController,
         // ADDED 1.2.0
         // Moved from 'doSave()'
         // Check that we have a unique menu label
+        
         if let list: MenuItemList = self.currentMenuItems {
             if list.items.count > 0 {
                 var got: Bool = false
@@ -358,6 +381,7 @@ class AddUserItemViewController: NSViewController,
 
         // Show the 'Help' via the website
         // TODO provide offline help
+        
         NSWorkspace.shared.open(URL.init(string:MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items")!)
     }
 
@@ -365,6 +389,7 @@ class AddUserItemViewController: NSViewController,
     @IBAction @objc func doShowIcons(sender: Any) {
 
         // Show the icon matrix
+        
         self.iconPopover!.show(relativeTo: self.iconButton.bounds,
                                of: self.iconButton,
                                preferredEdge: NSRectEdge.maxY)
@@ -376,6 +401,7 @@ class AddUserItemViewController: NSViewController,
     func showAlert(_ title: String, _ message: String) {
 
         // Present an alert to warn the user about deleting the Menu Item
+        
         let alert: NSAlert = NSAlert()
         alert.messageText = title
         alert.informativeText = message

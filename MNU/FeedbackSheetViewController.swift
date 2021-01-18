@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 27/07/2019.
-    Copyright © 2020 Tony Smith. All rights reserved.
+    Copyright © 2021 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -50,7 +50,9 @@ class FeedbackSheetViewController: NSViewController,
     // MARK: - Lifecycle Functions
 
     func showSheet() {
-
+        
+        // This function should be called to prepare the feedback sheet for viewing
+        
         // Reset the UI
         self.connectionProgress.stopAnimation(self)
         self.feedbackText.stringValue = ""
@@ -68,6 +70,7 @@ class FeedbackSheetViewController: NSViewController,
     @IBAction @objc func doCancel(sender: Any?) {
 
         // User has clicked 'Cancel', so just close the sheet
+        
         self.parentWindow!.endSheet(self.feedbackSheet)
         self.parentWindow = nil
     }
@@ -76,6 +79,7 @@ class FeedbackSheetViewController: NSViewController,
     @IBAction @objc func doSend(sender: Any?) {
 
         // User clicked 'Send' so get the message (if there is one) from the text field and send it
+        
         let feedback: String = self.feedbackText.stringValue
 
         if feedback.count > 0 {
@@ -136,6 +140,7 @@ class FeedbackSheetViewController: NSViewController,
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
 
         // Some sort of connection error - report it
+        
         sendFeedbackError()
     }
 
@@ -143,6 +148,7 @@ class FeedbackSheetViewController: NSViewController,
     func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 
         // The operation to send the comment completed
+        
         if let _ = error {
             // An error took place - report it
             sendFeedbackError()
@@ -167,6 +173,7 @@ class FeedbackSheetViewController: NSViewController,
         // Present an error message specific to sending feedback
         // This is called from multiple locations: if the initial request can't be created,
         // there was a send failure, or a server error
+        
         let alert: NSAlert = NSAlert()
         alert.messageText = "Feedback Could Not Be Sent"
         alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."

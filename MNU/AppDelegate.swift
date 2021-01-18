@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 03/07/2019.
-    Copyright © 2020 Tony Smith. All rights reserved.
+    Copyright © 2021 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -447,6 +447,9 @@ class AppDelegate: NSObject,
 
         // FROM 1.3.1
         self.cwvc.isElevenPlus = self.isElevenPlus
+        
+        // FROM 1.4.7
+        self.cwvc.appDelegate = self
 
         // Tell the configure window controller to show its window
         self.cwvc.show()
@@ -1037,28 +1040,71 @@ class AppDelegate: NSObject,
 
 
     func openApp(_ appName: String) {
-        
+
         // ADDED 1.2.0
         // Don't present the Terminal; just open the named app directly
-        
+
         #if DEBUG
         NSLog("MNU opening app \'\(appName)\'")
         #endif
-        
-        // Make sure the name has '.app' appended (if not already present) and has a path
-        var name: NSString = appName as NSString
-        if !name.contains(".app") { name = name.appendingFormat("%@", ".app") }
-        if !name.contains("/Applications") { name = NSString.init(format: "/Applications/%@", name) }
 
-        // TODO Check app existence rather than wait for open to fail
+        // FROM 1.4.7
+        // Get the app's valid path (or nil if there isn't one)
+        if let path = getAppPath(appName) {
+            #if DEBUG
+            NSLog("MNU running script \'open \(path)\'")
+            #endif
 
-        #if DEBUG
-        NSLog("MNU running script \'open \(name)\'")
-        #endif
+            // Call 'open'
+            runProcess(app: "/usr/bin/open",
+                        with: [path],
+                        doBlock: false)
+        } else {
+            showError("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
+        }
+    }
+    
+    
+    func getAppPath(_ appName: String) -> String? {
+
+        // FROM 1.4.7
+        // Set the app against each of the possible app locations
+        // TODO Add ~/Applications
         
-        runProcess(app: "/usr/bin/open",
-                   with: [name as String],
-                   doBlock: false)
+        // Two possible Application locations are...
+        var basePaths: [String] = ["/Applications", "/System/Applications"]
+        
+        // ...and the third is...
+        let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
+        if FileManager.default.fileExists(atPath: homeAppPath) {
+            basePaths.append(homeAppPath)
+        }
+        
+        // Run through the above list and check if the name app is there;
+        // if it is, return it
+        for basePath in basePaths {
+            // Build the full app path
+            var appPath: String = appName
+            
+            // Make sure our temporary full path ends in '.app'
+            if !appPath.contains(".app") {
+                appPath += ".app"
+            }
+            
+            // Prefix the temp path with the current app folder
+            if !appPath.contains(basePath) {
+                appPath = basePath + "/" + appPath
+            }
+
+            // Check if the app is there -- if it is, return the full path
+            if FileManager.default.fileExists(atPath: appPath) {
+                return appPath
+            }
+        }
+
+        // No match for the named app in any location,
+        // so issue a failure note
+        return nil
     }
     
     
