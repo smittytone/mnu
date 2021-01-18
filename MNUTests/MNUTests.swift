@@ -281,6 +281,12 @@ class MNUTests: XCTestCase {
         app = "TextEdit"
         XCTAssertNotNil(appDelegate.getAppPath(app))
         XCTAssert(appDelegate.getAppPath(app)! == "/System/Applications/TextEdit.app")
+        
+        app = "Screenshot"
+        XCTAssertNotNil(appDelegate.getAppPath(app))
+        XCTAssert(appDelegate.getAppPath(app)! == "/System/Applications/Utilities/Screenshot.app")
+        
+        
     }
 
 

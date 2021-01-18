@@ -1072,7 +1072,7 @@ class AppDelegate: NSObject,
         // TODO Add ~/Applications
         
         // Two possible Application locations are...
-        var basePaths: [String] = ["/Applications", "/System/Applications"]
+        var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
         
         // ...and the third is...
         let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
