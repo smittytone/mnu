@@ -1,4 +1,4 @@
-# MNU 1.4.6 #
+# MNU 1.4.7 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,9 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.4.7 *Unreleased*
+    - Support latest macOS app locations: `/System/Applications` as well as `/Applications`.
+    - Correctly update the Configure Window’s view of the menu contents.
 - 1.4.6 *10 December 2020*
     - Fix scrunched **Configure MNU** menu items table.
 - 1.4.5 *2 December 2020*
@@ -55,7 +58,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Copyright ##
 
-MNU is copyright &copy; 2020, Tony Smith.
+MNU is copyright &copy; 2021, Tony Smith.
 
 ## Licence ##
 
