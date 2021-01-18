@@ -109,7 +109,7 @@ class MNUTests: XCTestCase {
         _testtOpenAppHelper("Squinter", "com.bps.Squinter", 1)
 
         // Should succeed
-        _testtOpenAppHelper("OmniDiskSweeper.app", "com.omnigroup.OmniDiskSweeper", 1)
+        _testtOpenAppHelper("Firefox.app", "org.mozilla.firefox", 1)
 
         // Should fail
         _testtOpenAppHelper("Bollocks.app", "com.bollocks.bollocks", 0)
@@ -271,6 +271,17 @@ class MNUTests: XCTestCase {
         }
     }
 
+    
+    func testGetAppPath() throws {
+        
+        var app: String = "Visual Studio Code"
+        XCTAssertNotNil(appDelegate.getAppPath(app))
+        XCTAssert(appDelegate.getAppPath(app)! == "/Applications/Visual Studio Code.app")
+        
+        app = "TextEdit"
+        XCTAssertNotNil(appDelegate.getAppPath(app))
+        XCTAssert(appDelegate.getAppPath(app)! == "/System/Applications/TextEdit.app")
+    }
 
 
 
