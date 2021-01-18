@@ -11,7 +11,12 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 ## Release Notes ##
 
 - 1.4.7 *Unreleased*
-    - Support latest macOS app locations: `/System/Applications` as well as `/Applications`.
+    - Support all macOS app locations for ‘open app‘ actions:
+        - `/Applications`
+        - `/Applications/Utilities`
+        - `/System/Applications`
+        - `/System/Applications/Utilities`
+        - `~/Applications`
     - Correctly update the Configure Window’s view of the menu contents.
 - 1.4.6 *10 December 2020*
     - Fix scrunched **Configure MNU** menu items table.
