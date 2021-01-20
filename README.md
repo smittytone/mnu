@@ -18,6 +18,9 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
         - `/System/Applications/Utilities`
         - `~/Applications`
     - Correctly update the Configure Window’s view of the menu contents.
+    - Make sure mutually exclusive menu item actions can’t be selected together.
+    - Make sure out-of-terminal commands use absolute paths.
+        - And in-path relative elements are evaluated.
 - 1.4.6 *10 December 2020*
     - Fix scrunched **Configure MNU** menu items table.
 - 1.4.5 *2 December 2020*
