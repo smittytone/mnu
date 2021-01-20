@@ -1130,14 +1130,11 @@ class AppDelegate: NSObject,
 
         // Generic task creation and run function
         // FROM 1.3.0 - remove deprecated methods:
-        //   'launchPath()' -> 'executableURL',
+        //   'launchPath' -> 'executableURL',
         //   'launch()' -> 'run()'
 
         let task: Process = Process()
         task.executableURL = URL.init(fileURLWithPath: path)
-        /*
-        task.launchPath = path;
-        */
         if args.count > 0 { task.arguments = args }
 
         // Pipe out the output to avoid putting it in the log
@@ -1162,10 +1159,6 @@ class AppDelegate: NSObject,
             return
         }
 
-        /*
-        task.launch()
-        */
-
         if doBlock {
             // Block until the task has completed (short tasks ONLY)
             task.waitUntilExit()
@@ -1177,10 +1170,8 @@ class AppDelegate: NSObject,
                 // DOES THIS EVEN WORK?
                 let outputHandle = outputPipe.fileHandleForReading
                 var outString: String = ""
-                if outputHandle.availableData.count > 0 {
-                    if let line = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
-                        outString = line
-                    }
+                if let line = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
+                    outString = line
                 }
 
                 if outString.count > 0 {

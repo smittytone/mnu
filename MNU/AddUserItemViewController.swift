@@ -250,7 +250,8 @@ class AddUserItemViewController: NSViewController,
 
         var itemHasChanged: Bool = false
         let isOpenAction: Bool = self.openCheck.state == .on
-        
+        let isDirect: Bool = self.directCheck.state == .on
+
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
             // The field is blank, so warn the user
@@ -274,12 +275,22 @@ class AddUserItemViewController: NSViewController,
                 }
             }
         }
+
+        // FROM 1.4.7
+        // If the 'run direct' checkbox is set, make sure we have an absolute path
+        if isDirect {
+            // Check for an initial '/' to make sure we have an absolute path
+            if !self.itemScriptText.stringValue.hasPrefix("/") {
+                showAlert("You do not appear to have entered an absolute path", "Please check the ‘Enter a command...’ field and try again.")
+                return
+            }
+        }
         
         if self.isEditing {
             // Save the updated fields
             if let item = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
-                    // ADDED 1.2.0
+                    // FROM 1.2.0
                     // Check for a duplicate menu title if the
                     // menu title has been changed
                     if !checkLabel() { return }
@@ -298,22 +309,26 @@ class AddUserItemViewController: NSViewController,
                     item.iconIndex = self.iconButton.index
                 }
                 
-                // ADDED 1.2.0
+                // FROM 1.2.0
                 let newType: Int = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
                 if newType != item.type {
                     item.type = newType
                     itemHasChanged = true
                 }
 
-                // ADDED 1.2.2
+                // FROM 1.2.2
                 if (self.directCheck.state == .on) != item.isDirect {
                     itemHasChanged = true
                     item.isDirect = self.directCheck.state == .on
+
+                    // FROM 1.4.7
+                    // Check for relative elements in the path - and update accordingly
+                    if isDirect {
+                        if (item.script as NSString).contains("..") {
+                            item.script = (item.script as NSString).standardizingPath
+                        }
+                    }
                 }
-                
-                // FROM 1.4.7
-                // For 'open' actions, make sure the target app exists
-                
             }
         } else {
             // Check for a duplicate menu title
@@ -327,8 +342,16 @@ class AddUserItemViewController: NSViewController,
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
             newItem.iconIndex = self.iconButton.index
-            // Added 1.2.2
-            newItem.isDirect = self.directCheck.state == .on
+            // FROM 1.2.2
+            newItem.isDirect = isDirect
+
+            // FROM 1.4.7
+            // Check for relative elements in the path - and update accordingly
+            if isDirect {
+                if (newItem.script as NSString).contains("..") {
+                    newItem.script = (newItem.script as NSString).standardizingPath
+                }
+            }
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -393,6 +416,38 @@ class AddUserItemViewController: NSViewController,
         self.iconPopover!.show(relativeTo: self.iconButton.bounds,
                                of: self.iconButton,
                                preferredEdge: NSRectEdge.maxY)
+    }
+
+
+    @IBAction @objc func doCheckBox(sender: Any) {
+
+        // FROM 1.4.7
+        // Make sure mutually exclusive checkboxes aren't ticked
+
+        let checkedButton = sender as! NSButton
+        var doWarn: Bool = false
+
+        if checkedButton.state == .on {
+            if checkedButton == self.directCheck {
+                if self.openCheck.state == .on {
+                    // Open action checkbox is set, so direct action can't be
+                    doWarn = true
+                }
+            }
+
+            if checkedButton == self.openCheck {
+                if self.directCheck.state == .on {
+                    // Direct action checkbox is set, so open action can't be
+                    doWarn = true
+                }
+            }
+        }
+
+        if doWarn {
+            // There is a clash, so turn off the just-checked button and warn the user
+            checkedButton.state = .off
+            showAlert("You can’t check this option", "Selecting this option conflicts with another you have chosen")
+        }
     }
 
 

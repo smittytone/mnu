@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -140,7 +140,7 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="458" y="2" width="21.5" height="26"/>
+                                                                                <rect key="frame" x="458" y="2" width="21" height="26"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="20.5" id="rT4-fZ-1iD"/>
                                                                                 </constraints>
@@ -286,22 +286,11 @@
                                     <rect key="frame" x="10" y="33" width="534" height="256"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lLj-TG-Lr5">
-                                            <rect key="frame" x="15" y="17" width="471" height="14"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="14" id="ghl-OU-fMA"/>
-                                            </constraints>
-                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" title="Preferences will be applied immediately" id="MNa-l4-0cB">
-                                                <font key="font" metaFont="message" size="11"/>
-                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
                                         <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WdZ-qr-xzQ">
-                                            <rect key="frame" x="493" y="13" width="26" height="26"/>
+                                            <rect key="frame" x="14" y="15" width="26" height="26"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="21" id="aTF-Qp-SNY"/>
-                                                <constraint firstAttribute="width" constant="21" id="rUd-uI-VSJ"/>
+                                                <constraint firstAttribute="width" constant="21" id="s5W-ah-pEY"/>
+                                                <constraint firstAttribute="height" constant="21" id="uuk-Bb-jXB"/>
                                             </constraints>
                                             <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9hC-Wy-15V">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -364,14 +353,25 @@
                                                 <constraint firstItem="Iol-Aa-G7M" firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="xse-KC-kqW"/>
                                             </constraints>
                                         </customView>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lLj-TG-Lr5">
+                                            <rect key="frame" x="48" y="23" width="471" height="14"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="14" id="amN-KU-S19"/>
+                                            </constraints>
+                                            <textFieldCell key="cell" controlSize="small" lineBreakMode="clipping" alignment="right" title="Preferences will be applied immediately" id="MNa-l4-0cB">
+                                                <font key="font" metaFont="message" size="11"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="17" id="EpW-xW-ebO"/>
+                                        <constraint firstAttribute="bottom" secondItem="lLj-TG-Lr5" secondAttribute="bottom" constant="23" id="89Z-3J-0dw"/>
+                                        <constraint firstAttribute="trailing" secondItem="lLj-TG-Lr5" secondAttribute="trailing" constant="17" id="F6f-3S-Rlw"/>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="top" secondItem="RX0-XS-Gl5" secondAttribute="top" constant="74" id="F7E-UA-32R"/>
-                                        <constraint firstAttribute="bottom" secondItem="lLj-TG-Lr5" secondAttribute="bottom" constant="17" id="Oqd-73-wvc"/>
-                                        <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="lLj-TG-Lr5" secondAttribute="trailing" constant="12" id="eeE-NG-Y3a"/>
-                                        <constraint firstAttribute="trailing" secondItem="WdZ-qr-xzQ" secondAttribute="trailing" constant="17" id="fvd-zL-JGz"/>
-                                        <constraint firstItem="lLj-TG-Lr5" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="17" id="gLS-eG-jEO"/>
+                                        <constraint firstItem="lLj-TG-Lr5" firstAttribute="leading" secondItem="WdZ-qr-xzQ" secondAttribute="trailing" constant="12" symbolic="YES" id="Ood-qi-9Qp"/>
+                                        <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="17" id="mx6-G2-7lz"/>
+                                        <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="19" id="vgE-Kn-6Tm"/>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="zbj-d8-Xyi"/>
                                     </constraints>
                                 </view>
@@ -502,7 +502,7 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="322"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="560" height="322"/>
             <value key="maxSize" type="size" width="560" height="322"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="322"/>
@@ -598,6 +598,9 @@ Gw
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="doCheckBoxWithSender:" target="8Wq-hu-xtq" id="OaL-3J-xDa"/>
+                        </connections>
                     </button>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="luN-mo-wfm">
                         <rect key="frame" x="18" y="146" width="524" height="16"/>
@@ -668,10 +671,13 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="LlL-8Q-0Pp"/>
                         </constraints>
-                        <buttonCell key="cell" type="check" title="Check this box to run the command without Terminal (requires full paths)" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1Wy-Lg-g68">
+                        <buttonCell key="cell" type="check" title="Check this box to run the command without Terminal (requires an absolute path)" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1Wy-Lg-g68">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="doCheckBoxWithSender:" target="8Wq-hu-xtq" id="JsQ-Db-lIz"/>
+                        </connections>
                     </button>
                 </subviews>
                 <constraints>
@@ -743,7 +749,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -941,7 +947,7 @@ Gw
     </objects>
     <resources>
         <image name="NSActionTemplate" width="15" height="15"/>
-        <image name="NSAddTemplate" width="14" height="13"/>
+        <image name="NSAddTemplate" width="15" height="13"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSStopProgressFreestandingTemplate" width="15" height="15"/>
         <image name="button_close" width="20" height="20"/>
