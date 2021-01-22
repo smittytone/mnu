@@ -446,7 +446,7 @@ class AddUserItemViewController: NSViewController,
         if doWarn {
             // There is a clash, so turn off the just-checked button and warn the user
             checkedButton.state = .off
-            showAlert("You can’t check this option", "Selecting this option conflicts with another you have chosen")
+            showAlert("Sorry, you can’t check this option", "Selecting this option conflicts with another you have already chosen")
         }
     }
 
