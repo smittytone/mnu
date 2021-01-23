@@ -62,6 +62,7 @@ class AddUserItemViewController: NSViewController,
     var icons: NSMutableArray = NSMutableArray.init()
     // FROM 1.4.7
     var appDelegate: AppDelegate? = nil
+    var directAlert: NSAlert? = nil
 
 
     // MARK: - Lifecycle Functions
@@ -284,6 +285,15 @@ class AddUserItemViewController: NSViewController,
                 showAlert("You do not appear to have entered an absolute path", "Please check the ‘Enter a command...’ field and try again.")
                 return
             }
+
+            // Check to see if the direct command contains common shell characters
+            // NOTE We check 'sender' is not nil because we pass nil into the function
+            //      when recursing it from 'showDirectAlert()' if the user chooses
+            //      to save anyway
+            if sender != nil && checkDirectCommand(self.itemScriptText.stringValue) {
+                showDirectAlert()
+                return
+            }
         }
         
         if self.isEditing {
@@ -372,34 +382,6 @@ class AddUserItemViewController: NSViewController,
     }
 
     
-    func checkLabel() -> Bool {
-        
-        // ADDED 1.2.0
-        // Moved from 'doSave()'
-        // Check that we have a unique menu label
-        
-        if let list: MenuItemList = self.currentMenuItems {
-            if list.items.count > 0 {
-                var got: Bool = false
-                for item: MenuItem in list.items {
-                    if item.title == self.menuTitleText.stringValue {
-                        got = true
-                        break
-                    }
-                }
-
-                if got {
-                    // The label is in use, so warn the user and exit the save
-                    showAlert("Menu Label Already In Use", "You must enter a unique label for the command’s menu entry. If you don’t want to set one at this time, click OK then Cancel")
-                    return false
-                }
-            }
-        }
-        
-        return true
-    }
-    
-    
     @IBAction @objc func doShowHelp(sender: Any?) {
 
         // Show the 'Help' via the website
@@ -451,11 +433,58 @@ class AddUserItemViewController: NSViewController,
     }
 
 
+    // MARK: - Input Checker Functions
+
+    func checkLabel() -> Bool {
+
+        // ADDED 1.2.0
+        // Moved from 'doSave()'
+        // Check that we have a unique menu label
+
+        if let list: MenuItemList = self.currentMenuItems {
+            if list.items.count > 0 {
+                var got: Bool = false
+                for item: MenuItem in list.items {
+                    if item.title == self.menuTitleText.stringValue {
+                        got = true
+                        break
+                    }
+                }
+
+                if got {
+                    // The label is in use, so warn the user and exit the save
+                    showAlert("Menu Label Already In Use", "You must enter a unique label for the command’s menu entry. If you don’t want to set one at this time, click OK then Cancel")
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+
+
+    func checkDirectCommand(_ command: String) -> Bool {
+
+        // FROM 1.4.7
+        // Check for common shell characters in a direct-action command
+
+        let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
+
+        for shellChar in shellChars {
+            if (command as NSString).contains(shellChar) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+
     // MARK: - Helper Functions
 
     func showAlert(_ title: String, _ message: String) {
 
-        // Present an alert to warn the user about deleting the Menu Item
+        // Present an alert to warn the user, with only one option
         
         let alert: NSAlert = NSAlert()
         alert.messageText = title
@@ -463,6 +492,25 @@ class AddUserItemViewController: NSViewController,
         alert.addButton(withTitle: "OK")
         alert.beginSheetModal(for: self.addItemSheet,
                               completionHandler: nil)
+    }
+
+
+    func showDirectAlert() {
+
+        // FROM 1.4.7
+        // Present an alert to warn the user, with two options
+
+        self.directAlert = NSAlert()
+        self.directAlert!.messageText = "Your direct command contains one or more common shell characters"
+        self.directAlert!.informativeText = "Direct commands are not processed by a shell. Are you sure you want to save this command?"
+        self.directAlert!.addButton(withTitle: "Save")
+        self.directAlert!.addButton(withTitle: "Edit Command")
+        self.directAlert!.beginSheetModal(for: self.addItemSheet) { (response) in
+            if response == .alertFirstButtonReturn {
+                self.directAlert!.window.orderOut(nil)
+                self.doSave(sender: nil)
+            }
+        }
     }
 
 
