@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -140,7 +140,7 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="458" y="2" width="21.5" height="26"/>
+                                                                                <rect key="frame" x="458" y="2" width="21" height="26"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="20.5" id="rT4-fZ-1iD"/>
                                                                                 </constraints>
@@ -414,20 +414,6 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kva-xe-wg0">
-                                            <rect key="frame" x="198" y="10" width="138" height="28"/>
-                                            <constraints>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="124" id="9Xe-p5-bIC"/>
-                                                <constraint firstAttribute="height" constant="16" id="V3F-Eh-BIg"/>
-                                            </constraints>
-                                            <buttonCell key="cell" type="push" title="Send Feedback" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9lM-RR-Zjw">
-                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                <font key="font" metaFont="system"/>
-                                            </buttonCell>
-                                            <connections>
-                                                <action selector="submitFeedbackWithSender:" target="qtv-Yg-ACO" id="6pw-Xa-TCj"/>
-                                            </connections>
-                                        </button>
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzj-J5-dUM">
                                             <rect key="frame" x="15" y="48" width="504" height="97"/>
                                             <constraints>
@@ -441,9 +427,22 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kva-xe-wg0">
+                                            <rect key="frame" x="203" y="10" width="128" height="28"/>
+                                            <constraints>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="R2u-IG-Tes"/>
+                                                <constraint firstAttribute="height" constant="16" id="nYR-RS-2kt"/>
+                                            </constraints>
+                                            <buttonCell key="cell" type="push" title="Send Feedback" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9lM-RR-Zjw">
+                                                <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                                <font key="font" metaFont="system"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="submitFeedbackWithSender:" target="qtv-Yg-ACO" id="6pw-Xa-TCj"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="Kva-xe-wg0" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="3O4-0G-zma"/>
                                         <constraint firstItem="OVH-9d-QDC" firstAttribute="top" secondItem="Qz0-WE-dEO" secondAttribute="bottom" constant="8" symbolic="YES" id="8lw-e4-VfG"/>
                                         <constraint firstItem="pOe-I6-BRt" firstAttribute="top" secondItem="OVH-9d-QDC" secondAttribute="bottom" constant="8" symbolic="YES" id="8qR-7f-vLn"/>
                                         <constraint firstAttribute="trailing" secondItem="OVH-9d-QDC" secondAttribute="trailing" constant="17" id="AVj-Lt-j2Z"/>
@@ -451,11 +450,12 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
                                         <constraint firstAttribute="trailing" secondItem="rzj-J5-dUM" secondAttribute="trailing" constant="17" id="Mqw-mJ-70W"/>
                                         <constraint firstItem="pOe-I6-BRt" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="emc-L6-Yi2"/>
                                         <constraint firstItem="rzj-J5-dUM" firstAttribute="top" secondItem="pOe-I6-BRt" secondAttribute="bottom" constant="8" symbolic="YES" id="fP3-MW-nBd"/>
-                                        <constraint firstAttribute="bottom" secondItem="Kva-xe-wg0" secondAttribute="bottom" constant="17" id="gWA-M8-h62"/>
                                         <constraint firstItem="rzj-J5-dUM" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="hJY-Tr-mVV"/>
                                         <constraint firstAttribute="trailing" secondItem="pOe-I6-BRt" secondAttribute="trailing" constant="17" id="hxT-c2-lnw"/>
                                         <constraint firstItem="Qz0-WE-dEO" firstAttribute="top" secondItem="8RL-Pb-8R9" secondAttribute="top" constant="19" id="lGW-bg-pQw"/>
+                                        <constraint firstItem="Kva-xe-wg0" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="nqb-C6-sEE"/>
                                         <constraint firstItem="OVH-9d-QDC" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="poG-rn-GVM"/>
+                                        <constraint firstAttribute="bottom" secondItem="Kva-xe-wg0" secondAttribute="bottom" constant="17" id="u6a-6P-T7Y"/>
                                         <constraint firstItem="Qz0-WE-dEO" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="yco-4T-eDj"/>
                                     </constraints>
                                 </view>
@@ -502,7 +502,7 @@ contract, tort or otherwise, arising from, out of or in connection with the soft
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="322"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="560" height="322"/>
             <value key="maxSize" type="size" width="560" height="322"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="322"/>
@@ -749,7 +749,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1055"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -916,7 +916,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
@@ -947,7 +947,7 @@ Gw
     </objects>
     <resources>
         <image name="NSActionTemplate" width="15" height="15"/>
-        <image name="NSAddTemplate" width="14" height="13"/>
+        <image name="NSAddTemplate" width="15" height="13"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
         <image name="NSStopProgressFreestandingTemplate" width="15" height="15"/>
         <image name="button_close" width="20" height="20"/>
