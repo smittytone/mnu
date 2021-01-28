@@ -406,7 +406,6 @@ class AppDelegate: NSObject,
 
         // Set up the script that will open Terminal and run 'brew upgrade'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
-
         // Check for installation of brew and warn if it's missing
         if checkScriptExists("/usr/local/bin/brew") {
             runScript("brew upgrade")
@@ -457,7 +456,7 @@ class AppDelegate: NSObject,
         // FROM 1.3.1
         self.cwvc.isElevenPlus = self.isElevenPlus
         
-        // FROM 1.4.7
+        // FROM 1.5.0
         self.cwvc.appDelegate = self
 
         // Tell the configure window controller to show its window
@@ -923,7 +922,7 @@ class AppDelegate: NSObject,
 
     func checkScriptExists(_ path: String, _ isTest: Bool = false) -> Bool {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Confirm that the user has the requisite script on their system
         // and warn them if it does not. Returns true of the script exists
         // NOTE Second parameter used to prevent alert being shown during unit testing
@@ -1078,7 +1077,7 @@ class AppDelegate: NSObject,
         NSLog("MNU opening app \'\(appName)\'")
         #endif
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Get the app's valid path (or nil if there isn't one)
         if let path = getAppPath(appName) {
             #if DEBUG
@@ -1097,7 +1096,7 @@ class AppDelegate: NSObject,
     
     func getAppPath(_ appName: String) -> String? {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Set the app against each of the possible app locations
         // TODO Add ~/Applications
         

@@ -60,7 +60,7 @@ class AddUserItemViewController: NSViewController,
     var isEditing: Bool = false
     var iconPopover: NSPopover? = nil
     var icons: NSMutableArray = NSMutableArray.init()
-    // FROM 1.4.7
+    // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
     var directAlert: NSAlert? = nil
 
@@ -266,7 +266,7 @@ class AddUserItemViewController: NSViewController,
             return
         }
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // If we've created an 'open' action, check that the target exists
         if isOpenAction {
             if let ad = appDelegate {
@@ -277,7 +277,7 @@ class AddUserItemViewController: NSViewController,
             }
         }
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // If the 'run direct' checkbox is set, make sure we have an absolute path
         if isDirect {
             // Check for an initial '/' to make sure we have an absolute path
@@ -331,7 +331,7 @@ class AddUserItemViewController: NSViewController,
                     itemHasChanged = true
                     item.isDirect = self.directCheck.state == .on
 
-                    // FROM 1.4.7
+                    // FROM 1.5.0
                     // Check for relative elements in the path - and update accordingly
                     if isDirect {
                         item.script = makeAbsolutePath(item.script)
@@ -353,7 +353,7 @@ class AddUserItemViewController: NSViewController,
             // FROM 1.2.2
             newItem.isDirect = isDirect
 
-            // FROM 1.4.7
+            // FROM 1.5.0
             // Check for relative elements in the path - and update accordingly
             if isDirect {
                 if (newItem.script as NSString).contains("..") {
@@ -401,7 +401,7 @@ class AddUserItemViewController: NSViewController,
 
     @IBAction @objc func doCheckBox(sender: Any) {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Make sure mutually exclusive checkboxes aren't ticked
 
         let checkedButton = sender as! NSButton
@@ -463,7 +463,7 @@ class AddUserItemViewController: NSViewController,
 
     func checkDirectCommand(_ command: String) -> Bool {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Check for common shell characters in a direct-action command
 
         let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
@@ -480,7 +480,7 @@ class AddUserItemViewController: NSViewController,
 
     func makeAbsolutePath(_ path: String) -> String {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Check for a relative path and return the absolute version
         // (or the input path if it is already absolute)
         // NOTE Refactored to a function to simplify testing
@@ -528,7 +528,7 @@ class AddUserItemViewController: NSViewController,
 
     func showDirectAlert() {
 
-        // FROM 1.4.7
+        // FROM 1.5.0
         // Present an alert to warn the user, with two options
 
         self.directAlert = NSAlert()

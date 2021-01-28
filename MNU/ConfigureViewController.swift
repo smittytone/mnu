@@ -77,7 +77,7 @@ class ConfigureViewController:  NSViewController,
     var extrasMenu: NSMenu? = nil
     // FROM 1.3.1
     var isElevenPlus: Bool = false
-    // FROM 1.4.7
+    // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
     
     private var systemVersion: Int = 10
