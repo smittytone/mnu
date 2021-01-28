@@ -1,4 +1,4 @@
-# MNU 1.4.7 #
+# MNU 1.5.0 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.4.7 *Unreleased*
+- 1.5.0 *Unreleased*
     - Support all macOS app locations for ‘open app‘ actions:
         - `/Applications`
         - `/Applications/Utilities`
@@ -21,6 +21,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
     - Make sure mutually exclusive menu item actions can’t be selected together.
     - Make sure out-of-terminal commands use absolute paths.
         - And in-path relative elements are evaluated.
+    - Warn user when commands used by default items are not installed.
 - 1.4.6 *10 December 2020*
     - Fix scrunched **Configure MNU** menu items table.
 - 1.4.5 *2 December 2020*
