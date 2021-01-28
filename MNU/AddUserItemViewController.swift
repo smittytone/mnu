@@ -334,9 +334,7 @@ class AddUserItemViewController: NSViewController,
                     // FROM 1.4.7
                     // Check for relative elements in the path - and update accordingly
                     if isDirect {
-                        if (item.script as NSString).contains("..") {
-                            item.script = (item.script as NSString).standardizingPath
-                        }
+                        item.script = makeAbsolutePath(item.script)
                     }
                 }
             }
@@ -477,6 +475,39 @@ class AddUserItemViewController: NSViewController,
         }
 
         return false
+    }
+
+
+    func makeAbsolutePath(_ path: String) -> String {
+
+        // FROM 1.4.7
+        // Check for a relative path and return the absolute version
+        // (or the input path if it is already absolute)
+        // NOTE Refactored to a function to simplify testing
+
+        // Separate input path into space-separated sub-paths
+        var returnPath: String = ""
+        let parts: [String] = (path as NSString).components(separatedBy: " ")
+
+        // Fix up each sub-path
+        for i in 0..<parts.count {
+            var part: String = parts[i]
+            if (part as NSString).contains("..") {
+                if !part.hasPrefix("/") {
+                    part = "/" + part
+                }
+                returnPath += (part as NSString).standardizingPath
+            } else {
+                returnPath += part
+            }
+
+            // Put the spaces back for all but the last item
+            if i < parts.count - 1 {
+                returnPath += " "
+            }
+        }
+
+        return returnPath
     }
 
 

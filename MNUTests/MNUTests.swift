@@ -290,5 +290,53 @@ class MNUTests: XCTestCase {
     }
 
 
+    func testMakeAbsolutePath() throws {
+
+        let aivc: AddUserItemViewController = AddUserItemViewController()
+        var item: String = "/a/b/../c/d /x/y/z"
+        var result: String = "/a/c/d /x/y/z"
+        item = aivc.makeAbsolutePath(item)
+        XCTAssert(item == result)
+
+        item = "/a/b/../c/d /x/y/../z"
+        result = "/a/c/d /x/z"
+        item = aivc.makeAbsolutePath(item)
+        XCTAssert(item == result)
+
+        item = "/a/b/../c/d /x/y/../../z"
+        result = "/a/c/d /z"
+        item = aivc.makeAbsolutePath(item)
+        XCTAssert(item == result)
+    }
+
+
+    func testCheckDirectCommand() throws {
+
+        let aivc: AddUserItemViewController = AddUserItemViewController()
+        // Path componentes ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
+        var item: String = "cat *.txt"
+        var result: Bool = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+
+        item = "echo $var"
+        result = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+
+        item = "echo \"Value: ${var}\""
+        result = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+
+        item = "$(dlist)"
+        result = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+
+        item = "cd ~/desktop"
+        result = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+
+        item = "echo 'This is a text \"string\"'"
+        result = aivc.checkDirectCommand(item)
+        XCTAssert(result)
+    }
 
 }
