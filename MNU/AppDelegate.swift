@@ -379,11 +379,13 @@ class AppDelegate: NSObject,
 
     @IBAction @objc func doGit(sender: Any?) {
 
-        // Set up the script that will open Terminal and run 'gitup'
+        // Set up the script that will open Terminal and run 'git pull'
         // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
         //      and will fail (in Terminal) if it is not
         // TODO Check for installation of gitup and warn if it's missing
-        runScript("gitup")
+        if checkScriptExists("/usr/bin/git") {
+            runScript("git pull")
+        }
     }
 
 
@@ -391,17 +393,22 @@ class AppDelegate: NSObject,
 
         // Set up the script that will open Terminal and run 'brew update'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
-        // TODO Check for installation of brew and warn if it's missing
-        runScript("brew update")
+
+        // Check for installation of brew and warn if it's missing
+        if checkScriptExists("/usr/local/bin/brew") {
+            runScript("brew update")
+        }
     }
 
 
     @IBAction @objc func doBrewUpgrade(sender: Any?) {
 
-       // Set up the script that will open Terminal and run 'brew upgrade'
-       // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
-       // TODO Check for installation of brew and warn if it's missing
-       runScript("brew upgrade")
+        // Set up the script that will open Terminal and run 'brew upgrade'
+        // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
+        // TODO Check for installation of brew and warn if it's missing
+        if checkScriptExists("/usr/local/bin/brew") {
+            runScript("brew upgrade")
+        }
    }
 
     
@@ -909,6 +916,27 @@ class AppDelegate: NSObject,
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         defaults.synchronize()
+    }
+
+
+    func checkScriptExists(_ path: String, _ isTest: Bool = false) -> Bool {
+
+        // FROM 1.4.7
+        // Confirm that the user has the requisite script on their system
+        // and warn them if it does not. Returns true of the script exists
+        // NOTE Second parameter used to prevent alert being shown during unit testing
+
+        if FileManager.default.fileExists(atPath: path) {
+            // Command exists
+            return true
+        }
+
+        if !isTest {
+            let scriptName: String = (path as NSString).lastPathComponent
+            showError("\(scriptName) is not installed", "You will need to install this script to run this MNU item (or hide the item).")
+        }
+        
+        return false
     }
 
 

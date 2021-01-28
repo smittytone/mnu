@@ -15,6 +15,8 @@ import AppKit
 class MNUTests: XCTestCase {
 
 
+    // MARK: - AppDelegate Tests
+
     let appDelegate = NSApplication.shared.delegate as! AppDelegate
     let allowedOpenTime = 10.0
 
@@ -289,6 +291,22 @@ class MNUTests: XCTestCase {
         
     }
 
+    // MARK: Misc Tests
+
+    func testCheckScriptExists() throws {
+
+        var app: String = "/usr/local/bin/brew"
+        XCTAssertTrue(appDelegate.checkScriptExists(app, true))
+
+        app = "/usr/bin/git"
+        XCTAssertTrue(appDelegate.checkScriptExists(app, true))
+
+        app = "/usr/bin/madeupapp"
+        XCTAssertFalse(appDelegate.checkScriptExists(app, true))
+    }
+
+    
+    // MARK: - AddUserItemViewController Tests
 
     func testMakeAbsolutePath() throws {
 
