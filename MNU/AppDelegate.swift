@@ -379,12 +379,13 @@ class AppDelegate: NSObject,
 
     @IBAction @objc func doGit(sender: Any?) {
 
-        // Set up the script that will open Terminal and run 'git pull'
+        // Set up the script that will open Terminal and run 'gitup'
         // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
         //      and will fail (in Terminal) if it is not
-        // TODO Check for installation of gitup and warn if it's missing
-        if checkScriptExists("/usr/bin/git") {
-            runScript("git pull")
+
+        // Check for installation of gitup and warn if it's missing
+        if checkScriptExists("/usr/local/bin/gitup") {
+            runScript("gitup")
         }
     }
 
@@ -405,7 +406,8 @@ class AppDelegate: NSObject,
 
         // Set up the script that will open Terminal and run 'brew upgrade'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
-        // TODO Check for installation of brew and warn if it's missing
+
+        // Check for installation of brew and warn if it's missing
         if checkScriptExists("/usr/local/bin/brew") {
             runScript("brew upgrade")
         }

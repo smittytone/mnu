@@ -57,7 +57,7 @@ struct MNU_CONSTANTS {
         static let UIMODE           = "macOS Dark Mode"
         static let DESKTOP          = "Show Files on Desktop"
         static let SHOW_HIDDEN      = "Show Hidden Files"
-        static let GIT              = "Update Git"
+        static let GIT              = "Update Git with Gitup"
         static let BREW_UPDATE      = "Update Homebrew"
         static let BREW_UPGRADE     = "Upgrade Homebrew"
     }
