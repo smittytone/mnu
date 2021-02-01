@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.5.0 *Unreleased*
+- 1.5.0 *1 February 2021*
     - Support all macOS app locations for ‘open app‘ actions:
         - `/Applications`
         - `/Applications/Utilities`
