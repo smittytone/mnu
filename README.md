@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.5.1 *Unreleased*
+- 1.5.1 *28 April 2021*
     - Update `brew update` and `brew upgrade` scripts for M1 Macs:
         - Support brew at `/opt/homebrew` as well as `/usr/local`
     - Minor tweaks to the feedback system.
