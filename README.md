@@ -1,4 +1,4 @@
-# MNU 1.5.0 #
+# MNU 1.5.1 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,11 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.5.1 *Unreleased*
+    - Update `brew update` and `brew upgrade` scripts for M1 Macs:
+        - Support brew at `/opt/homebrew` as well as `/usr/local`
+    - Minor tweaks to the feedback system.
+    - Update tests.
 - 1.5.0 *1 February 2021*
     - Support all macOS app locations for ‘open app‘ actions:
         - `/Applications`
