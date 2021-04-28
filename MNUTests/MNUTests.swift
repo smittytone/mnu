@@ -171,7 +171,7 @@ class MNUTests: XCTestCase {
     func testMakeGitScript() throws {
 
         let menuItem: MenuItem = self.appDelegate.makeGitScript()
-        XCTAssert(menuItem.title == "Update Git")
+        XCTAssert(menuItem.title == "Update Git with Gitup")
         XCTAssert(menuItem.code == 10)
         XCTAssert(menuItem.type == 1)
     }
@@ -294,11 +294,13 @@ class MNUTests: XCTestCase {
     // MARK: Misc Tests
 
     func testCheckScriptExists() throws {
+        
+        // Remove: this is dependent on Mac type and where (and if)
+        //         brew is installed
+        //var app: String = "/usr/local/bin/brew"
+        //XCTAssertTrue(appDelegate.checkScriptExists(app, true))
 
-        var app: String = "/usr/local/bin/brew"
-        XCTAssertTrue(appDelegate.checkScriptExists(app, true))
-
-        app = "/usr/bin/git"
+        var app: String = "/usr/bin/git"
         XCTAssertTrue(appDelegate.checkScriptExists(app, true))
 
         app = "/usr/bin/madeupapp"
