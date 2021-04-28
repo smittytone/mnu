@@ -396,8 +396,16 @@ class AppDelegate: NSObject,
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
 
         // Check for installation of brew and warn if it's missing
-        if checkScriptExists("/usr/local/bin/brew") {
+        // FROM 1.5.1 Support standard ARM Mac install location too
+        //            This will see if we have brew in either location,
+        //            but won't display a warning
+        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        if brewAvailable {
             runScript("brew update")
+        } else {
+            // This will check for brew again, which we've already done,
+            // but this time we don't pass 'true' so a warning is presented to the user
+            _ = checkScriptExists("/usr/local/bin/brew")
         }
     }
 
@@ -407,8 +415,16 @@ class AppDelegate: NSObject,
         // Set up the script that will open Terminal and run 'brew upgrade'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
         // Check for installation of brew and warn if it's missing
-        if checkScriptExists("/usr/local/bin/brew") {
+        // FROM 1.5.1 Support standard ARM Mac install location too
+        //            This will see if we have brew in either location,
+        //            but won't display a warning
+        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        if brewAvailable {
             runScript("brew upgrade")
+        } else {
+            // This will check for brew again, which we've already done,
+            // but this time we don't pass 'true' so a warning is presented to the user
+            _ = checkScriptExists("/usr/local/bin/brew")
         }
    }
 
@@ -852,7 +868,6 @@ class AppDelegate: NSObject,
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
         return newItem
-        
     }
 
 
