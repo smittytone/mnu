@@ -87,25 +87,20 @@ class FeedbackSheetViewController: NSViewController,
             self.connectionProgress.startAnimation(self)
 
             // Send the string etc.
-            let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
-            let bundle: Bundle = Bundle.main
-            let app: String = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
-            let version: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-            let build: String = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-            let userAgent: String = "\(app) \(version) (build \(build)) (macOS \(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
-
-            let date: Date = Date()
-            var dateString = "Unknown"
-
-            let def: DateFormatter = DateFormatter()
-            def.locale = Locale(identifier: "en_US_POSIX")
-            def.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
-            def.timeZone = TimeZone(secondsFromGMT: 0)
-            dateString = def.string(from: date)
+            let userAgent: String = getUserAgentForFeedback()
+            let dateString = getDateForFeedback()
+            
+            // Assemble the message string
+            let dataString: String = """
+             *FEEDBACK REPORT*
+             *Date:* \(dateString)
+             *User Agent:* \(userAgent)
+             *Feedback:*
+             \(feedback)
+             """
 
             let dict: NSMutableDictionary = NSMutableDictionary()
-            dict.setObject("*FEEDBACK REPORT*\n*DATE* \(dateString))\n*USER AGENT* \(userAgent)\n*FEEDBACK* \(feedback)",
-                            forKey: NSString.init(string: "text"))
+            dict.setObject(dataString, forKey: NSString.init(string: "text"))
             dict.setObject(true, forKey: NSString.init(string: "mrkdown"))
 
             if let url: URL = URL.init(string: MNU_SECRETS.ADDRESS.A + MNU_SECRETS.ADDRESS.B) {
@@ -180,6 +175,45 @@ class FeedbackSheetViewController: NSViewController,
         alert.addButton(withTitle: "OK")
         alert.beginSheetModal(for: self.feedbackSheet,
                               completionHandler: nil)
+    }
+    
+    
+    func getVersion() -> String {
+
+        // FROM 1.5.1
+        // Build a basic 'major.manor' version string for prefs usage
+
+        let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let parts: [String] = (version as NSString).components(separatedBy: ".")
+        return parts[0] + "-" + parts[1]
+    }
+    
+    
+    func getDateForFeedback() -> String {
+
+        // FROM 1.5.1
+        // Refactor code out into separate function for clarity
+
+        let date: Date = Date()
+        let dateFormatter: DateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+        return dateFormatter.string(from: date)
+    }
+
+
+    func getUserAgentForFeedback() -> String {
+
+        // FROM 1.5.1
+        // Refactor code out into separate function for clarity
+
+        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
+        let bundle: Bundle = Bundle.main
+        let app: String = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
+        let version: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let build: String = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        return "\(app)/\(version)-\(build) (Mac macOS \(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
     }
 
 }
