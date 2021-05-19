@@ -1,4 +1,4 @@
-# MNU 1.5.1 #
+# MNU 1.5.2 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.5.2 *Unreleased*
+    - Correctly record the preference for starting MNU automatically at login.
 - 1.5.1 *28 April 2021*
     - Update `brew update` and `brew upgrade` scripts for M1 Macs:
         - Support brew at `/opt/homebrew` as well as `/usr/local`
