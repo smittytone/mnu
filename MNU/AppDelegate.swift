@@ -90,27 +90,30 @@ class AppDelegate: NSObject,
 
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
+        NSLog("Checking system state...")
         let defaults: UserDefaults = UserDefaults.standard
-        var defaultsDict: [String:Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain)!
-
-        if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
-            self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
+        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
+            if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
+                self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
+            }
         }
+        
+        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
+            if let useDesktopDefault = defaultsDict["CreateDesktop"] {
+                self.useDesktop = ("\(useDesktopDefault)" == "0") ? false : true
+            }
 
-        defaultsDict = defaults.persistentDomain(forName: "com.apple.finder")!
-        if let useDesktopDefault = defaultsDict["CreateDesktop"] {
-            self.useDesktop = (useDesktopDefault as! String == "0") ? false : true
-        }
-
-        if let doShowHidden = defaultsDict["AppleShowAllFiles"] {
-            self.showHidden = (doShowHidden as! String == "YES") ? true : false
+            if let doShowHidden = defaultsDict["AppleShowAllFiles"] {
+                self.showHidden = ("\(doShowHidden)" == "YES") ? true : false
+            }
         }
 
         // MARK: DEBUG SWITCHES
         // Uncomment the next two lines to wipe stored prefs
         //defaults.set([], forKey: "com.bps.mnu.item-order")
         //defaults.set(true, forKey: "com.bps.mnu.first-run")
-
+        
+        NSLog("Checking preferences...")
         // Register preferences
         registerPreferences()
 
@@ -119,7 +122,8 @@ class AppDelegate: NSObject,
 
         // Create the app's menu
         createMenu()
-
+        
+        NSLog("Setting observers...")
         // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
@@ -937,7 +941,7 @@ class AppDelegate: NSObject,
                                   false,
                                   true]
 
-        assert(keyArray.count == valueArray.count)
+        assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
