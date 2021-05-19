@@ -49,17 +49,21 @@ class AppDelegate: NSObject,
     var showHidden: Bool = false                // Is the Finder showing hidden files (true) or not (false)
     var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
-    var task: Process? = nil
-    var doNewTermTab: Bool = false
-    var showImages: Bool = false
-    var optionClick: Bool = false
+    var task: Process? = nil                    // A sub-process we use for triggered scripts
+    var doNewTermTab: Bool = false              // Should we open terminal scripts in a new window
+    var showImages: Bool = false                // Should we show menu icons as well as names
+    var optionClick: Bool = false               // Did the user option-click the menu
     var icons: NSMutableArray = NSMutableArray.init()
+                                                // Menu icons list
     // FROM 1.3.0
-    var reloadDefaults: Bool = false
+    var reloadDefaults: Bool = false            // Do we need to reload preferences?
     // FROM 1.3.1
-    var isElevenPlus: Bool = false
+    var isElevenPlus: Bool = false              // Are we running on Big Sur?
     // FROM 1.6.0
-    var terminalIndex: UInt = 0
+    var terminalIndex: Int = 0                  // Which terminal has the user selected?
+                                                // 0  - macOS Terminal (default)
+                                                // 1  - iTerm2
+                                                // 2+ - TBD
 
 
     // MARK: - App Lifecycle Functions
@@ -72,7 +76,7 @@ class AppDelegate: NSObject,
         // FROM 1.3.1
         // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
         if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
-            // Wrong version, so present a warnin message
+            // Wrong version, so present a warning message
             let alert = NSAlert.init()
             alert.messageText = "Unsupported version of macOS"
             alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
@@ -109,12 +113,6 @@ class AppDelegate: NSObject,
             }
         }
         
-        // FROM 1.6.0
-        self.terminalIndex = UInt(defaults.integer(forKey: "com.bps.mnu.term-choice"))
-        if !checkTerminal(self.terminalIndex) {
-            self.terminalIndex = 0
-        }
-
         // MARK: DEBUG SWITCHES
         // Uncomment the next two lines to wipe stored prefs
         //defaults.set([], forKey: "com.bps.mnu.item-order")
@@ -122,6 +120,12 @@ class AppDelegate: NSObject,
         
         // Register preferences
         registerPreferences()
+        
+        // FROM 1.6.0
+        self.terminalIndex = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        if isTerminalMissing(self.terminalIndex) {
+            self.terminalIndex = 0
+        }
 
         // Check for first run
         firstRunCheck()
@@ -166,7 +170,7 @@ class AppDelegate: NSObject,
         // FROM 1.6.0
         // The user has changed their preferred terminal
         nc.addObserver(self,
-                       selector: #selector(self.toggleTerminal),
+                       selector: #selector(self.switchTerminal),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
                        object: self.cwvc)
     }
@@ -306,35 +310,44 @@ class AppDelegate: NSObject,
     }
     
     
-    @objc func toggleTerminal() {
+    @objc func switchTerminal() {
         
         // FROM 1.6.0
+        // This function is called in response to a change of terminal being
+        // made in the Prefs pane of the ConfigureViewController
         if self.cwvc.terminalChoice != 0 {
-            // The user has selected a non-standard terminal,
+            // The user has selected a non-default terminal,
             // so check that it's available for use
-            if !checkTerminal(self.cwvc.terminalChoice) {
+            if isTerminalMissing(self.cwvc.terminalChoice) {
                 // Selected terminal doesn't exist, so use the default
                 self.terminalIndex = 0
                 return
             }
         }
         
-        // Set the current terminal
+        // Set the current terminal to the valid one
         // NOTE This doesn't affect the stored preferences
         self.terminalIndex = self.cwvc.terminalChoice
     }
     
     
-    func checkTerminal(_ choice: UInt) -> Bool {
+    func isTerminalMissing(_ choice: Int) -> Bool {
         
         // FROM 1.6.0
-        // Check that the selected terminal is installed.
+        // Check that the selected terminal is installed by making sure
+        // it is in the standard Application folders (see 'getAppPath()')
+        // NOTE Returns 'true' if the app is not present, otherwise false
         if choice != 0 {
+            // The user has selected a non-default terminal
             let terminals: [String] = ["iTerm2"]
-            return getAppPath(terminals[Int(choice - 1)]) != nil
+            
+            // 'getAppPath()' returns nil if the app isn't present
+            // Remember to zero-index 'choice'
+            return getAppPath(terminals[choice - 1]) == nil
         }
         
-        return true
+        // Default to false -- app present (the default)
+        return false
     }
 
 
@@ -1138,6 +1151,7 @@ class AppDelegate: NSObject,
         switch (self.terminalIndex) {
         case 1:
             script = "tell application \"iTerm2\"\nactivate\nset newWindow to (create window with default profile)\ntell current session of newWindow\nwrite text \"\(escapedCode)\"\nend tell\nend tell"
+        // Add other non-zero cases here to include other terminals
         default:
             script = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
         }

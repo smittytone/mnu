@@ -68,7 +68,7 @@ class ConfigureViewController:  NSViewController,
     
     
 
-    // MARK: - Class Properties
+    // MARK: - Public Class Properties
 
     var menuItems: MenuItemList? = nil
     var configureWindow: NSWindow? = nil
@@ -83,7 +83,9 @@ class ConfigureViewController:  NSViewController,
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
     // FROM 1.6.0
-    var terminalChoice: UInt = 0
+    var terminalChoice: Int = 0
+    
+    // MARK: - Private Class Properties
     
     private var systemVersion: Int = 10
     
@@ -171,10 +173,11 @@ class ConfigureViewController:  NSViewController,
         self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : .off
         
         // FROM 1.6.0
-        self.terminalChoice = UInt(defaults.integer(forKey: "com.bps.mnu.term-choice"))
+        self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
         switch(self.terminalChoice) {
         case 1:
             self.prefsTerminalChoiceITerm2.state = .on
+        // Add other non-zero cases here to include other terminals
         default:
             self.prefsTerminalChoiceTerminal.state = .on
         }
@@ -472,7 +475,7 @@ class ConfigureViewController:  NSViewController,
             
         // FROM 1.6.0
         // The user has changed their preferred terminal
-        var termChoice: UInt = 0
+        var termChoice: Int = 0
         if self.prefsTerminalChoiceITerm2.state == .on {
             termChoice = 1
         }
