@@ -93,19 +93,12 @@ class AppDelegate: NSObject,
         NSLog("Checking system state...")
         let defaults: UserDefaults = UserDefaults.standard
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
-            if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
-                self.inDarkMode = ("\(darkModeDefault)" == "Dark") ? true : false
-            }
+            self.inDarkMode = getTrueBool(defaultsDict["AppleInterfaceStyle"], "Dark")
         }
         
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
-            if let useDesktopDefault = defaultsDict["CreateDesktop"] {
-                self.useDesktop = ("\(useDesktopDefault)" == "0") ? false : true
-            }
-
-            if let doShowHidden = defaultsDict["AppleShowAllFiles"] {
-                self.showHidden = ("\(doShowHidden)" == "YES") ? true : false
-            }
+            self.useDesktop = getTrueBool(defaultsDict["CreateDesktop"])
+            self.showHidden = getTrueBool(defaultsDict["AppleShowAllFiles"])
         }
 
         // MARK: DEBUG SWITCHES
@@ -159,7 +152,19 @@ class AppDelegate: NSObject,
                        object: self.acvc)
     }
 
-    
+                       
+    func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
+        // FROM 1.5.2
+        // Convert values received from GlobalDomain and Finder to true Booleans
+        // NOTE They may be read as "1", "YES", or an __NSCFBoolean, which does
+        //      not cast to a String, but does to Int or Bool
+        if let v = value as? Bool { return v }
+        if let v = value as? Int { return v == 1 }
+        if let v = value as? String { return v == truthString | v == "YES" | v == "1" }
+        return false
+    }
+                       
+                       
     @objc func performTermination() {
         
         // Tell the application can now terminate, following the issuing of a
