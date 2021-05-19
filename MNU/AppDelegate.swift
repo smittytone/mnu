@@ -58,6 +58,8 @@ class AppDelegate: NSObject,
     var reloadDefaults: Bool = false
     // FROM 1.3.1
     var isElevenPlus: Bool = false
+    // FROM 1.6.0
+    var terminalIndex: UInt = 0
 
 
     // MARK: - App Lifecycle Functions
@@ -105,6 +107,12 @@ class AppDelegate: NSObject,
             if let anyValue: Any = defaultsDict["AppleShowAllFiles"] {
                 self.showHidden = getTrueBool(anyValue)
             }
+        }
+        
+        // FROM 1.6.0
+        self.terminalIndex = UInt(defaults.integer(forKey: "com.bps.mnu.term-choice"))
+        if !checkTerminal(self.terminalIndex) {
+            self.terminalIndex = 0
         }
 
         // MARK: DEBUG SWITCHES
@@ -154,6 +162,13 @@ class AppDelegate: NSObject,
                        selector: #selector(self.showConfigureWindow),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
                        object: self.acvc)
+        
+        // FROM 1.6.0
+        // The user has changed their preferred terminal
+        nc.addObserver(self,
+                       selector: #selector(self.toggleTerminal),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+                       object: self.cwvc)
     }
 
                        
@@ -238,6 +253,7 @@ class AppDelegate: NSObject,
 
     
     func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
+        
         // FROM 1.5.2
         // Convert values received from GlobalDomain and Finder to true Booleans
         // NOTE They may be read as "1", "YES", or an __NSCFBoolean, which does
@@ -256,8 +272,8 @@ class AppDelegate: NSObject,
         
         return false
     }
-                       
-                       
+    
+    
     // MARK: - Auto-start Functions
 
     @objc func enableAutoStart() {
@@ -287,6 +303,38 @@ class AppDelegate: NSObject,
         let defaults = UserDefaults.standard
         defaults.set(doTurnOn, forKey: "com.bps.mnu.startup-launch")
         defaults.synchronize()
+    }
+    
+    
+    @objc func toggleTerminal() {
+        
+        // FROM 1.6.0
+        if self.cwvc.terminalChoice != 0 {
+            // The user has selected a non-standard terminal,
+            // so check that it's available for use
+            if !checkTerminal(self.cwvc.terminalChoice) {
+                // Selected terminal doesn't exist, so use the default
+                self.terminalIndex = 0
+                return
+            }
+        }
+        
+        // Set the current terminal
+        // NOTE This doesn't affect the stored preferences
+        self.terminalIndex = self.cwvc.terminalChoice
+    }
+    
+    
+    func checkTerminal(_ choice: UInt) -> Bool {
+        
+        // FROM 1.6.0
+        // Check that the selected terminal is installed.
+        if choice != 0 {
+            let terminals: [String] = ["iTerm2"]
+            return getAppPath(terminals[Int(choice - 1)]) != nil
+        }
+        
+        return true
     }
 
 
@@ -940,6 +988,10 @@ class AppDelegate: NSObject,
         //   "com.bps.mnu.first-run"      - Bool  - Is this MNU's first run? Set to false afterwards
         //   "com.bps.mnu.new-term-tab"   - Bool  - Should MNU run scripts in a new Terminal tab
         //   "com.bps.mnu.show-controls"  - Bool  - Should MNU show icons in the menu?
+        // From 1.6.0
+        //   "com.bps.mnu.term-choice"    - Int   - Preferred Terminal by index
+        //                                          0 = Apple Terminal
+        //                                          1 = iTerm2
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
 
@@ -948,7 +1000,8 @@ class AppDelegate: NSObject,
                                   "com.bps.mnu.startup-launch",
                                   "com.bps.mnu.first-run",
                                   "com.bps.mnu.new-term-tab",
-                                  "com.bps.mnu.show-controls"]
+                                  "com.bps.mnu.show-controls",
+                                  "com.bps.mnu.term-choice"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
                                    MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
@@ -957,7 +1010,8 @@ class AppDelegate: NSObject,
                                   false,
                                   true,
                                   false,
-                                  true]
+                                  true,
+                                  0]
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
@@ -1077,7 +1131,16 @@ class AppDelegate: NSObject,
         let defaults: UserDefaults = UserDefaults.standard
         let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
         let tabSelection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
-        let script: String = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
+        
+        // FROM 1.6.0
+        // Support multiple terminals
+        let script: String
+        switch (self.terminalIndex) {
+        case 1:
+            script = "tell application \"iTerm2\"\nactivate\nset newWindow to (create window with default profile)\ntell current session of newWindow\nwrite text \"\(escapedCode)\"\nend tell\nend tell"
+        default:
+            script = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
+        }
         
         #if DEBUG
         NSLog("MNU running AppleScript:\n\(script)")

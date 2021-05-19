@@ -82,9 +82,10 @@ class ConfigureViewController:  NSViewController,
     var isElevenPlus: Bool = false
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
+    // FROM 1.6.0
+    var terminalChoice: UInt = 0
     
     private var systemVersion: Int = 10
-    private var terminalChoice: Int = 0
     
 
     // MARK: - Lifecycle Functions
@@ -170,7 +171,7 @@ class ConfigureViewController:  NSViewController,
         self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : .off
         
         // FROM 1.6.0
-        self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        self.terminalChoice = UInt(defaults.integer(forKey: "com.bps.mnu.term-choice"))
         switch(self.terminalChoice) {
         case 1:
             self.prefsTerminalChoiceITerm2.state = .on
@@ -470,8 +471,8 @@ class ConfigureViewController:  NSViewController,
     @IBAction @objc func doToggleTerminalChoice(sender: Any?) {
             
         // FROM 1.6.0
-        // The user has changed the terminal selection
-        var termChoice: Int = 0
+        // The user has changed their preferred terminal
+        var termChoice: UInt = 0
         if self.prefsTerminalChoiceITerm2.state == .on {
             termChoice = 1
         }
