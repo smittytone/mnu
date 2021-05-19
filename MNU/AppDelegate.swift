@@ -94,7 +94,7 @@ class AppDelegate: NSObject,
         let defaults: UserDefaults = UserDefaults.standard
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
             if let darkModeDefault = defaultsDict["AppleInterfaceStyle"] {
-                self.inDarkMode = (darkModeDefault as! String == "Dark") ? true : false
+                self.inDarkMode = ("\(darkModeDefault)" == "Dark") ? true : false
             }
         }
         
