@@ -10,8 +10,9 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.5.2 *Unreleased*
+- 1.5.2 *19 May 2021*
     - Correctly record the preference for starting MNU automatically at login.
+    - Fix start up crash on systems that record binary values in Finder and GlobalDomain preferences in a different way to mine, eg. `1` vs `YES` (thanks to @jgoldhammer)
 - 1.5.1 *28 April 2021*
     - Update `brew update` and `brew upgrade` scripts for M1 Macs:
         - Support brew at `/opt/homebrew` as well as `/usr/local`

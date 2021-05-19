@@ -90,15 +90,21 @@ class AppDelegate: NSObject,
 
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
-        NSLog("Checking system state...")
         let defaults: UserDefaults = UserDefaults.standard
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
-            self.inDarkMode = getTrueBool(defaultsDict["AppleInterfaceStyle"], "Dark")
+            if let anyValue: Any = defaultsDict["AppleInterfaceStyle"] {
+                self.inDarkMode = getTrueBool(anyValue, "Dark")
+            }
         }
         
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
-            self.useDesktop = getTrueBool(defaultsDict["CreateDesktop"])
-            self.showHidden = getTrueBool(defaultsDict["AppleShowAllFiles"])
+            if let anyValue: Any = defaultsDict["CreateDesktop"] {
+                self.useDesktop = getTrueBool(anyValue)
+            }
+            
+            if let anyValue: Any = defaultsDict["AppleShowAllFiles"] {
+                self.showHidden = getTrueBool(anyValue)
+            }
         }
 
         // MARK: DEBUG SWITCHES
@@ -106,7 +112,6 @@ class AppDelegate: NSObject,
         //defaults.set([], forKey: "com.bps.mnu.item-order")
         //defaults.set(true, forKey: "com.bps.mnu.first-run")
         
-        NSLog("Checking preferences...")
         // Register preferences
         registerPreferences()
 
@@ -116,7 +121,6 @@ class AppDelegate: NSObject,
         // Create the app's menu
         createMenu()
         
-        NSLog("Setting observers...")
         // Enable notification watching
         let nc = NotificationCenter.default
         nc.addObserver(self,
@@ -152,18 +156,6 @@ class AppDelegate: NSObject,
                        object: self.acvc)
     }
 
-                       
-    func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
-        // FROM 1.5.2
-        // Convert values received from GlobalDomain and Finder to true Booleans
-        // NOTE They may be read as "1", "YES", or an __NSCFBoolean, which does
-        //      not cast to a String, but does to Int or Bool
-        if let v = value as? Bool { return v }
-        if let v = value as? Int { return v == 1 }
-        if let v = value as? String { return v == truthString | v == "YES" | v == "1" }
-        return false
-    }
-                       
                        
     @objc func performTermination() {
         
@@ -244,7 +236,28 @@ class AppDelegate: NSObject,
         }
     }
 
-
+    
+    func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
+        // FROM 1.5.2
+        // Convert values received from GlobalDomain and Finder to true Booleans
+        // NOTE They may be read as "1", "YES", or an __NSCFBoolean, which does
+        //      not cast to a String, but does to Int or Bool
+        if let v = value as? Bool {
+            return v
+        }
+        
+        if let v = value as? Int {
+            return v == 1
+        }
+        
+        if let v = value as? String {
+            return v == truthString || v == "YES" || v == "1"
+        }
+        
+        return false
+    }
+                       
+                       
     // MARK: - Auto-start Functions
 
     @objc func enableAutoStart() {
