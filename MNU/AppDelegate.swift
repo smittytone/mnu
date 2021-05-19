@@ -160,8 +160,7 @@ class AppDelegate: NSObject,
         
         // Tell the application can now terminate, following the issuing of a
         // NSApplication.TerminateReply.terminateLater (see 'applicationShouldTerminate()')
-        let me = NSApplication.shared
-        me.reply(toApplicationShouldTerminate: true)
+        NSApplication.shared.reply(toApplicationShouldTerminate: true)
     }
     
     
@@ -212,22 +211,23 @@ class AppDelegate: NSObject,
         // Check whether we're running for the first time
         // If so, invite the user to run MNU at launch
 
-        // Read  in the defaults to see if this is MNU's first run: value will be true
+        // Read in the defaults to see if this is MNU's first run: value will be true
         let defaults: UserDefaults = UserDefaults.standard
-        if defaults.bool(forKey: "com.bps.mnu.first-run") {
+        let isFirstRun: Bool = defaults.bool(forKey: "com.bps.mnu.first-run")
+        if isFirstRun {
             // This is the first run - set the default to false
             defaults.set(false, forKey: "com.bps.mnu.first-run")
 
             // Ask the user if they want to run MNU at startup
             let alert = NSAlert.init()
             alert.messageText = "Run MNU at Login?"
-            alert.informativeText = "Do you wish to set your Mac to run MNU when you log in?\nThis can also be set in MNU’s Preferences."
+            alert.informativeText = "Do you wish to set your Mac to run MNU when you log in? This can also be set in MNU’s Preferences."
             alert.addButton(withTitle: "Yes")
             alert.addButton(withTitle: "No")
             let selection: NSApplication.ModalResponse = alert.runModal()
             if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
                 // The user said yes, so add MNU to the login items system preference
-                toggleStartupLaunch(doTurnOn: true)
+                enableAutoStart()
 
                 // Update MNU's own prefs
                 defaults.set(true, forKey: "com.bps.mnu.startup-launch")
@@ -237,16 +237,6 @@ class AppDelegate: NSObject,
 
 
     // MARK: - Auto-start Functions
-
-    func toggleStartupLaunch(doTurnOn: Bool) {
-
-        // Enable or disable (depending on the value of 'doTurnOn') the launching
-        // of MNU at user login. This is activated by a notification from the
-        // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
-        runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"),
-                        doAddPath: doTurnOn)
-    }
-
 
     @objc func enableAutoStart() {
 
@@ -259,6 +249,22 @@ class AppDelegate: NSObject,
 
         // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: false)
+    }
+
+
+    func toggleStartupLaunch(doTurnOn: Bool) {
+
+        // Enable or disable (depending on the value of 'doTurnOn') the launching
+        // of MNU at user login. This is activated by a notification from the
+        // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
+        runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"),
+                        doAddPath: doTurnOn)
+        
+        // FROM 1.5.2
+        // Make sure preference is saved
+        let defaults = UserDefaults.standard
+        defaults.set(doTurnOn, forKey: "com.bps.mnu.startup-launch")
+        defaults.synchronize()
     }
 
 
@@ -905,9 +911,13 @@ class AppDelegate: NSObject,
 
         // Called by the app at launch to register its initial defaults
         // Set up the following keys/values:
-        //   "com.bps.mnu.default-items" - An array of default items
-        //   "com.bps.mnu.item-order"    - An array of items (default and user-defined) set
-        //                                 once the user makes any change to the default set
+        //   "com.bps.mnu.default-items"  - Array - MNU's default items
+        //   "com.bps.mnu.item-order"     - Array - MNU's actual items (default and user-defined),
+        //                                          set once the user makes any change to the default set
+        //   "com.bps.mnu.startup-launch" - Bool  - Should MNU set itself to launch at login?
+        //   "com.bps.mnu.first-run"      - Bool  - Is this MNU's first run? Set to false afterwards
+        //   "com.bps.mnu.new-term-tab"   - Bool  - Should MNU run scripts in a new Terminal tab
+        //   "com.bps.mnu.show-controls"  - Bool  - Should MNU show icons in the menu?
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
 
@@ -1156,11 +1166,16 @@ class AppDelegate: NSObject,
 
         // Load and run the named script from the application bundle
 
-        if let script: String = Bundle.main.path(forResource: scriptName,
-                                                 ofType: "scpt") {
+        if let scriptPath: String = Bundle.main.path(forResource: scriptName,
+                                                     ofType: "scpt") {
             let appPath: String = Bundle.main.bundlePath
-            var args: [String] = [script]
-            if doAddPath { args.append(appPath) }
+            var args: [String] = [scriptPath]
+            if doAddPath {
+                // Add 'appPath' to the args so it's passed into the
+                // AppleScript 'AddToLogin' by osascript. Not required
+                // for the AppleScript 'RemoveLogin'
+                args.append(appPath)
+            }
 
             // Run the process
             runProcess(app: "/usr/bin/osascript",
