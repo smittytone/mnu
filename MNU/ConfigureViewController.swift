@@ -56,6 +56,9 @@ class ConfigureViewController:  NSViewController,
     @IBOutlet var prefsNewTermTabButton: NSButton!
     @IBOutlet var prefsShowControlsButton: NSButton!
     @IBOutlet var prefsHelpButton: NSButton!
+    // FROM 1.6.0
+    @IBOutlet var prefsTerminalChoiceTerminal: NSButton!
+    @IBOutlet var prefsTerminalChoiceITerm2: NSButton!
 
     // About... Tab
     @IBOutlet var aboutVersionText: NSTextField!
@@ -81,6 +84,7 @@ class ConfigureViewController:  NSViewController,
     var appDelegate: AppDelegate? = nil
     
     private var systemVersion: Int = 10
+    private var terminalChoice: Int = 0
     
 
     // MARK: - Lifecycle Functions
@@ -161,9 +165,18 @@ class ConfigureViewController:  NSViewController,
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : NSControl.StateValue.off
-        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : NSControl.StateValue.off
-        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : NSControl.StateValue.off
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : .off
+        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : .off
+        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : .off
+        
+        // FROM 1.6.0
+        self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        switch(self.terminalChoice) {
+        case 1:
+            self.prefsTerminalChoiceITerm2.state = .on
+        default:
+            self.prefsTerminalChoiceTerminal.state = .on
+        }
         
         // FROM 1.1.0
         // Disable/enable the Apply button until changes are made
@@ -453,6 +466,30 @@ class ConfigureViewController:  NSViewController,
                                         object: self)
     }
 
+    
+    @IBAction @objc func doToggleTerminalChoice(sender: Any?) {
+            
+        // FROM 1.6.0
+        // The user has changed the terminal selection
+        var termChoice: Int = 0
+        if self.prefsTerminalChoiceITerm2.state == .on {
+            termChoice = 1
+        }
+        // Add more Terminal choices by index here...
+        
+        // Only write out the choice if it's different -- it should be
+        if termChoice != self.terminalChoice {
+            self.terminalChoice = termChoice
+            let defaults: UserDefaults = UserDefaults.standard
+            defaults.set(termChoice,
+                         forKey: "com.bps.mnu.term-choice")
+            
+            // Notify the mai app that it needs to change
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+                                            object: self)
+        }
+    }
+    
     
     @IBAction @objc func doShowHelp(sender: Any?) {
         
