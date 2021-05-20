@@ -30,10 +30,10 @@
 import Cocoa
 
 
-class MenuItem: NSObject,
-                NSCopying {
+final class MenuItem: NSObject,
+                      NSCopying {
 
-    // MARK: - Properties
+    // MARK: - Public Class Properties
 
     var title: String = ""              // The name of the item in the menu
     var type: Int = -1                  // The type of the item: script or switch

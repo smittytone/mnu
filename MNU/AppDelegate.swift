@@ -40,27 +40,30 @@ class AppDelegate: NSObject,
     @IBOutlet var cwvc: ConfigureViewController!                // The Configure window controller
     @IBOutlet var acvc: MenuControlsViewController!             // The control bar view controller
     
-    // MARK: - App Properties
+    // MARK: - Public App Properties
 
     var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
     var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
-    var inDarkMode: Bool = false                // Is the Mac in dark mode (true) or not (false)
-    var useDesktop: Bool = false                // Is the Finder using the desktop (true) or not (false)
-    var showHidden: Bool = false                // Is the Finder showing hidden files (true) or not (false)
-    var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
-    var task: Process? = nil                    // A sub-process we use for triggered scripts
-    var doNewTermTab: Bool = false              // Should we open terminal scripts in a new window
-    var showImages: Bool = false                // Should we show menu icons as well as names
-    var optionClick: Bool = false               // Did the user option-click the menu
     var icons: NSMutableArray = NSMutableArray.init()
                                                 // Menu icons list
+    
+    // MARK: - Private App Properties
+    
+    private var task: Process? = nil            // A sub-process we use for triggered scripts
+    private var doNewTermTab: Bool = false      // Should we open terminal scripts in a new window
+    private var showImages: Bool = false        // Should we show menu icons as well as names
+    private var disableDarkMode: Bool = false   // Should the menu disable the dark mode control (ie. not supported on the host)
+    private var inDarkMode: Bool = false        // Is the Mac in dark mode (true) or not (false)
+    private var useDesktop: Bool = false        // Is the Finder using the desktop (true) or not (false)
+    private var showHidden: Bool = false        // Is the Finder showing hidden files (true) or not (false)
+    private var optionClick: Bool = false       // Did the user option-click the menu
     // FROM 1.3.0
-    var reloadDefaults: Bool = false            // Do we need to reload preferences?
+    private var reloadDefaults: Bool = false    // Do we need to reload preferences?
     // FROM 1.3.1
-    var isElevenPlus: Bool = false              // Are we running on Big Sur?
+    private var isElevenPlus: Bool = false      // Are we running on Big Sur?
     // FROM 1.6.0
-    var terminalIndex: Int = 0                  // Which terminal has the user selected?
+    private var terminalIndex: Int = 0          // Which terminal has the user selected?
                                                 // 0  - macOS Terminal (default)
                                                 // 1  - iTerm2
                                                 // 2+ - TBD
@@ -122,6 +125,8 @@ class AppDelegate: NSObject,
         registerPreferences()
         
         // FROM 1.6.0
+        // Read in the preferred terminal by index value, then
+        // check that it is actually available. If not, use the default
         self.terminalIndex = defaults.integer(forKey: "com.bps.mnu.term-choice")
         if isTerminalMissing(self.terminalIndex) {
             self.terminalIndex = 0
@@ -187,7 +192,7 @@ class AppDelegate: NSObject,
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
         
         // This prevents the app closing when the user clicks the Quit control, if the
-        // Configure Window is visible and is either presenting the Add Item sheet
+        // Configure Window is visible and is presenting the Add Item sheet
         if self.cwvc.isVisible && self.cwvc.aivc.parentWindow != nil {
             return NSApplication.TerminateReply.terminateCancel
         }
@@ -235,7 +240,8 @@ class AppDelegate: NSObject,
         let defaults: UserDefaults = UserDefaults.standard
         let isFirstRun: Bool = defaults.bool(forKey: "com.bps.mnu.first-run")
         if isFirstRun {
-            // This is the first run - set the default to false
+            // This is the first run - set the default to false so we don't
+            // ever do this again
             defaults.set(false, forKey: "com.bps.mnu.first-run")
 
             // Ask the user if they want to run MNU at startup
@@ -294,7 +300,7 @@ class AppDelegate: NSObject,
     }
 
 
-    func toggleStartupLaunch(doTurnOn: Bool) {
+    private func toggleStartupLaunch(doTurnOn: Bool) {
 
         // Enable or disable (depending on the value of 'doTurnOn') the launching
         // of MNU at user login. This is activated by a notification from the
@@ -314,7 +320,8 @@ class AppDelegate: NSObject,
         
         // FROM 1.6.0
         // This function is called in response to a change of terminal being
-        // made in the Prefs pane of the ConfigureViewController
+        // made in the Prefs pane of the ConfigureViewController, via the
+        // 'com.bps.mnu.term-updated' notification
         if self.cwvc.terminalChoice != 0 {
             // The user has selected a non-default terminal,
             // so check that it's available for use
@@ -336,7 +343,7 @@ class AppDelegate: NSObject,
         // FROM 1.6.0
         // Check that the selected terminal is installed by making sure
         // it is in the standard Application folders (see 'getAppPath()')
-        // NOTE Returns 'true' if the app is not present, otherwise false
+        // NOTE Returns 'true' if the app is NOT present, false if it IS present
         if choice != 0 {
             // The user has selected a non-default terminal
             let terminals: [String] = ["iTerm2"]
@@ -997,11 +1004,11 @@ class AppDelegate: NSObject,
         //   "com.bps.mnu.default-items"  - Array - MNU's default items
         //   "com.bps.mnu.item-order"     - Array - MNU's actual items (default and user-defined),
         //                                          set once the user makes any change to the default set
-        //   "com.bps.mnu.startup-launch" - Bool  - Should MNU set itself to launch at login?
+        //   "com.bps.mnu.startup-launch" - Bool  - Is MNU set to launch at login?
         //   "com.bps.mnu.first-run"      - Bool  - Is this MNU's first run? Set to false afterwards
         //   "com.bps.mnu.new-term-tab"   - Bool  - Should MNU run scripts in a new Terminal tab
         //   "com.bps.mnu.show-controls"  - Bool  - Should MNU show icons in the menu?
-        // From 1.6.0
+        //   From 1.6.0
         //   "com.bps.mnu.term-choice"    - Int   - Preferred Terminal by index
         //                                          0 = Apple Terminal
         //                                          1 = iTerm2

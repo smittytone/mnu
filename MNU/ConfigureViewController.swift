@@ -30,12 +30,12 @@
 import Cocoa
 
 
-class ConfigureViewController:  NSViewController,
-                                NSTabViewDelegate,
-                                NSTableViewDataSource,
-                                NSTableViewDelegate,
-                                NSWindowDelegate,
-                                NSMenuDelegate {
+final class ConfigureViewController:  NSViewController,
+                                      NSTabViewDelegate,
+                                      NSTableViewDataSource,
+                                      NSTableViewDelegate,
+                                      NSWindowDelegate,
+                                      NSMenuDelegate {
 
     // MARK: - UI Outlets
 

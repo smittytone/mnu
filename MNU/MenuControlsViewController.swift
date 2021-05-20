@@ -30,7 +30,7 @@
 import Cocoa
 
 
-class MenuControlsViewController: NSViewController {
+final class MenuControlsViewController: NSViewController {
 
     // MARK: - UI Outlets
 
@@ -40,7 +40,7 @@ class MenuControlsViewController: NSViewController {
     @IBOutlet var appControlHelpButton: NSButton!           // The Help button
 
 
-    // MARK: - Class Properties
+    // MARK: - Public Class Properties
 
     var controlMenuItem: NSMenuItem? = nil
 
