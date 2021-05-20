@@ -67,7 +67,6 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet var feedbackButton: NSButton!
     
     
-
     // MARK: - Public Class Properties
 
     var menuItems: MenuItemList? = nil
@@ -84,6 +83,8 @@ final class ConfigureViewController:  NSViewController,
     var appDelegate: AppDelegate? = nil
     // FROM 1.6.0
     var terminalChoice: Int = 0
+    var tabOpenChoice: Bool = false
+    
     
     // MARK: - Private Class Properties
     
@@ -450,9 +451,14 @@ final class ConfigureViewController:  NSViewController,
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
         let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
-        defaults.set(state,
+        self.tabOpenChoice = self.prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
+        defaults.set(self.tabOpenChoice,
                      forKey: "com.bps.mnu.new-term-tab")
+        
+        // FROM 1.6.0
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
+                                        object: self)
     }
 
 
