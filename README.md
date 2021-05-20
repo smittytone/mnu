@@ -1,4 +1,4 @@
-# MNU 1.5.2 #
+# MNU 1.6.0 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.6.0 *Unreleased*
+    - Added iTerm2 support.
 - 1.5.2 *19 May 2021*
     - Correctly record the preference for starting MNU automatically at login.
     - Fix start up crash on systems that record binary values in Finder and GlobalDomain preferences in a different way to mine, eg. `1` vs `YES` (thanks to @jgoldhammer)
