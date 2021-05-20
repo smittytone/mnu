@@ -47,6 +47,12 @@ class AppDelegate: NSObject,
     var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     var icons: NSMutableArray = NSMutableArray.init()
                                                 // Menu icons list
+    // FROM 1.6.0
+    var terminalIndex: Int = 0                  // Which terminal has the user selected?
+                                                // 0  - macOS Terminal (default)
+                                                // 1  - iTerm
+                                                // 2+ - TBD
+                                                // NOTE This is not private so that it's accessible in tests
     
     // MARK: - Private App Properties
     
@@ -62,11 +68,6 @@ class AppDelegate: NSObject,
     private var reloadDefaults: Bool = false    // Do we need to reload preferences?
     // FROM 1.3.1
     private var isElevenPlus: Bool = false      // Are we running on Big Sur?
-    // FROM 1.6.0
-    private var terminalIndex: Int = 0          // Which terminal has the user selected?
-                                                // 0  - macOS Terminal (default)
-                                                // 1  - iTerm
-                                                // 2+ - TBD
 
 
     // MARK: - App Lifecycle Functions
@@ -131,6 +132,9 @@ class AppDelegate: NSObject,
         if isTerminalMissing(self.terminalIndex) {
             self.terminalIndex = 0
         }
+        
+        // Set the current tab opening choice
+        self.doNewTermTab = defaults.bool(forKey: "com.bps.mnu.new-term-tab")
 
         // Check for first run
         firstRunCheck()
@@ -177,6 +181,12 @@ class AppDelegate: NSObject,
         nc.addObserver(self,
                        selector: #selector(self.switchTerminal),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+                       object: self.cwvc)
+        
+        // The user has changed their tab openning preference
+        nc.addObserver(self,
+                       selector: #selector(self.toggleTerminalTabbing),
+                       name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
                        object: self.cwvc)
     }
 
@@ -338,11 +348,21 @@ class AppDelegate: NSObject,
     }
     
     
+    @objc func toggleTerminalTabbing() {
+        
+        // FROM 1.6.0
+        // Update internal record of the user's tab opening choice: current window or new
+        // Configure Window has already saved the preference
+        self.doNewTermTab = self.cwvc.tabOpenChoice
+    }
+    
+    
     func isTerminalMissing(_ choice: Int) -> Bool {
         
         // FROM 1.6.0
         // Check that the selected terminal is installed by making sure
         // it is in the standard Application folders (see 'getAppPath()')
+        // Configure Window has already saved the preference
         // NOTE Returns 'true' if the app is NOT present, false if it IS present
         if choice != 0 {
             // The user has selected a non-default terminal
@@ -1146,21 +1166,50 @@ class AppDelegate: NSObject,
         // Handle escapable characters
         let escapedCode: NSString = escaper(code)
 
-        // Add the supplied script code ('code') to the boilerplate AppleScript and run it,
-        // in a new Terminal tab if that is required by the user
-        let defaults: UserDefaults = UserDefaults.standard
-        let doTermNewTab: Bool = defaults.value(forKey: "com.bps.mnu.new-term-tab") as! Bool
-        let tabSelection: String = !doTermNewTab ? " in tab 1 of window 1" : ""
-        
         // FROM 1.6.0
         // Support multiple terminals
         let script: String
         switch (self.terminalIndex) {
+        // Add the supplied script code ('escapedCode') to the boilerplate AppleScript and run it,
+        // in a new Terminal tab if that is required by the user -- 'tabSelection' contains
+        // script variations to accommodate this
         case 1:
-            script = "tell application \"iTerm\"\nactivate\nset newWindow to (create window with default profile)\ntell current session of newWindow\nwrite text \"\(escapedCode)\"\nend tell\nend tell"
+            let tabSelection: String = self.doNewTermTab ? "create tab with default profile" : "tab 0"
+            script = """
+                tell application \"iTerm\"
+                activate
+                if exists front window then
+                set newTab to (\(tabSelection) of front window)
+                else
+                set newWindow to (create window with default profile)
+                set newTab to (tab 0 of newWindow)
+                end if
+                tell current session of newTab
+                write text \"\(escapedCode)\"
+                end tell
+                end tell
+                """
         // Add other non-zero cases here to include other terminals
         default:
-            script = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
+            if self.doNewTermTab {
+                script = """
+                    tell application \"Terminal\"
+                    activate
+                    do script (\"\(escapedCode)\")
+                    end tell
+                    """
+            } else {
+                script = """
+                    tell application \"Terminal\"
+                    activate
+                    if not (exists first window) then
+                    do script (\"\(escapedCode)\")
+                    else
+                    do script (\"\(escapedCode)\") in first window
+                    end if
+                    end tell
+                    """
+            }
         }
         
         #if DEBUG
