@@ -30,9 +30,9 @@
 import Cocoa
 
 
-class AddUserItemTextField: NSTextField {
+final class AddUserItemTextField: NSTextField {
     
-    // MARK: - Class Properties
+    // MARK: - Private Class Properties
 
     private let commandKey = NSEvent.ModifierFlags.command.rawValue
     private let commandShiftKey = NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue

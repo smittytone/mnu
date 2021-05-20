@@ -30,7 +30,7 @@
 import Cocoa
 
 
-class MenuItemTableCellView: NSTableCellView {
+final class MenuItemTableCellView: NSTableCellView {
 
     // This table cell view simply has a couple of extra items we want to make accessible
     

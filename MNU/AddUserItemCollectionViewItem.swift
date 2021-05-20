@@ -30,7 +30,7 @@
 import Cocoa
 
 
-class AddUserItemCollectionViewItem: NSCollectionViewItem {
+final class AddUserItemCollectionViewItem: NSCollectionViewItem {
 
 
     // MARK: - Class Properties
@@ -61,7 +61,7 @@ class AddUserItemCollectionViewItem: NSCollectionViewItem {
 
 
     // MARK: - Lifecycle Functions
-    
+    /*
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -72,5 +72,6 @@ class AddUserItemCollectionViewItem: NSCollectionViewItem {
         // view.layer?.borderColor = NSColor.controlAccentColor.cgColor
         // view.layer?.borderWidth = 0.0
     }
+    */
 
 }

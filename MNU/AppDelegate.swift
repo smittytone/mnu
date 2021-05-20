@@ -41,10 +41,7 @@ class AppDelegate: NSObject,
     @IBOutlet var acvc: MenuControlsViewController!             // The control bar view controller
     
     // MARK: - Public App Properties
-
-    var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
-    var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
-    var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
+    
     var icons: NSMutableArray = NSMutableArray.init()
                                                 // Menu icons list
     // FROM 1.6.0
@@ -56,6 +53,9 @@ class AppDelegate: NSObject,
     
     // MARK: - Private App Properties
     
+    private var statusItem: NSStatusItem? = nil // The macOS main menu item providing the menu
+    private var appMenu: NSMenu? = nil          // The NSMenu presenting the switches and scripts
+    private var items: [MenuItem] = []          // The menu items that are present (but may be hidden)
     private var task: Process? = nil            // A sub-process we use for triggered scripts
     private var doNewTermTab: Bool = false      // Should we open terminal scripts in a new window
     private var showImages: Bool = false        // Should we show menu icons as well as names
@@ -1017,7 +1017,7 @@ class AppDelegate: NSObject,
 
     // MARK: - Helper Functions
 
-    func registerPreferences() {
+    private func registerPreferences() {
 
         // Called by the app at launch to register its initial defaults
         // Set up the following keys/values:

@@ -75,8 +75,6 @@ final class ConfigureViewController:  NSViewController,
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
-    // FROM 1.1.0
-    var extrasMenu: NSMenu? = nil
     // FROM 1.3.1
     var isElevenPlus: Bool = false
     // FROM 1.5.0
@@ -89,6 +87,8 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - Private Class Properties
     
     private var systemVersion: Int = 10
+    // FROM 1.1.0
+    private var extrasMenu: NSMenu? = nil
     
 
     // MARK: - Lifecycle Functions
@@ -232,7 +232,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc func doSave(sender: Any?) {
+    @IBAction @objc private func doSave(sender: Any?) {
 
         // If any changes have been made to the item list, inform the app delegate
         if self.hasChanged {
@@ -248,7 +248,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    @IBAction @objc func doNewScriptItem(sender: Any?) {
+    @IBAction @objc private func doNewScriptItem(sender: Any?) {
         
         // Check that the user has not added too many items already
         // current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'
@@ -278,7 +278,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc func doContextShowHide(sender: Any) {
+    @IBAction @objc private func doContextShowHide(sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
         let menuItem: NSMenuItem = sender as! NSMenuItem
@@ -287,7 +287,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    @objc func doShowHideSwitch(sender: Any) {
+    @objc private func doShowHideSwitch(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         
@@ -298,7 +298,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    func doShowHide(_ item: MenuItem) {
+    private func doShowHide(_ item: MenuItem) {
         
         // Flip the item's recorded state and update the table
         
@@ -312,7 +312,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    @IBAction func doContextEditScript (sender: Any) {
+    @IBAction private func doContextEditScript (sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
         
@@ -322,7 +322,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @objc func doEditScript(sender: Any) {
+    @objc private func doEditScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         
@@ -333,7 +333,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    func doEdit(_ item: MenuItem) {
+    private func doEdit(_ item: MenuItem) {
         
         // Tell the add user item view controller to display its sheet
         // and to opulate the sheet's fields for editing an existing item
@@ -348,7 +348,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc func doContextDeleteScript(sender: Any) {
+    @IBAction @objc private func doContextDeleteScript(sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
         
@@ -359,7 +359,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @objc func doDeleteScript(sender: Any) {
+    @objc private func doDeleteScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
@@ -369,7 +369,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    func doDelete(_ item: MenuItem) {
+    private func doDelete(_ item: MenuItem) {
         
         // Present an alert to warn the user about deleting the Menu Item
         let alert: NSAlert = NSAlert()
@@ -404,7 +404,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc func doShowExtras(sender: NSButton) {
+    @IBAction @objc private func doShowExtras(sender: NSButton) {
 
         // FROM 1.1.0
         // Pop up the import/export buttons
@@ -416,7 +416,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @objc func doExtraHelp() {
+    @objc private func doExtraHelp() {
 
         // FROM 1.1.0
         // Just call the existing 'doShowHelp()' function as if we were a button
@@ -426,7 +426,7 @@ final class ConfigureViewController:  NSViewController,
 
     // MARK: About... Pane Functions
     
-    @IBAction @objc func submitFeedback(sender: Any?) {
+    @IBAction @objc private func submitFeedback(sender: Any?) {
 
         // Get the feedback sheet view controller to show its sheet
         self.fbvc.parentWindow = self.configureWindow!
@@ -436,7 +436,7 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: Preferences Pane Functions
     
-    @IBAction @objc func doToggleLaunchAtLogin(sender: Any?) {
+    @IBAction @objc private func doToggleLaunchAtLogin(sender: Any?) {
 
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
@@ -446,7 +446,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc func doSetTermPref(sender: Any?) {
+    @IBAction @objc private func doSetTermPref(sender: Any?) {
         
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
@@ -462,7 +462,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc func doShowControls(sender: Any?) {
+    @IBAction @objc private func doShowControls(sender: Any?) {
 
         // The user has toggled the 'launch at login' checkbox, so send a suitable
         // notification to the app delegate
@@ -477,7 +477,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    @IBAction @objc func doToggleTerminalChoice(sender: Any?) {
+    @IBAction @objc private func doToggleTerminalChoice(sender: Any?) {
             
         // FROM 1.6.0
         // The user has changed their preferred terminal
@@ -501,7 +501,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc func doShowHelp(sender: Any?) {
+    @IBAction @objc private func doShowHelp(sender: Any?) {
         
         // Show the 'Help' via the website
         // TODO provide offline help
@@ -514,7 +514,7 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - List Import/Export Functions
 
-    @objc func doExport() {
+    @objc private func doExport() {
         
         // FROM 1.1.0
         // Create a save panel for the export operation...
@@ -554,7 +554,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    func showExportAlert() {
+    private func showExportAlert() {
 
         // FROM 1.1.0
         // Multi-use call from 'doExport()'
@@ -563,7 +563,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @objc func doImport() {
+    @objc private func doImport() {
         
         // FROM 1.1.0
         // Create an open panel for the import operation...
@@ -609,7 +609,7 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - Notification Handlers
 
-    @objc func processNewItem() {
+    @objc private func processNewItem() {
 
         // This function is called in response to a "com.bps.mnu.item-added" notification
         // from the Add User Item view controller that an existing item was edited,
@@ -923,7 +923,7 @@ final class ConfigureViewController:  NSViewController,
 
     // MARK: - Misc Functions
 
-    func displayItemCount() {
+    private func displayItemCount() {
 
         // Update the count of current menu items
         var total = 0
@@ -949,7 +949,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    func showAlert(_ title: String, _ message: String) {
+    private func showAlert(_ title: String, _ message: String) {
 
         // Present an alert to warn the user about deleting the Menu Item
         let alert: NSAlert = NSAlert()

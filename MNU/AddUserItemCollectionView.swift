@@ -30,9 +30,9 @@
 import Cocoa
 
 
-class AddUserItemCollectionView: NSView {
+final class AddUserItemCollectionView: NSView {
 
-    // MARK: - Class Properties
+    // MARK: - Public Class Properties
 
     var isSelected: Bool = false
 

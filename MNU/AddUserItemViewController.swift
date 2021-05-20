@@ -30,9 +30,9 @@
 import Cocoa
 
 
-class AddUserItemViewController: NSViewController,
-                                 NSTextFieldDelegate,
-                                 NSPopoverDelegate {
+final class AddUserItemViewController: NSViewController,
+                                       NSTextFieldDelegate,
+                                       NSPopoverDelegate {
 
     // MARK: - UI Outlets
 
@@ -44,27 +44,29 @@ class AddUserItemViewController: NSViewController,
     @IBOutlet var saveButton: NSButton!
     @IBOutlet var iconButton: AddUserItemIconButton!
     @IBOutlet var iconPopoverController: AddUserItemPopoverController!
-    
     // FROM 1.2.0
     @IBOutlet var openCheck: NSButton!
-
     // FROM 1.2.2
     @IBOutlet var directCheck: NSButton!
 
 
-    // MARK: - Class Properties
+    // MARK: - Public Class Properties
 
     var newMenuItem: MenuItem? = nil
     var currentMenuItems: MenuItemList? = nil
     var parentWindow: NSWindow? = nil
     var isEditing: Bool = false
-    var iconPopover: NSPopover? = nil
-    var icons: NSMutableArray = NSMutableArray.init()
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
-    var directAlert: NSAlert? = nil
-
-
+    
+    
+    // MARK: - Public Class Properties
+    private var iconPopover: NSPopover? = nil
+    private var icons: NSMutableArray = NSMutableArray.init()
+    // FROM 1.5.0
+    private var directAlert: NSAlert? = nil
+    
+    
     // MARK: - Lifecycle Functions
 
     override func viewDidLoad() {
@@ -95,7 +97,7 @@ class AddUserItemViewController: NSViewController,
     }
 
 
-    func makeIconMatrix() {
+    private func makeIconMatrix() {
 
         // Build the array of icons that we will use for the popover selector and the button
         // that triggers its appearance
@@ -163,7 +165,7 @@ class AddUserItemViewController: NSViewController,
     }
 
 
-    func makePopover() {
+    private func makePopover() {
 
         // Assemble the popover if it hasn't been assembled yet
         
@@ -433,7 +435,7 @@ class AddUserItemViewController: NSViewController,
 
     // MARK: - Input Checker Functions
 
-    func checkLabel() -> Bool {
+    private func checkLabel() -> Bool {
 
         // ADDED 1.2.0
         // Moved from 'doSave()'
@@ -513,7 +515,7 @@ class AddUserItemViewController: NSViewController,
 
     // MARK: - Helper Functions
 
-    func showAlert(_ title: String, _ message: String) {
+    private func showAlert(_ title: String, _ message: String) {
 
         // Present an alert to warn the user, with only one option
         
@@ -526,7 +528,7 @@ class AddUserItemViewController: NSViewController,
     }
 
 
-    func showDirectAlert() {
+    private func showDirectAlert() {
 
         // FROM 1.5.0
         // Present an alert to warn the user, with two options

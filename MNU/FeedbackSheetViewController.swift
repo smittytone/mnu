@@ -30,9 +30,9 @@
 import Cocoa
 
 
-class FeedbackSheetViewController: NSViewController,
-                                   URLSessionDelegate,
-                                   URLSessionDataDelegate {
+final class FeedbackSheetViewController: NSViewController,
+                                         URLSessionDelegate,
+                                         URLSessionDataDelegate {
 
     // MARK: - UI Outlets
 
@@ -41,9 +41,12 @@ class FeedbackSheetViewController: NSViewController,
     @IBOutlet var connectionProgress: NSProgressIndicator!
     
 
-    // MARK: - Class Properties
+    // MARK: - Public Class Properties
 
     var parentWindow: NSWindow? = nil
+    
+    // MARK: - Private Class Properties
+
     private var feedbackTask: URLSessionTask? = nil
 
 

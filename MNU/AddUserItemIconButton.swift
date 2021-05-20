@@ -29,8 +29,7 @@
 
 import Cocoa
 
-
-class AddUserItemIconButton: NSButton {
+final class AddUserItemIconButton: NSButton {
 
     // This is a simple NSButton sub-class which adds the property 'index'. This
     // allows the button to track the icon it is currently showing - 'index' is the

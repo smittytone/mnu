@@ -30,17 +30,26 @@
 import Cocoa
 
 
-class AddUserItemPopoverController: NSViewController,
-                                    NSCollectionViewDataSource,
-                                    NSCollectionViewDelegate {
+final class AddUserItemPopoverController: NSViewController,
+                                          NSCollectionViewDataSource,
+                                          NSCollectionViewDelegate {
 
+    // MARK: - UI Outlets
+    
     @IBOutlet weak var collectionView: NSCollectionView!
-
+    
+    
+    // MARK: - Public Class Properties
+    
     var icons: NSMutableArray = NSMutableArray.init()
-    var tooltips: [String] = []
-    var count: Int = 0
     var button: AddUserItemIconButton = AddUserItemIconButton()
-
+    
+    
+    // MARK: - Private Class Properties
+    
+    private var count: Int = 0
+    private var tooltips: [String] = []
+    
 
     // MARK: - Lifecycle Methods
 
@@ -97,7 +106,7 @@ class AddUserItemPopoverController: NSViewController,
     }
 
 
-    func configureCollectionView() {
+    private func configureCollectionView() {
 
         // Configure the collection view's flow layout manager
         

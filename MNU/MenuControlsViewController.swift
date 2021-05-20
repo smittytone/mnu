@@ -67,14 +67,14 @@ final class MenuControlsViewController: NSViewController {
 
     // MARK: - App Action Functions
 
-    @IBAction @objc func doQuit(sender: Any?) {
+    @IBAction @objc private func doQuit(sender: Any?) {
 
         // Quit the app
         NSApp.terminate(self)
     }
 
 
-    @IBAction @objc func doHelp(sender: Any?) {
+    @IBAction @objc private func doHelp(sender: Any?) {
 
         // Show the 'Help' via the website
         // TODO provide offline help
@@ -82,7 +82,7 @@ final class MenuControlsViewController: NSViewController {
     }
 
 
-    @IBAction @objc func doConfigure(sender: Any?) {
+    @IBAction @objc private func doConfigure(sender: Any?) {
 
         // Tell the app delegate to open the Configure window
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),

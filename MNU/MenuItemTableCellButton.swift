@@ -30,7 +30,7 @@
 import Cocoa
 
 
-class MenuItemTableCellButton: NSButton {
+final class MenuItemTableCellButton: NSButton {
 
     // Subclass in order to add a property that points to the button's parent menu item
     // This is used in the table of menu items presented by the Configure Window

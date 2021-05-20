@@ -30,7 +30,7 @@
 import Cocoa
 
 
-class MenuItemList: NSObject {
+final class MenuItemList: NSObject {
 
     // NOTE This very simple class is used solely to allow us to pass
     //      the item list around by reference. The property 'items' is never
