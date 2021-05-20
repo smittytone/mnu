@@ -65,7 +65,7 @@ class AppDelegate: NSObject,
     // FROM 1.6.0
     private var terminalIndex: Int = 0          // Which terminal has the user selected?
                                                 // 0  - macOS Terminal (default)
-                                                // 1  - iTerm2
+                                                // 1  - iTerm
                                                 // 2+ - TBD
 
 
@@ -346,7 +346,7 @@ class AppDelegate: NSObject,
         // NOTE Returns 'true' if the app is NOT present, false if it IS present
         if choice != 0 {
             // The user has selected a non-default terminal
-            let terminals: [String] = ["iTerm2"]
+            let terminals: [String] = ["iTerm"]
             
             // 'getAppPath()' returns nil if the app isn't present
             // Remember to zero-index 'choice'
@@ -1011,7 +1011,7 @@ class AppDelegate: NSObject,
         //   From 1.6.0
         //   "com.bps.mnu.term-choice"    - Int   - Preferred Terminal by index
         //                                          0 = Apple Terminal
-        //                                          1 = iTerm2
+        //                                          1 = iTerm
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
 
@@ -1157,7 +1157,7 @@ class AppDelegate: NSObject,
         let script: String
         switch (self.terminalIndex) {
         case 1:
-            script = "tell application \"iTerm2\"\nactivate\nset newWindow to (create window with default profile)\ntell current session of newWindow\nwrite text \"\(escapedCode)\"\nend tell\nend tell"
+            script = "tell application \"iTerm\"\nactivate\nset newWindow to (create window with default profile)\ntell current session of newWindow\nwrite text \"\(escapedCode)\"\nend tell\nend tell"
         // Add other non-zero cases here to include other terminals
         default:
             script = "tell application \"Terminal\"\nactivate\nif exists window 1 then\ndo script (\"\(escapedCode)\")\(tabSelection)\nelse\ndo script (\"\(escapedCode)\")\nend if\nend tell"
@@ -1231,10 +1231,10 @@ class AppDelegate: NSObject,
         // Set the app against each of the possible app locations
         // TODO Add ~/Applications
         
-        // Two possible Application locations are...
+        // Various possible Application locations are...
         var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
         
-        // ...and the third is...
+        // ...and another is...
         let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
         if FileManager.default.fileExists(atPath: homeAppPath) {
             basePaths.append(homeAppPath)
@@ -1392,6 +1392,3 @@ class AppDelegate: NSObject,
     }
 
 }
-
-
-
