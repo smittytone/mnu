@@ -87,9 +87,29 @@ class MNUTests: XCTestCase {
     }
 
 
-    func testRunScript() throws {
+    func testRunScriptiTerm() throws {
 
         let codeSample = "cd \"$HOME\"; rm test.txt; echo TEST > test.txt"
+        self.appDelegate.terminalIndex = 1
+        self.appDelegate.runScript(codeSample)
+
+        let expectation = XCTestExpectation(description: "Script run")
+
+        let _ = Timer.scheduledTimer(withTimeInterval: allowedOpenTime, repeats: false) { (firedTimer) in
+            let fm = FileManager.default
+            let npath: NSString = "~/test.txt"
+            XCTAssert(fm.fileExists(atPath: npath.expandingTildeInPath))
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: allowedOpenTime * 3)
+    }
+    
+    
+    func testRunScriptTerminal() throws {
+
+        let codeSample = "cd \"$HOME\"; rm test.txt; echo TEST > test.txt"
+        self.appDelegate.terminalIndex = 0
         self.appDelegate.runScript(codeSample)
 
         let expectation = XCTestExpectation(description: "Script run")
