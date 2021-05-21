@@ -44,9 +44,12 @@ struct MNU_CONSTANTS {
             static let BREW_UPDATE  = 11
             static let BREW_UPGRADE = 12
             static let SHOW_IP      = 13
-            static let GRAB_WINDOW  = 14
-            static let SHOW_DF      = 15
+            static let SHOW_DF      = 14
             static let USER         = 20
+        }
+        
+        struct OPEN {
+            static let GRAB_WINDOW  = 15
         }
     }
 
