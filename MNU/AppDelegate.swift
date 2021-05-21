@@ -119,8 +119,8 @@ class AppDelegate: NSObject,
         
         // MARK: DEBUG SWITCHES
         // Uncomment the next two lines to wipe stored prefs
-        //defaults.set([], forKey: "com.bps.mnu.item-order")
-        //defaults.set(true, forKey: "com.bps.mnu.first-run")
+        defaults.set([], forKey: "com.bps.mnu.item-order")
+        defaults.set(true, forKey: "com.bps.mnu.first-run")
         
         // Register preferences
         registerPreferences()
@@ -554,7 +554,7 @@ class AppDelegate: NSObject,
                 if item.isDirect {
                     // FROM 1.3.0
                     // Switch to new method
-                    //runCallDirect(item.script)
+                    // (old one: runCallDirect(item.script))
                     runScriptDirect(item.script)
                 } else {
                     runScript(item.script)
@@ -702,6 +702,21 @@ class AppDelegate: NSObject,
                     newItem = makeBrewUpdateScript()
                 }
 
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP {
+                    // Create and add a Show IP Address item
+                    newItem = makeShowIPScript()
+                }
+
+                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF {
+                    // Create and add a Show Disk Free Space item
+                    newItem = makeShowDiskFullScript()
+                }
+
+                if itemCode == MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW {
+                    // Create and add a Grab Window item
+                    newItem = makeGetScreenshotOpen()
+                }
+
                 if let item: MenuItem = newItem {
                     // Add the menu item to the list
                     self.items.append(item)
@@ -811,6 +826,8 @@ class AppDelegate: NSObject,
         menuItem.representedObject = item
 
         // Make item-specific changes
+        // These will set specific titles (based on state) and icons
+        // or fall back to default behaviour which as per user-added items
         switch item.code {
             case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                 if self.disableDarkMode { menuItem.isEnabled = false }
@@ -850,7 +867,7 @@ class AppDelegate: NSObject,
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                     menuItem.image = NSImage.init(named: "logo_brew")
                 default:
-                    // Default is a user-added (ie. custom) item
+                    // Default is a standard icon from the list
                     menuItem.image = icons.object(at: item.iconIndex) as? NSImage
             }
         }
@@ -1014,6 +1031,54 @@ class AppDelegate: NSObject,
         return newItem
     }
 
+    // MARK: Show IP Address Trigger
+
+    func makeShowIPScript() -> MenuItem {
+
+        // FROM 1.6.0
+        // Make and return a stock Show IP Address item
+
+        let newItem = MenuItem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
+        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.script = "ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\\\\.){3}[0-9]*).*/\\\\2/p'"
+        newItem.iconIndex = 15
+        return newItem
+    }
+
+    // MARK: Show Disk Usage Trigger
+
+    func makeShowDiskFullScript() -> MenuItem {
+
+        // FROM 1.6.0
+        // Make and return a stock Show Disk Free Space item
+
+        let newItem = MenuItem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_DF
+        newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF
+        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.script = "df -H /System/Volumes/Data"
+        newItem.iconIndex = 2
+        return newItem
+    }
+
+    // MARK: Show Grab Window Trigger
+
+    func makeGetScreenshotOpen() -> MenuItem {
+
+        // FROM 1.6.0
+        // Make and return a stock Grab Windw item
+
+        let newItem = MenuItem()
+        newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GRAB_WINDOW
+        newItem.code = MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW
+        newItem.type = MNU_CONSTANTS.TYPES.OPEN
+        newItem.script = "Screenshot"
+        newItem.iconIndex = 23
+        return newItem
+    }
+
 
     // MARK: - Helper Functions
 
@@ -1044,8 +1109,10 @@ class AppDelegate: NSObject,
                                   "com.bps.mnu.term-choice"]
 
         let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE],
+                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN,
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE,
+                                   MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP, MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF,
+                                   MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW],
                                   [],
                                   false,
                                   true,
@@ -1218,7 +1285,7 @@ class AppDelegate: NSObject,
         
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
-                   doBlock: false)
+                   doBlock: true)
     }
 
 

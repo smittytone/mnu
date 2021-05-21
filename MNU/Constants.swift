@@ -66,9 +66,10 @@ struct MNU_CONSTANTS {
         static let GIT              = "Update Git with Gitup"
         static let BREW_UPDATE      = "Update Homebrew"
         static let BREW_UPGRADE     = "Upgrade Homebrew"
-        static let SHOW_IP          = "Display Mac IP address"
-        static let GRAB_WINDOW      = "Screebgrab a window"
+        static let SHOW_IP          = "Show Mac IP address"
         static let SHOW_DF          = "Show free disk space"
+        static let GRAB_WINDOW      = "Screengrab a window"
+
     }
 
     static let MENU_TEXT_LEN        = 30
