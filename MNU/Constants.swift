@@ -69,7 +69,6 @@ struct MNU_CONSTANTS {
         static let SHOW_IP          = "Show Mac IP address"
         static let SHOW_DF          = "Show free disk space"
         static let GRAB_WINDOW      = "Screengrab a window"
-
     }
 
     static let MENU_TEXT_LEN        = 30

@@ -1042,7 +1042,7 @@ class AppDelegate: NSObject,
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-        newItem.script = "ifconfig | sed -En 's/127.0.0.1//;s/.*inet (addr:)?(([0-9]*\\\\.){3}[0-9]*).*/\\\\2/p'"
+        newItem.script = "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'"
         newItem.iconIndex = 15
         return newItem
     }
@@ -1305,6 +1305,9 @@ class AppDelegate: NSObject,
         escapedCode = escapedCode.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") as NSString
         // Look for auto-escaped DQs
         escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        // FROM 1.6.0
+        // Look for auto-escaped periods (eg. in grep regex)
+        escapedCode = escapedCode.replacingOccurrences(of: "\\.", with: "\\\\.") as NSString
         // Look for user-escaped $ symbols: \$ -> \\$ -> \\\\$
         escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
         // Look for user-escaped ` symbols
