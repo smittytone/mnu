@@ -43,15 +43,17 @@ class MNUTests: XCTestCase {
         // Happy paths
 
         // Plain DQs: echo "$GIT"
-        XCTAssert("echo \\\"$GIT\\\"" == self.appDelegate.escaper("echo \"$GIT\""))
+        XCTAssert("echo \\\"$GIT\\\"" == self.appDelegate.escaper(#"echo "$GIT""#))
         // Escape tick in plain DQs: echo "You \`have `ls | wc -l` files in `pwd`"
-        XCTAssert("echo \\\"You \\\\`have `ls | wc -l` files in `pwd`\\\"" == self.appDelegate.escaper("echo \"You \\`have `ls | wc -l` files in `pwd`\""))
+        XCTAssert("echo \\\"You \\\\`have `ls | wc -l` files in `pwd`\\\"" == self.appDelegate.escaper(#"echo "You \`have `ls | wc -l` files in `pwd`""#))
         // Escape $ in plain DQs: echo "The value of \$HOME is $HOME"
-        XCTAssert("echo \\\"The value of \\\\$HOME is $HOME\\\"" == self.appDelegate.escaper("echo \"The value of \\$HOME is $HOME\""))
+        XCTAssert("echo \\\"The value of \\\\$HOME is $HOME\\\"" == self.appDelegate.escaper(#"echo "The value of \$HOME is $HOME""#))
         // escape DQs within SQs: echo '"GIT"'
-        XCTAssert("echo \'\\\"$GIT\\\"\'" == self.appDelegate.escaper("echo '\"$GIT\"'"))
+        XCTAssert("echo \'\\\"$GIT\\\"\'" == self.appDelegate.escaper(#"echo '"$GIT"'"#))
         // escape DQs within DQs: echo "\"zz\""
-        XCTAssert("echo \\\"\\\\\\\"zz\\\\\\\"\\\"" == self.appDelegate.escaper("echo \"\\\"zz\\\"\""))
+        XCTAssert("echo \\\"\\\\\\\"zz\\\\\\\"\\\"" == self.appDelegate.escaper(#"echo "\"zz\"""#))
+        // escape \s in grep regex
+        XCTAssert("ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\\\.){3}[0-9]*' | grep -Eo '([0-9]*\\\\.){3}[0-9]*' | grep -v '127.0.0.1'" == self.appDelegate.escaper(#"ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"#))
     }
 
 

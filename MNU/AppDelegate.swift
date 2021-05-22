@@ -119,8 +119,8 @@ class AppDelegate: NSObject,
         
         // MARK: DEBUG SWITCHES
         // Uncomment the next two lines to wipe stored prefs
-        defaults.set([], forKey: "com.bps.mnu.item-order")
-        defaults.set(true, forKey: "com.bps.mnu.first-run")
+        //defaults.set([], forKey: "com.bps.mnu.item-order")
+        //defaults.set(true, forKey: "com.bps.mnu.first-run")
         
         // Register preferences
         registerPreferences()
@@ -1042,7 +1042,7 @@ class AppDelegate: NSObject,
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
-        newItem.script = "ifconfig | grep -Eo 'inet (addr:)?([0-9]*\\.){3}[0-9]*' | grep -Eo '([0-9]*\\.){3}[0-9]*' | grep -v '127.0.0.1'"
+        newItem.script = #"ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"#
         newItem.iconIndex = 15
         return newItem
     }
@@ -1293,27 +1293,38 @@ class AppDelegate: NSObject,
 
         // FROM 1.3.0
         // Process the user's code string to double-escape
-        // For example, if the user enters [echo "$GIT"] (square brackets indicate text field)
-        // then the string becomes "echo \"$GIT\"", but because this will be inserted into
-        // another string (see 'runScript()') within escaped double-quotes, we have to double-escape
-        // everything, ie. make the string "echo \\\"$GIT\\\"". osascript then correctly interprets
-        // all the escapes
+        // For example, if the user enters:
+        //      echo "$GIT"
+        // then the string is stored as:
+        //      echo \"$GIT\"
+        // But because this will be inserted into another string (see 'runScript()') within escaped double-quotes,
+        // we have to double-escape everything, ie. make the string:
+        //      echo \\\"$GIT\\\""
+        // osascript then correctly interprets all the escapes
+        // See also MNUTests.swift::testEscaper() for more examples
 
         // Convert the script string to an NSString so we can run 'replacingOccurrences()'
         var escapedCode: NSString = unescapedString as NSString
+        
         // Look for user-escaped DQs and temporarily hide them
         escapedCode = escapedCode.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") as NSString
-        // Look for auto-escaped DQs
-        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        
         // FROM 1.6.0
-        // Look for auto-escaped periods (eg. in grep regex)
-        escapedCode = escapedCode.replacingOccurrences(of: "\\.", with: "\\\\.") as NSString
-        // Look for user-escaped $ symbols: \$ -> \\$ -> \\\\$
-        escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
-        // Look for user-escaped ` symbols
-        escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
+        // Process escaped slashes ***
+        escapedCode = escapedCode.replacingOccurrences(of: "\\", with: "\\\\") as NSString
+        // Look for escaped DQs
+        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
+        
+        // FROM 1.6.0
+        // Remove specific slash-symbol combos, which should now be covered by *** above
+        // Look for escaped $ symbols: \$ -> \\$ -> \\\\$
+        //escapedCode = escapedCode.replacingOccurrences(of: "\\$", with: "\\\\$") as NSString
+        // Look for escaped ` symbols
+        //escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
+        
         // Put back user-escaped DQs
         escapedCode = escapedCode.replacingOccurrences(of: "!-USER-ESCAPED-D-QUOTES-!", with: "\\\\\\\"") as NSString
+
         return escapedCode
     }
 
