@@ -31,9 +31,9 @@ import Cocoa
 
 
 @NSApplicationMain
-class AppDelegate: NSObject,
-                   NSApplicationDelegate,
-                   NSMenuDelegate {
+final class AppDelegate: NSObject,
+                         NSApplicationDelegate,
+                         NSMenuDelegate {
 
     // MARK: - UI Outlets
 
@@ -74,75 +74,29 @@ class AppDelegate: NSObject,
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
 
-        // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
-        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
-
-        // FROM 1.3.1
-        // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
-        if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
-            // Wrong version, so present a warning message
-            let alert = NSAlert.init()
-            alert.messageText = "Unsupported version of macOS"
-            alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
-            alert.addButton(withTitle: "OK")
-            alert.runModal()
-            self.disableDarkMode = true
-        }
-
-        // Are we running on Big Sur?
-        self.isElevenPlus = sysVer.majorVersion >= 11
-        self.cwvc.isElevenPlus = self.isElevenPlus
-
-        // Set the default values for the states we control
-        self.inDarkMode = false
-        self.useDesktop = true
-        self.showHidden = false
-
-        // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
-        // and the the other states of supported switches
-        let defaults: UserDefaults = UserDefaults.standard
-        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
-            if let anyValue: Any = defaultsDict["AppleInterfaceStyle"] {
-                self.inDarkMode = getTrueBool(anyValue, "Dark")
-            }
-        }
-        
-        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
-            if let anyValue: Any = defaultsDict["CreateDesktop"] {
-                self.useDesktop = getTrueBool(anyValue)
-            }
-            
-            if let anyValue: Any = defaultsDict["AppleShowAllFiles"] {
-                self.showHidden = getTrueBool(anyValue)
-            }
-        }
+        // First, check system state and record system truth
+        recordSystemState()
         
         // MARK: DEBUG SWITCHES
-        // Uncomment the next two lines to wipe stored prefs
+        // Uncomment the next three lines to wipe stored prefs
+        //let defaults: UserDefaults = UserDefaults.standard
         //defaults.set([], forKey: "com.bps.mnu.item-order")
         //defaults.set(true, forKey: "com.bps.mnu.first-run")
         
-        // Register preferences
+        // Register default preferences
         registerPreferences()
         
         // FROM 1.6.0
-        // Read in the preferred terminal by index value, then
-        // check that it is actually available. If not, use the default
-        self.terminalIndex = defaults.integer(forKey: "com.bps.mnu.term-choice")
-        if isTerminalMissing(self.terminalIndex) {
-            self.terminalIndex = 0
-        }
+        // Record key preferences
+        recordKeyPreferences()
         
-        // Set the current tab opening choice
-        self.doNewTermTab = defaults.bool(forKey: "com.bps.mnu.new-term-tab")
-
         // Check for first run
         firstRunCheck()
 
         // Create the app's menu
         createMenu()
         
-        // Enable notification watching
+        // Register notification handlers
         let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.updateAndSaveMenu),
@@ -191,7 +145,7 @@ class AppDelegate: NSObject,
     }
 
                        
-    @objc func performTermination() {
+    @objc private func performTermination() {
         
         // Tell the application can now terminate, following the issuing of a
         // NSApplication.TerminateReply.terminateLater (see 'applicationShouldTerminate()')
@@ -241,7 +195,7 @@ class AppDelegate: NSObject,
     }
 
 
-    func firstRunCheck() {
+    private func firstRunCheck() {
 
         // Check whether we're running for the first time
         // If so, invite the user to run MNU at launch
@@ -272,7 +226,7 @@ class AppDelegate: NSObject,
     }
 
     
-    func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
+    private func getTrueBool(_ value: Any, _ truthString: String = "YES") -> Bool {
         
         // FROM 1.5.2
         // Convert values received from GlobalDomain and Finder to true Booleans
@@ -294,16 +248,89 @@ class AppDelegate: NSObject,
     }
     
     
+    private func recordSystemState() {
+        
+        // FROM 1.6.0
+        // Refactored from 'applicationDidFinishLaunching()'
+        // Get system and state information and record it for use during run
+        
+        // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
+        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
+
+        // FROM 1.3.1
+        // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
+        if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
+            // Wrong version, so present a warning message
+            let alert = NSAlert.init()
+            alert.messageText = "Unsupported version of macOS"
+            alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
+            alert.addButton(withTitle: "OK")
+            alert.runModal()
+            self.disableDarkMode = true
+        }
+
+        // Are we running on Big Sur?
+        self.isElevenPlus = sysVer.majorVersion >= 11
+        self.cwvc.isElevenPlus = self.isElevenPlus
+
+        // Set the default values for the states we control
+        self.inDarkMode = false
+        self.useDesktop = true
+        self.showHidden = false
+
+        // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
+        // and the the other states of supported switches
+        let defaults: UserDefaults = UserDefaults.standard
+        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
+            if let anyValue: Any = defaultsDict["AppleInterfaceStyle"] {
+                self.inDarkMode = getTrueBool(anyValue, "Dark")
+            }
+        }
+        
+        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
+            if let anyValue: Any = defaultsDict["CreateDesktop"] {
+                self.useDesktop = getTrueBool(anyValue)
+            }
+            
+            if let anyValue: Any = defaultsDict["AppleShowAllFiles"] {
+                self.showHidden = getTrueBool(anyValue)
+            }
+        }
+    }
+    
+    
+    private func recordKeyPreferences() {
+        
+        // FROM 1.6.0
+        // NOTE We read and store the following two preferences because
+        //      we need to refer to them regularly. We only re-read the
+        //      saved value in response to a notification that it has
+        //      been changed by the user
+        
+        let defaults: UserDefaults = UserDefaults.standard
+        
+        // Read in the preferred terminal by index value, then
+        // check that it is actually available. If not, use the default
+        self.terminalIndex = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        if isTerminalMissing(self.terminalIndex) {
+            self.terminalIndex = 0
+        }
+        
+        // Set the current tab opening choice: open in new window/tab or not
+        self.doNewTermTab = defaults.bool(forKey: "com.bps.mnu.new-term-tab")
+    }
+    
+    
     // MARK: - Auto-start Functions
 
-    @objc func enableAutoStart() {
+    @objc private func enableAutoStart() {
 
         // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: true)
     }
 
 
-    @objc func disableAutoStart() {
+    @objc private func disableAutoStart() {
 
         // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: false)
@@ -326,7 +353,7 @@ class AppDelegate: NSObject,
     }
     
     
-    @objc func switchTerminal() {
+    @objc private func switchTerminal() {
         
         // FROM 1.6.0
         // This function is called in response to a change of terminal being
@@ -348,7 +375,7 @@ class AppDelegate: NSObject,
     }
     
     
-    @objc func toggleTerminalTabbing() {
+    @objc private func toggleTerminalTabbing() {
         
         // FROM 1.6.0
         // Update internal record of the user's tab opening choice: current window or new
@@ -357,7 +384,7 @@ class AppDelegate: NSObject,
     }
     
     
-    func isTerminalMissing(_ choice: Int) -> Bool {
+    private func isTerminalMissing(_ choice: Int) -> Bool {
         
         // FROM 1.6.0
         // Check that the selected terminal is installed by making sure
@@ -380,7 +407,7 @@ class AppDelegate: NSObject,
 
     // MARK: - Loading And Saving Serialization Functions
 
-    func saveItems() {
+    private func saveItems() {
         
         // Store the current state of the menu if it has changed
         // NOTE We convert Menu Item objects into basic JSON strings and save
@@ -401,7 +428,7 @@ class AppDelegate: NSObject,
 
     // MARK: - App Action Functions
 
-    @IBAction @objc func doModeSwitch(sender: Any?) {
+    @IBAction @objc private func doModeSwitch(sender: Any?) {
 
         // Switch mode record
         self.inDarkMode = !self.inDarkMode
@@ -427,7 +454,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doDesktopSwitch(sender: Any?) {
+    @IBAction @objc private func doDesktopSwitch(sender: Any?) {
 
         // Switch the stored state
         self.useDesktop = !self.useDesktop
@@ -460,7 +487,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doShowHiddenFilesSwitch(sender: Any?) {
+    @IBAction @objc private func doShowHiddenFilesSwitch(sender: Any?) {
 
         // Switch the stored state
         self.showHidden = !self.showHidden
@@ -493,7 +520,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doGit(sender: Any?) {
+    @IBAction @objc private func doGit(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'gitup'
         // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
@@ -506,7 +533,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doBrewUpdate(sender: Any?) {
+    @IBAction @objc private func doBrewUpdate(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew update'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
@@ -526,7 +553,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc func doBrewUpgrade(sender: Any?) {
+    @IBAction @objc private func doBrewUpgrade(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew upgrade'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
@@ -545,7 +572,7 @@ class AppDelegate: NSObject,
    }
 
     
-    @IBAction @objc func doScript(sender: Any?) {
+    @IBAction @objc private func doScript(sender: Any?) {
 
         // Get the source Menu Item that the menu button is linked to
         let menuItem: NSMenuItem = sender as! NSMenuItem
@@ -566,7 +593,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @objc func showConfigureWindow() {
+    @objc private func showConfigureWindow() {
 
         // Duplicate the current item list to pass on to the configure window view controller
         let list: MenuItemList = MenuItemList()
@@ -598,7 +625,7 @@ class AppDelegate: NSObject,
 
     // MARK: - Menu And View Controller Maker Functions
 
-    @objc func createMenu() {
+    @objc private func createMenu() {
 
         // Create the app's menu when the app is run
         let defaults = UserDefaults.standard
@@ -757,7 +784,7 @@ class AppDelegate: NSObject,
     }
 
 
-    @objc func updateMenu() {
+    @objc private func updateMenu() {
         
         // Redraw the menu based on the current list of items
         // NOTE If 'optionClick' has been set, we show all items, even if they would normally
@@ -800,7 +827,7 @@ class AppDelegate: NSObject,
     }
     
     
-    @objc func updateAndSaveMenu() {
+    @objc private func updateAndSaveMenu() {
         
         // We have received a notification from the Configure Window's controller that the
         // list of Menu Items has changed in some way, so rebuild the menu from scratch
@@ -817,7 +844,7 @@ class AppDelegate: NSObject,
     
 
 
-    func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
+    private func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
 
         // Create and return an NSMenuItem for the specified Menu Item instance
         let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
@@ -876,7 +903,7 @@ class AppDelegate: NSObject,
     }
 
 
-    func addAppMenuItem(_ doSeparate: Bool) {
+    private func addAppMenuItem(_ doSeparate: Bool) {
 
         // Add the app's control bar item
         // We always add this after creating or updating the menu
@@ -1149,7 +1176,7 @@ class AppDelegate: NSObject,
     }
 
 
-    func presentError() {
+    private func presentError() {
 
         // Present a basic alert if an internal, non fatal error occurred.
         // This is primarily a debugging tool
@@ -1157,7 +1184,7 @@ class AppDelegate: NSObject,
     }
 
 
-    func showError(_ head: String, _ text: String) {
+    private func showError(_ head: String, _ text: String) {
 
         // FROM 1.3.0
         // Show an error modal dialog on the main (UI) thread
@@ -1398,7 +1425,7 @@ class AppDelegate: NSObject,
     }
     
     
-    func runBundleScript(named scriptName: String, doAddPath: Bool) {
+    private func runBundleScript(named scriptName: String, doAddPath: Bool) {
 
         // Load and run the named script from the application bundle
 
@@ -1421,7 +1448,7 @@ class AppDelegate: NSObject,
     }
     
     
-    func runProcess(app path: String, with args: [String], doBlock: Bool) {
+    private func runProcess(app path: String, with args: [String], doBlock: Bool) {
 
         // Generic task creation and run function
         // FROM 1.3.0 - remove deprecated methods:

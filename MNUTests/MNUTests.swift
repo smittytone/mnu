@@ -214,7 +214,30 @@ class MNUTests: XCTestCase {
         XCTAssert(menuItem.type == 1)
     }
 
+    func testMakeShowIPScript() throws {
 
+        let menuItem: MenuItem = self.appDelegate.makeShowIPScript()
+        XCTAssert(menuItem.title == "Show Mac IP address")
+        XCTAssert(menuItem.code == 13)
+        XCTAssert(menuItem.type == 1)
+    }
+    
+    func testMakeShowDiskFullScript() throws {
+
+        let menuItem: MenuItem = self.appDelegate.makeShowDiskFullScript()
+        XCTAssert(menuItem.title == "Show free disk space")
+        XCTAssert(menuItem.code == 14)
+        XCTAssert(menuItem.type == 1)
+    }
+    
+    func testMakeGetScreenshotOpen() throws {
+
+        let menuItem: MenuItem = self.appDelegate.makeGetScreenshotOpen()
+        XCTAssert(menuItem.title == "Screengrab a window")
+        XCTAssert(menuItem.code == 15)
+        XCTAssert(menuItem.type == 2)
+    }
+    
     func testMakeIconMatrix() throws {
 
         let list = ["logo_generic", "logo_bash", "logo_brew", "logo_github", "logo_gitlab", "logo_python", "logo_node", "logo_java", "logo_lua", "logo_rust", "logo_perl", "logo_ruby", "logo_as", "logo_coffee", "logo_php", "logo_js", "logo_docker", "logo_doc", "logo_dir", "logo_app", "logo_cog", "logo_sync", "logo_power", "logo_mac", "logo_x"]
