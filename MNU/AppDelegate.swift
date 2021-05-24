@@ -1268,7 +1268,7 @@ final class AppDelegate: NSObject,
         // in a new Terminal tab if that is required by the user -- 'tabSelection' contains
         // script variations to accommodate this
         case 1:
-            let tabSelection: String = self.doNewTermTab ? "create tab with default profile" : "tab 0"
+            let tabSelection: String = self.doNewTermTab ? "create tab with default profile" : "current tab"
             script = """
                 tell application \"iTerm\"
                 activate
