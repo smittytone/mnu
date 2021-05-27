@@ -825,10 +825,6 @@ final class AppDelegate: NSObject,
         // NOTE If 'optionClick' has been set, we show all items, even if they would normally
         //      be hidden from view via the Configure Window
         
-        // Check for a prefs changes
-        let defaults = UserDefaults.standard
-        self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
-
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
         
@@ -869,6 +865,9 @@ final class AppDelegate: NSObject,
         if let itemList: MenuItemList = cwvc.menuItems {
             self.items = itemList.items
         }
+        
+        // FROM 1.6.0
+        recordKeyPreferences()
         
         // Regenerate the menu
         updateMenu()
