@@ -318,6 +318,9 @@ final class AppDelegate: NSObject,
         
         // Set the current tab opening choice: open in new window/tab or not
         self.doNewTermTab = defaults.bool(forKey: "com.bps.mnu.new-term-tab")
+        
+        // Set whether the menu shows images or not
+        self.showImages = defaults.bool(forKey: "com.bps.mnu.show-controls")
     }
     
     
@@ -628,8 +631,6 @@ final class AppDelegate: NSObject,
     @objc private func createMenu() {
 
         // Create the app's menu when the app is run
-        let defaults = UserDefaults.standard
-        self.showImages = defaults.value(forKey: "com.bps.mnu.show-controls") as! Bool
         
         // Load the icons
         makeIconMatrix()
@@ -643,6 +644,7 @@ final class AppDelegate: NSObject,
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
+        let defaults = UserDefaults.standard
         let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
         if !reloadDefaults && loadedItems.count > 0 {
@@ -690,6 +692,30 @@ final class AppDelegate: NSObject,
 
                     return
                 }
+                
+                // FROM 1.6.0
+                // Add new defaults to the menu if the user has already customised the menu
+                let insertNewDefaults: Int = defaults.integer(forKey: "com.bps.mnu.new-defs-1-6")
+                if insertNewDefaults > 0 {
+                    let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
+                    for i: Int in 0..<insertNewDefaults {
+                        if let item: MenuItem = getNewMenuItem(defaultItems[MNU_CONSTANTS.BASE_DEFAULT_COUNT + i]) {
+                            // Add the menu item to the list and make a menu item
+                            self.items.append(item)
+                            let menuItem: NSMenuItem = makeNSMenuItem(item)
+                            self.appMenu!.addItem(menuItem)
+                            if self.showImages {
+                                self.appMenu!.addItem(NSMenuItem.separator())
+                            }
+                        }
+                    }
+                    
+                    // Record for next time that the operation was done
+                    defaults.set(0, forKey: "com.bps.mnu.new-defs-1-6")
+                    
+                    // Save the update menu item list
+                    saveItems()
+                }
             }
         } else {
             // No serialized items are present, so assemble a list based on the default values
@@ -697,54 +723,7 @@ final class AppDelegate: NSObject,
             let defaultItems: [Int] = defaults.array(forKey: "com.bps.mnu.default-items") as! [Int]
 
             for itemCode in defaultItems {
-                var newItem: MenuItem? = nil
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
-                    // Create and add a Light/Dark Mode MNU item
-                    newItem = makeModeSwitch()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
-                    // Create and add a Desktop Usage MNU Item
-                    newItem = makeDesktopSwitch()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
-                    // Create and add a Show Hidden Files item
-                    newItem = makeHiddenFilesSwitch()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
-                    // Create and add a Git Update item
-                    newItem = makeGitScript()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
-                    // Create and add a Brew Upgrade item
-                    newItem = makeBrewUpgradeScript()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
-                    // Create and add a Brew Update item
-                    newItem = makeBrewUpdateScript()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP {
-                    // Create and add a Show IP Address item
-                    newItem = makeShowIPScript()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF {
-                    // Create and add a Show Disk Free Space item
-                    newItem = makeShowDiskFullScript()
-                }
-
-                if itemCode == MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW {
-                    // Create and add a Grab Window item
-                    newItem = makeGetScreenshotOpen()
-                }
-
-                if let item: MenuItem = newItem {
+                if let item: MenuItem = getNewMenuItem(itemCode) {
                     // Add the menu item to the list
                     self.items.append(item)
 
@@ -783,7 +762,63 @@ final class AppDelegate: NSObject,
         }
     }
 
+    
+    private func getNewMenuItem(_ itemCode: Int) -> MenuItem? {
+        
+        // FROM 1.6.0
+        // Refactor out the code so it can be reused
+        
+        var newItem: MenuItem? = nil
+        
+        if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE {
+            // Create and add a Light/Dark Mode MNU item
+            newItem = makeModeSwitch()
+        }
 
+        if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP {
+            // Create and add a Desktop Usage MNU Item
+            newItem = makeDesktopSwitch()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN {
+            // Create and add a Show Hidden Files item
+            newItem = makeHiddenFilesSwitch()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.GIT {
+            // Create and add a Git Update item
+            newItem = makeGitScript()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE {
+            // Create and add a Brew Upgrade item
+            newItem = makeBrewUpgradeScript()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE {
+            // Create and add a Brew Update item
+            newItem = makeBrewUpdateScript()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP {
+            // Create and add a Show IP Address item
+            newItem = makeShowIPScript()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF {
+            // Create and add a Show Disk Free Space item
+            newItem = makeShowDiskFullScript()
+        }
+
+        if itemCode == MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW {
+            // Create and add a Grab Window item
+            newItem = makeGetScreenshotOpen()
+        }
+        
+        return newItem
+    }
+    
+    
     @objc private func updateMenu() {
         
         // Redraw the menu based on the current list of items
@@ -1124,8 +1159,16 @@ final class AppDelegate: NSObject,
         //   "com.bps.mnu.term-choice"    - Int   - Preferred Terminal by index
         //                                          0 = Apple Terminal
         //                                          1 = iTerm
+        //   "com.bps.mnu.new-defs-1-6"   - Bool  - Have stored items been updated?
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
+        
+        // FROM 1.6.0
+        let defaultItemArray: [Int] = [MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
+                                       MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
+                                       MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE,
+                                       MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP, MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF,
+                                       MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW]
 
         let keyArray: [String] = ["com.bps.mnu.default-items",
                                   "com.bps.mnu.item-order",
@@ -1133,24 +1176,34 @@ final class AppDelegate: NSObject,
                                   "com.bps.mnu.first-run",
                                   "com.bps.mnu.new-term-tab",
                                   "com.bps.mnu.show-controls",
-                                  "com.bps.mnu.term-choice"]
+                                  "com.bps.mnu.term-choice",
+                                  "com.bps.mnu.new-defs-1-6"]
 
-        let valueArray: [Any]  = [[MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
-                                   MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE,
-                                   MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP, MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF,
-                                   MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW],
+        let valueArray: [Any]  = [defaultItemArray,
                                   [],
                                   false,
                                   true,
                                   false,
                                   true,
-                                  0]
+                                  0,
+                                  3]
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
         let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
+        
+        // FROM 1.6.0
+        // Reset the stored defaults to add new items
+        // NOTE This catches users only working with the default items
+        if let storedDefaults = defaults.array(forKey: "com.bps.mnu.default-items") {
+            if storedDefaults.count < defaultItemArray.count {
+                // Previously stored defaults don't contain new values,
+                // so write them into the store
+                defaults.set(defaultItemArray, forKey: "com.bps.mnu.default-items")
+            }
+        }
+        
         defaults.synchronize()
     }
 

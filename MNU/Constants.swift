@@ -84,4 +84,6 @@ struct MNU_CONSTANTS {
     static let MENU_REDO_KEY        = "Z"
     
     static let MAX_ITEM_COUNT       = 25
+    
+    static let BASE_DEFAULT_COUNT   = 6
 }
