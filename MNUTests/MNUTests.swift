@@ -62,16 +62,23 @@ class MNUTests: XCTestCase {
     func testRunScriptDirect() throws {
 
         // Happy path
-        _testRunScriptDirectHelper("/usr/local/bin/python3 --version")
+        _testRunScriptDirectHelper("/opt/homebrew/bin/python3 --version")
 
         // Correct app, bad argument -- should show dialog
-        _testRunScriptDirectHelper("/usr/local/bin/python3 --blast")
+        _testRunScriptDirectHelper("/opt/homebrew/bin/python3 --blast")
 
         // Misnamed app -- should show dialog
-        _testRunScriptDirectHelper("/usr/local/bin/pdfmooker")
+        _testRunScriptDirectHelper("/usr/bin/pdfmooker")
 
         // No app or args -- should show dialog
         _testRunScriptDirectHelper("")
+        
+        // FROM 1.6.0
+        // Not escaped space -- should show dialog
+        _testRunScriptDirectHelper("/usr/bin/open /Users/smitty/GitHub/mnu/MNUTests/Test Files/README.md")
+        
+        // Escaped space -- should open file
+        _testRunScriptDirectHelper("/usr/bin/open /Users/smitty/GitHub/mnu/MNUTests/Test\\ Files/README.md")
     }
 
 
