@@ -89,7 +89,7 @@ final class AddUserItemViewController: NSViewController,
 
         // Set up notifications
         // 'com.bps.mnu.select-image' is sent by the AddUserItemViewController when an icon is selected
-        let nc = NotificationCenter.default
+        let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(updateButtonIcon(_:)),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
@@ -227,7 +227,7 @@ final class AddUserItemViewController: NSViewController,
         // When we receive a notification from the popover controller that an icon has been selected,
         // we come here and set the button's image to that icon
         
-        if let obj = note.object {
+        if let obj: Any = note.object {
             // Decode the notifiction object
             let index = obj as! NSNumber
             self.iconButton.image = self.icons.object(at: index.intValue) as? NSImage
@@ -271,7 +271,7 @@ final class AddUserItemViewController: NSViewController,
         // FROM 1.5.0
         // If we've created an 'open' action, check that the target exists
         if isOpenAction {
-            if let ad = appDelegate {
+            if let ad: AppDelegate = self.appDelegate {
                 if ad.getAppPath(self.itemScriptText.stringValue) == nil {
                     showAlert("The app ‘\(self.itemScriptText.stringValue)’ cannot be found", "Please check that you have it installed on your Mac.")
                     return
@@ -284,7 +284,7 @@ final class AddUserItemViewController: NSViewController,
         if isDirect {
             // Check for an initial '/' to make sure we have an absolute path
             if !self.itemScriptText.stringValue.hasPrefix("/") {
-                showAlert("You do not appear to have entered an absolute path", "Please check the ‘Enter a command...’ field and try again.")
+                showAlert("You do not appear to have entered an absolute path", "Please check the ‘Enter a command...’ field and try so Save again.")
                 return
             }
 
@@ -300,7 +300,7 @@ final class AddUserItemViewController: NSViewController,
         
         if self.isEditing {
             // Save the updated fields
-            if let item = self.newMenuItem {
+            if let item: MenuItem = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
                     // FROM 1.2.0
                     // Check for a duplicate menu title if the
@@ -329,9 +329,9 @@ final class AddUserItemViewController: NSViewController,
                 }
 
                 // FROM 1.2.2
-                if (self.directCheck.state == .on) != item.isDirect {
+                if item.isDirect != isDirect {
                     itemHasChanged = true
-                    item.isDirect = self.directCheck.state == .on
+                    item.isDirect = isDirect
 
                     // FROM 1.5.0
                     // Check for relative elements in the path - and update accordingly
@@ -345,7 +345,7 @@ final class AddUserItemViewController: NSViewController,
             if !checkLabel() { return }
             
             // Create a Menu Item and set its values
-            let newItem = MenuItem()
+            let newItem: MenuItem = MenuItem()
             newItem.script = self.itemScriptText.stringValue
             newItem.title = self.menuTitleText.stringValue
             newItem.type = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
@@ -378,7 +378,8 @@ final class AddUserItemViewController: NSViewController,
         // Close the sheet
         self.parentWindow!.endSheet(addItemSheet)
         self.parentWindow = nil
-        self.isEditing = false
+        // FROM 1.6.0 -- don't stop editing here, do it in notified code
+        // self.isEditing = false
     }
 
     
@@ -406,7 +407,7 @@ final class AddUserItemViewController: NSViewController,
         // FROM 1.5.0
         // Make sure mutually exclusive checkboxes aren't ticked
 
-        let checkedButton = sender as! NSButton
+        let checkedButton: NSButton = sender as! NSButton
         var doWarn: Bool = false
 
         if checkedButton.state == .on {
@@ -555,11 +556,11 @@ final class AddUserItemViewController: NSViewController,
         // where x is set by 'MNU_CONSTANTS.MENU_TEXT_LEN'
         let sender: NSTextField = obj.object as! NSTextField
 
-        if sender == menuTitleText {
-            if menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
+        if sender == self.menuTitleText {
+            if self.menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
                 // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
                 // keep that number of characters in the field
-                self.menuTitleText.stringValue = String(menuTitleText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
+                self.menuTitleText.stringValue = String(self.menuTitleText.stringValue.prefix(MNU_CONSTANTS.MENU_TEXT_LEN))
                 NSSound.beep()
             }
 

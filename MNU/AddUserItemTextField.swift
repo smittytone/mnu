@@ -34,8 +34,8 @@ final class AddUserItemTextField: NSTextField {
     
     // MARK: - Private Class Properties
 
-    private let commandKey = NSEvent.ModifierFlags.command.rawValue
-    private let commandShiftKey = NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue
+    private let commandKey: UInt = NSEvent.ModifierFlags.command.rawValue
+    private let commandShiftKey: UInt = NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue
 
     
     // MARK: - Class Functions
@@ -46,7 +46,7 @@ final class AddUserItemTextField: NSTextField {
         // This adds support for cut, copy and paste to the Add/Edit User Item sheet text fields
         
         if event.type == NSEvent.EventType.keyDown {
-            if (event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue) == commandKey {
+            if (event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue) == self.commandKey {
                 switch event.charactersIgnoringModifiers! {
                 case MNU_CONSTANTS.MENU_CUT_KEY:
                     if NSApp.sendAction(#selector(NSText.cut(_:)), to: nil, from: self) { return true }
@@ -61,7 +61,7 @@ final class AddUserItemTextField: NSTextField {
                 default:
                     break
                 }
-            } else if (event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue) == commandShiftKey {
+            } else if (event.modifierFlags.rawValue & NSEvent.ModifierFlags.deviceIndependentFlagsMask.rawValue) == self.commandShiftKey {
                 if event.charactersIgnoringModifiers == MNU_CONSTANTS.MENU_REDO_KEY {
                     if NSApp.sendAction(Selector(("redo:")), to: nil, from: self) { return true }
                 }

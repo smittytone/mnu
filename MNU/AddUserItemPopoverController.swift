@@ -110,7 +110,7 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Configure the collection view's flow layout manager
         
-        let gridLayout = NSCollectionViewGridLayout.init()
+        let gridLayout: NSCollectionViewGridLayout = NSCollectionViewGridLayout.init()
         gridLayout.maximumItemSize = NSMakeSize(64, 64)
         gridLayout.minimumItemSize = NSMakeSize(64, 64)
         gridLayout.maximumNumberOfRows = 5
@@ -150,9 +150,9 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Create (or retrieve) an AddUserItemCollectionViewItem instance and configure it
         
-        let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
-                                           for: indexPath)
-        guard let collectionViewItem = item as? AddUserItemCollectionViewItem else { return item }
+        let item: NSCollectionViewItem = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
+                                                                 for: indexPath)
+        guard let collectionViewItem: AddUserItemCollectionViewItem = item as? AddUserItemCollectionViewItem else { return item }
         collectionViewItem.image = self.icons.object(at: count) as? NSImage
         collectionViewItem.index = self.count
         collectionViewItem.view.toolTip = self.tooltips[self.count]
@@ -173,10 +173,10 @@ final class AddUserItemPopoverController: NSViewController,
         // update its icon button (which triggers the popup containing this collection)
         
         for index in indexPaths {
-            if let obj = collectionView.item(at: index) {
+            if let obj: NSCollectionViewItem = collectionView.item(at: index) {
                 // Send the selected item's index to the AddUserItemViewController
                 let item = obj as! AddUserItemCollectionViewItem
-                let nc = NotificationCenter.default
+                let nc: NotificationCenter = NotificationCenter.default
                 nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
                         object: NSNumber.init(value: item.index))
             }

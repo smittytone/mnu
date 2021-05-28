@@ -113,7 +113,7 @@ final class ConfigureViewController:  NSViewController,
         self.menuItemsTableView.rowSizeStyle = .custom
 
         // Watch for notifications of changes sent by the add user item view controller
-        let nc = NotificationCenter.default
+        let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
@@ -122,7 +122,7 @@ final class ConfigureViewController:  NSViewController,
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-        aboutVersionText.stringValue = "Version \(version) (\(build))"
+        self.aboutVersionText.stringValue = "Version \(version) (\(build))"
         
         // FROM 1.1.0
         // Prepare the extras... button
@@ -253,7 +253,7 @@ final class ConfigureViewController:  NSViewController,
         // Check that the user has not added too many items already
         // current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'
         // TODO Calculate the number of DISPLAYED items and limit that rather than the total
-        if let items = self.menuItems {
+        if let items: MenuItemList = self.menuItems {
             if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
                 // Limit reached - warn the user
                 let alert: NSAlert = NSAlert()
@@ -612,22 +612,26 @@ final class ConfigureViewController:  NSViewController,
     @objc private func processNewItem() {
 
         // This function is called in response to a "com.bps.mnu.item-added" notification
-        // from the Add User Item view controller that an existing item was edited,
+        // from the AddUserItemViewController that an existing item was edited,
         // or a new item created
 
-        if aivc != nil {
-            if !aivc.isEditing {
-                // Add a newly created Menu Item to the list
-                if let item: MenuItem = aivc!.newMenuItem {
-                    self.menuItems!.items.append(item)
-                }
+        if self.aivc.isEditing {
+            // Add a newly created Menu Item to the list
+            if let item: MenuItem = self.aivc.newMenuItem {
+                self.menuItems!.items.append(item)
             }
-
-            self.hasChanged = true
-            self.applyChangesButton.isEnabled = true
-            self.menuItemsTableView.reloadData()
-            displayItemCount()
         }
+            
+        // FROM 1.6.0
+        // Switch off editing mode for the AddUserItemViewController
+        // NOTE Previously done in the controller's code
+        self.aivc.isEditing = false
+        
+        // Update the Configure Window
+        self.hasChanged = true
+        self.applyChangesButton.isEnabled = true
+        self.menuItemsTableView.reloadData()
+        displayItemCount()
     }
 
     
@@ -635,7 +639,7 @@ final class ConfigureViewController:  NSViewController,
 
     func numberOfRows(in tableView: NSTableView) -> Int {
 
-        if let items = self.menuItems {
+        if let items: MenuItemList = self.menuItems {
             return items.items.count
         }
 
@@ -645,9 +649,9 @@ final class ConfigureViewController:  NSViewController,
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 
-        if let items = self.menuItems {
+        if let items: MenuItemList = self.menuItems {
             let item: MenuItem = items.items[row]
-            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
+            let cell: MenuItemTableCellView? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
             
             if cell != nil {
                 // Configure the cell's title and its three buttons
@@ -704,9 +708,9 @@ final class ConfigureViewController:  NSViewController,
 
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 
-        if let items = self.menuItems {
+        if let items: MenuItemList = self.menuItems {
             let item: MenuItem = items.items[row]
-            let pasteboardItem = NSPasteboardItem()
+            let pasteboardItem: NSPasteboardItem = NSPasteboardItem()
             pasteboardItem.setString(item.title, forType: self.mnuPasteboardType)
             return pasteboardItem
         }
@@ -732,7 +736,7 @@ final class ConfigureViewController:  NSViewController,
             else { return false }
 
         var originalRow = -1
-        if let items = self.menuItems {
+        if let items: MenuItemList = self.menuItems {
             for i in 0..<items.items.count {
                 let anItem: MenuItem = items.items[i]
                 if anItem.title == itemTitle {
@@ -773,7 +777,7 @@ final class ConfigureViewController:  NSViewController,
         // NOTE This follows from any call to 'doCancel()'
         if self.hasChanged {
             // There are unsaved changes - warn the user
-            let alert = NSAlert.init()
+            let alert: NSAlert = NSAlert.init()
             alert.messageText = "You have unapplied changes"
             alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
             alert.addButton(withTitle: "Yes")
@@ -827,7 +831,7 @@ final class ConfigureViewController:  NSViewController,
             // Cycle through the tabs in that direction
             if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
                 if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
-                    let index = self.windowTabView.indexOfTabViewItem(selectedTab)
+                    let index: Int = self.windowTabView.indexOfTabViewItem(selectedTab)
                     if index == 2 {
                         self.windowTabView.selectTabViewItem(at: 0)
                         return
@@ -844,7 +848,7 @@ final class ConfigureViewController:  NSViewController,
             // Cycle through the tabs in that direction
             if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
                 if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
-                    let index = self.windowTabView.indexOfTabViewItem(selectedTab)
+                    let index: Int = self.windowTabView.indexOfTabViewItem(selectedTab)
                     if index == 0 {
                         self.windowTabView.selectTabViewItem(at: 2)
                         return
@@ -882,7 +886,7 @@ final class ConfigureViewController:  NSViewController,
         if clickedRow > -1 {
             // If the click was on a valid row, use that index to
             // get the MenuItem represented at the clicked row
-            if let items = self.menuItems {
+            if let items: MenuItemList = self.menuItems {
                 let item: MenuItem = items.items[clickedRow]
                 // Set the contextual menu's three items (Show/Hide, Edit, Delete)
                 // to point to the Menu Item represented at the clicked row
@@ -941,8 +945,8 @@ final class ConfigureViewController:  NSViewController,
         }
 
         // Handle plurals in the text correctly, and subsitite 'no' for '0'
-        let itemText = count == 1 ? "item" : "items"
-        let countText = count == 0 ? "no" : "\(count)"
+        let itemText: String = count == 1 ? "item" : "items"
+        let countText: String = count == 0 ? "no" : "\(count)"
 
         // Display the text
         menuItemsCountText.stringValue = "MNU is showing \(countText) of \(total) \(itemText) (Option-click the menu to show all items)"

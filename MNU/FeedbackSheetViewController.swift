@@ -91,7 +91,7 @@ final class FeedbackSheetViewController: NSViewController,
 
             // Send the string etc.
             let userAgent: String = getUserAgentForFeedback()
-            let dateString = getDateForFeedback()
+            let dateString: String = getDateForFeedback()
             
             // Assemble the message string
             let dataString: String = """

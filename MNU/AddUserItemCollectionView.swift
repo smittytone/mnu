@@ -49,7 +49,7 @@ final class AddUserItemCollectionView: NSView {
 
             // Set the colours we'll be using - just use fill so we
             // get colour coming through the image
-            if isSelected {
+            if self.isSelected {
                 NSColor.controlAccentColor.setFill()
             } else {
                 NSColor.clear.setFill()
