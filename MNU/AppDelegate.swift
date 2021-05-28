@@ -97,7 +97,7 @@ final class AppDelegate: NSObject,
         createMenu()
         
         // Register notification handlers
-        let nc = NotificationCenter.default
+        let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.updateAndSaveMenu),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
@@ -209,7 +209,7 @@ final class AppDelegate: NSObject,
             defaults.set(false, forKey: "com.bps.mnu.first-run")
 
             // Ask the user if they want to run MNU at startup
-            let alert = NSAlert.init()
+            let alert: NSAlert = NSAlert.init()
             alert.messageText = "Run MNU at Login?"
             alert.informativeText = "Do you wish to set your Mac to run MNU when you log in? This can also be set in MNU’s Preferences."
             alert.addButton(withTitle: "Yes")
@@ -261,7 +261,7 @@ final class AppDelegate: NSObject,
         // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
         if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
             // Wrong version, so present a warning message
-            let alert = NSAlert.init()
+            let alert: NSAlert = NSAlert.init()
             alert.messageText = "Unsupported version of macOS"
             alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
             alert.addButton(withTitle: "OK")
@@ -350,7 +350,7 @@ final class AppDelegate: NSObject,
         
         // FROM 1.5.2
         // Make sure preference is saved
-        let defaults = UserDefaults.standard
+        let defaults: UserDefaults = UserDefaults.standard
         defaults.set(doTurnOn, forKey: "com.bps.mnu.startup-launch")
         defaults.synchronize()
     }
@@ -423,7 +423,7 @@ final class AppDelegate: NSObject,
             savedItems.append(Serializer.jsonize(item))
         }
         
-        let defaults = UserDefaults.standard
+        let defaults: UserDefaults = UserDefaults.standard
         defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
         defaults.synchronize()
     }
@@ -545,7 +545,7 @@ final class AppDelegate: NSObject,
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
         //            but won't display a warning
-        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        let brewAvailable: Bool = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
         if brewAvailable {
             runScript("brew update")
         } else {
@@ -564,7 +564,7 @@ final class AppDelegate: NSObject,
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
         //            but won't display a warning
-        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        let brewAvailable: Bool = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
         if brewAvailable {
             runScript("brew upgrade")
         } else {
@@ -644,7 +644,7 @@ final class AppDelegate: NSObject,
         self.items.removeAll()
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
-        let defaults = UserDefaults.standard
+        let defaults: UserDefaults = UserDefaults.standard
         let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
         if !reloadDefaults && loadedItems.count > 0 {
@@ -653,7 +653,7 @@ final class AppDelegate: NSObject,
             // NSMenuItems
             
             for loadedItem: String in loadedItems {
-                if let itemInstance = Serializer.dejsonize(loadedItem) {
+                if let itemInstance: MenuItem = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
@@ -799,7 +799,8 @@ final class AppDelegate: NSObject,
             // Create and add a Brew Update item
             newItem = makeBrewUpdateScript()
         }
-
+        
+        // FROM 1.6.0 -- Next three items
         if itemCode == MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP {
             // Create and add a Show IP Address item
             newItem = makeShowIPScript()
@@ -829,7 +830,7 @@ final class AppDelegate: NSObject,
         self.appMenu!.removeAllItems()
         
         // Iteratre through the menu items, creating NSMenuItems to represent the visible ones
-        for item in self.items {
+        for item: MenuItem in self.items {
             // Create an NSMenuItem that will display the current MNU item
             let menuItem: NSMenuItem = makeNSMenuItem(item)
 
@@ -943,7 +944,7 @@ final class AppDelegate: NSObject,
         // We always add this after creating or updating the menu
         // FROM 1.3.0 - Add a 'show separator' parameter
 
-        if let appItem = self.acvc.controlMenuItem {
+        if let appItem: NSMenuItem = self.acvc.controlMenuItem {
             // FROM 1.3.0 - Add a separator if we're NOT showing item images
             if doSeparate { self.appMenu!.addItem(NSMenuItem.separator()) }
             self.appMenu!.addItem(appItem)
@@ -1017,7 +1018,7 @@ final class AppDelegate: NSObject,
     func makeModeSwitch() -> MenuItem {
 
         // Make and return a stock UI mode switch
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
@@ -1030,7 +1031,7 @@ final class AppDelegate: NSObject,
     func makeDesktopSwitch() -> MenuItem {
 
         // Make and return a stock desktop usage mode switch
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
@@ -1043,7 +1044,7 @@ final class AppDelegate: NSObject,
     func makeHiddenFilesSwitch() -> MenuItem {
 
         // Make and return a stock desktop usage mode switch
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
@@ -1056,8 +1057,7 @@ final class AppDelegate: NSObject,
     func makeGitScript() -> MenuItem {
 
         // Make and return a stock Git Update item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -1070,8 +1070,7 @@ final class AppDelegate: NSObject,
     func makeBrewUpdateScript() -> MenuItem {
 
         // Make and return a stock Brew Update item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -1084,8 +1083,7 @@ final class AppDelegate: NSObject,
     func makeBrewUpgradeScript() -> MenuItem {
 
         // Make and return a stock Brew Update item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -1098,8 +1096,7 @@ final class AppDelegate: NSObject,
 
         // FROM 1.6.0
         // Make and return a stock Show IP Address item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -1114,8 +1111,7 @@ final class AppDelegate: NSObject,
 
         // FROM 1.6.0
         // Make and return a stock Show Disk Free Space item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_DF
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF
         newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
@@ -1130,8 +1126,7 @@ final class AppDelegate: NSObject,
 
         // FROM 1.6.0
         // Make and return a stock Grab Windw item
-
-        let newItem = MenuItem()
+        let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GRAB_WINDOW
         newItem.code = MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW
         newItem.type = MNU_CONSTANTS.TYPES.OPEN
@@ -1189,13 +1184,13 @@ final class AppDelegate: NSObject,
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
-        let defaults = UserDefaults.standard
+        let defaults: UserDefaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         
         // FROM 1.6.0
         // Reset the stored defaults to add new items
         // NOTE This catches users only working with the default items
-        if let storedDefaults = defaults.array(forKey: "com.bps.mnu.default-items") {
+        if let storedDefaults: [Any] = defaults.array(forKey: "com.bps.mnu.default-items") {
             if storedDefaults.count < defaultItemArray.count {
                 // Previously stored defaults don't contain new values,
                 // so write them into the store
@@ -1272,7 +1267,10 @@ final class AppDelegate: NSObject,
         //   '/usr/local/bin/pdfmaker -f jpg -s /Users/z/source -d /users/z/target'
         // becomes:
         //   'parts': ['/usr/local/bin/pdfmaker', '-f', 'jpg', '-s', '/Users/z/source', '-d', '/users/z/target']
-        let parts = (code as NSString).components(separatedBy: " ")
+        
+        // FROM 1.6.0 -- first handle for path space escapes
+        let spacedCode: String = (code as NSString).replacingOccurrences(of: "\\ ", with: "!--ESC_SPACE--!")
+        let parts = (spacedCode as NSString).components(separatedBy: " ")
 
         // FROM 1.3.0 - Just in case that didn't quite work...
         if parts.count == 0 {
@@ -1284,12 +1282,13 @@ final class AppDelegate: NSObject,
 
         // Get the app and its arguments
         let app: String = parts[0]
-        var args = [String]()
+        var args: [String] = [String]()
 
         if parts.count > 1 {
             // Copy args beyond index 0 (the app)
             for i in 1..<parts.count {
-                args.append(parts[i])
+                // FROM 1.6.0 -- put back per-arg spaces
+                args.append((parts[i] as NSString).replacingOccurrences(of: "!--ESC_SPACE--!", with: " "))
             }
         }
 
@@ -1419,15 +1418,15 @@ final class AppDelegate: NSObject,
 
         // FROM 1.5.0
         // Get the app's valid path (or nil if there isn't one)
-        if let path = getAppPath(appName) {
+        if let path: String = getAppPath(appName) {
             #if DEBUG
             NSLog("MNU running script \'open \(path)\'")
             #endif
 
             // Call 'open'
             runProcess(app: "/usr/bin/open",
-                        with: [path],
-                        doBlock: false)
+                       with: [path],
+                       doBlock: false)
         } else {
             showError("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
         }
@@ -1451,7 +1450,7 @@ final class AppDelegate: NSObject,
         
         // Run through the above list and check if the name app is there;
         // if it is, return it
-        for basePath in basePaths {
+        for basePath: String in basePaths {
             // Build the full app path
             var appPath: String = appName
             
@@ -1512,7 +1511,7 @@ final class AppDelegate: NSObject,
         if args.count > 0 { task.arguments = args }
 
         // Pipe out the output to avoid putting it in the log
-        let outputPipe = Pipe()
+        let outputPipe: Pipe = Pipe()
         task.standardOutput = outputPipe
         task.standardError = outputPipe
 
@@ -1542,9 +1541,9 @@ final class AppDelegate: NSObject,
             if (task.terminationStatus != 0) {
                 // Command failed -- collect the output if there is any
                 // DOES THIS EVEN WORK?
-                let outputHandle = outputPipe.fileHandleForReading
+                let outputHandle: FileHandle = outputPipe.fileHandleForReading
                 var outString: String = ""
-                if let line = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
+                if let line: String = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
                     outString = line
                 }
 
@@ -1562,7 +1561,7 @@ final class AppDelegate: NSObject,
 
         // Set up a task to kill the macOS Finder and, optionally, the Dock
 
-        var args: [String] =  ["Finder"]
+        var args: [String] = ["Finder"]
         if andDock { args.append("Dock") }
 
         // Run the process

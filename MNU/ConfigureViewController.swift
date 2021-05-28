@@ -615,7 +615,7 @@ final class ConfigureViewController:  NSViewController,
         // from the AddUserItemViewController that an existing item was edited,
         // or a new item created
 
-        if self.aivc.isEditing {
+        if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
             if let item: MenuItem = self.aivc.newMenuItem {
                 self.menuItems!.items.append(item)
