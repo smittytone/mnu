@@ -13,6 +13,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 - 1.6.0 *Unreleased*
     - Added iTerm2 support.
     - Added new default items.
+    - Improved handling of spaces in direct commands’ path arguments.
     - Improved escape character handling.
 - 1.5.2 *19 May 2021*
     - Correctly record the preference for starting MNU automatically at login.
