@@ -79,6 +79,9 @@ class MNUTests: XCTestCase {
         
         // Escaped space -- should open file
         _testRunScriptDirectHelper("/usr/bin/open /Users/smitty/GitHub/mnu/MNUTests/Test\\ Files/README.md")
+        
+        // Escaped spaces -- should open file
+        _testRunScriptDirectHelper("/usr/bin/open /Users/smitty/GitHub/mnu/MNUTests/Test\\ Files/README.md -a visual\\ studio\\ code")
     }
 
 
