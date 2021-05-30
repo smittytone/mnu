@@ -189,6 +189,8 @@ final class AddUserItemViewController: NSViewController,
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
                 self.itemScriptText.stringValue = item.script
+                self.itemScriptText.becomeFirstResponder()
+                self.itemScriptText.currentEditor()?.selectedRange = NSMakeRange(0, 0)
                 self.menuTitleText.stringValue = item.title
                 self.saveButton.title = "Update"
                 self.titleText.stringValue = "Edit This Command"
@@ -205,6 +207,7 @@ final class AddUserItemViewController: NSViewController,
             // We are presenting a new item, so create it and
             // clear the sheet's input fields
             self.itemScriptText.stringValue = ""
+            self.itemScriptText.becomeFirstResponder()
             self.menuTitleText.stringValue = ""
             self.saveButton.title = "Add"
             self.titleText.stringValue = "Add A New Command"
@@ -341,6 +344,7 @@ final class AddUserItemViewController: NSViewController,
                 }
             }
         } else {
+            // Process a new menu item
             // Check for a duplicate menu title
             if !checkLabel() { return }
             
@@ -441,7 +445,6 @@ final class AddUserItemViewController: NSViewController,
         // ADDED 1.2.0
         // Moved from 'doSave()'
         // Check that we have a unique menu label
-
         if let list: MenuItemList = self.currentMenuItems {
             if list.items.count > 0 {
                 var got: Bool = false
@@ -468,9 +471,7 @@ final class AddUserItemViewController: NSViewController,
 
         // FROM 1.5.0
         // Check for common shell characters in a direct-action command
-
         let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
-
         for shellChar in shellChars {
             if (command as NSString).contains(shellChar) {
                 return true

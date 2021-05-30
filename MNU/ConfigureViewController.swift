@@ -317,8 +317,9 @@ final class ConfigureViewController:  NSViewController,
         // Get the Menu Item from the reference stored in the contextual menu item
         
         let menuItem: NSMenuItem = sender as! NSMenuItem
-        let item: MenuItem = menuItem.representedObject as! MenuItem
-        doEdit(item)
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doEdit(item)
+        }
     }
     
     
@@ -342,8 +343,6 @@ final class ConfigureViewController:  NSViewController,
         self.aivc.isEditing = true
         self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
-        self.aivc.itemScriptText.stringValue = ""
-        self.aivc.menuTitleText.stringValue = ""
         self.aivc.showSheet()
     }
     
