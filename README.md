@@ -15,6 +15,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
     - Added new default items.
     - Improved handling of spaces in direct commands’ path arguments.
     - Improved escape character handling.
+    - Improved script and script title field presentation when editing a script.
 - 1.5.2 *19 May 2021*
     - Correctly record the preference for starting MNU automatically at login.
     - Fix start up crash on systems that record binary values in Finder and GlobalDomain preferences in a different way to mine, eg. `1` vs `YES` (thanks to @jgoldhammer)
