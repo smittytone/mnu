@@ -1,4 +1,4 @@
-# MNU 1.6.0 #
+# MNU 1.6.1 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.6.1 *Unreleased*
 - 1.6.0 *6 June 2021*
     - Added iTerm2 support.
     - Added new default items.
