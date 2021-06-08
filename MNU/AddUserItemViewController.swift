@@ -257,7 +257,18 @@ final class AddUserItemViewController: NSViewController,
         var itemHasChanged: Bool = false
         let isOpenAction: Bool = self.openCheck.state == .on
         let isDirect: Bool = self.directCheck.state == .on
-
+        
+        // FROM 1.6.1
+        // For end to editing, to see if this fixes the 'no changes' issue
+        // with the TextFields
+        if let theText: NSText = self.itemScriptText.currentEditor() {
+            self.itemScriptText.endEditing(theText)
+        }
+        
+        if let theText: NSText = self.menuTitleText.currentEditor() {
+            self.menuTitleText.endEditing(theText)
+        }
+        
         // Check that we have valid field entries
         if self.itemScriptText.stringValue.count == 0 {
             // The field is blank, so warn the user
