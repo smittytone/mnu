@@ -1506,51 +1506,56 @@ final class AppDelegate: NSObject,
         //   'launchPath' -> 'executableURL',
         //   'launch()' -> 'run()'
 
-        let task: Process = Process()
-        task.executableURL = URL.init(fileURLWithPath: path)
-        if args.count > 0 { task.arguments = args }
+        // FROM 1.6.1
+        // Run the process on a secondary thread
+        let processQueue: DispatchQueue = DispatchQueue.init(label: "com.bps.mnu.process-q")
+        processQueue.async {
+            let task: Process = Process.init()
+            task.executableURL = URL.init(fileURLWithPath: path)
+            if args.count > 0 { task.arguments = args }
 
-        // Pipe out the output to avoid putting it in the log
-        let outputPipe: Pipe = Pipe()
-        task.standardOutput = outputPipe
-        task.standardError = outputPipe
+            // Pipe out the output to avoid putting it in the log
+            let outputPipe: Pipe = Pipe()
+            task.standardOutput = outputPipe
+            task.standardError = outputPipe
 
-        /*let outputHandle = outputPipe.fileHandleForReading
-        // WARNING THIS LEADS TO EXCESS CPU USAGE DURING RUN
-        var outString: String = ""
-        outputHandle.readabilityHandler = { fshandle in
-            if let line = String(data: fshandle.availableData, encoding: String.Encoding.utf8) {
-                outString += line
-            }
-        }*/
-
-        do {
-            try task.run()
-        } catch {
-            // The script exited with an error -- most likely it doesn't exist
-            showError("Command Error", "The app called by the MNU item doesn’t exist. Please check your code.")
-            return
-        }
-
-        if doBlock {
-            // Block until the task has completed (short tasks ONLY)
-            task.waitUntilExit()
-        }
-
-        if !task.isRunning {
-            if (task.terminationStatus != 0) {
-                // Command failed -- collect the output if there is any
-                // DOES THIS EVEN WORK?
-                let outputHandle: FileHandle = outputPipe.fileHandleForReading
-                var outString: String = ""
-                if let line: String = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
-                    outString = line
+            /*let outputHandle = outputPipe.fileHandleForReading
+            // WARNING THIS LEADS TO EXCESS CPU USAGE DURING RUN
+            var outString: String = ""
+            outputHandle.readabilityHandler = { fshandle in
+                if let line = String(data: fshandle.availableData, encoding: String.Encoding.utf8) {
+                    outString += line
                 }
+            }*/
 
-                if outString.count > 0 {
-                    self.showError("Command Error", "The MNU item’s command reported an error: \(outString)")
-                } else {
-                    self.showError("Command Error", "The MNU item’s command reported an error.\nExit code \(task.terminationStatus)")
+            do {
+                try task.run()
+            } catch {
+                // The script exited with an error -- most likely it doesn't exist
+                self.showError("Command Error", "The app called by the MNU item doesn’t exist. Please check your code.")
+                return
+            }
+
+            if doBlock {
+                // Block until the task has completed (short tasks ONLY)
+                task.waitUntilExit()
+            }
+
+            if !task.isRunning {
+                if (task.terminationStatus != 0) {
+                    // Command failed -- collect the output if there is any
+                    // DOES THIS EVEN WORK?
+                    let outputHandle: FileHandle = outputPipe.fileHandleForReading
+                    var outString: String = ""
+                    if let line: String = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
+                        outString = line
+                    }
+
+                    if outString.count > 0 {
+                        self.showError("Command Error", "The MNU item’s command reported an error: \(outString)")
+                    } else {
+                        self.showError("Command Error", "The MNU item’s command reported an error.\nExit code \(task.terminationStatus)")
+                    }
                 }
             }
         }
