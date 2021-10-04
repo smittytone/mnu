@@ -1,4 +1,4 @@
-# MNU 1.6.1 #
+# MNU 1.6.2 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.6.2 *Unreleased*
+    - Fix old, unchanged dates.
 - 1.6.1 *23 July 2021*
     - Call external processes, eg. Terminal, from a secondary thread.
     - Attempt to fix issue in which changes to a menu item's code are not registered.
