@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.6.2 *Unreleased*
+- 1.6.2 *5 October 2021*
     - Fix old, unchanged dates.
 - 1.6.1 *23 July 2021*
     - Call external processes, eg. Terminal, from a secondary thread.
