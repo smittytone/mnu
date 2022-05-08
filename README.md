@@ -1,4 +1,4 @@
-# MNU 1.6.2 #
+# MNU 1.6.3 #
 
 Please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -10,6 +10,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
+- 1.6.3 *Unreleased*
+    - Correct Help URL.
 - 1.6.2 *5 October 2021*
     - Fix old, unchanged dates.
 - 1.6.1 *23 July 2021*
@@ -86,7 +88,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Copyright ##
 
-MNU is copyright &copy; 2021, Tony Smith.
+MNU is copyright &copy; 2022, Tony Smith.
 
 ## Licence ##
 
