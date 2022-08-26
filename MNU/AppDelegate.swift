@@ -933,11 +933,16 @@ final class AppDelegate: NSObject,
                     menuItem.image = icons.object(at: item.iconIndex) as? NSImage
             }
         }
+        
+        if item.keyEquivalent != "" {
+            menuItem.keyEquivalent = item.keyEquivalent
+            menuItem.keyEquivalentModifierMask = NSEvent.ModifierFlags(rawValue: item.keyModFlags)
+        }
 
         return menuItem
     }
-
-
+    
+    
     private func addAppMenuItem(_ doSeparate: Bool) {
 
         // Add the app's control bar item

@@ -44,6 +44,9 @@ final class MenuItem: NSObject,
     var iconIndex: Int = 0              // Icon reference value (where applicable)
     // FROM 1.2.2
     var isDirect: Bool = false          // Does the command not appear in the Terminal?
+    // FROM 1.7.0
+    var keyEquivalent: String = ""      // Meny key equivalent
+    var keyModFlags: UInt = 0            // Modifier key field
 
 
     // MARK: NSCopying Functions
@@ -58,7 +61,11 @@ final class MenuItem: NSObject,
         itemCopy.isNew = self.isNew
         itemCopy.isHidden = self.isHidden
         itemCopy.iconIndex = self.iconIndex
+        // FROM 1.2.2
         itemCopy.isDirect = self.isDirect
+        // FROM 1.7.0
+        itemCopy.keyEquivalent = self.keyEquivalent
+        itemCopy.keyModFlags = self.keyModFlags
         return itemCopy
     }
 

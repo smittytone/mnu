@@ -89,8 +89,12 @@ struct Serializer {
         dict["icon"] = item.iconIndex
         dict["script"] = item.script
         dict["hidden"] = item.isHidden
+        // FROM 1.2.2
         dict["direct"] = item.isDirect
-
+        // FROM 1.7.0
+        dict["keyequivalent"] = item.keyEquivalent
+        dict["keymodflags"] = item.keyModFlags
+        
         return dict
     }
 
@@ -164,7 +168,11 @@ struct Serializer {
         newItem.type = dict["type"] as? Int ?? 1
         newItem.code = dict["code"] as? Int ?? 20
         newItem.isHidden = dict["hidden"] as? Bool ?? false
+        // FROM 1.2.2
         newItem.isDirect = dict["direct"] as? Bool ?? false
+        // FROM 1.7.0
+        newItem.keyEquivalent = dict["keyequivalent"] as? String ?? ""
+        newItem.keyModFlags = dict["keymodflags"] as? UInt ?? 0
         return newItem
     }
     
