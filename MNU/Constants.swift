@@ -86,4 +86,10 @@ struct MNU_CONSTANTS {
     static let MAX_ITEM_COUNT       = 25
     
     static let BASE_DEFAULT_COUNT   = 6
+    
+    // FROM 1.7.0
+    static let MOD_KEY_SHIFT        = 0
+    static let MOD_KEY_CMD          = 1
+    static let MOD_KEY_OPT          = 2
+    static let MOD_KEY_CTRL         = 3
 }

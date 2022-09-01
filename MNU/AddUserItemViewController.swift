@@ -48,6 +48,9 @@ final class AddUserItemViewController: NSViewController,
     @IBOutlet var openCheck: NSButton!
     // FROM 1.2.2
     @IBOutlet var directCheck: NSButton!
+    // FROM 1.7.0
+    @IBOutlet var modifierKeysSegment: NSSegmentedControl!
+    @IBOutlet var keyEquivalentText: NSTextField!
 
 
     // MARK: - Public Class Properties
@@ -199,6 +202,25 @@ final class AddUserItemViewController: NSViewController,
                 self.textCount.stringValue = "\(item.title.count)/30"
                 self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? .off : .on
                 self.directCheck.state = item.isDirect ? .on : .off
+                // FROM 1.7.0
+                self.keyEquivalentText.stringValue = item.keyEquivalent
+                
+                if item.keyModFlags & 0x01 != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: 0)
+                }
+                
+                if item.keyModFlags & 0x02 != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: 1)
+                }
+                
+                if item.keyModFlags & 0x04 != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: 2)
+                }
+                
+                if item.keyModFlags & 0x08 != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: 3)
+                }
+                
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
@@ -216,6 +238,9 @@ final class AddUserItemViewController: NSViewController,
             self.textCount.stringValue = "0/30"
             self.openCheck.state = .off
             self.directCheck.state = .off
+            // FROM 1.7.0
+            self.modifierKeysSegment.selectedSegment = -1
+            self.keyEquivalentText.stringValue = ""
         }
 
         // Present the sheet
@@ -353,6 +378,24 @@ final class AddUserItemViewController: NSViewController,
                         item.script = makeAbsolutePath(item.script)
                     }
                 }
+                
+                // FROM 1.7.0
+                if item.keyEquivalent != self.keyEquivalentText.stringValue {
+                    itemHasChanged = true
+                    item.keyEquivalent = self.keyEquivalentText.stringValue
+                }
+                
+                var modKeys: UInt = 0
+                for i: Int in 0..<self.modifierKeysSegment.segmentCount {
+                    if self.modifierKeysSegment.isSelected(forSegment: i) {
+                        modKeys |= (1 << i)
+                    }
+                }
+                
+                if item.keyModFlags != modKeys {
+                    itemHasChanged = true
+                    item.keyModFlags = modKeys
+                }
             }
         } else {
             // Process a new menu item
@@ -375,6 +418,14 @@ final class AddUserItemViewController: NSViewController,
             if isDirect {
                 if (newItem.script as NSString).contains("..") {
                     newItem.script = (newItem.script as NSString).standardizingPath
+                }
+            }
+            
+            // FROM 1.7.0
+            newItem.keyEquivalent = self.keyEquivalentText.stringValue
+            for i: Int in 0..<self.modifierKeysSegment.segmentCount {
+                if self.modifierKeysSegment.isSelected(forSegment: i) {
+                    newItem.keyModFlags |= (1 << i)
                 }
             }
 
@@ -579,6 +630,35 @@ final class AddUserItemViewController: NSViewController,
             // Whenever a character is entered, update the character count
             self.textCount.stringValue = "\(self.menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
             return;
+        }
+        
+        if sender == self.keyEquivalentText {
+            if self.keyEquivalentText.stringValue.count > 1 {
+                let index: String.Index = String.Index(utf16Offset: 1, in: self.keyEquivalentText.stringValue)
+                self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue.substring(from: index))
+            }
+            
+            // TODO Ignore modifiers or use to set the segmented control
+            if let event: NSEvent = NSApp.currentEvent {
+                if event.type == .keyDown {
+                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.shift.rawValue != 0 {
+                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_SHIFT)
+                    }
+                    
+                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.command.rawValue != 0 {
+                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CMD)
+                    }
+                    
+                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.option.rawValue != 0 {
+                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_OPT)
+                    }
+                    
+                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.control.rawValue != 0 {
+                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CTRL)
+                    }
+                }
+            }
+            
         }
     }
 
