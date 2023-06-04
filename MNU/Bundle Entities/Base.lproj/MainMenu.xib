@@ -937,7 +937,7 @@ Gw
                         </constraints>
                         <textFieldCell key="cell" id="cZB-Nx-ifb">
                             <font key="font" metaFont="system"/>
-                            <string key="title">Enter your comments (512 characters max.) in the space below and hit ‘Send’ to pass them on to us. We may not respond directly to your feedback, even if you include an email address in your comment.</string>
+                            <string key="title">Enter your comments (512 characters max.) in the space below and hit ‘Send’ to pass them to us. We may not respond directly to your feedback, even if you include an email address in your comment, but we can’t respond without an email address.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
