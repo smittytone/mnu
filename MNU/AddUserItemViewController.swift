@@ -118,19 +118,7 @@ final class AddUserItemViewController: NSViewController,
         image = NSImage.init(named: "picon_git")
         self.icons.add(image!)
 
-        // ROW 1 - Scripts
-        image = NSImage.init(named: "picon_python")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_node")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_as")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_ts")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_coffee")
-        self.icons.add(image!)
-
-        // ROW 2 - Services, Misc
+        // ROW 1 - Services, Misc
         image = NSImage.init(named: "picon_github")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_gitlab")
@@ -138,6 +126,18 @@ final class AddUserItemViewController: NSViewController,
         image = NSImage.init(named: "picon_brew")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_docker")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_multipass")
+        self.icons.add(image!)
+
+        // ROW 2 - Scripts
+        image = NSImage.init(named: "picon_python")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_node")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_as")
+        self.icons.add(image!)
+        image = NSImage.init(named: "picon_ts")
         self.icons.add(image!)
         image = NSImage.init(named: "picon_php")
         self.icons.add(image!)

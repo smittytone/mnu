@@ -250,7 +250,7 @@ class MNUTests: XCTestCase {
     
     func testMakeIconMatrix() throws {
 
-        let list = ["logo_generic", "logo_bash", "logo_brew", "logo_github", "logo_gitlab", "logo_python", "logo_node", "logo_java", "logo_lua", "logo_rust", "logo_perl", "logo_ruby", "logo_as", "logo_coffee", "logo_php", "logo_js", "logo_docker", "logo_doc", "logo_dir", "logo_app", "logo_cog", "logo_sync", "logo_power", "logo_mac", "logo_x"]
+        let list = ["logo_generic", "logo_bash", "logo_brew", "logo_github", "logo_gitlab", "logo_python", "logo_node", "logo_java", "logo_lua", "logo_rust", "logo_perl", "logo_ruby", "logo_as", "logo_multipass", "logo_php", "logo_js", "logo_docker", "logo_doc", "logo_dir", "logo_app", "logo_cog", "logo_sync", "logo_power", "logo_mac", "logo_x"]
 
         let icons = self.appDelegate.icons
         icons.removeAllObjects()

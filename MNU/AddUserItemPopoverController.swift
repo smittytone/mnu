@@ -64,16 +64,16 @@ final class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Code")
         self.tooltips.append("Git")
 
-        self.tooltips.append("Python")
-        self.tooltips.append("Node")
-        self.tooltips.append("AppleScript")
-        self.tooltips.append("TypeScript")
-        self.tooltips.append("CoffeeScript")
-
         self.tooltips.append("GitHub")
         self.tooltips.append("GitLab")
         self.tooltips.append("Homebrew")
         self.tooltips.append("Docker")
+        self.tooltips.append("Multipass")
+
+        self.tooltips.append("Python")
+        self.tooltips.append("Node")
+        self.tooltips.append("AppleScript")
+        self.tooltips.append("TypeScript")
         self.tooltips.append("PHP")
 
         self.tooltips.append("Web")

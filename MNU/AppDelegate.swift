@@ -448,8 +448,13 @@ final class AppDelegate: NSObject,
         arg += self.inDarkMode ? "true" : "false"
 
         // Run the AppleScript
-        let aps: NSAppleScript = NSAppleScript.init(source: arg)!
-        aps.executeAndReturnError(nil)
+        // FROM 1.7.0 -- Run off the main thread
+        let apsQueue: DispatchQueue = DispatchQueue.init(label: "com.bps.mnu.aps-q")
+        apsQueue.async {
+            if let aps: NSAppleScript = NSAppleScript.init(source: arg) {
+                aps.executeAndReturnError(nil)
+            }
+        }
 
         // Run the task
         // NOTE This code is no longer required, but retain it for reference
@@ -656,6 +661,25 @@ final class AppDelegate: NSObject,
                 if let itemInstance: MenuItem = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
+
+                    // FROM 1.7.0
+                    // Inject new keys + key mods for..
+                    // ... Switch mode
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE && itemInstance.keyEquivalent == "" {
+                        itemInstance.keyEquivalent = "z"
+                        itemInstance.keyModFlags = 12
+                    }
+
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE && itemInstance.keyEquivalent == ""  {
+                        itemInstance.keyEquivalent = "h"
+                        itemInstance.keyModFlags = 12
+                    }
+
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE && itemInstance.keyEquivalent == "" {
+                        itemInstance.keyEquivalent = "h"
+                        itemInstance.keyModFlags = 9
+                    }
+
                     let menuItem: NSMenuItem = makeNSMenuItem(itemInstance)
 
                     // If the item is not hidden, add it to the menu
@@ -671,7 +695,7 @@ final class AppDelegate: NSObject,
                     // We couldn't load one of the saved list of MNU items, so ask the user what to do
                     DispatchQueue.main.async {
                         let alert: NSAlert = NSAlert.init()
-                        alert.messageText = "Stored MNU items are damanged"
+                        alert.messageText = "Stored MNU items are damaged"
                         alert.informativeText = "Do you wish to continue with the default items?"
                         alert.addButton(withTitle: "Continue")
                         alert.addButton(withTitle: "Quit MNU")
@@ -990,7 +1014,7 @@ final class AppDelegate: NSObject,
             self.icons.add(image!)
             image = NSImage.init(named: "logo_ts")
             self.icons.add(image!)
-            image = NSImage.init(named: "logo_coffee")
+            image = NSImage.init(named: "logo_multipass")
             self.icons.add(image!)
             image = NSImage.init(named: "logo_github")
             self.icons.add(image!)
@@ -1035,6 +1059,8 @@ final class AppDelegate: NSObject,
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
         newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.keyEquivalent = "m"
+        newItem.keyModFlags = 0x08
         return newItem
     }
 
