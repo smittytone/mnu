@@ -104,7 +104,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
                                                 <rect key="frame" x="1" y="1" width="498" height="167"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="29" viewBased="YES" floatsGroupRows="NO" id="2ab-77-HWZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="167"/>
@@ -468,7 +468,8 @@
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qz0-WE-dEO">
                                             <rect key="frame" x="15" y="213" width="504" height="24"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="24" id="Q27-Ef-hxK"/>
+                                                <constraint firstAttribute="height" constant="24" id="T99-sT-gAZ"/>
+                                                <constraint firstAttribute="width" constant="500" id="vwf-f9-OPi"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="center" title="MNU" id="BtE-6Z-IDj">
                                                 <font key="font" size="16" name="HelveticaNeue-Bold"/>
@@ -479,7 +480,8 @@
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-9d-QDC">
                                             <rect key="frame" x="15" y="183" width="504" height="22"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="22" id="92R-MN-bvP"/>
+                                                <constraint firstAttribute="height" constant="22" id="ZRp-OU-Nvz"/>
+                                                <constraint firstAttribute="width" constant="500" id="z9j-Z4-KMr"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="center" title="macOS menu bar utility — a handy place for actions you perform every day" id="lQ6-Kq-y7Z">
                                                 <font key="font" metaFont="system"/>
@@ -490,7 +492,8 @@
                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pOe-I6-BRt">
                                             <rect key="frame" x="15" y="153" width="504" height="22"/>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="22" id="ElK-Xw-uUm"/>
+                                                <constraint firstAttribute="width" constant="500" id="c5G-3n-DCB"/>
+                                                <constraint firstAttribute="height" constant="22" id="cw6-ZP-UCP"/>
                                             </constraints>
                                             <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="center" title="Version 0.0.0 (0)" id="ALn-k5-85P">
                                                 <font key="font" metaFont="message" size="11"/>
@@ -498,11 +501,9 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzj-J5-dUM">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzj-J5-dUM">
                                             <rect key="frame" x="15" y="41" width="504" height="104"/>
-                                            <constraints>
-                                                <constraint firstAttribute="height" constant="104" id="kVf-TR-d8F"/>
-                                            </constraints>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" refusesFirstResponder="YES" allowsUndo="NO" alignment="center" id="Ndt-gO-aw4">
                                                 <font key="font" metaFont="label" size="9"/>
                                                 <string key="title">The software is provided “as is”, without warranty of any kind, express or implied, including but not limited to  the warranties of merchantability, fitness for a particular purpose and  non-infringement. in no event  shall the authors or copyright holders be liable for any claim, damages or other liability, whether in  an action of contract, tort or otherwise, arising from, out of or in connection with the software  or the use or other dealings in the software.  Organizaion logotypes used in menu icons remain the property of their respective organizations.  This software in no way claims ownership of those logotypes, and use of those logotypes does not imply any recommendation of this software by the owner organizations.</string>
@@ -513,8 +514,8 @@
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Kva-xe-wg0">
                                             <rect key="frame" x="203" y="10" width="128" height="28"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="70" id="R2u-IG-Tes"/>
-                                                <constraint firstAttribute="height" constant="16" id="nYR-RS-2kt"/>
+                                                <constraint firstAttribute="height" constant="16" id="3uo-vh-Qtm"/>
+                                                <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="114" id="o9D-3o-xYG"/>
                                             </constraints>
                                             <buttonCell key="cell" type="push" title="Send Feedback" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="9lM-RR-Zjw">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -526,20 +527,14 @@
                                         </button>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="OVH-9d-QDC" firstAttribute="top" secondItem="Qz0-WE-dEO" secondAttribute="bottom" constant="8" symbolic="YES" id="8lw-e4-VfG"/>
-                                        <constraint firstItem="pOe-I6-BRt" firstAttribute="top" secondItem="OVH-9d-QDC" secondAttribute="bottom" constant="8" symbolic="YES" id="8qR-7f-vLn"/>
-                                        <constraint firstAttribute="trailing" secondItem="OVH-9d-QDC" secondAttribute="trailing" constant="17" id="AVj-Lt-j2Z"/>
-                                        <constraint firstAttribute="trailing" secondItem="Qz0-WE-dEO" secondAttribute="trailing" constant="17" id="IQl-3g-cQr"/>
-                                        <constraint firstAttribute="trailing" secondItem="rzj-J5-dUM" secondAttribute="trailing" constant="17" id="Mqw-mJ-70W"/>
-                                        <constraint firstItem="pOe-I6-BRt" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="emc-L6-Yi2"/>
-                                        <constraint firstItem="rzj-J5-dUM" firstAttribute="top" secondItem="pOe-I6-BRt" secondAttribute="bottom" constant="8" symbolic="YES" id="fP3-MW-nBd"/>
-                                        <constraint firstItem="rzj-J5-dUM" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="hJY-Tr-mVV"/>
-                                        <constraint firstAttribute="trailing" secondItem="pOe-I6-BRt" secondAttribute="trailing" constant="17" id="hxT-c2-lnw"/>
-                                        <constraint firstItem="Qz0-WE-dEO" firstAttribute="top" secondItem="8RL-Pb-8R9" secondAttribute="top" constant="19" id="lGW-bg-pQw"/>
-                                        <constraint firstItem="Kva-xe-wg0" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="nqb-C6-sEE"/>
-                                        <constraint firstItem="OVH-9d-QDC" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="poG-rn-GVM"/>
-                                        <constraint firstAttribute="bottom" secondItem="Kva-xe-wg0" secondAttribute="bottom" constant="17" id="u6a-6P-T7Y"/>
-                                        <constraint firstItem="Qz0-WE-dEO" firstAttribute="leading" secondItem="8RL-Pb-8R9" secondAttribute="leading" constant="17" id="yco-4T-eDj"/>
+                                        <constraint firstItem="Qz0-WE-dEO" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="0Sd-wZ-QoD"/>
+                                        <constraint firstItem="OVH-9d-QDC" firstAttribute="top" secondItem="Qz0-WE-dEO" secondAttribute="bottom" constant="8" symbolic="YES" id="U7z-7a-rcG"/>
+                                        <constraint firstItem="OVH-9d-QDC" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="W2C-Xw-ibd"/>
+                                        <constraint firstItem="Qz0-WE-dEO" firstAttribute="top" secondItem="8RL-Pb-8R9" secondAttribute="top" constant="19" id="Y6c-hd-TdE"/>
+                                        <constraint firstItem="Kva-xe-wg0" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="kJ6-8a-26M"/>
+                                        <constraint firstAttribute="bottom" secondItem="Kva-xe-wg0" secondAttribute="bottom" constant="17" id="sKq-1r-anj"/>
+                                        <constraint firstItem="pOe-I6-BRt" firstAttribute="centerX" secondItem="8RL-Pb-8R9" secondAttribute="centerX" id="uVW-7x-b7i"/>
+                                        <constraint firstItem="pOe-I6-BRt" firstAttribute="top" secondItem="OVH-9d-QDC" secondAttribute="bottom" constant="8" symbolic="YES" id="ynT-O0-mwf"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
