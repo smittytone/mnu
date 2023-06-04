@@ -203,7 +203,7 @@ final class AddUserItemViewController: NSViewController,
                 self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? .off : .on
                 self.directCheck.state = item.isDirect ? .on : .off
                 // FROM 1.7.0
-                self.keyEquivalentText.stringValue = item.keyEquivalent
+                self.keyEquivalentText.stringValue = item.keyEquivalent.uppercased()
                 
                 if item.keyModFlags & 0x01 != 0 {
                     self.modifierKeysSegment.selectSegment(withTag: 0)
@@ -382,7 +382,7 @@ final class AddUserItemViewController: NSViewController,
                 // FROM 1.7.0
                 if item.keyEquivalent != self.keyEquivalentText.stringValue {
                     itemHasChanged = true
-                    item.keyEquivalent = self.keyEquivalentText.stringValue
+                    item.keyEquivalent = self.keyEquivalentText.stringValue.lowercased()
                 }
                 
                 var modKeys: UInt = 0
@@ -635,7 +635,8 @@ final class AddUserItemViewController: NSViewController,
         if sender == self.keyEquivalentText {
             if self.keyEquivalentText.stringValue.count > 1 {
                 let index: String.Index = String.Index(utf16Offset: 1, in: self.keyEquivalentText.stringValue)
-                self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue.substring(from: index))
+                //self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue.substring(from: index))
+                self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue[index...])
             }
             
             // TODO Ignore modifiers or use to set the segmented control
@@ -659,6 +660,7 @@ final class AddUserItemViewController: NSViewController,
                 }
             }
             
+            self.keyEquivalentText.stringValue = self.keyEquivalentText.stringValue.uppercased()
         }
     }
 
