@@ -29,13 +29,15 @@ class MNUTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    /*
     func testPerformanceExample() throws {
         // This is an example of a performance test case.
         measure {
             // Put the code you want to measure the time of here.
         }
     }
-
+     */
+    
     // MARK: Escaper Function Tests
 
     func testEscaper() throws {
@@ -282,12 +284,14 @@ class MNUTests: XCTestCase {
         let item: MenuItem = MenuItem()
         var result: String = Serializer.jsonize(item)
         print(result)
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}"#)
+        // Update for 1.7.0 -- add extra members
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1}"#)
 
         item.script = "open \"test\";"
         result = Serializer.jsonize(item)
         print(result)
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1}"#)
+        // Update for 1.7.0 -- add extra members
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"open \"test\";","title":"","type":-1}"#)
     }
 
 
@@ -297,8 +301,8 @@ class MNUTests: XCTestCase {
         let items: MenuItemList = MenuItemList()
         items.items.append(item)
         let result: String = Serializer.jsonizeAll(items)
-        print(result)
-        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}]}"#)
+        print("*** ",result)
+        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1}]}"#)
     }
 
 
