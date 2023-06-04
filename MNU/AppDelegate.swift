@@ -884,7 +884,20 @@ final class AppDelegate: NSObject,
         // Create and return an NSMenuItem for the specified Menu Item instance
         let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
                                                    action: nil,
-                                                   keyEquivalent: "")
+                                                   keyEquivalent: item.keyEquivalent)
+        
+        // FROM 1.7.0
+        // Implement key modifiers if required
+        if item.keyEquivalent.count > 0 {
+            var flags: NSEvent.ModifierFlags = []
+            if (item.keyModFlags & 0x01) != 0 { flags.insert(.shift) }
+            if (item.keyModFlags & 0x02) != 0 { flags.insert(.command) }
+            if (item.keyModFlags & 0x04) != 0 { flags.insert(.option) }
+            if (item.keyModFlags & 0x08) != 0 { flags.insert(.control) }
+            menuItem.keyEquivalentModifierMask = flags
+        }
+
+        // Reference the MenuItem instance
         menuItem.representedObject = item
 
         // Make item-specific changes
@@ -934,11 +947,6 @@ final class AppDelegate: NSObject,
             }
         }
         
-        if item.keyEquivalent != "" {
-            menuItem.keyEquivalent = item.keyEquivalent
-            menuItem.keyEquivalentModifierMask = NSEvent.ModifierFlags(rawValue: item.keyModFlags)
-        }
-
         return menuItem
     }
     
@@ -1095,6 +1103,7 @@ final class AppDelegate: NSObject,
         return newItem
     }
 
+
     // MARK: Show IP Address Trigger
 
     func makeShowIPScript() -> MenuItem {
@@ -1110,6 +1119,7 @@ final class AppDelegate: NSObject,
         return newItem
     }
 
+
     // MARK: Show Disk Usage Trigger
 
     func makeShowDiskFullScript() -> MenuItem {
@@ -1124,6 +1134,7 @@ final class AppDelegate: NSObject,
         newItem.iconIndex = 2
         return newItem
     }
+
 
     // MARK: Show Grab Window Trigger
 
@@ -1179,7 +1190,7 @@ final class AppDelegate: NSObject,
                                   "com.bps.mnu.new-defs-1-6"]
 
         let valueArray: [Any]  = [defaultItemArray,
-                                  [],
+                                  [Any](),
                                   false,
                                   true,
                                   false,
