@@ -336,7 +336,20 @@ final class AddUserItemViewController: NSViewController,
                 return
             }
         }
-        
+
+        // FROM 1.7.0
+        // Make sure a specified key equivalent AND any modifiers are unique
+        var modKeys: UInt = 0
+        for i: Int in 0..<self.modifierKeysSegment.segmentCount {
+            if self.modifierKeysSegment.isSelected(forSegment: i) {
+                modKeys |= (1 << i)
+            }
+        }
+
+        if !checkModifiers(modKeys) {
+            return
+        }
+
         if self.isEditing {
             // Save the updated fields
             if let item: MenuItem = self.newMenuItem {
@@ -385,13 +398,6 @@ final class AddUserItemViewController: NSViewController,
                     item.keyEquivalent = self.keyEquivalentText.stringValue.lowercased()
                 }
                 
-                var modKeys: UInt = 0
-                for i: Int in 0..<self.modifierKeysSegment.segmentCount {
-                    if self.modifierKeysSegment.isSelected(forSegment: i) {
-                        modKeys |= (1 << i)
-                    }
-                }
-                
                 if item.keyModFlags != modKeys {
                     itemHasChanged = true
                     item.keyModFlags = modKeys
@@ -423,11 +429,7 @@ final class AddUserItemViewController: NSViewController,
             
             // FROM 1.7.0
             newItem.keyEquivalent = self.keyEquivalentText.stringValue
-            for i: Int in 0..<self.modifierKeysSegment.segmentCount {
-                if self.modifierKeysSegment.isSelected(forSegment: i) {
-                    newItem.keyModFlags |= (1 << i)
-                }
-            }
+            newItem.keyModFlags = modKeys
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -574,6 +576,36 @@ final class AddUserItemViewController: NSViewController,
         }
 
         return returnPath
+    }
+
+
+    private func checkModifiers(_ modFlags: UInt) -> Bool {
+
+        if self.keyEquivalentText.stringValue == "" {
+            return true
+        }
+
+        if let list: MenuItemList = self.currentMenuItems {
+            if list.items.count > 0 {
+                var got: Bool = false
+                for item: MenuItem in list.items {
+                    if item.keyEquivalent == self.keyEquivalentText.stringValue.lowercased() &&
+                        item.keyModFlags == modFlags
+                    {
+                        got = true
+                        break
+                    }
+                }
+
+                if got {
+                    // The label is in use, so warn the user and exit the save
+                    showAlert("Key Equivalent and Modifiers in Use", "You must enter a unique key equivalent and modifier set.")
+                    return false
+                }
+            }
+        }
+
+        return true;
     }
 
 
