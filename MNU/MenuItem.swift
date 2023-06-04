@@ -46,7 +46,7 @@ final class MenuItem: NSObject,
     var isDirect: Bool = false          // Does the command not appear in the Terminal?
     // FROM 1.7.0
     var keyEquivalent: String = ""      // Meny key equivalent
-    var keyModFlags: UInt = 0            // Modifier key field
+    var keyModFlags: UInt = 0           // Modifier key field
 
 
     // MARK: NSCopying Functions
