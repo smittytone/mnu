@@ -4,7 +4,7 @@ For usage and other information, please see [the MNU web site](https://smittyton
 
 ### Development Scripts ###
 
-Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPEGs).
+Run `mnuprep.sh` from the `Scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPEGs).
 
 The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
