@@ -991,61 +991,14 @@ final class AppDelegate: NSObject,
     
     func makeIconMatrix() {
         
-        // Build the array of icons that we will use for the popover selector and the button
-        // that triggers its appearance
-        // NOTE There should be 25 icons in total in this release
+        // Build the array of icons that we will use for the popover selector
+        // and the button that triggers its appearance
 
         if self.icons.count == 0 {
-            var image: NSImage? = NSImage.init(named: "logo_generic")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_bash")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_z")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_code")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_git")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_python")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_node")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_as")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_ts")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_multipass")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_github")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_gitlab")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_brew")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_docker")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_php")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_web")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_cloud")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_doc")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_dir")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_app")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_cog")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_sync")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_power")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_mac")
-            self.icons.add(image!)
-            image = NSImage.init(named: "logo_x")
-            self.icons.add(image!)
+            for i in 0..<MNU_CONSTANTS.ICONS.count {
+                let image: NSImage? = NSImage.init(named: "logo_" + MNU_CONSTANTS.ICONS[i])
+                self.icons.add(image!)
+            }
         }
     }
     

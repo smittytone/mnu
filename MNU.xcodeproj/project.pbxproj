@@ -63,6 +63,11 @@
 		3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemCollectionViewItem.swift; sourceTree = "<group>"; };
 		3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AddUserItemCollectionViewItem.xib; sourceTree = "<group>"; };
 		3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemPopoverController.swift; sourceTree = "<group>"; };
+		3B910AF52A2DF45500650D14 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		3B910AF62A2DF45500650D14 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = SOURCE_ROOT; };
+		3B910AFC2A2DF55900650D14 /* mnuprep.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = mnuprep.sh; path = scripts/mnuprep.sh; sourceTree = "<group>"; };
+		3B910AFD2A2DF55900650D14 /* postinstall.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = postinstall.sh; path = scripts/postinstall.sh; sourceTree = "<group>"; };
+		3B910AFE2A2DF55900650D14 /* pak.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = pak.sh; path = scripts/pak.sh; sourceTree = "<group>"; };
 		3B9180B223439E3A00A5CE3B /* Serializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializer.swift; sourceTree = "<group>"; };
 		3BBEF08A22CEBD90001D1CCB /* ConfigureViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigureViewController.swift; sourceTree = "<group>"; };
 		3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemList.swift; sourceTree = "<group>"; };
@@ -116,6 +121,8 @@
 			children = (
 				3B083B7922CC3C2E0025F081 /* MNU */,
 				3B4DF32824C72D670065DAAE /* MNUTests */,
+				3B910AF42A2DF43000650D14 /* Text */,
+				3B910AFB2A2DF54200650D14 /* Scripts */,
 				3B083B7822CC3C2E0025F081 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -164,6 +171,25 @@
 			);
 			path = MNUTests;
 			sourceTree = "<group>";
+		};
+		3B910AF42A2DF43000650D14 /* Text */ = {
+			isa = PBXGroup;
+			children = (
+				3B910AF62A2DF45500650D14 /* LICENSE.md */,
+				3B910AF52A2DF45500650D14 /* README.md */,
+			);
+			name = Text;
+			sourceTree = "<group>";
+		};
+		3B910AFB2A2DF54200650D14 /* Scripts */ = {
+			isa = PBXGroup;
+			children = (
+				3B910AFC2A2DF55900650D14 /* mnuprep.sh */,
+				3B910AFE2A2DF55900650D14 /* pak.sh */,
+				3B910AFD2A2DF55900650D14 /* postinstall.sh */,
+			);
+			name = Scripts;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -444,7 +470,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 199;
+				CURRENT_PROJECT_VERSION = 200;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -471,7 +497,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 199;
+				CURRENT_PROJECT_VERSION = 200;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;

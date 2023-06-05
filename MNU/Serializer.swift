@@ -94,7 +94,7 @@ struct Serializer {
         // FROM 1.7.0
         dict["keyequivalent"] = item.keyEquivalent
         dict["keymodflags"] = item.keyModFlags
-        
+        dict["uuid"] = item.uuid
         return dict
     }
 
@@ -173,6 +173,7 @@ struct Serializer {
         // FROM 1.7.0
         newItem.keyEquivalent = dict["keyequivalent"] as? String ?? ""
         newItem.keyModFlags = dict["keymodflags"] as? UInt ?? 0
+        newItem.uuid = dict["uuid"] as? String ?? UUID().uuidString
         return newItem
     }
     

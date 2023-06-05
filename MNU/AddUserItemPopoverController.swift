@@ -58,6 +58,7 @@ final class AddUserItemPopoverController: NSViewController,
         super.viewDidLoad()
 
         // Add icon tooltips
+        // NOTE You MUST sync this with `MNU_CONSTANTS.ICONS`
         self.tooltips.append("Hash Bang")
         self.tooltips.append("Bash")
         self.tooltips.append("Z Shell")

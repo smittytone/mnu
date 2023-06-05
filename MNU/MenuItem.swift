@@ -45,8 +45,9 @@ final class MenuItem: NSObject,
     // FROM 1.2.2
     var isDirect: Bool = false          // Does the command not appear in the Terminal?
     // FROM 1.7.0
-    var keyEquivalent: String = ""      // Meny key equivalent
+    var keyEquivalent: String = ""      // Menu key equivalent
     var keyModFlags: UInt = 0           // Modifier key field
+    var uuid: String = UUID().uuidString
 
 
     // MARK: NSCopying Functions
@@ -66,6 +67,7 @@ final class MenuItem: NSObject,
         // FROM 1.7.0
         itemCopy.keyEquivalent = self.keyEquivalent
         itemCopy.keyModFlags = self.keyModFlags
+        itemCopy.uuid = self.uuid
         return itemCopy
     }
 

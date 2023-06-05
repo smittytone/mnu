@@ -102,69 +102,13 @@ final class AddUserItemViewController: NSViewController,
 
     private func makeIconMatrix() {
 
-        // Build the array of icons that we will use for the popover selector and the button
-        // that triggers its appearance
-        // NOTE There should be 16 icons in total in this release
-
-        // ROW 0 - Shell
-        var image: NSImage? = NSImage.init(named: "picon_generic")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_bash")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_z")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_code")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_git")
-        self.icons.add(image!)
-
-        // ROW 1 - Services, Misc
-        image = NSImage.init(named: "picon_github")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_gitlab")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_brew")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_docker")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_multipass")
-        self.icons.add(image!)
-
-        // ROW 2 - Scripts
-        image = NSImage.init(named: "picon_python")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_node")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_as")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_ts")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_php")
-        self.icons.add(image!)
-
-        // ROW 3 - Files
-        image = NSImage.init(named: "picon_web")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_cloud")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_doc")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_dir")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_app")
-        self.icons.add(image!)
-
-        // ROW 0 - Mac
-        image = NSImage.init(named: "picon_cog")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_sync")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_power")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_mac")
-        self.icons.add(image!)
-        image = NSImage.init(named: "picon_x")
-        self.icons.add(image!)
+        // Build the array of icons that we will use for the popover selector
+        // and the button that triggers its appearance
+        
+        for i in 0..<MNU_CONSTANTS.ICONS.count {
+            let image: NSImage? = NSImage.init(named: "picon_" + MNU_CONSTANTS.ICONS[i])
+            self.icons.add(image!)
+        }
     }
 
 
@@ -256,7 +200,7 @@ final class AddUserItemViewController: NSViewController,
         // we come here and set the button's image to that icon
         
         if let obj: Any = note.object {
-            // Decode the notifiction object
+            // Decode the notification object
             let index = obj as! NSNumber
             self.iconButton.image = self.icons.object(at: index.intValue) as? NSImage
             self.iconButton.index = index.intValue
@@ -587,20 +531,22 @@ final class AddUserItemViewController: NSViewController,
 
         if let list: MenuItemList = self.currentMenuItems {
             if list.items.count > 0 {
-                var got: Bool = false
-                for item: MenuItem in list.items {
-                    if item.keyEquivalent == self.keyEquivalentText.stringValue.lowercased() &&
-                        item.keyModFlags == modFlags
-                    {
-                        got = true
-                        break
+                if let newMenuItem: MenuItem = self.newMenuItem {
+                    var got: Bool = false
+                    for item: MenuItem in list.items {
+                        if item.uuid != newMenuItem.uuid &&
+                            item.keyEquivalent == self.keyEquivalentText.stringValue.lowercased() &&
+                            item.keyModFlags == modFlags {
+                            got = true
+                            break
+                        }
                     }
-                }
-
-                if got {
-                    // The label is in use, so warn the user and exit the save
-                    showAlert("Key Equivalent and Modifiers in Use", "You must enter a unique key equivalent and modifier set.")
-                    return false
+                    
+                    if got {
+                        // The label is in use, so warn the user and exit the save
+                        showAlert("Key Equivalent and Modifiers are in use", "You must enter a unique key equivalent and modifier set. Please do so, or remove the key")
+                        return false
+                    }
                 }
             }
         }

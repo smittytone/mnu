@@ -282,33 +282,37 @@ class MNUTests: XCTestCase {
     func testSerializerJsonize() throws {
 
         let item: MenuItem = MenuItem()
+        // Impose static UUID
+        item.uuid = "8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"
         var result: String = Serializer.jsonize(item)
         print(result)
         // Update for 1.7.0 -- add extra members
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1}"#)
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
 
         item.script = "open \"test\";"
         result = Serializer.jsonize(item)
         print(result)
         // Update for 1.7.0 -- add extra members
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"open \"test\";","title":"","type":-1}"#)
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"open \"test\";","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
     }
 
 
     func testSerializerJsonizeAll() throws {
 
         let item: MenuItem = MenuItem()
+        // Impose static UUID
+        item.uuid = "8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"
         let items: MenuItemList = MenuItemList()
         items.items.append(item)
         let result: String = Serializer.jsonizeAll(items)
         print("*** ",result)
-        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1}]}"#)
+        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}]}"#)
     }
 
 
     func testSerializerDejsonize() throws {
 
-        let jsonString: String = #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1}"#
+        let jsonString: String = #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#
         let menuItem: MenuItem? = Serializer.dejsonize(jsonString)
         if let item: MenuItem = menuItem {
             XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == -1 && item.script == "open \"test\";")
@@ -320,7 +324,7 @@ class MNUTests: XCTestCase {
 
     func testSerializerDejsonizeAll() throws {
 
-        let jsonString: String = #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1}]}"#
+        let jsonString: String = #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}]}"#
         if let jsonData: Data = jsonString.data(using: String.Encoding.utf8) {
             let menuItems: MenuItemList? = Serializer.dejsonizeAll(jsonData)
             if let items: MenuItemList = menuItems {

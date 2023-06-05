@@ -92,4 +92,14 @@ struct MNU_CONSTANTS {
     static let MOD_KEY_CMD          = 1
     static let MOD_KEY_OPT          = 2
     static let MOD_KEY_CTRL         = 3
+    
+    // THIS IS THE DEFINITIVE ICON ORDER
+    static let ICONS: [String] = [
+        "generic", "bash", "z", "code", "git",
+        "github", "gitlab", "brew", "docker", "multipass",
+        "python", "node", "as", "ts", "php",
+        "web", "cloud", "doc", "dir", "app",
+        "cog", "sync", "power", "mac", "x"
+    ]
+    
 }
