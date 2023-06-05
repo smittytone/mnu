@@ -2,7 +2,7 @@
 
 # Prep MNU images
 #
-# Version 1.0.2
+# Version 1.0.3
 
 # Function to show help info - keeps this out of the code
 showHelp() {
@@ -26,7 +26,7 @@ extension="png"
 argIsAValue=0
 iconType=0
 args=(-s -d)
-# Set required sizes (@2x will be created too:
+# Set required sizes (@2x, @3x will be created too:
 # 20 - Menu icon
 # 64 - Popover icon
 # 32 - About screen icon
@@ -52,6 +52,11 @@ m_a_make() {
     retinaSize=$(($size * 2))
     make "$1" "$destFolder/$destFile-$size@2x.$extension" "$retinaSize"
     echo "Writing icon size $retinaSize x $retinaSize ($size@2x)"
+    
+    # Make the retina-size image (@2x)
+    retinaSize=$(($size * 3))
+    make "$1" "$destFolder/$destFile-$size@3x.$extension" "$retinaSize"
+    echo "Writing icon size $retinaSize x $retinaSize ($size@3x)"
 }
 
 make() {
