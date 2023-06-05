@@ -1,8 +1,8 @@
 # MNU 1.7.0 #
 
-Please see [the MNU web site](https://smittytone.net/mnu/index.html).
+For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
-### Scripts ###
+### Development Scripts ###
 
 Run `mnuprep.sh` from the `scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPEGs).
 
@@ -11,7 +11,8 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 ## Release Notes ##
 
 - 1.7.0 *Unreleased*
-    - Add key equiavalents to menu items.
+    - Add key equiavalents with modifiers to menu items.
+    - Internal improvements.
 - 1.6.3 *8 May 2022*
     - Correct Help URL.
 - 1.6.2 *5 October 2021*
@@ -90,7 +91,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Copyright ##
 
-MNU is copyright &copy; 2022, Tony Smith.
+MNU is copyright &copy; 2023, Tony Smith.
 
 ## Licence ##
 
