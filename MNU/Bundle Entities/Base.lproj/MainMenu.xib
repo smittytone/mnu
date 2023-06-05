@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -104,7 +104,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
                                                 <rect key="frame" x="1" y="1" width="498" height="167"/>
-                                                <autoresizingMask key="autoresizingMask"/>
+                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="29" viewBased="YES" floatsGroupRows="NO" id="2ab-77-HWZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="498" height="167"/>
@@ -140,7 +140,7 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="458" y="2" width="21" height="26"/>
+                                                                                <rect key="frame" x="458" y="2" width="21.5" height="26"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="width" constant="20.5" id="rT4-fZ-1iD"/>
                                                                                 </constraints>
@@ -582,7 +582,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="384"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="560" height="384"/>
             <value key="maxSize" type="size" width="560" height="384"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="384"/>
@@ -769,10 +769,10 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dRt-Ip-nOQ">
-                        <rect key="frame" x="20" y="102" width="120" height="21"/>
+                        <rect key="frame" x="20" y="102" width="88" height="21"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="120" id="3Da-DG-cdA"/>
-                            <constraint firstAttribute="height" constant="21" id="3GJ-ee-26o"/>
+                            <constraint firstAttribute="height" constant="21" id="c87-rc-E8i"/>
+                            <constraint firstAttribute="width" constant="88" id="rzs-W9-ejQ"/>
                         </constraints>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" placeholderString="Optional key" drawsBackground="YES" usesSingleLineMode="YES" id="zZR-wK-Hej">
                             <font key="font" usesAppearanceFont="YES"/>
@@ -786,11 +786,25 @@ Gw
                             <outlet property="delegate" destination="8Wq-hu-xtq" id="Qks-Su-hXu"/>
                         </connections>
                     </textField>
-                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aL9-Qa-3Zh">
-                        <rect key="frame" x="145" y="101" width="226" height="24"/>
+                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ei3-AJ-4to">
+                        <rect key="frame" x="110" y="101" width="24" height="24"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="220" id="0PX-l9-0VX"/>
-                            <constraint firstAttribute="height" constant="20" id="Go1-ZZ-nez"/>
+                            <constraint firstAttribute="height" constant="24" id="2P5-1W-1y6"/>
+                            <constraint firstAttribute="width" constant="24" id="BGA-Rc-LZG"/>
+                        </constraints>
+                        <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="button_close" imagePosition="only" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="2A9-Mb-ARQ">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="smallSystem"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="doClearKeyWithSender:" target="8Wq-hu-xtq" id="Pzp-Tr-6xM"/>
+                        </connections>
+                    </button>
+                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aL9-Qa-3Zh">
+                        <rect key="frame" x="139" y="101" width="226" height="24"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="220" id="KBv-NA-wd8"/>
+                            <constraint firstAttribute="height" constant="20" id="X4K-PY-XX0"/>
                         </constraints>
                         <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="MdG-Iw-duJ">
                             <font key="font" metaFont="system"/>
@@ -809,25 +823,28 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="luN-mo-wfm" secondAttribute="trailing" constant="20" id="1WS-9u-ogB"/>
                     <constraint firstItem="Jm6-VI-8yC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nMY-bY-KwO" secondAttribute="trailing" constant="12" symbolic="YES" id="1vO-hK-XiY"/>
                     <constraint firstItem="3GM-GK-4Xv" firstAttribute="top" secondItem="v9D-Om-6Ns" secondAttribute="bottom" constant="8" id="3nT-dj-Ulo"/>
+                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="57i-Ek-8sA"/>
                     <constraint firstItem="VJE-2G-TZ5" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" constant="8" symbolic="YES" id="5vC-Yl-gvY"/>
                     <constraint firstAttribute="trailing" secondItem="WiG-6V-3VE" secondAttribute="trailing" constant="20" id="6YM-uH-ZL5"/>
                     <constraint firstAttribute="bottom" secondItem="nMY-bY-KwO" secondAttribute="bottom" constant="20" id="6fz-MM-huL"/>
                     <constraint firstAttribute="bottom" secondItem="Jm6-VI-8yC" secondAttribute="bottom" constant="20" id="AlL-Tz-aLF"/>
                     <constraint firstItem="3GM-GK-4Xv" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="AuE-DQ-efs"/>
+                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="BJI-jD-LBx"/>
                     <constraint firstItem="VJE-2G-TZ5" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="Cx9-QF-Jxd"/>
                     <constraint firstItem="Jm6-VI-8yC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="DJ5-xo-xYR"/>
                     <constraint firstAttribute="trailing" secondItem="Bc4-ey-6Gh" secondAttribute="trailing" constant="24" id="DPC-JD-Rfz"/>
                     <constraint firstItem="luN-mo-wfm" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="Dh1-fn-pb7"/>
                     <constraint firstItem="nMY-bY-KwO" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="ELe-KD-yuL"/>
+                    <constraint firstItem="ei3-AJ-4to" firstAttribute="leading" secondItem="dRt-Ip-nOQ" secondAttribute="trailing" constant="2" id="HxI-c8-GWB"/>
                     <constraint firstAttribute="trailing" secondItem="oWJ-xC-IC0" secondAttribute="trailing" constant="20" id="IAq-me-shK"/>
                     <constraint firstItem="RJf-rp-4EB" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="JBD-hm-ZQ1"/>
+                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="N56-xQ-Zbo"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="N5p-wj-63E"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="P1d-4x-bGj"/>
-                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="Qyf-rD-C5W"/>
-                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="leading" secondItem="dRt-Ip-nOQ" secondAttribute="trailing" constant="8" symbolic="YES" id="S2d-JG-5Wk"/>
                     <constraint firstAttribute="bottom" secondItem="mU3-js-THC" secondAttribute="bottom" constant="53" id="SDO-tL-ShM"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="SEp-aZ-qQR"/>
                     <constraint firstItem="Ujx-c9-tjN" firstAttribute="top" secondItem="RJf-rp-4EB" secondAttribute="bottom" constant="6" id="UBw-ha-RRM"/>
+                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="leading" secondItem="ei3-AJ-4to" secondAttribute="trailing" constant="8" symbolic="YES" id="W2T-L8-eF1"/>
                     <constraint firstItem="nMY-bY-KwO" firstAttribute="top" secondItem="TZc-Df-MOS" secondAttribute="bottom" constant="19" id="X3D-6s-PIV"/>
                     <constraint firstAttribute="trailing" secondItem="VJE-2G-TZ5" secondAttribute="trailing" constant="20" symbolic="YES" id="ZHI-RP-Pr0"/>
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="top" secondItem="luN-mo-wfm" secondAttribute="bottom" constant="8" id="bD5-kL-WuP"/>
@@ -838,15 +855,14 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="Ujx-c9-tjN" secondAttribute="trailing" constant="20" id="lJh-gz-4CE"/>
                     <constraint firstItem="Ujx-c9-tjN" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="lki-BM-wiu"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="top" secondItem="PIQ-xd-jED" secondAttribute="bottom" constant="8" id="lmv-ph-ZHY"/>
-                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="oXI-jT-7XW"/>
                     <constraint firstItem="WiG-6V-3VE" firstAttribute="leading" secondItem="Jm6-VI-8yC" secondAttribute="trailing" constant="12" id="pGg-79-wsz"/>
                     <constraint firstItem="luN-mo-wfm" firstAttribute="top" secondItem="Ujx-c9-tjN" secondAttribute="bottom" constant="25" id="qm4-xc-50o"/>
                     <constraint firstItem="mU3-js-THC" firstAttribute="leading" secondItem="TZc-Df-MOS" secondAttribute="trailing" constant="8" symbolic="YES" id="t7g-37-e1c"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="top" secondItem="kbT-Jg-8jd" secondAttribute="top" constant="12" id="tmL-kk-dAT"/>
                     <constraint firstItem="RJf-rp-4EB" firstAttribute="top" secondItem="3GM-GK-4Xv" secondAttribute="bottom" constant="8" id="uGC-7D-Hex"/>
-                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="vj1-08-UQa"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="top" secondItem="Bc4-ey-6Gh" secondAttribute="bottom" constant="16" id="wIs-ee-yxj"/>
                     <constraint firstAttribute="trailing" secondItem="3GM-GK-4Xv" secondAttribute="trailing" constant="20" id="wX2-QX-wv0"/>
+                    <constraint firstItem="ei3-AJ-4to" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="6" id="ySv-Ub-5La"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="736" y="266"/>
@@ -879,7 +895,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -1046,7 +1062,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
@@ -1076,10 +1092,10 @@ Gw
         </scrollView>
     </objects>
     <resources>
-        <image name="NSActionTemplate" width="19" height="19"/>
-        <image name="NSAddTemplate" width="18" height="16"/>
+        <image name="NSActionTemplate" width="20" height="20"/>
+        <image name="NSAddTemplate" width="18" height="17"/>
         <image name="NSStatusAvailable" width="16" height="16"/>
-        <image name="NSStopProgressFreestandingTemplate" width="19" height="19"/>
+        <image name="NSStopProgressFreestandingTemplate" width="20" height="20"/>
         <image name="button_close" width="20" height="20"/>
         <image name="button_configure" width="20" height="20"/>
         <image name="button_help" width="20" height="20"/>

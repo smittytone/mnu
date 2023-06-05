@@ -446,6 +446,14 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    @IBAction @objc func doClearKey(sender: Any) {
+
+        // FROM 1.7.0
+
+        self.keyEquivalentText.stringValue = ""
+    }
+
+
     // MARK: - Input Checker Functions
 
     private func checkLabel() -> Bool {
