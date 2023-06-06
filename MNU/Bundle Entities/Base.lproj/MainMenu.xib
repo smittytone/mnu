@@ -52,7 +52,7 @@
                         <action selector="doConfigureWithSender:" target="6lM-F5-yZG" id="MVl-Ut-vhS"/>
                     </connections>
                 </button>
-                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
+                <button horizontalHuggingPriority="750" verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="HNC-XV-ioA">
                     <rect key="frame" x="14" y="4" width="20" height="20"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="20" id="aG2-Fx-8v3"/>
@@ -590,6 +590,9 @@
             <view key="contentView" id="kbT-Jg-8jd">
                 <rect key="frame" x="0.0" y="0.0" width="560" height="384"/>
                 <autoresizingMask key="autoresizingMask"/>
+                <userGuides>
+                    <userLayoutGuide location="280" affinity="minX"/>
+                </userGuides>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WiG-6V-3VE">
                         <rect key="frame" x="480" y="13" width="67" height="33"/>
@@ -768,14 +771,11 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dRt-Ip-nOQ">
-                        <rect key="frame" x="20" y="102" width="88" height="21"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="21" id="c87-rc-E8i"/>
-                            <constraint firstAttribute="width" constant="88" id="rzs-W9-ejQ"/>
-                        </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="center" placeholderString="Optional key" drawsBackground="YES" usesSingleLineMode="YES" id="zZR-wK-Hej">
-                            <font key="font" usesAppearanceFont="YES"/>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="88" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dRt-Ip-nOQ">
+                        <rect key="frame" x="286" y="99" width="88" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="Key..." usesSingleLineMode="YES" bezelStyle="round" id="zZR-wK-Hej">
+                            <font key="font" metaFont="smallSystem"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                             <allowedInputSourceLocales>
@@ -786,12 +786,9 @@ Gw
                             <outlet property="delegate" destination="8Wq-hu-xtq" id="Qks-Su-hXu"/>
                         </connections>
                     </textField>
-                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ei3-AJ-4to">
-                        <rect key="frame" x="110" y="101" width="24" height="24"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="24" id="2P5-1W-1y6"/>
-                            <constraint firstAttribute="width" constant="24" id="BGA-Rc-LZG"/>
-                        </constraints>
+                    <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ei3-AJ-4to">
+                        <rect key="frame" x="357" y="102" width="14" height="14"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="rounded" image="button_close" imagePosition="only" alignment="center" controlSize="small" imageScaling="proportionallyDown" inset="2" id="2A9-Mb-ARQ">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="smallSystem"/>
@@ -800,18 +797,15 @@ Gw
                             <action selector="doClearKeyWithSender:" target="8Wq-hu-xtq" id="Pzp-Tr-6xM"/>
                         </connections>
                     </button>
-                    <segmentedControl verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="aL9-Qa-3Zh">
-                        <rect key="frame" x="139" y="101" width="226" height="24"/>
-                        <constraints>
-                            <constraint firstAttribute="width" constant="220" id="KBv-NA-wd8"/>
-                            <constraint firstAttribute="height" constant="20" id="X4K-PY-XX0"/>
-                        </constraints>
-                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fillEqually" style="rounded" trackingMode="selectAny" id="MdG-Iw-duJ">
+                    <segmentedControl verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aL9-Qa-3Zh">
+                        <rect key="frame" x="119" y="99" width="162" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <segmentedCell key="cell" borderStyle="border" alignment="left" segmentDistribution="fill" style="rounded" trackingMode="selectAny" id="MdG-Iw-duJ">
                             <font key="font" metaFont="system"/>
                             <segments>
-                                <segment alignment="natural" image="key_mod_sft" width="54"/>
-                                <segment image="key_mod_cmd" width="54" selected="YES" tag="1"/>
-                                <segment image="key_mod_opt" width="54"/>
+                                <segment alignment="natural" image="key_mod_sft" width="38"/>
+                                <segment image="key_mod_cmd" width="38" selected="YES" tag="1"/>
+                                <segment image="key_mod_opt" width="38"/>
                                 <segment image="key_mod_ctl" tag="3"/>
                             </segments>
                         </segmentedCell>
@@ -823,28 +817,23 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="luN-mo-wfm" secondAttribute="trailing" constant="20" id="1WS-9u-ogB"/>
                     <constraint firstItem="Jm6-VI-8yC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nMY-bY-KwO" secondAttribute="trailing" constant="12" symbolic="YES" id="1vO-hK-XiY"/>
                     <constraint firstItem="3GM-GK-4Xv" firstAttribute="top" secondItem="v9D-Om-6Ns" secondAttribute="bottom" constant="8" id="3nT-dj-Ulo"/>
-                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="57i-Ek-8sA"/>
                     <constraint firstItem="VJE-2G-TZ5" firstAttribute="top" secondItem="oWJ-xC-IC0" secondAttribute="bottom" constant="8" symbolic="YES" id="5vC-Yl-gvY"/>
                     <constraint firstAttribute="trailing" secondItem="WiG-6V-3VE" secondAttribute="trailing" constant="20" id="6YM-uH-ZL5"/>
                     <constraint firstAttribute="bottom" secondItem="nMY-bY-KwO" secondAttribute="bottom" constant="20" id="6fz-MM-huL"/>
                     <constraint firstAttribute="bottom" secondItem="Jm6-VI-8yC" secondAttribute="bottom" constant="20" id="AlL-Tz-aLF"/>
                     <constraint firstItem="3GM-GK-4Xv" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="AuE-DQ-efs"/>
-                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="BJI-jD-LBx"/>
                     <constraint firstItem="VJE-2G-TZ5" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="Cx9-QF-Jxd"/>
                     <constraint firstItem="Jm6-VI-8yC" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="DJ5-xo-xYR"/>
                     <constraint firstAttribute="trailing" secondItem="Bc4-ey-6Gh" secondAttribute="trailing" constant="24" id="DPC-JD-Rfz"/>
                     <constraint firstItem="luN-mo-wfm" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="Dh1-fn-pb7"/>
                     <constraint firstItem="nMY-bY-KwO" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="ELe-KD-yuL"/>
-                    <constraint firstItem="ei3-AJ-4to" firstAttribute="leading" secondItem="dRt-Ip-nOQ" secondAttribute="trailing" constant="2" id="HxI-c8-GWB"/>
                     <constraint firstAttribute="trailing" secondItem="oWJ-xC-IC0" secondAttribute="trailing" constant="20" id="IAq-me-shK"/>
                     <constraint firstItem="RJf-rp-4EB" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="JBD-hm-ZQ1"/>
-                    <constraint firstItem="dRt-Ip-nOQ" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="8" symbolic="YES" id="N56-xQ-Zbo"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="N5p-wj-63E"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="P1d-4x-bGj"/>
                     <constraint firstAttribute="bottom" secondItem="mU3-js-THC" secondAttribute="bottom" constant="53" id="SDO-tL-ShM"/>
                     <constraint firstItem="Bc4-ey-6Gh" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="SEp-aZ-qQR"/>
                     <constraint firstItem="Ujx-c9-tjN" firstAttribute="top" secondItem="RJf-rp-4EB" secondAttribute="bottom" constant="6" id="UBw-ha-RRM"/>
-                    <constraint firstItem="aL9-Qa-3Zh" firstAttribute="leading" secondItem="ei3-AJ-4to" secondAttribute="trailing" constant="8" symbolic="YES" id="W2T-L8-eF1"/>
                     <constraint firstItem="nMY-bY-KwO" firstAttribute="top" secondItem="TZc-Df-MOS" secondAttribute="bottom" constant="19" id="X3D-6s-PIV"/>
                     <constraint firstAttribute="trailing" secondItem="VJE-2G-TZ5" secondAttribute="trailing" constant="20" symbolic="YES" id="ZHI-RP-Pr0"/>
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="top" secondItem="luN-mo-wfm" secondAttribute="bottom" constant="8" id="bD5-kL-WuP"/>
@@ -862,7 +851,6 @@ Gw
                     <constraint firstItem="RJf-rp-4EB" firstAttribute="top" secondItem="3GM-GK-4Xv" secondAttribute="bottom" constant="8" id="uGC-7D-Hex"/>
                     <constraint firstItem="v9D-Om-6Ns" firstAttribute="top" secondItem="Bc4-ey-6Gh" secondAttribute="bottom" constant="16" id="wIs-ee-yxj"/>
                     <constraint firstAttribute="trailing" secondItem="3GM-GK-4Xv" secondAttribute="trailing" constant="20" id="wX2-QX-wv0"/>
-                    <constraint firstItem="ei3-AJ-4to" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="6" id="ySv-Ub-5La"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="736" y="266"/>
