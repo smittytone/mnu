@@ -14,6 +14,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
     - Add key equiavalents with modifiers to menu items.
     - Internal improvements.
     - Fix crash on clicking any help button.
+    - Fix feedback system.
 - 1.6.3 *8 May 2022*
     - Correct Help URL.
 - 1.6.2 *5 October 2021*

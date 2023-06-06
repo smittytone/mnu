@@ -106,7 +106,7 @@ final class FeedbackSheetViewController: NSViewController,
             dict.setObject(dataString, forKey: NSString.init(string: "text"))
             dict.setObject(true, forKey: NSString.init(string: "mrkdown"))
 
-            if let url: URL = URL.init(string: MNU_SECRETS.ADDRESS.A + MNU_SECRETS.ADDRESS.B) {
+            if let url: URL = URL.init(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
                 var request: URLRequest = URLRequest.init(url: url)
                 request.httpMethod = "POST"
                 do {
@@ -161,6 +161,9 @@ final class FeedbackSheetViewController: NSViewController,
                 self.parentWindow!.endSheet(self.feedbackSheet)
             }
         }
+
+        // FROM 1.7.0 -- Stop the animation
+        self.connectionProgress.stopAnimation(self)
     }
 
     
