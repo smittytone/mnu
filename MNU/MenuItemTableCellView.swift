@@ -37,6 +37,7 @@ final class MenuItemTableCellView: NSTableCellView {
     @IBOutlet weak var title: NSTextField!
     @IBOutlet weak var buttonA: MenuItemTableCellButton!
     @IBOutlet weak var buttonB: MenuItemTableCellButton!
-    @IBOutlet weak var buttonC: MenuItemTableCellButton!
-    
+    // FROM 1.7.0
+    // @IBOutlet weak var buttonC: MenuItemTableCellButton!
+    @IBOutlet var cellSwitch: MenuItemTableCellSwitch!
 }

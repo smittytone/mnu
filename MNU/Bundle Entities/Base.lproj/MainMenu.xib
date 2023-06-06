@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -129,7 +129,7 @@
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
-                                                                                <rect key="frame" x="1" y="7" width="400" height="16"/>
+                                                                                <rect key="frame" x="1" y="7" width="96" height="16"/>
                                                                                 <constraints>
                                                                                     <constraint firstAttribute="height" constant="16" id="sCN-tI-Rj8"/>
                                                                                 </constraints>
@@ -140,9 +140,10 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="458" y="2" width="21.5" height="26"/>
+                                                                                <rect key="frame" x="458" y="2" width="21" height="26"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="20.5" id="rT4-fZ-1iD"/>
+                                                                                    <constraint firstAttribute="width" constant="21" id="IxR-5F-CBK"/>
+                                                                                    <constraint firstAttribute="height" constant="20" id="THY-tR-4Q6"/>
                                                                                 </constraints>
                                                                                 <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSStopProgressFreestandingTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="CNG-Ta-pgV">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -152,42 +153,36 @@
                                                                             <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tru-Xv-LMc" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
                                                                                 <rect key="frame" x="430" y="2" width="20" height="26"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="20" id="rLj-JF-UE0"/>
+                                                                                    <constraint firstAttribute="width" constant="20" id="NBk-VW-UQo"/>
+                                                                                    <constraint firstAttribute="height" constant="20" id="e8j-ni-Wed"/>
                                                                                 </constraints>
                                                                                 <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSActionTemplate" imagePosition="only" controlSize="large" imageScaling="proportionallyUpOrDown" inset="2" id="zLg-ls-krn">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="system"/>
                                                                                 </buttonCell>
                                                                             </button>
-                                                                            <button verticalHuggingPriority="750" allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="PoR-bt-W7F" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="402" y="5" width="20" height="20"/>
+                                                                            <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="UJM-JJ-409" customClass="MenuItemTableCellSwitch" customModule="MNU" customModuleProvider="target">
+                                                                                <rect key="frame" x="388" y="4" width="36" height="21"/>
                                                                                 <constraints>
-                                                                                    <constraint firstAttribute="width" constant="20" id="HWn-ep-XsF"/>
+                                                                                    <constraint firstAttribute="width" constant="32" id="aKx-Xk-mXZ"/>
+                                                                                    <constraint firstAttribute="height" constant="18" id="zAz-fC-TlY"/>
                                                                                 </constraints>
-                                                                                <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSStatusAvailable" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="Ewa-60-kKY">
-                                                                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                                                                    <font key="font" metaFont="smallSystemBold"/>
-                                                                                </buttonCell>
-                                                                            </button>
+                                                                            </switch>
                                                                         </subviews>
                                                                         <constraints>
-                                                                            <constraint firstItem="PoR-bt-W7F" firstAttribute="top" secondItem="Tru-Xv-LMc" secondAttribute="top" id="8it-Hw-1Z0"/>
-                                                                            <constraint firstItem="PoR-bt-W7F" firstAttribute="leading" secondItem="n7Y-Oz-8fP" secondAttribute="trailing" constant="3" id="GO7-G7-uNc"/>
-                                                                            <constraint firstItem="n7Y-Oz-8fP" firstAttribute="centerY" secondItem="PoR-bt-W7F" secondAttribute="centerY" id="Q1J-lx-Rl4"/>
-                                                                            <constraint firstItem="Tru-Xv-LMc" firstAttribute="leading" secondItem="PoR-bt-W7F" secondAttribute="trailing" constant="8" symbolic="YES" id="Tl2-Ql-Eyv"/>
+                                                                            <constraint firstItem="XTp-QK-fn6" firstAttribute="centerY" secondItem="Yb8-Cl-6kq" secondAttribute="centerY" id="R8R-Cc-6SM"/>
+                                                                            <constraint firstItem="Tru-Xv-LMc" firstAttribute="leading" secondItem="UJM-JJ-409" secondAttribute="trailing" constant="8" symbolic="YES" id="TT8-T0-HRG"/>
                                                                             <constraint firstItem="n7Y-Oz-8fP" firstAttribute="top" secondItem="Yb8-Cl-6kq" secondAttribute="top" constant="6" id="XM4-bE-FHJ"/>
-                                                                            <constraint firstItem="Tru-Xv-LMc" firstAttribute="bottom" secondItem="XTp-QK-fn6" secondAttribute="bottom" id="dlZ-4p-TiO"/>
-                                                                            <constraint firstItem="PoR-bt-W7F" firstAttribute="top" secondItem="Yb8-Cl-6kq" secondAttribute="top" constant="4" id="e55-am-eSP"/>
-                                                                            <constraint firstItem="Tru-Xv-LMc" firstAttribute="top" secondItem="XTp-QK-fn6" secondAttribute="top" id="n3g-7e-W7t"/>
-                                                                            <constraint firstItem="XTp-QK-fn6" firstAttribute="leading" secondItem="Tru-Xv-LMc" secondAttribute="trailing" constant="8" symbolic="YES" id="utJ-4d-VjC"/>
+                                                                            <constraint firstAttribute="trailing" secondItem="XTp-QK-fn6" secondAttribute="trailing" constant="10" id="c0Z-KA-ydQ"/>
+                                                                            <constraint firstItem="UJM-JJ-409" firstAttribute="centerY" secondItem="Yb8-Cl-6kq" secondAttribute="centerY" id="dwd-Bd-K4v"/>
+                                                                            <constraint firstItem="Tru-Xv-LMc" firstAttribute="centerY" secondItem="Yb8-Cl-6kq" secondAttribute="centerY" id="e8B-JR-Lo7"/>
+                                                                            <constraint firstItem="XTp-QK-fn6" firstAttribute="leading" secondItem="Tru-Xv-LMc" secondAttribute="trailing" constant="8" symbolic="YES" id="hyF-xI-PuL"/>
                                                                             <constraint firstItem="n7Y-Oz-8fP" firstAttribute="leading" secondItem="Yb8-Cl-6kq" secondAttribute="leading" constant="3" id="wix-Ye-V06"/>
-                                                                            <constraint firstAttribute="trailing" secondItem="XTp-QK-fn6" secondAttribute="trailing" constant="10.5" id="wmC-aq-ymB"/>
-                                                                            <constraint firstItem="PoR-bt-W7F" firstAttribute="bottom" secondItem="Tru-Xv-LMc" secondAttribute="bottom" id="yqi-4f-YaD"/>
                                                                         </constraints>
                                                                         <connections>
                                                                             <outlet property="buttonA" destination="XTp-QK-fn6" id="HuR-vc-nTG"/>
                                                                             <outlet property="buttonB" destination="Tru-Xv-LMc" id="jQm-Eh-h8c"/>
-                                                                            <outlet property="buttonC" destination="PoR-bt-W7F" id="53u-fs-l4N"/>
+                                                                            <outlet property="cellSwitch" destination="UJM-JJ-409" id="bDU-LJ-6oj"/>
                                                                             <outlet property="textField" destination="n7Y-Oz-8fP" id="FbI-9T-PNn"/>
                                                                             <outlet property="title" destination="n7Y-Oz-8fP" id="RUk-SB-LQg"/>
                                                                         </connections>
@@ -241,7 +236,7 @@
                                             </connections>
                                         </button>
                                         <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cw2-9R-dHW">
-                                            <rect key="frame" x="51" y="49" width="29" height="23"/>
+                                            <rect key="frame" x="43" y="49" width="29" height="23"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" constant="27" id="vYd-sP-oxs"/>
                                             </constraints>
@@ -267,8 +262,8 @@
                                                 <action selector="doSaveWithSender:" target="qtv-Yg-ACO" id="ru7-sN-Ktb"/>
                                             </connections>
                                         </button>
-                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAX-ej-8rF">
-                                            <rect key="frame" x="85" y="53" width="434" height="16"/>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAX-ej-8rF">
+                                            <rect key="frame" x="77" y="53" width="442" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="430" id="9Ac-9x-Y70"/>
                                                 <constraint firstAttribute="height" constant="16" id="cNY-1x-pbx"/>
@@ -281,7 +276,7 @@
                                         </textField>
                                     </subviews>
                                     <constraints>
-                                        <constraint firstItem="cw2-9R-dHW" firstAttribute="leading" secondItem="Xos-L3-Lxi" secondAttribute="trailing" constant="8" id="1cx-bV-qOe"/>
+                                        <constraint firstItem="cw2-9R-dHW" firstAttribute="leading" secondItem="Xos-L3-Lxi" secondAttribute="trailing" id="1cx-bV-qOe"/>
                                         <constraint firstItem="nVn-04-17X" firstAttribute="top" secondItem="Xos-L3-Lxi" secondAttribute="bottom" constant="8" id="Bz7-TO-LsN"/>
                                         <constraint firstAttribute="trailing" secondItem="3gR-ck-alF" secondAttribute="trailing" constant="17" id="C9Z-5h-Dpx"/>
                                         <constraint firstItem="3gR-ck-alF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nVn-04-17X" secondAttribute="trailing" constant="12" symbolic="YES" id="Nov-RX-S4I"/>
@@ -582,7 +577,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="384"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="560" height="384"/>
             <value key="maxSize" type="size" width="560" height="384"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="384"/>
@@ -883,7 +878,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
@@ -1050,7 +1045,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
@@ -1080,10 +1075,9 @@ Gw
         </scrollView>
     </objects>
     <resources>
-        <image name="NSActionTemplate" width="20" height="20"/>
-        <image name="NSAddTemplate" width="18" height="17"/>
-        <image name="NSStatusAvailable" width="16" height="16"/>
-        <image name="NSStopProgressFreestandingTemplate" width="20" height="20"/>
+        <image name="NSActionTemplate" width="19" height="19"/>
+        <image name="NSAddTemplate" width="18" height="16"/>
+        <image name="NSStopProgressFreestandingTemplate" width="19" height="19"/>
         <image name="button_close" width="20" height="20"/>
         <image name="button_configure" width="20" height="20"/>
         <image name="button_help" width="20" height="20"/>

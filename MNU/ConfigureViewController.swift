@@ -89,8 +89,10 @@ final class ConfigureViewController:  NSViewController,
     private var systemVersion: Int = 10
     // FROM 1.1.0
     private var extrasMenu: NSMenu? = nil
+    // FROM 1.7.0
+    private var systemVersionMinor: Int = 14
     
-
+    
     // MARK: - Lifecycle Functions
 
     override func viewDidLoad() {
@@ -102,7 +104,8 @@ final class ConfigureViewController:  NSViewController,
         // according to whether we're on Catalina or under, or Big Sur and up
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
         self.systemVersion = sysVer.majorVersion
-
+        self.systemVersionMinor = sysVer.minorVersion
+        
         // Ask our window to make the  first responder (for key presses)
         self.configureWindow = self.view.window
         self.configureWindow!.makeFirstResponder(self)
@@ -127,10 +130,10 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.1.0
         // Prepare the extras... button
         self.extrasMenu = NSMenu()
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU Items...", action: #selector(self.doExport), keyEquivalent: ""))
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Import Items...", action: #selector(self.doImport), keyEquivalent: ""))
-        //self.extrasMenu!.addItem(NSMenuItem.separator())
-        //self.extrasMenu!.addItem(NSMenuItem.init(title: "Show Help...", action: #selector(self.doExtraHelp), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU data...", action: #selector(self.doExport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore MNU data...", action: #selector(self.doImport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.separator())
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Send feedback...", action: #selector(self.submitFeedback), keyEquivalent: ""))
 
         // FROM 1.1.0
         // Add tooltips: Menu Items Tab
@@ -291,8 +294,8 @@ final class ConfigureViewController:  NSViewController,
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
         
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
+        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
+        if let item: MenuItem = theSwitch.menuItem {
             doShowHide(item)
         }
     }
@@ -673,14 +676,14 @@ final class ConfigureViewController:  NSViewController,
                 cell!.buttonB.isEnabled = true
                 cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonB.menuItem = item
-
-                cell!.buttonC.image = NSImage.init(named: (item.isHidden ? "NSStatusUnavailable" : "NSStatusAvailable"))
-                cell!.buttonC.action = #selector(self.doShowHideSwitch(sender:))
-                cell!.buttonC.toolTip = "Show/Hide Item"
-                cell!.buttonC.isEnabled = true
-                cell!.buttonC.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
-                cell!.buttonC.menuItem = item
-
+                
+                // FROM 1.7.0
+                // Drop Button C (red/green image button) in favour of a switch
+                cell!.cellSwitch.menuItem = item
+                cell!.cellSwitch.state = item.isHidden ? .off : .on
+                cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
+                cell!.cellSwitch.toolTip = "Show/Hide Item"
+                
                 if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false

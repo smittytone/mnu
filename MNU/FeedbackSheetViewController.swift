@@ -219,7 +219,8 @@ final class FeedbackSheetViewController: NSViewController,
         let app: String = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
         let version: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-        return "\(app)/\(version)-\(build) (Mac macOS \(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
+        // FROM 1.7.0 -- standardise user agent format
+        return "\(app)/\(version)-\(build) (macOS/\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
     }
 
 }
