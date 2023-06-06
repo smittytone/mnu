@@ -663,14 +663,14 @@ final class ConfigureViewController:  NSViewController,
                 // NOTE 'buttonA' is the right-most button
                 cell!.title.stringValue = item.title
                 
-                cell!.buttonA.image = NSImage.init(named: "NSStopProgressFreestandingTemplate")
+                cell!.buttonA.image = NSImage.init(named: "NSTouchBarDeleteTemplate")
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.toolTip = "Delete Item"
                 cell!.buttonA.isEnabled = true
                 cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
-                cell!.buttonB.image = NSImage.init(named: "NSActionTemplate")
+                cell!.buttonB.image = NSImage.init(named: "NSTouchBarComposeTemplate")
                 cell!.buttonB.action = #selector(self.doEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit Item"
                 cell!.buttonB.isEnabled = true
