@@ -399,8 +399,10 @@ final class AddUserItemViewController: NSViewController,
 
         // Show the 'Help' via the website
         // TODO provide offline help
-        
-        NSWorkspace.shared.open(URL.init(string:MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items")!)
+
+        if let helpURL: URL = URL.init(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
+            NSWorkspace.shared.open(helpURL)
+        }
     }
 
 

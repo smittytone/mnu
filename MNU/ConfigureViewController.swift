@@ -507,7 +507,10 @@ final class ConfigureViewController:  NSViewController,
         var path: String = MNU_SECRETS.WEBSITE.URL_MAIN
         let button: NSButton = sender as! NSButton
         path += button == self.prefsHelpButton ? "#mnu-preferences" : "#how-to-configure-mnu"
-        NSWorkspace.shared.open(URL.init(string:path)!)
+
+        if let helpURL: URL = URL.init(string: path) {
+            NSWorkspace.shared.open(helpURL)
+        }
     }
     
     

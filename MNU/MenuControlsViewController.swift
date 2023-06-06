@@ -78,7 +78,9 @@ final class MenuControlsViewController: NSViewController {
 
         // Show the 'Help' via the website
         // TODO provide offline help
-        NSWorkspace.shared.open(URL.init(string:MNU_SECRETS.WEBSITE.URL_MAIN)!)
+        if let helpURL: URL = URL.init(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-use-mnu") {
+            NSWorkspace.shared.open(helpURL)
+        }
     }
 
 
