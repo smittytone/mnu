@@ -31,13 +31,14 @@ import Cocoa
 
 
 final class FeedbackSheetViewController: NSViewController,
+                                         NSTextFieldDelegate,
                                          URLSessionDelegate,
                                          URLSessionDataDelegate {
 
     // MARK: - UI Outlets
 
     @IBOutlet var feedbackSheet: NSWindow!
-    @IBOutlet var feedbackText: NSTextField!
+    @IBOutlet var feedbackText: AddUserItemTextField!
     @IBOutlet var connectionProgress: NSProgressIndicator!
     
 
@@ -59,6 +60,8 @@ final class FeedbackSheetViewController: NSViewController,
         // Reset the UI
         self.connectionProgress.stopAnimation(self)
         self.feedbackText.stringValue = ""
+        self.feedbackText.isEditable = true
+        self.feedbackText.becomeFirstResponder()
 
         // Present the sheet
         if let window = self.parentWindow {
@@ -73,7 +76,13 @@ final class FeedbackSheetViewController: NSViewController,
     @IBAction @objc func doCancel(sender: Any?) {
 
         // User has clicked 'Cancel', so just close the sheet
-        
+
+        // FROM 1.7.0 -- stop editing the NSTextField
+        if let theText: NSText = self.feedbackText.currentEditor() {
+            self.feedbackText.endEditing(theText)
+        }
+
+        // Close the sheet
         self.parentWindow!.endSheet(self.feedbackSheet)
         self.parentWindow = nil
     }
@@ -157,6 +166,11 @@ final class FeedbackSheetViewController: NSViewController,
             alert.informativeText = "Your comments have been received and we’ll take a look at them shortly."
             alert.addButton(withTitle: "OK")
             alert.beginSheetModal(for: self.feedbackSheet) { (resp) in
+                // FROM 1.7.0 -- stop editing the NSTextField
+                if let theText: NSText = self.feedbackText.currentEditor() {
+                    self.feedbackText.endEditing(theText)
+                }
+
                 // Close the feedback window when the modal alert returns
                 self.parentWindow!.endSheet(self.feedbackSheet)
             }
@@ -179,8 +193,12 @@ final class FeedbackSheetViewController: NSViewController,
         alert.messageText = "Feedback Could Not Be Sent"
         alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."
         alert.addButton(withTitle: "OK")
-        alert.beginSheetModal(for: self.feedbackSheet,
-                              completionHandler: nil)
+        alert.beginSheetModal(for: self.feedbackSheet) { (resp) in
+            // FROM 1.7.0 -- stop editing the NSTextField
+            if let theText: NSText = self.feedbackText.currentEditor() {
+                self.feedbackText.endEditing(theText)
+            }
+        }
     }
     
     
