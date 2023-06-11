@@ -92,6 +92,12 @@ struct MNU_CONSTANTS {
     static let MOD_KEY_CMD          = 1
     static let MOD_KEY_OPT          = 2
     static let MOD_KEY_CTRL         = 3
+
+    static let EDIT_CMD_COPY        = 0
+    static let EDIT_CMD_CUT         = 1
+    static let EDIT_CMD_PASTE       = 2
+    static let EDIT_CMD_ALL         = 3
+    static let EDIT_CMD_UNDO        = 4
     
     // THIS IS THE DEFINITIVE ICON ORDER
     static let ICONS: [String] = [

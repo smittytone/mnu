@@ -32,7 +32,8 @@ import Cocoa
 
 final class AddUserItemViewController: NSViewController,
                                        NSTextFieldDelegate,
-                                       NSPopoverDelegate {
+                                       NSPopoverDelegate,
+                                       NSWindowDelegate {
 
     // MARK: - UI Outlets
 
@@ -50,7 +51,7 @@ final class AddUserItemViewController: NSViewController,
     @IBOutlet var directCheck: NSButton!
     // FROM 1.7.0
     @IBOutlet var modifierKeysSegment: NSSegmentedControl!
-    @IBOutlet var keyEquivalentText: NSTextField!
+    @IBOutlet var keyEquivalentText: AddUserItemKeyTextField!
 
 
     // MARK: - Public Class Properties
@@ -61,14 +62,15 @@ final class AddUserItemViewController: NSViewController,
     var isEditing: Bool = false
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
-    
-    
+
+
     // MARK: - Public Class Properties
     private var iconPopover: NSPopover? = nil
     private var icons: NSMutableArray = NSMutableArray.init()
     // FROM 1.5.0
     private var directAlert: NSAlert? = nil
-    
+    // FROM 1.7.0
+    private var keyFieldEditor: AddUserItemKeyFieldEditor? = nil
     
     // MARK: - Lifecycle Functions
 
@@ -89,6 +91,9 @@ final class AddUserItemViewController: NSViewController,
 
         // Set up and confiure the NSPopover
         makePopover()
+
+        // FROM 1.7.0
+        self.keyEquivalentText.segment = self.modifierKeysSegment
 
         // Set up notifications
         // 'com.bps.mnu.select-image' is sent by the AddUserItemViewController when an icon is selected
@@ -130,6 +135,10 @@ final class AddUserItemViewController: NSViewController,
         // Present the controller's sheet, customising it to either display an existing
         // Menu Item's details for editing, or empty fields for a new Menu Item
 
+        // FROM 1.7.0
+        // Reset the segment control
+        self.modifierKeysSegment.selectedSegment = -1
+
         if self.isEditing {
             // We are presenting an existing item, so get it and populate
             // the sheet's fields accordingly
@@ -149,20 +158,20 @@ final class AddUserItemViewController: NSViewController,
                 // FROM 1.7.0
                 self.keyEquivalentText.stringValue = item.keyEquivalent.uppercased()
                 
-                if item.keyModFlags & 0x01 != 0 {
-                    self.modifierKeysSegment.selectSegment(withTag: 0)
+                if item.keyModFlags & (1 << MNU_CONSTANTS.MOD_KEY_SHIFT) != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_SHIFT)
                 }
                 
-                if item.keyModFlags & 0x02 != 0 {
-                    self.modifierKeysSegment.selectSegment(withTag: 1)
+                if item.keyModFlags & (1 << MNU_CONSTANTS.MOD_KEY_CMD) != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CMD)
                 }
                 
-                if item.keyModFlags & 0x04 != 0 {
-                    self.modifierKeysSegment.selectSegment(withTag: 2)
+                if item.keyModFlags & (1 << MNU_CONSTANTS.MOD_KEY_OPT) != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_OPT)
                 }
                 
-                if item.keyModFlags & 0x08 != 0 {
-                    self.modifierKeysSegment.selectSegment(withTag: 3)
+                if item.keyModFlags & (1 << MNU_CONSTANTS.MOD_KEY_CTRL) != 0 {
+                    self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CTRL)
                 }
                 
             } else {
@@ -183,7 +192,6 @@ final class AddUserItemViewController: NSViewController,
             self.openCheck.state = .off
             self.directCheck.state = .off
             // FROM 1.7.0
-            self.modifierKeysSegment.selectedSegment = -1
             self.keyEquivalentText.stringValue = ""
         }
 
@@ -619,37 +627,36 @@ final class AddUserItemViewController: NSViewController,
             self.textCount.stringValue = "\(self.menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
             return;
         }
-        
-        if sender == self.keyEquivalentText {
-            if self.keyEquivalentText.stringValue.count > 1 {
-                let index: String.Index = String.Index(utf16Offset: 1, in: self.keyEquivalentText.stringValue)
-                //self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue.substring(from: index))
-                self.keyEquivalentText.stringValue = String(self.keyEquivalentText.stringValue[index...])
-            }
-            
-            // TODO Ignore modifiers or use to set the segmented control
-            if let event: NSEvent = NSApp.currentEvent {
-                if event.type == .keyDown {
-                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.shift.rawValue != 0 {
-                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_SHIFT)
-                    }
-                    
-                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.command.rawValue != 0 {
-                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CMD)
-                    }
-                    
-                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.option.rawValue != 0 {
-                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_OPT)
-                    }
-                    
-                    if event.modifierFlags.rawValue & NSEvent.ModifierFlags.control.rawValue != 0 {
-                        self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CTRL)
-                    }
-                }
-            }
-            
-            self.keyEquivalentText.stringValue = self.keyEquivalentText.stringValue.uppercased()
-        }
     }
 
+
+    // MARK: - NSWindowDelegate Methods
+
+    func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
+
+        // Assign a custom Field Editor to the modifier keys NSTextField
+
+        if let anyClient: Any = client {
+            if anyClient is AddUserItemKeyTextField {
+                if self.keyFieldEditor == nil {
+                    self.keyFieldEditor = AddUserItemKeyFieldEditor.init()
+                }
+
+                // Don't process Tab, Enter etc.
+                self.keyFieldEditor!.isFieldEditor = false
+
+                // Link in the NSTextField subclass
+                self.keyFieldEditor!.keyTextField = self.keyEquivalentText
+
+                // Trap Undo (CMD-Z) handling
+                self.keyFieldEditor!.allowsUndo = false
+                self.keyEquivalentText.undoManager?.registerUndo(withTarget: self.keyFieldEditor!,
+                                                                 selector: #selector(AddUserItemKeyFieldEditor.undo),
+                                                                 object: nil)
+                return self.keyFieldEditor!
+            }
+        }
+
+        return nil
+    }
 }

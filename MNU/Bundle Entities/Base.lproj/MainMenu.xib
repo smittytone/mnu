@@ -577,7 +577,7 @@
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="384"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="560" height="384"/>
             <value key="maxSize" type="size" width="560" height="384"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="384"/>
@@ -650,11 +650,14 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
                         </constraints>
-                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. cd $HOME or ./myscript.sh" drawsBackground="YES" id="cG4-aB-hsX">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. cd $HOME or ./myscript.sh" drawsBackground="YES" usesSingleLineMode="YES" id="cG4-aB-hsX">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="8Wq-hu-xtq" id="Ntr-2m-KWW"/>
+                        </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
                         <rect key="frame" x="18" y="356" width="520" height="16"/>
@@ -696,7 +699,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="JAk-Wm-1tI"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. Go To Home Directory" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="eg. Go To Home Directory" drawsBackground="YES" allowsEditingTextAttributes="YES" usesSingleLineMode="YES" id="qWe-hH-zjT">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -766,21 +769,6 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" fixedFrame="YES" preferredMaxLayoutWidth="88" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="dRt-Ip-nOQ">
-                        <rect key="frame" x="286" y="99" width="88" height="21"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="small" lineBreakMode="truncatingTail" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" alignment="left" placeholderString="Key..." usesSingleLineMode="YES" bezelStyle="round" id="zZR-wK-Hej">
-                            <font key="font" metaFont="smallSystem"/>
-                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                            <allowedInputSourceLocales>
-                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
-                            </allowedInputSourceLocales>
-                        </textFieldCell>
-                        <connections>
-                            <outlet property="delegate" destination="8Wq-hu-xtq" id="Qks-Su-hXu"/>
-                        </connections>
-                    </textField>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ei3-AJ-4to">
                         <rect key="frame" x="357" y="102" width="14" height="14"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -799,12 +787,27 @@ Gw
                             <font key="font" metaFont="system"/>
                             <segments>
                                 <segment alignment="natural" image="key_mod_sft" width="38"/>
-                                <segment image="key_mod_cmd" width="38" selected="YES" tag="1"/>
-                                <segment image="key_mod_opt" width="38"/>
+                                <segment image="key_mod_cmd" width="38" tag="1"/>
+                                <segment image="key_mod_opt" width="38" tag="2"/>
                                 <segment image="key_mod_ctl" tag="3"/>
                             </segments>
                         </segmentedCell>
                     </segmentedControl>
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X29-Bo-ixK" customClass="AddUserItemKeyTextField" customModule="MNU" customModuleProvider="target">
+                        <rect key="frame" x="286" y="98" width="92" height="21"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Key" drawsBackground="YES" usesSingleLineMode="YES" id="1hG-V3-G4u">
+                            <font key="font" usesAppearanceFont="YES"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <allowedInputSourceLocales>
+                                <string>NSAllRomanInputSourcesLocaleIdentifier</string>
+                            </allowedInputSourceLocales>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="8Wq-hu-xtq" id="T0h-4M-ORK"/>
+                        </connections>
+                    </textField>
                 </subviews>
                 <constraints>
                     <constraint firstAttribute="trailing" secondItem="PIQ-xd-jED" secondAttribute="trailing" constant="20" id="19Y-XY-ncw"/>
@@ -848,6 +851,9 @@ Gw
                     <constraint firstAttribute="trailing" secondItem="3GM-GK-4Xv" secondAttribute="trailing" constant="20" id="wX2-QX-wv0"/>
                 </constraints>
             </view>
+            <connections>
+                <outlet property="delegate" destination="8Wq-hu-xtq" id="eBY-A8-Ui4"/>
+            </connections>
             <point key="canvasLocation" x="736" y="266"/>
         </window>
         <viewController id="8Wq-hu-xtq" customClass="AddUserItemViewController" customModule="MNU" customModuleProvider="target">
@@ -857,7 +863,7 @@ Gw
                 <outlet property="iconButton" destination="mU3-js-THC" id="zQq-Ds-qnD"/>
                 <outlet property="iconPopoverController" destination="vBD-l2-SeN" id="isX-Z1-Im8"/>
                 <outlet property="itemScriptText" destination="3GM-GK-4Xv" id="0sH-hp-YAp"/>
-                <outlet property="keyEquivalentText" destination="dRt-Ip-nOQ" id="jgu-VL-ql6"/>
+                <outlet property="keyEquivalentText" destination="X29-Bo-ixK" id="1n3-3z-N7r"/>
                 <outlet property="menuTitleText" destination="PIQ-xd-jED" id="wYa-Xc-ULU"/>
                 <outlet property="modifierKeysSegment" destination="aL9-Qa-3Zh" id="AHR-1C-Y3E"/>
                 <outlet property="openCheck" destination="RJf-rp-4EB" id="QsK-nv-hYe"/>
@@ -893,7 +899,7 @@ Gw
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="71" id="0rd-fM-ufm"/>
                             <constraint firstAttribute="height" constant="21" id="kd5-9R-lwX"/>
                         </constraints>
-                        <buttonCell key="cell" type="push" title="Send" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Alc-xv-Uou">
+                        <buttonCell key="cell" type="push" title="Send" bezelStyle="rounded" alignment="center" refusesFirstResponder="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Alc-xv-Uou">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
@@ -923,7 +929,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="fvq-ts-r1v"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="clipping" alignment="left" title="Please provide us with feedback, or report a problem you’ve encountered with MNU." id="y1O-hC-A0T">
+                        <textFieldCell key="cell" lineBreakMode="clipping" refusesFirstResponder="YES" alignment="left" title="Please provide us with feedback, or report a problem you’ve encountered with MNU." id="y1O-hC-A0T">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -934,7 +940,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="48" id="8jh-Ur-fiT"/>
                         </constraints>
-                        <textFieldCell key="cell" id="cZB-Nx-ifb">
+                        <textFieldCell key="cell" refusesFirstResponder="YES" id="cZB-Nx-ifb">
                             <font key="font" metaFont="system"/>
                             <string key="title">Enter your comments (512 characters max.) in the space below and hit ‘Send’ to pass them to us. We may not respond directly to your feedback, even if you include an email address in your comment, but we can’t respond without an email address.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -946,14 +952,14 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="aIn-SS-uIm"/>
                         </constraints>
-                        <textFieldCell key="cell" controlSize="small" id="jWx-f8-ELM">
+                        <textFieldCell key="cell" controlSize="small" refusesFirstResponder="YES" id="jWx-f8-ELM">
                             <font key="font" metaFont="message" size="11"/>
                             <string key="title">We respect your privacy and we will not record or store any supplied email addresses, use them for marketing purposes, or pass them to third-parties.</string>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIy-xK-Fn3">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIy-xK-Fn3" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="109" width="520" height="169"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="169" id="rgM-Ce-kcr"/>
@@ -966,6 +972,9 @@ Gw
                                 <string>NSAllRomanInputSourcesLocaleIdentifier</string>
                             </allowedInputSourceLocales>
                         </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="qsm-LN-R5T" id="jns-Pp-36g"/>
+                        </connections>
                     </textField>
                     <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Tcv-tO-mpa">
                         <rect key="frame" x="20" y="23" width="16" height="16"/>
@@ -1045,7 +1054,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
