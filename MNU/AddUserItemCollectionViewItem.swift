@@ -34,6 +34,7 @@ final class AddUserItemCollectionViewItem: NSCollectionViewItem {
 
 
     // MARK: - Class Properties
+
     var index: Int = -1
 
     var image: NSImage? {
@@ -58,20 +59,5 @@ final class AddUserItemCollectionViewItem: NSCollectionViewItem {
             auicv.needsDisplay = true
         }
     }
-
-
-    // MARK: - Lifecycle Functions
-    /*
-    override func viewDidLoad() {
-
-        super.viewDidLoad()
-
-        // REMOVED 1.0.0 (180)
-        // view.wantsLayer = true
-        // view.layer?.backgroundColor = NSColor.clear.cgColor
-        // view.layer?.borderColor = NSColor.controlAccentColor.cgColor
-        // view.layer?.borderWidth = 0.0
-    }
-    */
 
 }

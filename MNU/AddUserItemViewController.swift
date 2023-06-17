@@ -495,7 +495,7 @@ final class AddUserItemViewController: NSViewController,
 
     func checkDirectCommand(_ command: String) -> Bool {
 
-        // FROM 1.5.0
+        // ADDED 1.5.0
         // Check for common shell characters in a direct-action command
         let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
         for shellChar in shellChars {
@@ -510,7 +510,7 @@ final class AddUserItemViewController: NSViewController,
 
     func makeAbsolutePath(_ path: String) -> String {
 
-        // FROM 1.5.0
+        // ADDED 1.5.0
         // Check for a relative path and return the absolute version
         // (or the input path if it is already absolute)
         // NOTE Refactored to a function to simplify testing
@@ -634,7 +634,9 @@ final class AddUserItemViewController: NSViewController,
 
     func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
 
+        // ADDED 1.7.0
         // Assign a custom Field Editor to the modifier keys NSTextField
+        // See `AddUserItemKeyFieldEditor.swift`
 
         if let anyClient: Any = client {
             if anyClient is AddUserItemKeyTextField {

@@ -29,6 +29,7 @@
 
 import Cocoa
 
+
 final class AddUserItemIconButton: NSButton {
 
     // This is a simple NSButton sub-class which adds the property 'index'. This

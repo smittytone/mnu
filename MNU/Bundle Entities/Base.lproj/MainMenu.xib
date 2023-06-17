@@ -81,7 +81,7 @@
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="580" height="332"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="580" height="332"/>
             <value key="maxSize" type="size" width="580" height="332"/>
             <value key="minFullScreenContentSize" type="size" width="580" height="332"/>
@@ -268,7 +268,7 @@
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="430" id="9Ac-9x-Y70"/>
                                                 <constraint firstAttribute="height" constant="16" id="cNY-1x-pbx"/>
                                             </constraints>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="left" title="Label Label Label Label Label Label Label Label Label Label Label Label Label" usesSingleLineMode="YES" id="iDp-sy-ypf">
+                                            <textFieldCell key="cell" lineBreakMode="clipping" allowsUndo="NO" alignment="right" title="Label Label Label Label Label Label Label Label Label Label Label Label Label" usesSingleLineMode="YES" id="iDp-sy-ypf">
                                                 <font key="font" metaFont="smallSystem"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -884,7 +884,7 @@ Gw
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="131" y="158" width="560" height="378"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1440" height="875"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="1680" height="1025"/>
             <value key="minSize" type="size" width="560" height="378"/>
             <value key="maxSize" type="size" width="560" height="378"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="378"/>

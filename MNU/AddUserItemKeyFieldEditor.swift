@@ -26,8 +26,15 @@
  */
 
 
-import Foundation
 import Cocoa
+
+
+/*
+    This is the field editor for the Modifier Keys text field on the Add User Item
+    panel. We use a custom field editor so we can override the integrated NSTextField
+    modifier keys for cut, copy, paste, select all, undo etc. and trap all modifier
+    key presses.
+ */
 
 
 final class AddUserItemKeyFieldEditor: NSTextView {
@@ -103,29 +110,25 @@ final class AddUserItemKeyFieldEditor: NSTextView {
 
         if let keyTextField: AddUserItemKeyTextField = self.keyTextField {
             if let segment: NSSegmentedControl = keyTextField.segment {
-                // NOTE Deselect all segments first on a per-press basis, in case
-                //      the user taps an unmodified key afterwards, ie. only a
-                //      different modifiers should clear existing modifiers.
+                // Deselect all segments first
+                segment.selectedSegment = -1
+
                 if bitfield & commandKey != 0 {
-                    segment.selectedSegment = -1
                     segment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CMD)
                     modKeyUsed = true
                 }
 
                 if bitfield & shiftKey != 0 {
-                    segment.selectedSegment = -1
                     segment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_SHIFT)
                     modKeyUsed = true
                 }
 
                 if bitfield & optKey != 0 {
-                    segment.selectedSegment = -1
                     segment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_OPT)
                     modKeyUsed = true
                 }
 
                 if bitfield & ctrlKey != 0 {
-                    segment.selectedSegment = -1
                     segment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CTRL)
                     modKeyUsed = true
                 }

@@ -29,7 +29,9 @@
 import Cocoa
 
 /*
-    An NSTextField sub
+    Subclass NSTextField so we can reference a linked NSSegmentedControl. This
+    latter is used to display the modifier keys to be applied to the key whose
+    character is entered into this text field.
  */
 
 final class AddUserItemKeyTextField: NSTextField {
