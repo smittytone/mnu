@@ -10,7 +10,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ## Release Notes ##
 
-- 1.7.0 *Unreleased*
+- 1.7.0 *20 June 2023*
     - Add key equiavalents with modifiers to menu items.
     - Replace the item show/hide gree/red dots with switches so...
     - ...end support for macOS 10.14: 10.15 (Catalina, 2019) is the new minium supported version.
