@@ -81,8 +81,8 @@
 		3BC6F64722EBE61F004FBF22 /* RemoveLogin.scpt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = RemoveLogin.scpt; sourceTree = "<group>"; };
 		3BCBFD6523DF426A0018C0BC /* AddUserItemTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemTextField.swift; sourceTree = "<group>"; };
 		3BD30C992A3094DF00F022F9 /* AddUserItemKeyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyTextField.swift; sourceTree = "<group>"; };
-		3BE25D1B2B039B3800C2349F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Assets.xcassets"; sourceTree = "<group>"; };
-		3BE25D1C2B039B7E00C2349F /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = "../../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Secrets.swift"; sourceTree = "<group>"; };
+		3BE25D1B2B039B3800C2349F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
+		3BE25D1C2B039B7E00C2349F /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Secrets.swift"; sourceTree = SOURCE_ROOT; };
 		3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyFieldEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
