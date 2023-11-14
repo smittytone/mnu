@@ -1,4 +1,4 @@
-# MNU 1.7.0 #
+# MNU 1.7.1 #
 
 For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -8,8 +8,17 @@ Run `mnuprep.sh` from the `Scripts` folder to prep in-app menu and popover graph
 
 The script `postinstall.sh` is used to kill an existing app instance after re-installation.
 
+### Building the App ###
+
+Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in this repo. You build the code, you must either replace these items with your own (app icon, menu bar icon, menu item images, menu item selection images and other visual assets) or comment out the code that makes use of them.
+
 ## Release Notes ##
 
+- 1.7.1 *Unreleased*
+    - Clarify which code you must supply to build the app.
+    - Fix some typos.
+    - Automate build number incrementation.
+    - No functional changes.
 - 1.7.0 *20 June 2023*
     - Add key equiavalents with modifiers to menu items.
     - Replace the item show/hide gree/red dots with switches so...
