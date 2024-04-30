@@ -14,7 +14,7 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 
 ## Release Notes ##
 
-- 1.7.1 *Unreleased*
+- 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.
     - Fix some typos.
     - Automate build number incrementation.
