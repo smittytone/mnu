@@ -105,7 +105,7 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 
 ## Copyright ##
 
-MNU is copyright &copy; 2023, Tony Smith.
+MNU is copyright &copy; 2024, Tony Smith.
 
 ## Licence ##
 

@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 20/08/2019.
-    Copyright © 2023 Tony Smith. All rights reserved.
+    Copyright © 2024 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
