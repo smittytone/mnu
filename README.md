@@ -1,4 +1,4 @@
-# MNU 1.7.1 #
+# MNU 1.7.2 #
 
 For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -14,6 +14,8 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 
 ## Release Notes ##
 
+- 1.7.2 *Unreleased*
+    - Under-the-hood changes.
 - 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.
     - Fix some typos.

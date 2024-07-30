@@ -179,7 +179,7 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.6.0
         self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
         switch(self.terminalChoice) {
-        case 1:
+        case MNU_CONSTANTS.TERMINAL.ITERM:
             self.prefsTerminalChoiceITerm2.state = .on
         // Add other non-zero cases here to include other terminals
         default:
@@ -483,10 +483,11 @@ final class ConfigureViewController:  NSViewController,
             
         // FROM 1.6.0
         // The user has changed their preferred terminal
-        var termChoice: Int = 0
+        var termChoice: Int = MNU_CONSTANTS.TERMINAL.MACOS
         if self.prefsTerminalChoiceITerm2.state == .on {
-            termChoice = 1
+            termChoice = MNU_CONSTANTS.TERMINAL.ITERM
         }
+
         // Add more Terminal choices by index here...
         
         // Only write out the choice if it's different -- it should be
@@ -496,7 +497,7 @@ final class ConfigureViewController:  NSViewController,
             defaults.set(termChoice,
                          forKey: "com.bps.mnu.term-choice")
             
-            // Notify the mai app that it needs to change
+            // Notify the main app that it needs to change
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
                                             object: self)
         }

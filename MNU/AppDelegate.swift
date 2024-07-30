@@ -362,12 +362,12 @@ final class AppDelegate: NSObject,
         // This function is called in response to a change of terminal being
         // made in the Prefs pane of the ConfigureViewController, via the
         // 'com.bps.mnu.term-updated' notification
-        if self.cwvc.terminalChoice != 0 {
+        if self.cwvc.terminalChoice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal,
             // so check that it's available for use
             if isTerminalMissing(self.cwvc.terminalChoice) {
                 // Selected terminal doesn't exist, so use the default
-                self.terminalIndex = 0
+                self.terminalIndex = MNU_CONSTANTS.TERMINAL.MACOS
                 return
             }
         }
@@ -394,7 +394,7 @@ final class AppDelegate: NSObject,
         // it is in the standard Application folders (see 'getAppPath()')
         // Configure Window has already saved the preference
         // NOTE Returns 'true' if the app is NOT present, false if it IS present
-        if choice != 0 {
+        if choice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal
             let terminals: [String] = ["iTerm"]
             
@@ -1313,7 +1313,7 @@ final class AppDelegate: NSObject,
         // Add the supplied script code ('escapedCode') to the boilerplate AppleScript and run it,
         // in a new Terminal tab if that is required by the user -- 'tabSelection' contains
         // script variations to accommodate this
-        case 1:
+        case MNU_CONSTANTS.TERMINAL.ITERM:
             let tabSelection: String = self.doNewTermTab ? "create tab with default profile" : "current tab"
             script = """
                 tell application \"iTerm\"

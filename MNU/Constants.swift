@@ -107,5 +107,12 @@ struct MNU_CONSTANTS {
         "web", "cloud", "doc", "dir", "app",
         "cog", "sync", "power", "mac", "x"
     ]
-    
+
+    // FROM 1.7.2
+    struct TERMINAL {
+        static let MACOS         = 0
+        static let ITERM        = 1
+        static let ALACRITTY    = 2
+    }
+
 }
