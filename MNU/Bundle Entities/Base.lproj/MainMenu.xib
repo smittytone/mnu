@@ -879,18 +879,18 @@ Gw
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="gZX-Fz-9gs">
             <windowStyleMask key="styleMask" titled="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="131" y="158" width="560" height="378"/>
+            <rect key="contentRect" x="131" y="158" width="580" height="360"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1200"/>
-            <value key="minSize" type="size" width="560" height="378"/>
-            <value key="maxSize" type="size" width="560" height="378"/>
-            <value key="minFullScreenContentSize" type="size" width="560" height="378"/>
-            <value key="maxFullScreenContentSize" type="size" width="560" height="378"/>
+            <value key="minSize" type="size" width="580" height="360"/>
+            <value key="maxSize" type="size" width="580" height="360"/>
+            <value key="minFullScreenContentSize" type="size" width="580" height="360"/>
+            <value key="maxFullScreenContentSize" type="size" width="580" height="360"/>
             <view key="contentView" id="fKX-y7-q8i">
-                <rect key="frame" x="0.0" y="0.0" width="560" height="378"/>
+                <rect key="frame" x="0.0" y="0.0" width="580" height="360"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="XDv-wN-O6x">
-                        <rect key="frame" x="462" y="13" width="85" height="33"/>
+                        <rect key="frame" x="482" y="13" width="85" height="33"/>
                         <buttonCell key="cell" type="push" title="Send" bezelStyle="rounded" alignment="center" refusesFirstResponder="YES" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="Alc-xv-Uou">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -904,7 +904,7 @@ Gw
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="DCm-xq-FFu">
-                        <rect key="frame" x="380" y="13" width="84" height="33"/>
+                        <rect key="frame" x="400" y="13" width="84" height="33"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="j7Y-n9-fsA">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -921,7 +921,7 @@ Gw
                         </connections>
                     </button>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="icw-5T-cay">
-                        <rect key="frame" x="18" y="342" width="524" height="16"/>
+                        <rect key="frame" x="18" y="324" width="544" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="fvq-ts-r1v"/>
                         </constraints>
@@ -932,7 +932,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zIz-BS-udt">
-                        <rect key="frame" x="18" y="286" width="524" height="48"/>
+                        <rect key="frame" x="18" y="268" width="544" height="48"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="48" id="8jh-Ur-fiT"/>
                         </constraints>
@@ -944,7 +944,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="JZN-PK-D1t">
-                        <rect key="frame" x="18" y="61" width="524" height="40"/>
+                        <rect key="frame" x="18" y="43" width="544" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="aIn-SS-uIm"/>
                         </constraints>
@@ -956,7 +956,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIy-xK-Fn3" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
-                        <rect key="frame" x="20" y="109" width="520" height="169"/>
+                        <rect key="frame" x="20" y="91" width="540" height="169"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="169" id="rgM-Ce-kcr"/>
                         </constraints>
@@ -972,9 +972,12 @@ Gw
                             <outlet property="delegate" destination="qsm-LN-R5T" id="jns-Pp-36g"/>
                         </connections>
                     </textField>
-                    <progressIndicator wantsLayer="YES" fixedFrame="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Tcv-tO-mpa">
+                    <progressIndicator wantsLayer="YES" maxValue="100" displayedWhenStopped="NO" indeterminate="YES" controlSize="small" style="spinning" translatesAutoresizingMaskIntoConstraints="NO" id="Tcv-tO-mpa">
                         <rect key="frame" x="20" y="23" width="16" height="16"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="16" id="35H-6a-rBv"/>
+                            <constraint firstAttribute="height" constant="16" id="ck6-Ww-kPU"/>
+                        </constraints>
                     </progressIndicator>
                 </subviews>
                 <constraints>
@@ -990,11 +993,13 @@ Gw
                     <constraint firstItem="icw-5T-cay" firstAttribute="leading" secondItem="fKX-y7-q8i" secondAttribute="leading" constant="20" id="Vhz-da-8qu"/>
                     <constraint firstAttribute="bottom" secondItem="DCm-xq-FFu" secondAttribute="bottom" constant="20" id="Y4S-30-qBR"/>
                     <constraint firstItem="JZN-PK-D1t" firstAttribute="top" secondItem="QIy-xK-Fn3" secondAttribute="bottom" constant="8" id="eZ7-ZY-1aM"/>
+                    <constraint firstItem="Tcv-tO-mpa" firstAttribute="leading" secondItem="fKX-y7-q8i" secondAttribute="leading" constant="20" symbolic="YES" id="fAJ-3R-4yB"/>
                     <constraint firstItem="zIz-BS-udt" firstAttribute="top" secondItem="icw-5T-cay" secondAttribute="bottom" constant="8" id="gVl-ae-UIA"/>
                     <constraint firstAttribute="bottom" secondItem="XDv-wN-O6x" secondAttribute="bottom" constant="20" id="kl3-vz-CQc"/>
                     <constraint firstItem="QIy-xK-Fn3" firstAttribute="leading" secondItem="fKX-y7-q8i" secondAttribute="leading" constant="20" id="m02-VJ-Rjw"/>
                     <constraint firstItem="DCm-xq-FFu" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="fKX-y7-q8i" secondAttribute="leading" constant="20" symbolic="YES" id="rWO-qb-r4F"/>
                     <constraint firstItem="XDv-wN-O6x" firstAttribute="leading" secondItem="DCm-xq-FFu" secondAttribute="trailing" constant="12" id="rYI-vw-LN7"/>
+                    <constraint firstAttribute="bottom" secondItem="Tcv-tO-mpa" secondAttribute="bottom" constant="23" id="zBr-sz-6Ih"/>
                 </constraints>
             </view>
             <point key="canvasLocation" x="736" y="-242"/>
