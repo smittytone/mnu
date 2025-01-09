@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 24/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -153,7 +153,7 @@ final class AddUserItemViewController: NSViewController,
                 self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
                 self.iconButton.index = item.iconIndex
                 self.textCount.stringValue = "\(item.title.count)/30"
-                self.openCheck.state = item.type == MNU_CONSTANTS.TYPES.SCRIPT ? .off : .on
+                self.openCheck.state = item.type == .script ? .off : .on
                 self.directCheck.state = item.isDirect ? .on : .off
                 // FROM 1.7.0
                 self.keyEquivalentText.stringValue = item.keyEquivalent.uppercased()
@@ -326,7 +326,7 @@ final class AddUserItemViewController: NSViewController,
                 }
                 
                 // FROM 1.2.0
-                let newType: Int = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
+                let newType: MNUItemType = isOpenAction ? .open : .script
                 if newType != item.type {
                     item.type = newType
                     itemHasChanged = true
@@ -364,7 +364,7 @@ final class AddUserItemViewController: NSViewController,
             let newItem: MenuItem = MenuItem()
             newItem.script = self.itemScriptText.stringValue
             newItem.title = self.menuTitleText.stringValue
-            newItem.type = isOpenAction ? MNU_CONSTANTS.TYPES.OPEN : MNU_CONSTANTS.TYPES.SCRIPT
+            newItem.type = isOpenAction ? .open : .script
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
             newItem.iconIndex = self.iconButton.index

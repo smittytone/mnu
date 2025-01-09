@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 5/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,7 +32,7 @@
 struct MNU_CONSTANTS {
 
     struct ITEMS {
-
+        
         struct SWITCH {
             static let UIMODE       = 0
             static let DESKTOP      = 1
@@ -51,14 +51,20 @@ struct MNU_CONSTANTS {
         struct OPEN {
             static let GRAB_WINDOW  = 15
         }
+        
+        struct MISC {
+            static let NO_ITEM      = -1
+        }
     }
-
+    
+    /*
     struct TYPES {
         static let SWITCH           = 0
         static let SCRIPT           = 1
         static let OPEN             = 2
     }
-
+    */
+    
     struct BUILT_IN_TITLES {
         static let UIMODE           = "macOS Dark Mode"
         static let DESKTOP          = "Show Files on Desktop"
@@ -102,9 +108,9 @@ struct MNU_CONSTANTS {
     // THIS IS THE DEFINITIVE ICON ORDER
     static let ICONS: [String] = [
         "generic", "bash", "z", "code", "git",
-        "github", "gitlab", "brew", "docker", "multipass",
-        "python", "node", "as", "ts", "php",
-        "web", "cloud", "doc", "dir", "app",
+        "brew", "docker", "multipass",
+        "as", "python", "", "", "",
+        "web", "cloud", "keys", "", "app",
         "cog", "sync", "power", "mac", "x"
     ]
     

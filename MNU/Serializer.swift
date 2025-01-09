@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 01/10/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -84,7 +84,7 @@ struct Serializer {
 
         var dict: [String:Any] = [:]
         dict["title"] = item.title
-        dict["type"] = item.type
+        dict["type"] = item.type.rawValue
         dict["code"] = item.code
         dict["icon"] = item.iconIndex
         dict["script"] = item.script
@@ -165,7 +165,7 @@ struct Serializer {
         newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
         newItem.title = dict["title"] as? String ?? "Unknown"
         newItem.script = dict["script"] as? String ?? ""
-        newItem.type = dict["type"] as? Int ?? 1
+        newItem.type = MNUItemType(rawValue: (dict["type"] as? Int ?? -1)) ?? .unknown
         newItem.code = dict["code"] as? Int ?? 20
         newItem.isHidden = dict["hidden"] as? Bool ?? false
         // FROM 1.2.2

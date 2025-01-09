@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 03/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -585,7 +585,7 @@ final class AppDelegate: NSObject,
         // Get the source Menu Item that the menu button is linked to
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            if item.type == MNU_CONSTANTS.TYPES.SCRIPT {
+            if item.type == .script {
                 if item.isDirect {
                     // FROM 1.3.0
                     // Switch to new method
@@ -1011,7 +1011,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
-        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.type = .switch
         newItem.keyEquivalent = "m"
         newItem.keyModFlags = 0x08
         return newItem
@@ -1026,7 +1026,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
-        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.type = .switch
         return newItem
     }
 
@@ -1039,7 +1039,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
-        newItem.type = MNU_CONSTANTS.TYPES.SWITCH
+        newItem.type = .switch
         return newItem
     }
 
@@ -1052,7 +1052,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.type = .script
         return newItem
     }
 
@@ -1065,7 +1065,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.type = .script
         return newItem
     }
 
@@ -1078,7 +1078,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.type = .script
         return newItem
     }
 
@@ -1092,7 +1092,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.type = .script
         newItem.script = #"ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1'"#
         newItem.iconIndex = 15
         return newItem
@@ -1108,7 +1108,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_DF
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF
-        newItem.type = MNU_CONSTANTS.TYPES.SCRIPT
+        newItem.type = .script
         newItem.script = "df -H /System/Volumes/Data"
         newItem.iconIndex = 2
         return newItem
@@ -1124,7 +1124,7 @@ final class AppDelegate: NSObject,
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GRAB_WINDOW
         newItem.code = MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW
-        newItem.type = MNU_CONSTANTS.TYPES.OPEN
+        newItem.type = .open
         newItem.script = "Screenshot"
         newItem.iconIndex = 23
         return newItem

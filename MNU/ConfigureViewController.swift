@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 05/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -712,7 +712,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
                 cell!.cellSwitch.toolTip = "Show/Hide Item"
                 
-                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
                     cell!.buttonA.isEnabled = false
@@ -937,7 +937,7 @@ final class ConfigureViewController:  NSViewController,
                 
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)
-                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     menu.item(at: 1)!.isEnabled = false
                     menu.item(at: 2)!.isEnabled = false
                 }

@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 05/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -30,30 +30,43 @@
 import Cocoa
 
 
+enum MNUItemType: Int {
+    case `switch`       = 0
+    case script
+    case open
+    case separator
+    case unknown        = -1
+}
+
+
+
 final class MenuItem: NSObject,
                       NSCopying {
 
     // MARK: - Public Class Properties
 
-    var title: String = ""                  // The name of the item in the menu
-    var type: Int = -1                      // The type of the item: script or switch
-    var code: Int = -1                      // What kind of script or switch is it
-    var script: String = ""                 // For user items, the bash command it will run
-    var isNew: Bool = false                 // Set to true when a user item is added
-    var isHidden: Bool = false              // Set to true when a switch item is hidden by the user
-    var iconIndex: Int = 0                  // Icon reference value (where applicable)
+    var title: String = ""                              // The name of the item in the menu
+    var type: MNUItemType = .unknown                    // The type of the item: script or switch
+    var code: Int = MNU_CONSTANTS.ITEMS.MISC.NO_ITEM    // What kind of script or switch is it
+    var script: String = ""                             // For user items, the bash command it will run
+    var isNew: Bool = false                             // Set to true when a user item is added
+    var isHidden: Bool = false                          // Set to true when a switch item is hidden by the user
+    var iconIndex: Int = 0                              // Icon reference value (where applicable)
     // FROM 1.2.2
-    var isDirect: Bool = false              // Does the command not appear in the Terminal?
+    var isDirect: Bool = false                          // Does the command not appear in the Terminal?
     // FROM 1.7.0
-    var keyEquivalent: String = ""          // Menu key equivalent
-    var keyModFlags: UInt = 0               // Modifier key field
-    var uuid: String = UUID().uuidString    // Unique item ID
+    var keyEquivalent: String = ""                      // Menu key equivalent
+    var keyModFlags: UInt = 0                           // Modifier key field
+    var uuid: String = UUID().uuidString                // Unique item ID
+    // FROM 2.0.0
+    var customImagePath: String = ""                    // Custom menu image (unsupported, but reserving)
+    var showDirectOutput: Bool = false                  // Log output from direct command
 
 
     // MARK: NSCopying Functions
 
     func copy(with zone: NSZone? = nil) -> Any {
-
+        
         let itemCopy = MenuItem()
         itemCopy.title = self.title
         itemCopy.type = self.type
@@ -68,6 +81,9 @@ final class MenuItem: NSObject,
         itemCopy.keyEquivalent = self.keyEquivalent
         itemCopy.keyModFlags = self.keyModFlags
         itemCopy.uuid = self.uuid
+        // FROM 2.0.0
+        itemCopy.customImagePath = self.customImagePath
+        itemCopy.showDirectOutput = self.showDirectOutput
         return itemCopy
     }
 
