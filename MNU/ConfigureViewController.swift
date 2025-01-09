@@ -42,29 +42,33 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet var windowTabView: NSTabView!
 
     // Menu Items Tab
-    @IBOutlet var menuItemsTableView: NSTableView!
-    @IBOutlet var menuItemsCountText: NSTextField!
-    @IBOutlet var showHelpButton: NSButton!
-    @IBOutlet var aivc: AddUserItemViewController!
+    @IBOutlet weak var menuItemsTableView: NSTableView!
+    @IBOutlet weak var menuItemsCountText: NSTextField!
+    @IBOutlet weak var showHelpButton: NSButton!
+    @IBOutlet weak var aivc: AddUserItemViewController!
     // FROM 1.1.0
-    @IBOutlet var extrasButton: NSButton!
-    @IBOutlet var menuItemsAddButton: NSButton!
-    @IBOutlet var applyChangesButton: NSButton!
+    @IBOutlet weak var extrasButton: NSButton!
+    @IBOutlet weak var menuItemsAddButton: NSButton!
+    @IBOutlet weak var applyChangesButton: NSButton!
 
     // Preferences Tab
-    @IBOutlet var prefsLaunchAtLoginButton: NSButton!
-    @IBOutlet var prefsNewTermTabButton: NSButton!
-    @IBOutlet var prefsShowControlsButton: NSButton!
-    @IBOutlet var prefsHelpButton: NSButton!
+    @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
+    @IBOutlet weak var prefsNewTermTabButton: NSButton!
+    @IBOutlet weak var prefsShowControlsButton: NSButton!
+    @IBOutlet weak var prefsHelpButton: NSButton!
     // FROM 1.6.0
-    @IBOutlet var prefsTerminalChoiceTerminal: NSButton!
-    @IBOutlet var prefsTerminalChoiceITerm2: NSButton!
+    @IBOutlet weak var prefsTerminalChoiceTerminal: NSButton!
+    @IBOutlet weak var prefsTerminalChoiceITerm2: NSButton!
 
     // About... Tab
-    @IBOutlet var aboutVersionText: NSTextField!
-    @IBOutlet var fbvc: FeedbackSheetViewController!
+    @IBOutlet weak var aboutVersionText: NSTextField!
+    @IBOutlet weak var fbvc: FeedbackSheetViewController!
     // FROM 1.1.0
-    @IBOutlet var feedbackButton: NSButton!
+    @IBOutlet weak var feedbackButton: NSButton!
+    
+    @IBOutlet weak var tabButtonMenu: NSButton!
+    @IBOutlet weak var tabButtonSettings: NSButton!
+    @IBOutlet weak var tabButtonAbout: NSButton!
     
     
     // MARK: - Public Class Properties
@@ -91,7 +95,8 @@ final class ConfigureViewController:  NSViewController,
     private var extrasMenu: NSMenu? = nil
     // FROM 1.7.0
     private var systemVersionMinor: Int = 14
-    
+    // FROM 2.0.0
+    private var tabManager: PMTabManager = PMTabManager.init()
     
     // MARK: - Lifecycle Functions
 
@@ -142,7 +147,7 @@ final class ConfigureViewController:  NSViewController,
         self.applyChangesButton.toolTip = "Click to apply any changes you have made"
         self.showHelpButton.toolTip = "Click here for help with this tab"
 
-        // Preferences Tab
+        // Preferences/Settings Tab
         self.prefsHelpButton.toolTip = "Click here for help with this tab"
         self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
         self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
@@ -150,6 +155,18 @@ final class ConfigureViewController:  NSViewController,
         
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
+        
+        // Configure the tab manager
+        self.tabManager.parent = self
+        self.tabManager.buttons.append(self.tabButtonMenu)
+        self.tabManager.buttons.append(self.tabButtonSettings)
+        self.tabManager.buttons.append(self.tabButtonAbout)
+        
+        // Add callback closures, one per tab, to the tab manager
+        // NOTE Can probably remove this
+        self.tabManager.callbacks.append(nil)   // Info tab
+        self.tabManager.callbacks.append(nil)   // Settings tab
+        self.tabManager.callbacks.append(nil)   // Feedback tab
     }
 
 
@@ -189,6 +206,10 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.1.0
         // Disable/enable the Apply button until changes are made
         self.applyChangesButton.isEnabled = self.hasChanged
+        
+        // FROM 2.0.0
+        // Manually select the first tab
+        self.tabManager.programmaticallyClickButton(at: 0)
     }
 
     
@@ -222,8 +243,15 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    // MARK: - Action Functions
-    // MARK: Menu Items List Functions
+    // MARK: - Tab View Action Functions
+    
+    @IBAction private func doSwitchTab(sender: NSButton) {
+        
+        self.tabManager.buttonClicked(sender)
+    }
+    
+    
+    // MARK: - Menu Items Tab Action Functions
     
     @IBAction @objc func doCancel(sender: Any?) {
 
@@ -426,7 +454,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    // MARK: About... Pane Functions
+    // MARK: - About Tab Action Functions
     
     @IBAction @objc private func submitFeedback(sender: Any?) {
 
@@ -436,7 +464,7 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    // MARK: Preferences Pane Functions
+    // MARK: - Settings Tab Action Functions
     
     @IBAction @objc private func doToggleLaunchAtLogin(sender: Any?) {
 
