@@ -113,7 +113,7 @@
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn width="540" minWidth="500" maxWidth="540" id="Ws8-ne-vin">
+                                                            <tableColumn width="530" minWidth="500" maxWidth="530" id="Ws8-ne-vin">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -125,7 +125,7 @@
                                                                 </textFieldCell>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="mnu-item-cell" id="Yb8-Cl-6kq" customClass="MenuItemTableCellView" customModule="MNU" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="552" height="28"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="542" height="28"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
