@@ -688,7 +688,7 @@ final class AppDelegate: NSObject,
                         self.appMenu!.addItem(menuItem)
 
                         // FROM 1.3.0 -- Only add a separator if we're showing images
-                        if self.showImages { self.appMenu!.addItem(NSMenuItem.separator()) }
+                        //if self.showImages { self.appMenu!.addItem(NSMenuItem.separator()) }
                     }
                 } else {
                     // FROM 1.3.0
@@ -729,7 +729,7 @@ final class AppDelegate: NSObject,
                             let menuItem: NSMenuItem = makeNSMenuItem(item)
                             self.appMenu!.addItem(menuItem)
                             if self.showImages {
-                                self.appMenu!.addItem(NSMenuItem.separator())
+                                //self.appMenu!.addItem(NSMenuItem.separator())
                             }
                         }
                     }
@@ -756,7 +756,7 @@ final class AppDelegate: NSObject,
 
                     // Add the NSMenuItem to the NSMenu
                     self.appMenu!.addItem(menuItem)
-                    self.appMenu!.addItem(NSMenuItem.separator())
+                    //self.appMenu!.addItem(NSMenuItem.separator())
                 }
             }
 
@@ -864,7 +864,11 @@ final class AppDelegate: NSObject,
                 self.appMenu!.addItem(menuItem)
 
                 // FROM 1.3.0 -- Only add a separator if we're showing images
-                if self.showImages { self.appMenu!.addItem(NSMenuItem.separator()) }
+                /*
+                if self.showImages {
+                    self.appMenu!.addItem(NSMenuItem.separator())
+                }
+                */
             }
         }
         
@@ -875,7 +879,7 @@ final class AppDelegate: NSObject,
                                                        keyEquivalent: "")
             noteItem.isEnabled = false
             self.appMenu!.addItem(noteItem)
-            self.appMenu!.addItem(NSMenuItem.separator())
+            //self.appMenu!.addItem(NSMenuItem.separator())
         }
 
         // Finally, add the app menu item at the end of the menu
@@ -905,73 +909,77 @@ final class AppDelegate: NSObject,
 
     private func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
 
-        // Create and return an NSMenuItem for the specified Menu Item instance
-        let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                   action: nil,
-                                                   keyEquivalent: item.keyEquivalent)
-        
-        // FROM 1.7.0
-        // Implement key modifiers if required
-        if item.keyEquivalent.count > 0 {
-            var flags: NSEvent.ModifierFlags = []
-            if (item.keyModFlags & 0x01) != 0 { flags.insert(.shift) }
-            if (item.keyModFlags & 0x02) != 0 { flags.insert(.command) }
-            if (item.keyModFlags & 0x04) != 0 { flags.insert(.option) }
-            if (item.keyModFlags & 0x08) != 0 { flags.insert(.control) }
-            menuItem.keyEquivalentModifierMask = flags
-        }
-
-        // Reference the MenuItem instance
-        menuItem.representedObject = item
-
-        // Make item-specific changes
-        // These will set specific titles (based on state) and icons
-        // or fall back to default behaviour which as per user-added items
-        switch item.code {
-            case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                if self.disableDarkMode { menuItem.isEnabled = false }
-                menuItem.action = #selector(self.doModeSwitch(sender:))
-                menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
-            case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                menuItem.action = #selector(self.doDesktopSwitch(sender:))
-                menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
-            case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                menuItem.action = #selector(self.doShowHiddenFilesSwitch(sender:))
-                menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
-            case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
-                menuItem.action = #selector(self.doGit(sender:))
-            case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
-                menuItem.action = #selector(self.doBrewUpdate(sender:))
-            case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
-                menuItem.action = #selector(self.doBrewUpgrade(sender:))
-            default:
-                menuItem.action = #selector(self.doScript(sender:))
-        }
-
-        if self.showImages {
+        if item.type == .separator {
+            return NSMenuItem.separator()
+        } else {
+            // Create and return an NSMenuItem for the specified Menu Item instance
+            let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
+                                                       action: nil,
+                                                       keyEquivalent: item.keyEquivalent)
+            
+            // FROM 1.7.0
+            // Implement key modifiers if required
+            if item.keyEquivalent.count > 0 {
+                var flags: NSEvent.ModifierFlags = []
+                if (item.keyModFlags & 0x01) != 0 { flags.insert(.shift) }
+                if (item.keyModFlags & 0x02) != 0 { flags.insert(.command) }
+                if (item.keyModFlags & 0x04) != 0 { flags.insert(.option) }
+                if (item.keyModFlags & 0x08) != 0 { flags.insert(.control) }
+                menuItem.keyEquivalentModifierMask = flags
+            }
+            
+            // Reference the MenuItem instance
+            menuItem.representedObject = item
+            
+            // Make item-specific changes
+            // These will set specific titles (based on state) and icons
+            // or fall back to default behaviour which as per user-added items
             switch item.code {
                 case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                   menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+                    if self.disableDarkMode { menuItem.isEnabled = false }
+                    menuItem.action = #selector(self.doModeSwitch(sender:))
+                    menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
                 case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                    menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                    menuItem.action = #selector(self.doDesktopSwitch(sender:))
+                    menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
                 case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                    menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                    menuItem.action = #selector(self.doShowHiddenFilesSwitch(sender:))
+                    menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
                 case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                    menuItem.image = NSImage.init(named: "logo_github")
+                    menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
+                    menuItem.action = #selector(self.doGit(sender:))
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                    menuItem.image = NSImage.init(named: "logo_brew")
+                    menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
+                    menuItem.action = #selector(self.doBrewUpdate(sender:))
                 case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                    menuItem.image = NSImage.init(named: "logo_brew")
+                    menuItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
+                    menuItem.action = #selector(self.doBrewUpgrade(sender:))
                 default:
-                    // Default is a standard icon from the list
-                    menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+                    menuItem.action = #selector(self.doScript(sender:))
             }
+            
+            if self.showImages {
+                switch item.code {
+                    case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
+                        menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+                    case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
+                        menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                    case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
+                        menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                    case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
+                        menuItem.image = NSImage.init(named: "logo_github")
+                    case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
+                        menuItem.image = NSImage.init(named: "logo_brew")
+                    case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
+                        menuItem.image = NSImage.init(named: "logo_brew")
+                    default:
+                        // Default is a standard icon from the list
+                        menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+                }
+            }
+            
+            return menuItem
         }
-        
-        return menuItem
     }
     
     
@@ -983,7 +991,7 @@ final class AppDelegate: NSObject,
 
         if let appItem: NSMenuItem = self.acvc.controlMenuItem {
             // FROM 1.3.0 - Add a separator if we're NOT showing item images
-            if doSeparate { self.appMenu!.addItem(NSMenuItem.separator()) }
+            self.appMenu!.addItem(NSMenuItem.separator())
             self.appMenu!.addItem(appItem)
         }
     }
@@ -1556,10 +1564,15 @@ final class AppDelegate: NSObject,
         }
     }
 
-
+    /**
+     Set up a task to kill the macOS Finder and, optionally, the Dock.
+     
+     - Parameters
+        - andDock: `true` if the Dock should be restarted too.
+     */
     func killFinder(andDock: Bool) {
 
-        // Set up a task to kill the macOS Finder and, optionally, the Dock
+        //
 
         var args: [String] = ["Finder"]
         if andDock { args.append("Dock") }
@@ -1572,7 +1585,14 @@ final class AppDelegate: NSObject,
 
 
     // MARK: - NSMenuDelegate Functions
-
+    
+    /**
+     Issue a notification if the menu has been gone into the background,
+     ie. been closed (manually or by clicking off it).
+     
+     - Parameters
+        - menu: The menu that has closed.
+     */
     func menuDidClose(_ menu: NSMenu) {
 
         // The menu has closed - tell the subviews
@@ -1581,6 +1601,14 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     The menu ia about to be opened after a click by the user so check if the
+     OPTION key has been held down: this will cause ALL the items to be shown, rather
+     than just the selected set.
+     
+     - Parameters
+        - menu: The menu that is about to open.
+     */
     func menuWillOpen(_ menu: NSMenu) {
 
         // Check to see if the Option key was down when the menu was clicked

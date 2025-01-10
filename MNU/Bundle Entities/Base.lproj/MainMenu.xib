@@ -101,19 +101,19 @@
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <scrollView fixedFrame="YES" autohidesScrollers="YES" horizontalLineScroll="28" horizontalPageScroll="10" verticalLineScroll="28" verticalPageScroll="10" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="YRU-ni-WJW">
-                                            <rect key="frame" x="14" y="81" width="566" height="236"/>
+                                            <rect key="frame" x="20" y="81" width="560" height="236"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
-                                                <rect key="frame" x="1" y="1" width="564" height="234"/>
+                                                <rect key="frame" x="1" y="1" width="558" height="234"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="28" viewBased="YES" floatsGroupRows="NO" id="2ab-77-HWZ">
-                                                        <rect key="frame" x="0.0" y="0.0" width="564" height="234"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="558" height="234"/>
                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                         <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                         <tableColumns>
-                                                            <tableColumn width="500" minWidth="480" maxWidth="500" id="Ws8-ne-vin">
+                                                            <tableColumn width="540" minWidth="500" maxWidth="540" id="Ws8-ne-vin">
                                                                 <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border">
                                                                     <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
@@ -125,11 +125,11 @@
                                                                 </textFieldCell>
                                                                 <prototypeCellViews>
                                                                     <tableCellView identifier="mnu-item-cell" id="Yb8-Cl-6kq" customClass="MenuItemTableCellView" customModule="MNU" customModuleProvider="target">
-                                                                        <rect key="frame" x="0.0" y="0.0" width="512" height="28"/>
+                                                                        <rect key="frame" x="0.0" y="0.0" width="552" height="28"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
                                                                             <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
-                                                                                <rect key="frame" x="1" y="6" width="383" height="16"/>
+                                                                                <rect key="frame" x="1" y="6" width="429" height="16"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Table View Cell" id="3Wj-7W-gYv">
                                                                                     <font key="font" metaFont="system"/>
@@ -138,19 +138,19 @@
                                                                                 </textFieldCell>
                                                                             </textField>
                                                                             <button allowsExpansionToolTips="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XTp-QK-fn6" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="500" y="1" width="21" height="27"/>
+                                                                                <rect key="frame" x="510" y="1" width="21" height="27"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                                                                <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarDeleteTemplate" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="CNG-Ta-pgV">
+                                                                                <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarDeleteTemplate" imagePosition="only" imageScaling="proportionallyDown" inset="2" id="CNG-Ta-pgV">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                                     <font key="font" metaFont="smallSystemBold"/>
                                                                                 </buttonCell>
                                                                             </button>
                                                                             <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" controlSize="small" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="UJM-JJ-409" customClass="MenuItemTableCellSwitch" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="430" y="3" width="36" height="21"/>
+                                                                                <rect key="frame" x="440" y="3" width="36" height="21"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                             </switch>
                                                                             <button allowsExpansionToolTips="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Tru-Xv-LMc" customClass="MenuItemTableCellButton" customModule="MNU" customModuleProvider="target">
-                                                                                <rect key="frame" x="472" y="7.5" width="20.5" height="16"/>
+                                                                                <rect key="frame" x="482" y="7.5" width="20.5" height="16"/>
                                                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                                                 <buttonCell key="cell" type="inline" bezelStyle="inline" image="NSTouchBarComposeTemplate" imagePosition="only" controlSize="large" imageScaling="proportionallyDown" inset="2" id="zLg-ls-krn">
                                                                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -188,7 +188,7 @@
                                             </scroller>
                                         </scrollView>
                                         <button horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="nVn-04-17X">
-                                            <rect key="frame" x="14" y="16" width="26" height="26"/>
+                                            <rect key="frame" x="17" y="16" width="26" height="26"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="help" bezelStyle="helpButton" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wKr-OW-4wl">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -210,7 +210,7 @@
                                             </connections>
                                         </button>
                                         <button allowsExpansionToolTips="YES" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Xos-L3-Lxi">
-                                            <rect key="frame" x="13" y="42" width="29" height="29"/>
+                                            <rect key="frame" x="19" y="42" width="29" height="29"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSAddTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="f4Y-p3-A54">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -230,7 +230,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="cw2-9R-dHW">
-                                            <rect key="frame" x="48" y="45" width="29" height="23"/>
+                                            <rect key="frame" x="54" y="45" width="29" height="23"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <buttonCell key="cell" type="roundTextured" bezelStyle="texturedRounded" image="NSActionTemplate" imagePosition="only" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="KyX-O1-NTg">
                                                 <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -504,7 +504,7 @@
                             <outlet property="delegate" destination="qtv-Yg-ACO" id="Jos-Oy-DZq"/>
                         </connections>
                     </tabView>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tTC-yl-5aZ">
+                    <button allowsExpansionToolTips="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tTC-yl-5aZ">
                         <rect key="frame" x="230" y="322.5" width="32" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="filemenu.and.selection" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="k5q-kz-Eo1">
@@ -515,7 +515,7 @@
                             <action selector="doSwitchTabWithSender:" target="qtv-Yg-ACO" id="nSk-4c-gOl"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exI-z2-gth">
+                    <button allowsExpansionToolTips="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exI-z2-gth">
                         <rect key="frame" x="285" y="321.5" width="32.5" height="34"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="gear" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="BTM-zj-mUK">
@@ -526,7 +526,7 @@
                             <action selector="doSwitchTabWithSender:" target="qtv-Yg-ACO" id="W4k-6T-4ek"/>
                         </connections>
                     </button>
-                    <button fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L2g-LZ-eSJ">
+                    <button allowsExpansionToolTips="YES" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L2g-LZ-eSJ">
                         <rect key="frame" x="339" y="322.5" width="32" height="32"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="info.square" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="hu2-CO-iYC">
@@ -1045,11 +1045,17 @@ Gw
                         <action selector="doContextDeleteScriptWithSender:" target="qtv-Yg-ACO" id="BeT-L0-FFF"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Insert Separator" id="YIZ-j2-c4b">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doContextAddSeparatorWithSender:" target="qtv-Yg-ACO" id="AIg-bP-MnQ"/>
+                    </connections>
+                </menuItem>
             </items>
             <connections>
                 <outlet property="delegate" destination="qtv-Yg-ACO" id="OaP-65-Ir8"/>
             </connections>
-            <point key="canvasLocation" x="246" y="-281"/>
+            <point key="canvasLocation" x="483" y="-319"/>
         </menu>
         <scrollView wantsLayer="YES" autohidesScrollers="YES" horizontalLineScroll="10" horizontalPageScroll="10" verticalLineScroll="10" verticalPageScroll="10" hasHorizontalScroller="NO" usesPredominantAxisScrolling="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gGh-PJ-SnZ">
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>

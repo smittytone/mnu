@@ -167,6 +167,10 @@ final class ConfigureViewController:  NSViewController,
         self.tabManager.callbacks.append(nil)   // Info tab
         self.tabManager.callbacks.append(nil)   // Settings tab
         self.tabManager.callbacks.append(nil)   // Feedback tab
+        
+        self.tabButtonMenu.toolTip = "Configure MNU’s menu items"
+        self.tabButtonSettings.toolTip = "Apply MNU settings"
+        self.tabButtonAbout.toolTip = "Learn more about MNU"
     }
 
 
@@ -309,15 +313,6 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc private func doContextShowHide(sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        let item: MenuItem = menuItem.representedObject as! MenuItem
-        doShowHide(item)
-    }
-
-    
     @objc private func doShowHideSwitch(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
@@ -343,17 +338,6 @@ final class ConfigureViewController:  NSViewController,
     }
 
     
-    @IBAction private func doContextEditScript (sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            doEdit(item)
-        }
-    }
-    
-    
     @objc private func doEditScript(sender: Any) {
 
         // Get the Menu Item from the reference stored in the MenuItemTableCellButton
@@ -375,17 +359,6 @@ final class ConfigureViewController:  NSViewController,
         self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.showSheet()
-    }
-    
-    
-    @IBAction @objc private func doContextDeleteScript(sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            doDelete(item)
-        }
     }
     
     
@@ -453,7 +426,61 @@ final class ConfigureViewController:  NSViewController,
         doShowHelp(sender: self.extrasButton)
     }
 
+    
+    // MARK: - Contextual Menu Action Functions
+    
+    @IBAction @objc private func doContextShowHide(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doShowHide(item)
+        }
+    }
 
+    
+    @IBAction private func doContextEditScript (sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doEdit(item)
+        }
+    }
+    
+    
+    @IBAction @objc private func doContextDeleteScript(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doDelete(item)
+        }
+    }
+    
+    
+    /**
+     Add a separator below the selected table view row
+     */
+    @IBAction @objc private func doContextAddSeparator(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            if let index = self.menuItems?.items.firstIndex(of: item) {
+                let newMenuItem = MenuItem.init()
+                newMenuItem.type = .separator
+                newMenuItem.title = "Separator"
+                newMenuItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
+                self.menuItems?.items.insert(newMenuItem, at: index + 1)
+                self.hasChanged = true
+                self.applyChangesButton.isEnabled = true
+                self.menuItemsTableView.reloadData()
+            }
+        }
+    }
+    
+    
     // MARK: - About Tab Action Functions
     
     @IBAction @objc private func submitFeedback(sender: Any?) {
@@ -691,17 +718,39 @@ final class ConfigureViewController:  NSViewController,
                 // NOTE 'buttonA' is the right-most button
                 cell!.title.stringValue = item.title
                 
+                if item.type == .separator {
+                    let paraStyle = NSMutableParagraphStyle()
+                    paraStyle.alignment = .left
+                    var sysFont = NSFont.systemFont(ofSize: 13.0)
+                    if let font: NSFont = NSFontManager.shared.font(withFamily: sysFont.familyName!,
+                                                                    traits: .italicFontMask,
+                                                                    weight: 5,
+                                                                    size: 13.0) {
+                        sysFont = font
+                    } else {
+                        sysFont = NSFont.systemFont(ofSize: 13.0)
+                    }
+                        
+                    let attrTitle = NSMutableAttributedString.init(string: item.title + " ", attributes: [
+                        .font: sysFont,
+                        .paragraphStyle: paraStyle
+                    ])
+                    
+                    cell!.title.attributedStringValue = attrTitle
+                }
+                
+                // NOTE Buttons named in order, from the Left to Right
                 cell!.buttonA.image = NSImage.init(named: "NSTouchBarDeleteTemplate")
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
-                cell!.buttonA.toolTip = "Delete Item"
+                cell!.buttonA.toolTip = "Delete this menu item"
                 cell!.buttonA.isEnabled = true
                 cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage.init(named: "NSTouchBarComposeTemplate")
                 cell!.buttonB.action = #selector(self.doEditScript(sender:))
-                cell!.buttonB.toolTip = "Edit Item"
-                cell!.buttonB.isEnabled = true
+                cell!.buttonB.toolTip = "Edit this menu item"
+                cell!.buttonB.isEnabled = item.type != .separator
                 cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonB.menuItem = item
                 
@@ -710,7 +759,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.cellSwitch.menuItem = item
                 cell!.cellSwitch.state = item.isHidden ? .off : .on
                 cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
-                cell!.cellSwitch.toolTip = "Show/Hide Item"
+                cell!.cellSwitch.toolTip = "Show or hide this menu item"
                 
                 if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
@@ -719,8 +768,8 @@ final class ConfigureViewController:  NSViewController,
                     
                     // FROM 1.3.0
                     // Change tooltips for built-ins
-                    cell!.buttonB.toolTip = "Built-in items can’t be edited"
-                    cell!.buttonA.toolTip = "Built-in items can’t be deleted"
+                    cell!.buttonB.toolTip = "Built-in menu items can’t be edited"
+                    cell!.buttonA.toolTip = "Built-in menu items can’t be deleted"
                 }
 
                 return cell
@@ -926,6 +975,7 @@ final class ConfigureViewController:  NSViewController,
                 menu.item(at: 0)!.representedObject = item
                 menu.item(at: 1)!.representedObject = item
                 menu.item(at: 2)!.representedObject = item
+                menu.item(at: 3)!.representedObject = item
                 
                 // Contextualise the Show/Hide menu item's title
                 menu.item(at: 0)?.title = item.isHidden ? "Show" : "Hide"
@@ -934,6 +984,7 @@ final class ConfigureViewController:  NSViewController,
                 menu.item(at: 0)!.isEnabled = true
                 menu.item(at: 1)!.isEnabled = true
                 menu.item(at: 2)!.isEnabled = true
+                menu.item(at: 3)!.isEnabled = true
                 
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)

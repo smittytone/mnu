@@ -107,10 +107,10 @@ struct MNU_CONSTANTS {
     
     // THIS IS THE DEFINITIVE ICON ORDER
     static let ICONS: [String] = [
-        "generic", "bash", "z", "code", "git",
-        "brew", "docker", "multipass",
-        "as", "python", "", "", "",
-        "web", "cloud", "keys", "", "app",
+        "generic", "bash", "z", "brew", "git",
+        "as", "python", "as", "as", "code",
+        "docker", "multipass", "as", "as", "as",
+        "web", "cloud", "as", "as", "app",
         "cog", "sync", "power", "mac", "x"
     ]
     
