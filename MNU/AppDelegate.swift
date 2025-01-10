@@ -146,6 +146,13 @@ final class AppDelegate: NSObject,
                        selector: #selector(self.toggleTerminalTabbing),
                        name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
                        object: self.cwvc)
+        
+        // FROM 2.0.0
+        // The user wants to factory reset MNU
+        nc.addObserver(self,
+                       selector: #selector(self.performReset),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.RESTORE_DEFAULTS),
+                       object: self.cwvc)
     }
 
                        
@@ -434,6 +441,22 @@ final class AppDelegate: NSObject,
         defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
         defaults.synchronize()
     }
+    
+    
+    @objc private func performReset() {
+        
+        // Set the appropriate flags and make sure the
+        // control panel menu item has been removed.
+        self.reloadDefaults = true
+        self.appMenu?.removeAllItems()
+        
+        // Set the default settings
+        registerPreferences()
+        
+        // Rebuild the menu from scratch (this will check
+        // the value of `reloadDefaults` to choose the correct path
+        createMenu()
+    }
 
 
     // MARK: - App Action Functions
@@ -649,8 +672,8 @@ final class AppDelegate: NSObject,
         
         // Prepare the NSMenu
         self.appMenu = NSMenu.init(title: "MNU")
-        self.appMenu!.autoenablesItems = false
-        self.appMenu!.delegate = self
+        self.appMenu?.autoenablesItems = false
+        self.appMenu?.delegate = self
 
         // Clear the items list
         self.items.removeAll()
@@ -659,7 +682,7 @@ final class AppDelegate: NSObject,
         let defaults: UserDefaults = UserDefaults.standard
         let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
 
-        if !reloadDefaults && loadedItems.count > 0 {
+        if !self.reloadDefaults && loadedItems.count > 0 {
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
             // convert the serializations into real objects: Menu Items and their representative
             // NSMenuItems
@@ -955,7 +978,7 @@ final class AppDelegate: NSObject,
                     case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
                         menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
                     case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                        menuItem.image = NSImage.init(named: "logo_github")
+                        menuItem.image = NSImage.init(named: "logo_git")
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
                         menuItem.image = NSImage.init(named: "logo_brew")
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:

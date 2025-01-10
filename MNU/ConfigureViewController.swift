@@ -145,6 +145,8 @@ final class ConfigureViewController:  NSViewController,
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU data...", action: #selector(self.doExport), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore MNU data...", action: #selector(self.doImport), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.separator())
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore defaults", action: #selector(self.restoreDefaults), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.separator())
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Send feedback...", action: #selector(self.submitFeedback), keyEquivalent: ""))
 
         // FROM 1.1.0
@@ -494,7 +496,7 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - About Tab Action Functions
     
-    @IBAction @objc private func submitFeedback(sender: Any?) {
+    @IBAction private func submitFeedback(sender: Any?) {
 
         // Get the feedback sheet view controller to show its sheet
         self.fbvc.parentWindow = self.configureWindow!
@@ -632,7 +634,7 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    // MARK: - List Import/Export Functions
+    // MARK: - List Import/Export/Reset Functions
 
     /**
      Export the menu list as a backup. This currently outputs a plaintext JSON file.
@@ -730,6 +732,33 @@ final class ConfigureViewController:  NSViewController,
                                        "Sorry, but the menu items back-up file could not be loaded from disk. Is it a MNU file?")
                     }
                 }
+            }
+        }
+    }
+    
+    
+    /**
+     Factory Reset.
+     */
+    @objc private func restoreDefaults() {
+        
+        let alert: NSAlert = NSAlert()
+        alert.messageText = "Are you sure you wish to restore MNU’s defaults?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user clicked 'Yes': notify the menu that it needs to change
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.RESTORE_DEFAULTS),
+                                                object: self)
+                
+                // App delegate will rebuild the item list, so the config
+                // window is now redundant -- so close it. Also, we're implicitly ignoring
+                // any exxisting changes made as the user has explicitly said YES to
+                // restoring the defaults.
+                self.hasChanged = false
+                self.applyChangesButton.isEnabled = false
+                self.configureWindow!.close()
             }
         }
     }

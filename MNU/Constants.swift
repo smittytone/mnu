@@ -130,6 +130,7 @@ struct MNU_CONSTANTS {
     struct NOTIFICATION_IDS {
         
         static let UPDATE_LIST                  = "com.bps.mnu.list-updated"
+        static let RESTORE_DEFAULTS             = "com.bps.mnu.restore-defaults"
     }
     
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0
