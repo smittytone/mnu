@@ -470,7 +470,7 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
-            menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+            menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
         }
 
         // Set up the script that will switch the UI mode
@@ -972,7 +972,7 @@ final class AppDelegate: NSObject,
             if self.showImages {
                 switch item.code {
                     case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                        menuItem.image = NSImage.init(named: (self.inDarkMode ? "light_mode_icon" : "dark_mode_icon"))
+                        menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
                     case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
                         menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
                     case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:

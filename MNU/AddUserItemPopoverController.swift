@@ -62,32 +62,32 @@ final class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Hash Bang")
         self.tooltips.append("Bash")
         self.tooltips.append("Z Shell")
-        self.tooltips.append("Code")
-        self.tooltips.append("Git")
-
-        self.tooltips.append("GitHub")
-        self.tooltips.append("GitLab")
         self.tooltips.append("Homebrew")
+        self.tooltips.append("MacPorts")
+
+        self.tooltips.append("AppleScript")
+        self.tooltips.append("Python")
+        self.tooltips.append("Swift")
+        self.tooltips.append("NodeJS")
+        self.tooltips.append("Code")
+
         self.tooltips.append("Docker")
         self.tooltips.append("Multipass")
-
-        self.tooltips.append("Python")
-        self.tooltips.append("Node")
-        self.tooltips.append("AppleScript")
-        self.tooltips.append("TypeScript")
-        self.tooltips.append("PHP")
+        self.tooltips.append("Emulation")
+        self.tooltips.append("Git")
+        self.tooltips.append("SSH")
 
         self.tooltips.append("Web")
         self.tooltips.append("Cloud")
-        self.tooltips.append("Document")
-        self.tooltips.append("Folder")
-        self.tooltips.append("Application")
+        self.tooltips.append("NAS")
+        self.tooltips.append("Server")
+        self.tooltips.append("Mac")
 
         self.tooltips.append("Settings")
         self.tooltips.append("Sync")
         self.tooltips.append("Power")
-        self.tooltips.append("Mac")
-        self.tooltips.append("X: The Unknown")
+        self.tooltips.append("App")
+        self.tooltips.append("X, The Unknown")
 
         // Configure the collection view
         configureCollectionView()
