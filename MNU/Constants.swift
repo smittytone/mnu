@@ -114,4 +114,24 @@ struct MNU_CONSTANTS {
         "cog", "sync", "power", "mac", "x"
     ]
     
+    
+    // FROM 2.0.0
+    struct SETTINGS_IDS {
+        
+        static let DEFAULT_ITEMS                = "com.bps.mnu.default-items"
+        static let SHOW_MENU_IMAGES             = "com.bps.mnu.show-controls"
+        static let NEW_TERM_TAB                 = "com.bps.mnu.new-term-tab"
+        static let TERMINAL                     = "com.bps.mnu.term-choice"
+        static let AUTO_SEPARATE                = "com.bps.mnu.auto-separate-items"
+        static let SHOW_DIRECT_OUTPUT           = "com.bps.mnu.show-direct-output"
+    }
+    
+    
+    struct NOTIFICATION_IDS {
+        
+        static let UPDATE_LIST                  = "com.bps.mnu.list-updated"
+    }
+    
+    static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0
+    
 }

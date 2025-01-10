@@ -51,21 +51,26 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet weak var menuItemsAddButton: NSButton!
     @IBOutlet weak var applyChangesButton: NSButton!
 
-    // Preferences Tab
+    // Settings Tab
     @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
     @IBOutlet weak var prefsNewTermTabButton: NSButton!
-    @IBOutlet weak var prefsShowControlsButton: NSButton!
+    @IBOutlet weak var prefsShowImagesButton: NSButton!
     @IBOutlet weak var prefsHelpButton: NSButton!
     // FROM 1.6.0
     @IBOutlet weak var prefsTerminalChoiceTerminal: NSButton!
     @IBOutlet weak var prefsTerminalChoiceITerm2: NSButton!
-
+    // FROM 2.0.0
+    @IBOutlet weak var prefsAutoSeparateButton: NSButton!
+    @IBOutlet weak var prefsDirectOutpuButton: NSButton!
+    
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
     @IBOutlet weak var fbvc: FeedbackSheetViewController!
     // FROM 1.1.0
     @IBOutlet weak var feedbackButton: NSButton!
     
+    // Tab control buttons
+    // FROM 2.0.0
     @IBOutlet weak var tabButtonMenu: NSButton!
     @IBOutlet weak var tabButtonSettings: NSButton!
     @IBOutlet weak var tabButtonAbout: NSButton!
@@ -86,6 +91,8 @@ final class ConfigureViewController:  NSViewController,
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
+    // FROM 2.0.0
+    var autoSeparateInForce: Bool = false
     
     
     // MARK: - Private Class Properties
@@ -151,7 +158,7 @@ final class ConfigureViewController:  NSViewController,
         self.prefsHelpButton.toolTip = "Click here for help with this tab"
         self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
         self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
-        self.prefsShowControlsButton.toolTip = "Check to display images alongside MNU menu items"
+        self.prefsShowImagesButton.toolTip = "Check to display images alongside MNU menu items"
         
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
@@ -193,18 +200,17 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : .off
-        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : .off
-        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : .off
-        
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? .on : .off
+        self.prefsNewTermTabButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
+        self.prefsShowImagesButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
         // FROM 1.6.0
-        self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        self.terminalChoice = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
         switch(self.terminalChoice) {
-        case 1:
-            self.prefsTerminalChoiceITerm2.state = .on
-        // Add other non-zero cases here to include other terminals
-        default:
-            self.prefsTerminalChoiceTerminal.state = .on
+            case 1:
+                self.prefsTerminalChoiceITerm2.state = .on
+            // Add other non-zero cases here to include other terminals
+            default:
+                self.prefsTerminalChoiceTerminal.state = .on
         }
         
         // FROM 1.1.0
@@ -214,6 +220,11 @@ final class ConfigureViewController:  NSViewController,
         // FROM 2.0.0
         // Manually select the first tab
         self.tabManager.programmaticallyClickButton(at: 0)
+        
+        // FROM 2.0.0
+        // Set up auto separation and its effect on controls
+        self.prefsAutoSeparateButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
+        self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
     }
 
     
@@ -271,7 +282,7 @@ final class ConfigureViewController:  NSViewController,
 
         // If any changes have been made to the item list, inform the app delegate
         if self.hasChanged {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
                                             object: self)
             self.hasChanged = false
             self.applyChangesButton.isEnabled = false
@@ -493,24 +504,45 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - Settings Tab Action Functions
     
-    @IBAction @objc private func doToggleLaunchAtLogin(sender: Any?) {
+    /**
+     The user has toggled the 'launch at login' checkbox, so send a suitable
+     notification to the app delegate.
+     */
+    @IBAction private func doToggleLaunchAtLogin(sender: Any?) {
 
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
-        let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
+        let action: String = "com.bps.mnu.startup-" + (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
                                         object: self)
     }
     
     
-    @IBAction @objc private func doSetTermPref(sender: Any?) {
-        
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
+    /**
+     The user has toggled the 'show item images' checkbox, so set a suitable
+     notification to the app delegate.
+     */
+    @IBAction private func doToggleItemImages(sender: Any?) {
+
         let defaults: UserDefaults = UserDefaults.standard
-        self.tabOpenChoice = self.prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
+        let state = self.prefsShowImagesButton.state == .on ? true : false
+        defaults.set(state,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+                                        object: self)
+    }
+
+    
+    /**
+     The user has toggled the 'new terminal tab' checkbox, so set a suitable
+     notification to the app delegate.
+     */
+    @IBAction private func doSetTermPref(sender: Any?) {
+        
+        let defaults: UserDefaults = UserDefaults.standard
+        self.tabOpenChoice = self.prefsNewTermTabButton.state == .on ? true : false
         defaults.set(self.tabOpenChoice,
-                     forKey: "com.bps.mnu.new-term-tab")
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
         
         // FROM 1.6.0
         // Notify the menu that it needs to change
@@ -519,25 +551,12 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc private func doShowControls(sender: Any?) {
-
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
-        let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsShowControlsButton.state == NSControl.StateValue.on ? true : false
-        defaults.set(state,
-                     forKey: "com.bps.mnu.show-controls")
-
-        // Notify the menu that it needs to change
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
-                                        object: self)
-    }
-
-    
-    @IBAction @objc private func doToggleTerminalChoice(sender: Any?) {
+    /**
+     The user has changed their preferred terminal app.
+     FROM 1.6.0
+     */
+    @IBAction private func doToggleTerminalChoice(sender: Any?) {
             
-        // FROM 1.6.0
-        // The user has changed their preferred terminal
         var termChoice: Int = 0
         if self.prefsTerminalChoiceITerm2.state == .on {
             termChoice = 1
@@ -549,7 +568,7 @@ final class ConfigureViewController:  NSViewController,
             self.terminalChoice = termChoice
             let defaults: UserDefaults = UserDefaults.standard
             defaults.set(termChoice,
-                         forKey: "com.bps.mnu.term-choice")
+                         forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
             
             // Notify the mai app that it needs to change
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
@@ -558,7 +577,48 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
-    @IBAction @objc private func doShowHelp(sender: Any?) {
+    /**
+     The user has toggled the 'auto separate' checkbox, so set a suitable
+     notification to the app delegate.
+     FROM 2.0.0
+     */
+    @IBAction private func doToggleAutoSeparate(sender: Any?) {
+        
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = self.prefsAutoSeparateButton.state == .on ? true : false
+        defaults.set(state,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
+        
+        // Setting this disables manually created separators so enable/disable
+        // the separator setting controls as required
+        self.autoSeparateInForce = state
+        self.menuItemsTableView.reloadData()
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+                                        object: self)
+    }
+    
+    
+    /**
+     The user has toggled the 'show direct output' checkbox, so set a suitable
+     notification to the app delegate.
+     FROM 2.0.0
+     */
+    @IBAction private func doToggleShowDirectOutput(sender: Any?) {
+        
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = self.prefsDirectOutpuButton.state == .on ? true : false
+        defaults.set(state,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+                                        object: self)
+    }
+    
+    
+    @IBAction private func doShowHelp(sender: Any?) {
         
         // Show the 'Help' via the website
         // TODO provide offline help
@@ -574,9 +634,12 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - List Import/Export Functions
 
+    /**
+     Export the menu list as a backup. This currently outputs a plaintext JSON file.
+     FROM 1.1.0
+     */
     @objc private func doExport() {
         
-        // FROM 1.1.0
         // Create a save panel for the export operation...
         let savePanel: NSSavePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["json"]
@@ -612,20 +675,25 @@ final class ConfigureViewController:  NSViewController,
             }
         }
     }
-
-
+    
+    
+    /**
+     Multi-use call from `doExport()` (see above).
+     FROM 1.1.0
+     */
     private func showExportAlert() {
 
-        // FROM 1.1.0
-        // Multi-use call from 'doExport()'
         showAlert("File Export Error",
                   "Sorry, but the menu items back-up file could not be created. Please try again.")
     }
     
     
+    /**
+     Import a backup menu item list.
+     FROM 1.1.0
+     */
     @objc private func doImport() {
         
-        // FROM 1.1.0
         // Create an open panel for the import operation...
         let openPanel: NSOpenPanel = NSOpenPanel()
         openPanel.allowedFileTypes = ["json"]
@@ -718,22 +786,25 @@ final class ConfigureViewController:  NSViewController,
                 // NOTE 'buttonA' is the right-most button
                 cell!.title.stringValue = item.title
                 
+                // FROM 2.0.0
+                // Is the item a separator line? If so this requires special text formatting
                 if item.type == .separator {
-                    let paraStyle = NSMutableParagraphStyle()
-                    paraStyle.alignment = .left
-                    var sysFont = NSFont.systemFont(ofSize: 13.0)
-                    if let font: NSFont = NSFontManager.shared.font(withFamily: sysFont.familyName!,
+                    let labelParagraphStyle = NSMutableParagraphStyle()
+                    labelParagraphStyle.alignment = .left
+                    
+                    var labelFont = NSFont.systemFont(ofSize: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE)
+                    if let font: NSFont = NSFontManager.shared.font(withFamily: labelFont.familyName!,
                                                                     traits: .italicFontMask,
                                                                     weight: 5,
-                                                                    size: 13.0) {
-                        sysFont = font
-                    } else {
-                        sysFont = NSFont.systemFont(ofSize: 13.0)
+                                                                    size: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE) {
+                        labelFont = font
                     }
-                        
-                    let attrTitle = NSMutableAttributedString.init(string: item.title + " ", attributes: [
-                        .font: sysFont,
-                        .paragraphStyle: paraStyle
+                    
+                    let labelText = item.title + (self.autoSeparateInForce ? " only visible when separators not added automatically" : "")
+                    let attrTitle = NSMutableAttributedString.init(string: labelText, attributes: [
+                        .font: labelFont,
+                        .paragraphStyle: labelParagraphStyle,
+                        .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.labelColor
                     ])
                     
                     cell!.title.attributedStringValue = attrTitle
@@ -760,6 +831,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.cellSwitch.state = item.isHidden ? .off : .on
                 cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
                 cell!.cellSwitch.toolTip = "Show or hide this menu item"
+                cell!.cellSwitch.isEnabled = true
                 
                 if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
@@ -771,7 +843,19 @@ final class ConfigureViewController:  NSViewController,
                     cell!.buttonB.toolTip = "Built-in menu items can’t be edited"
                     cell!.buttonA.toolTip = "Built-in menu items can’t be deleted"
                 }
-
+                
+                // FROM 2.0.0
+                // Do we need to disable the cell?
+                if self.autoSeparateInForce && item.type == .separator {
+                    cell!.buttonA.isEnabled = false
+                    cell!.buttonB.isEnabled = false
+                    cell!.cellSwitch.isEnabled = false
+                    
+                    cell!.buttonB.toolTip = "MNU-managed separators can’t be edited"
+                    cell!.buttonA.toolTip = "MNU-managed separators can’t be deleted"
+                    cell!.cellSwitch.toolTip = "MNU-managed separators are shown automatically"
+                }
+                
                 return cell
             }
         }
@@ -984,7 +1068,7 @@ final class ConfigureViewController:  NSViewController,
                 menu.item(at: 0)!.isEnabled = true
                 menu.item(at: 1)!.isEnabled = true
                 menu.item(at: 2)!.isEnabled = true
-                menu.item(at: 3)!.isEnabled = true
+                menu.item(at: 3)!.isEnabled = !self.autoSeparateInForce
                 
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)

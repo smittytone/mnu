@@ -274,51 +274,51 @@
                                             </textFieldCell>
                                         </textField>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
-                                            <rect key="frame" x="136" y="91" width="329" height="206"/>
+                                            <rect key="frame" x="103" y="59" width="395" height="252"/>
                                             <subviews>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="mDI-9d-iRt">
-                                                    <rect key="frame" x="-2" y="65" width="331" height="20"/>
+                                                    <rect key="frame" x="-2" y="127" width="397" height="20"/>
                                                     <buttonCell key="cell" type="check" title="Start MNU at Login" bezelStyle="regularSquare" imagePosition="left" inset="2" id="HGc-B0-vYh">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="18" id="hW3-62-ACF"/>
+                                                        <constraint firstAttribute="height" constant="18" id="fBY-9X-Kff"/>
                                                     </constraints>
                                                     <connections>
                                                         <action selector="doToggleLaunchAtLoginWithSender:" target="qtv-Yg-ACO" id="JdV-tf-Quw"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Iol-Aa-G7M">
-                                                    <rect key="frame" x="-2" y="43" width="331" height="18"/>
+                                                    <rect key="frame" x="-2" y="105" width="397" height="18"/>
                                                     <buttonCell key="cell" type="check" title="Show menu item images" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Ter-1U-8AP">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="tMz-rr-XUd"/>
+                                                        <constraint firstAttribute="height" constant="16" id="8mB-Rs-XPx"/>
                                                     </constraints>
                                                     <connections>
-                                                        <action selector="doShowControlsWithSender:" target="qtv-Yg-ACO" id="IDj-Bb-1ZJ"/>
+                                                        <action selector="doToggleItemImagesWithSender:" target="qtv-Yg-ACO" id="arI-vi-uBT"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
-                                                    <rect key="frame" x="-2" y="21" width="331" height="18"/>
+                                                    <rect key="frame" x="-2" y="21" width="397" height="18"/>
                                                     <buttonCell key="cell" type="check" title="Execute Terminal commands in new tab or window" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6hj-XL-YC9">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="4Xi-CG-6RP"/>
+                                                        <constraint firstAttribute="height" constant="16" id="VcM-mC-gCc"/>
                                                     </constraints>
                                                     <connections>
                                                         <action selector="doSetTermPrefWithSender:" target="qtv-Yg-ACO" id="COU-Ji-Ib9"/>
                                                     </connections>
                                                 </button>
                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Szs-YE-A1b">
-                                                    <rect key="frame" x="-2" y="190" width="333" height="16"/>
+                                                    <rect key="frame" x="-2" y="236" width="399" height="16"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="9y1-Zp-iPT"/>
+                                                        <constraint firstAttribute="height" constant="16" id="tZ4-iy-5qh"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" lineBreakMode="clipping" title="Select your preferred terminal:" id="tsQ-vq-vGG">
                                                         <font key="font" metaFont="system"/>
@@ -327,80 +327,113 @@
                                                     </textFieldCell>
                                                 </textField>
                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaJ-sI-hCQ">
-                                                    <rect key="frame" x="18" y="110" width="313" height="28"/>
+                                                    <rect key="frame" x="18" y="170" width="379" height="14"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="309" id="P03-ka-si9"/>
-                                                        <constraint firstAttribute="height" constant="28" id="ipL-eV-7Py"/>
+                                                        <constraint firstAttribute="height" constant="14" id="P6I-ol-rME"/>
+                                                        <constraint firstAttribute="width" constant="375" id="fZd-Ui-Gos"/>
                                                     </constraints>
-                                                    <textFieldCell key="cell" controlSize="small" allowsUndo="NO" title="If you do not have iTerm2 installed, then macOS’ Terminal will be used instead." id="HVe-9w-GK0">
+                                                    <textFieldCell key="cell" controlSize="small" allowsUndo="NO" title="If you do not have iTerm2 installed, then macOS’ Terminal will be used." id="HVe-9w-GK0">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="9Pi-ZW-UUW">
-                                                    <rect key="frame" x="-2" y="165" width="331" height="18"/>
+                                                    <rect key="frame" x="-2" y="211" width="397" height="18"/>
                                                     <buttonCell key="cell" type="radio" title="macOS Terminal" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="2Ec-un-i5f">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="FSs-cB-UII"/>
+                                                        <constraint firstAttribute="height" constant="16" id="nts-nV-9ov"/>
                                                     </constraints>
                                                     <connections>
                                                         <action selector="doToggleTerminalChoiceWithSender:" target="qtv-Yg-ACO" id="iHR-0Q-pfY"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="MI8-u3-HSa">
-                                                    <rect key="frame" x="-2" y="143" width="331" height="18"/>
+                                                    <rect key="frame" x="-2" y="189" width="397" height="18"/>
                                                     <buttonCell key="cell" type="radio" title="iTerm2" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Alv-Uf-MPB">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="DeF-pI-Y1f"/>
+                                                        <constraint firstAttribute="height" constant="16" id="yW4-gv-TdC"/>
                                                     </constraints>
                                                     <connections>
                                                         <action selector="doToggleTerminalChoiceWithSender:" target="qtv-Yg-ACO" id="soy-3a-m9E"/>
                                                     </connections>
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AsU-8H-CFq">
-                                                    <rect key="frame" x="-2" y="-1" width="331" height="18"/>
+                                                    <rect key="frame" x="-2" y="-1" width="397" height="18"/>
                                                     <buttonCell key="cell" type="check" title="Show command output in a window" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6C0-Tj-18A">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="16" id="exa-kD-y2b"/>
+                                                        <constraint firstAttribute="height" constant="16" id="k6z-zO-nQk"/>
                                                     </constraints>
+                                                    <connections>
+                                                        <action selector="doToggleShowDirectOutputWithSender:" target="qtv-Yg-ACO" id="OGL-Qa-oDb"/>
+                                                    </connections>
                                                 </button>
+                                                <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="NqJ-H3-JRr">
+                                                    <rect key="frame" x="-2" y="83" width="397" height="18"/>
+                                                    <buttonCell key="cell" type="check" title="Auto-separate menu items like MNU 1.x" bezelStyle="regularSquare" imagePosition="left" inset="2" id="E75-zo-02Z">
+                                                        <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                        <font key="font" metaFont="system"/>
+                                                    </buttonCell>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="16" id="eqQ-cT-dK9"/>
+                                                    </constraints>
+                                                    <connections>
+                                                        <action selector="doToggleAutoSeparateWithSender:" target="qtv-Yg-ACO" id="P0W-75-GGz"/>
+                                                    </connections>
+                                                </button>
+                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mw-IW-ELX">
+                                                    <rect key="frame" x="18" y="62" width="379" height="14"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="375" id="6XT-pe-Zlp"/>
+                                                        <constraint firstAttribute="height" constant="14" id="l1h-3T-W2M"/>
+                                                    </constraints>
+                                                    <textFieldCell key="cell" controlSize="small" allowsUndo="NO" title="When this is not selected, you can add your own separators." id="pb4-Ai-5uL">
+                                                        <font key="font" metaFont="smallSystem"/>
+                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="9Pi-ZW-UUW" firstAttribute="top" secondItem="Szs-YE-A1b" secondAttribute="bottom" constant="8" symbolic="YES" id="01d-8L-5jv"/>
-                                                <constraint firstItem="Szs-YE-A1b" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="0fC-Wd-vrx"/>
-                                                <constraint firstItem="MI8-u3-HSa" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="0kv-58-Da3"/>
-                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="8dy-Ed-586"/>
-                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" symbolic="YES" id="CuX-d8-QsE"/>
-                                                <constraint firstAttribute="trailing" secondItem="9Pi-ZW-UUW" secondAttribute="trailing" id="Ll8-6a-Qcx"/>
-                                                <constraint firstItem="AsU-8H-CFq" firstAttribute="top" secondItem="Wit-jC-Lfb" secondAttribute="bottom" constant="6" symbolic="YES" id="MA8-xY-otL"/>
-                                                <constraint firstAttribute="trailing" secondItem="MI8-u3-HSa" secondAttribute="trailing" id="Nj7-Xb-pl0"/>
-                                                <constraint firstItem="Szs-YE-A1b" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="OSt-F6-A96"/>
-                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="PKw-Dz-HBf"/>
-                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="PzC-fS-hrZ"/>
-                                                <constraint firstItem="9Pi-ZW-UUW" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="V7D-oM-trp"/>
-                                                <constraint firstItem="XaJ-sI-hCQ" firstAttribute="top" secondItem="MI8-u3-HSa" secondAttribute="bottom" constant="6" id="Vhr-1q-8Kk"/>
-                                                <constraint firstAttribute="bottom" secondItem="AsU-8H-CFq" secondAttribute="bottom" id="YT4-tN-9VK"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="bgW-ua-RFJ"/>
-                                                <constraint firstAttribute="trailing" secondItem="XaJ-sI-hCQ" secondAttribute="trailing" id="dl2-DJ-HTo"/>
-                                                <constraint firstAttribute="trailing" secondItem="mDI-9d-iRt" secondAttribute="trailing" id="dpm-xE-b4m"/>
-                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="Iol-Aa-G7M" secondAttribute="bottom" constant="6" symbolic="YES" id="e7m-dN-Ngh"/>
-                                                <constraint firstAttribute="trailing" secondItem="AsU-8H-CFq" secondAttribute="trailing" id="kx7-fo-QUO"/>
-                                                <constraint firstAttribute="trailing" secondItem="Szs-YE-A1b" secondAttribute="trailing" id="m2n-Mz-we4"/>
-                                                <constraint firstAttribute="width" constant="329" id="mRq-jO-8iN"/>
-                                                <constraint firstAttribute="height" constant="206" id="nw3-Zs-TnG"/>
-                                                <constraint firstAttribute="trailing" secondItem="Iol-Aa-G7M" secondAttribute="trailing" id="sxE-kz-BrT"/>
-                                                <constraint firstItem="MI8-u3-HSa" firstAttribute="top" secondItem="9Pi-ZW-UUW" secondAttribute="bottom" constant="6" symbolic="YES" id="upr-8U-rMb"/>
-                                                <constraint firstItem="AsU-8H-CFq" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="xS2-MN-Hr2"/>
+                                                <constraint firstAttribute="bottom" secondItem="AsU-8H-CFq" secondAttribute="bottom" id="6Qr-gB-3O2"/>
+                                                <constraint firstAttribute="trailing" secondItem="0mw-IW-ELX" secondAttribute="trailing" id="8Bl-wR-e5Y"/>
+                                                <constraint firstItem="9Pi-ZW-UUW" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="CNZ-Tr-uEB"/>
+                                                <constraint firstAttribute="trailing" secondItem="XaJ-sI-hCQ" secondAttribute="trailing" id="CbW-cz-MiH"/>
+                                                <constraint firstItem="NqJ-H3-JRr" firstAttribute="top" secondItem="Iol-Aa-G7M" secondAttribute="bottom" constant="6" symbolic="YES" id="GTi-UJ-rPk"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="H87-0Y-vAZ"/>
+                                                <constraint firstItem="mDI-9d-iRt" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="KPn-WR-Ml0"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="MqK-Hw-ozi"/>
+                                                <constraint firstAttribute="trailing" secondItem="AsU-8H-CFq" secondAttribute="trailing" id="Mvr-l9-sga"/>
+                                                <constraint firstAttribute="height" constant="252" id="NlV-Pn-wr1"/>
+                                                <constraint firstItem="9Pi-ZW-UUW" firstAttribute="top" secondItem="Szs-YE-A1b" secondAttribute="bottom" constant="8" symbolic="YES" id="PVd-hX-vSR"/>
+                                                <constraint firstItem="Szs-YE-A1b" firstAttribute="top" secondItem="Gdv-8a-wSf" secondAttribute="top" id="ScN-GB-3d1"/>
+                                                <constraint firstItem="MI8-u3-HSa" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="Upb-O4-zSk"/>
+                                                <constraint firstAttribute="trailing" secondItem="Wit-jC-Lfb" secondAttribute="trailing" id="Usv-cf-Puy"/>
+                                                <constraint firstItem="0mw-IW-ELX" firstAttribute="top" secondItem="NqJ-H3-JRr" secondAttribute="bottom" constant="8" symbolic="YES" id="Xxf-8e-V4Z"/>
+                                                <constraint firstAttribute="trailing" secondItem="9Pi-ZW-UUW" secondAttribute="trailing" id="a7c-K3-dyP"/>
+                                                <constraint firstItem="MI8-u3-HSa" firstAttribute="top" secondItem="9Pi-ZW-UUW" secondAttribute="bottom" constant="6" symbolic="YES" id="asq-ya-kAP"/>
+                                                <constraint firstAttribute="trailing" secondItem="MI8-u3-HSa" secondAttribute="trailing" id="c4e-LA-8a1"/>
+                                                <constraint firstItem="AsU-8H-CFq" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="cZK-lK-zhD"/>
+                                                <constraint firstItem="XaJ-sI-hCQ" firstAttribute="top" secondItem="MI8-u3-HSa" secondAttribute="bottom" constant="6" id="dqj-o6-edJ"/>
+                                                <constraint firstAttribute="trailing" secondItem="mDI-9d-iRt" secondAttribute="trailing" id="eRc-N2-cu1"/>
+                                                <constraint firstItem="AsU-8H-CFq" firstAttribute="top" secondItem="Wit-jC-Lfb" secondAttribute="bottom" constant="6" symbolic="YES" id="gFO-ve-7ry"/>
+                                                <constraint firstItem="Iol-Aa-G7M" firstAttribute="top" secondItem="mDI-9d-iRt" secondAttribute="bottom" constant="6" symbolic="YES" id="h5d-Ef-rwl"/>
+                                                <constraint firstItem="Szs-YE-A1b" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="hb9-Ei-9ap"/>
+                                                <constraint firstAttribute="trailing" secondItem="NqJ-H3-JRr" secondAttribute="trailing" id="hyz-7L-cpz"/>
+                                                <constraint firstItem="Wit-jC-Lfb" firstAttribute="top" secondItem="0mw-IW-ELX" secondAttribute="bottom" constant="24" id="uEu-t9-ZRJ"/>
+                                                <constraint firstItem="NqJ-H3-JRr" firstAttribute="leading" secondItem="Gdv-8a-wSf" secondAttribute="leading" id="vl2-P0-TD3"/>
+                                                <constraint firstAttribute="trailing" secondItem="Szs-YE-A1b" secondAttribute="trailing" id="ybM-pF-j9i"/>
+                                                <constraint firstAttribute="width" constant="395" id="yd9-DZ-pQK"/>
+                                                <constraint firstAttribute="trailing" secondItem="Iol-Aa-G7M" secondAttribute="trailing" id="yot-YR-Qmv"/>
                                             </constraints>
                                         </customView>
                                     </subviews>
@@ -408,10 +441,10 @@
                                         <constraint firstAttribute="bottom" secondItem="lLj-TG-Lr5" secondAttribute="bottom" constant="24" id="89Z-3J-0dw"/>
                                         <constraint firstAttribute="trailing" secondItem="lLj-TG-Lr5" secondAttribute="trailing" constant="20" id="F6f-3S-Rlw"/>
                                         <constraint firstItem="lLj-TG-Lr5" firstAttribute="leading" secondItem="WdZ-qr-xzQ" secondAttribute="trailing" constant="6" id="Ood-qi-9Qp"/>
-                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="Z3B-eN-4oK"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="top" secondItem="RX0-XS-Gl5" secondAttribute="top" constant="6" id="Y3I-Av-Mk1"/>
                                         <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="20" id="mx6-G2-7lz"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="nmu-ru-5M6"/>
                                         <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="20" id="vgE-Kn-6Tm"/>
-                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="top" secondItem="RX0-XS-Gl5" secondAttribute="top" constant="20" symbolic="YES" id="voj-gb-JDQ"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -555,10 +588,12 @@
                 <outlet property="menuItemsAddButton" destination="Xos-L3-Lxi" id="JFx-vY-oET"/>
                 <outlet property="menuItemsCountText" destination="eAX-ej-8rF" id="gwi-Wk-xEE"/>
                 <outlet property="menuItemsTableView" destination="2ab-77-HWZ" id="l1v-fo-niw"/>
+                <outlet property="prefsAutoSeparateButton" destination="NqJ-H3-JRr" id="bM1-hm-HPb"/>
+                <outlet property="prefsDirectOutpuButton" destination="AsU-8H-CFq" id="6eo-qH-hb7"/>
                 <outlet property="prefsHelpButton" destination="WdZ-qr-xzQ" id="1kv-J6-WMY"/>
                 <outlet property="prefsLaunchAtLoginButton" destination="mDI-9d-iRt" id="eaT-R5-DqA"/>
                 <outlet property="prefsNewTermTabButton" destination="Wit-jC-Lfb" id="msP-Bb-jp9"/>
-                <outlet property="prefsShowControlsButton" destination="Iol-Aa-G7M" id="0zT-j2-pw1"/>
+                <outlet property="prefsShowImagesButton" destination="Iol-Aa-G7M" id="KjT-H6-18i"/>
                 <outlet property="prefsTerminalChoiceITerm2" destination="MI8-u3-HSa" id="XGy-oY-zr6"/>
                 <outlet property="prefsTerminalChoiceTerminal" destination="9Pi-ZW-UUW" id="R1k-Xm-37L"/>
                 <outlet property="showHelpButton" destination="nVn-04-17X" id="Xac-Af-wW0"/>
@@ -1045,7 +1080,7 @@ Gw
                         <action selector="doContextDeleteScriptWithSender:" target="qtv-Yg-ACO" id="BeT-L0-FFF"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Insert Separator" id="YIZ-j2-c4b">
+                <menuItem title="Insert Separator Below" id="YIZ-j2-c4b">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="doContextAddSeparatorWithSender:" target="qtv-Yg-ACO" id="AIg-bP-MnQ"/>
