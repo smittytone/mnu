@@ -2,7 +2,7 @@
 
 # Prep MNU images
 #
-# Version 1.0.3
+# Version 1.0.4
 
 # Function to show help info - keeps this out of the code
 showHelp() {
@@ -122,9 +122,13 @@ if [ "$sourceFolder" != "UNSET" ]; then
             cd "$sourceFolder"
             for file in *
             do
-                # Make the images
-                echo "Processing '$file'..."
-                m_a_make "$file"
+                ext="${file##*.}"
+                ext=${ext,,}
+                if [[ ${ext} == "png" || ${ext} == "webp" ]]; then
+                    # Make the images
+                    echo "Processing '$file'..."
+                    m_a_make "$file"
+                fi
             done
         else
             echo "Destination folder $destFolder can't be found"
