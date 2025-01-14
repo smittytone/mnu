@@ -27,13 +27,15 @@
  */
 
 
-import Cocoa
+import AppKit
+import UniformTypeIdentifiers
 
 
 final class AddUserItemViewController: NSViewController,
                                        NSTextFieldDelegate,
                                        NSPopoverDelegate,
-                                       NSWindowDelegate {
+                                       NSWindowDelegate,
+                                       NSOpenSavePanelDelegate {
 
     // MARK: - UI Outlets
 
@@ -52,7 +54,9 @@ final class AddUserItemViewController: NSViewController,
     // FROM 1.7.0
     @IBOutlet var modifierKeysSegment: NSSegmentedControl!
     @IBOutlet var keyEquivalentText: AddUserItemKeyTextField!
-
+    // FROM 2.0.0
+    @IBOutlet var chooseCustomIconButton: NSButton!
+    
 
     // MARK: - Public Class Properties
 
@@ -71,6 +75,10 @@ final class AddUserItemViewController: NSViewController,
     private var directAlert: NSAlert? = nil
     // FROM 1.7.0
     private var keyFieldEditor: AddUserItemKeyFieldEditor? = nil
+    // FROM 2.0.0
+    private var newImageURL: URL? = nil
+    private var hasNewImage: Bool = false
+    
     
     // MARK: - Lifecycle Functions
 
@@ -100,8 +108,11 @@ final class AddUserItemViewController: NSViewController,
         let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(updateButtonIcon(_:)),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
                        object: nil)
+        
+        // FROM 2.0.0
+        self.chooseCustomIconButton.toolTip = "Click to select a template image as a menu icon"
     }
 
 
@@ -150,11 +161,10 @@ final class AddUserItemViewController: NSViewController,
                 self.menuTitleText.stringValue = item.title
                 self.saveButton.title = "Update"
                 self.titleText.stringValue = "Edit This Command"
-                self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
-                self.iconButton.index = item.iconIndex
                 self.textCount.stringValue = "\(item.title.count)/30"
                 self.openCheck.state = item.type == .script ? .off : .on
                 self.directCheck.state = item.isDirect ? .on : .off
+                
                 // FROM 1.7.0
                 self.keyEquivalentText.stringValue = item.keyEquivalent.uppercased()
                 
@@ -174,6 +184,21 @@ final class AddUserItemViewController: NSViewController,
                     self.modifierKeysSegment.selectSegment(withTag: MNU_CONSTANTS.MOD_KEY_CTRL)
                 }
                 
+                // FROM 2.0.0
+                if !item.customImagePath.isEmpty {
+                    // We have a custom menu item icon to load
+                    if let imageBytes = loadImage(URL.init(fileURLWithPath: item.customImagePath)) {
+                        if let image = NSImage.init(data: imageBytes) {
+                            image.isTemplate = true
+                            self.iconButton.image = image
+                            self.iconButton.index = 99
+                        }
+                    }
+                } else {
+                    // Load up a pre-installed icon
+                    self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
+                    self.iconButton.index = item.iconIndex
+                }
             } else {
                 NSLog("Could not access the supplied MenuItem")
                 return
@@ -193,6 +218,9 @@ final class AddUserItemViewController: NSViewController,
             self.directCheck.state = .off
             // FROM 1.7.0
             self.keyEquivalentText.stringValue = ""
+            // FROM 2.0.0
+            self.hasNewImage = false
+            self.newImageURL = nil
         }
 
         // Present the sheet
@@ -202,16 +230,21 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    /**
+     When we receive a notification from the popover controller that an icon has been selected,
+     we come here and set the button's image to that icon.
+     */
     @objc func updateButtonIcon(_ note: Notification) {
 
-        // When we receive a notification from the popover controller that an icon has been selected,
-        // we come here and set the button's image to that icon
-        
         if let obj: Any = note.object {
             // Decode the notification object
             let index = obj as! NSNumber
             self.iconButton.image = self.icons.object(at: index.intValue) as? NSImage
             self.iconButton.index = index.intValue
+            
+            // FROM 2.0.0
+            self.hasNewImage = false
+            self.newImageURL = nil
         }
     }
 
@@ -227,10 +260,12 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    /**
+     The user has clicked the Add button, so check the entered information then,
+     if the checks pass, save or update the referenced menu item.
+     */
     @IBAction @objc func doSave(sender: Any?) {
-
-        // Save a new script item, or update an existing one (if we are editing)
-
+        
         var itemHasChanged: Bool = false
         let isOpenAction: Bool = self.openCheck.state == .on
         let isDirect: Bool = self.directCheck.state == .on
@@ -304,6 +339,7 @@ final class AddUserItemViewController: NSViewController,
 
         if self.isEditing {
             // Save the updated fields
+            // NOTE `self.menuItem` should not be `nil` if we're editing
             if let item: MenuItem = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
                     // FROM 1.2.0
@@ -319,11 +355,13 @@ final class AddUserItemViewController: NSViewController,
                     itemHasChanged = true
                     item.script = self.itemScriptText.stringValue
                 }
-
+                
+                /*
                 if item.iconIndex != self.iconButton.index {
                     itemHasChanged = true
                     item.iconIndex = self.iconButton.index
                 }
+                */
                 
                 // FROM 1.2.0
                 let newType: MNUItemType = isOpenAction ? .open : .script
@@ -354,6 +392,29 @@ final class AddUserItemViewController: NSViewController,
                     itemHasChanged = true
                     item.keyModFlags = modKeys
                 }
+                
+                // FROM 2.0.0
+                if self.hasNewImage {
+                    // A custom image has been chosen, replacing either an older custom image
+                    // or a pre-installed icon selection
+                    if let oldPath = self.newImageURL?.unixpath() {
+                        // An image path was previously saved
+                        if item.customImagePath != oldPath {
+                            // TODO Assumes users has reloaded the same image, which may actually
+                            //      have been edited and altered
+                            itemHasChanged = true
+                        }
+                    } else {
+                        NSLog("Missing custom image URL")
+                    }
+                } else {
+                    // No custom image selected so we can check the icon button's
+                    // `index` value to see if a different icon has been selected.
+                    if item.iconIndex != self.iconButton.index {
+                        itemHasChanged = true
+                        item.iconIndex = self.iconButton.index
+                    }
+                }
             }
         } else {
             // Process a new menu item
@@ -367,7 +428,6 @@ final class AddUserItemViewController: NSViewController,
             newItem.type = isOpenAction ? .open : .script
             newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
             newItem.isNew = true
-            newItem.iconIndex = self.iconButton.index
             // FROM 1.2.2
             newItem.isDirect = isDirect
 
@@ -382,16 +442,29 @@ final class AddUserItemViewController: NSViewController,
             // FROM 1.7.0
             newItem.keyEquivalent = self.keyEquivalentText.stringValue
             newItem.keyModFlags = modKeys
+            
+            // FROM 2.0.0
+            if self.hasNewImage {
+                newItem.customImagePath = self.newImageURL?.unixpath() ?? "ERROR"
+                newItem.iconIndex = 99
+            } else {
+                newItem.iconIndex = self.iconButton.index
+            }
 
             // Store the new menu item
             self.newMenuItem = newItem
             itemHasChanged = true
         }
-
+        
+        // FROM 2.0.0
+        // Do we need to save a custom image?
+        // NOTE This will 
+        saveImage()
+        
         if itemHasChanged {
             // Inform the configure window controller that there's a new item to list
             // NOTE The called code handles edited items too - it's not just for new items
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED),
                                             object: self)
         }
 
@@ -401,37 +474,39 @@ final class AddUserItemViewController: NSViewController,
         // FROM 1.6.0 -- don't stop editing here, do it in notified code
         // self.isEditing = false
     }
-
     
+    
+    /**
+     Show help via the website.
+     */
     @IBAction @objc func doShowHelp(sender: Any?) {
-
-        // Show the 'Help' via the website
-        // TODO provide offline help
-
+        
         if let helpURL: URL = URL.init(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
             NSWorkspace.shared.open(helpURL)
         }
     }
-
-
+    
+    /**
+     Present the pre-installed icon matrix.
+     */
     @IBAction @objc func doShowIcons(sender: Any) {
-
-        // Show the icon matrix
         
         self.iconPopover!.show(relativeTo: self.iconButton.bounds,
                                of: self.iconButton,
                                preferredEdge: NSRectEdge.maxY)
     }
-
-
+    
+    
+    /**
+     Make sure mutually exclusive checkboxes aren't ticked, and present
+     a warning if they are.
+     FROM 1.5.0
+     */
     @IBAction @objc func doCheckBox(sender: Any) {
-
-        // FROM 1.5.0
-        // Make sure mutually exclusive checkboxes aren't ticked
-
+        
         let checkedButton: NSButton = sender as! NSButton
         var doWarn: Bool = false
-
+        
         if checkedButton.state == .on {
             if checkedButton == self.directCheck {
                 if self.openCheck.state == .on {
@@ -439,7 +514,7 @@ final class AddUserItemViewController: NSViewController,
                     doWarn = true
                 }
             }
-
+            
             if checkedButton == self.openCheck {
                 if self.directCheck.state == .on {
                     // Direct action checkbox is set, so open action can't be
@@ -447,7 +522,7 @@ final class AddUserItemViewController: NSViewController,
                 }
             }
         }
-
+        
         if doWarn {
             // There is a clash, so turn off the just-checked button and warn the user
             checkedButton.state = .off
@@ -456,21 +531,147 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    /**
+     Clear any modifiers applied thus far.
+     FROM 1.7.0
+     */
     @IBAction @objc func doClearKey(sender: Any) {
-
-        // FROM 1.7.0
-
+        
         self.keyEquivalentText.stringValue = ""
     }
+    
+    
+    /**
+     Present an Open dialog to get a custom image, ie. an unprocessed PNG
+     we're going to use as the basis for a menu item icon.
+     
+     - Note Currently limited to PNG files only, but this may change.
+     */
+    @IBAction func doChooseImage(sender: Any) {
+        
+        // Prepare an Open dialog
+        let openDialog = NSOpenPanel.init()
+        openDialog.canChooseFiles = true
+        openDialog.canChooseDirectories = false
+        openDialog.allowsMultipleSelection = false
+        openDialog.delegate = self
+        openDialog.directoryURL = URL.init(fileURLWithPath: "")
+        
+        // Limit opening to PNG files
+        if let typo = UTType.init(filenameExtension: "png") {
+            openDialog.allowedContentTypes = [typo]
+        }
+        
+        if let typo = UTType.init(filenameExtension: "webp") {
+            openDialog.allowedContentTypes.append(typo)
+        }
+        
+        // Show the panel and get the result
+        var targetUrl: URL? = nil
+        if openDialog.runModal() == .OK {
+            targetUrl = openDialog.url
+        }
 
-
+        openDialog.close()
+        
+        // If we have a valid (non-nil) URL, try and load the file
+        // and then, on success, process it for MNU usage.
+        if let openUrl = targetUrl {
+            if let data = loadImage(openUrl) {
+                processImage(data, openUrl)
+            }
+        }
+    }
+    
+    
+    // MARK: - Image File Load/Save and Processing Functions
+    
+    /**
+     Convert a loaded custom image into a form that can be used by menu items,
+     ie. 60x60 and set as a template.
+     
+     - Parameters
+        - imageBytes: The image data loaded from disk.
+     */
+    private func processImage(_ imageBytes: Data, _ imageUrl: URL) {
+        
+        // Convert the image data to an image object
+        if let image = NSImage.init(data: imageBytes) {
+            // Get a scaled version of the image at the required size
+            if let scaledImage = image.resize(to: NSSize(width: 60.0, height: 60.0)) {
+                scaledImage.isTemplate = true
+                self.iconButton.image = scaledImage
+                self.iconButton.index = 99
+                self.hasNewImage = true
+                self.newImageURL = imageUrl
+                return
+            }
+        }
+    }
+    
+    
+    /**
+     Save a custom image that has been processed for menu item use to disk.
+     FROM 2.0.0
+     */
+    private func saveImage() {
+    
+        if let item = self.newMenuItem, self.hasNewImage {
+            if let bitmap = self.iconButton.image!.tiffRepresentation {
+                if makeConfig() {
+                    let filename = UUID().uuidString
+                    let path = getImageStorePath(filename)
+                    
+                    do {
+                        try bitmap.write(to: path)
+                        item.customImagePath = path.unixpath()
+                        item.iconIndex = 99
+                    } catch {
+                        print(error)
+                    }
+                }
+            }
+        }
+        
+        // TODO Needs better error handling
+    }
+        
+    
+    /**
+     Create `.config` and `.config/mnu` directories under the user's home directory.
+     FROM 2.0.0
+     
+     - Returns `true` if the directories are already present or created, otherwise `false`.
+     */
+    private func makeConfig() -> Bool {
+        
+        let fd = FileManager.default
+        let path = getImageStorePath("")
+        if fd.fileExists(atPath: path.unixpath()) {
+            return true
+        }
+        
+        do {
+            try fd.createDirectory(at: path, withIntermediateDirectories: true)
+            return true
+        } catch {
+            print(error)
+        }
+        
+        return false
+    }
+    
+    
     // MARK: - Input Checker Functions
-
+    
+    /**
+     Verify that the user has entered a unique menu label.
+     FROM 1.2.0 (moved from `doSave()`)
+     
+     - Returns `true` if the label is unique, otherwise `false`.
+     */
     private func checkLabel() -> Bool {
-
-        // ADDED 1.2.0
-        // Moved from 'doSave()'
-        // Check that we have a unique menu label
+        
         if let list: MenuItemList = self.currentMenuItems {
             if list.items.count > 0 {
                 var got: Bool = false
@@ -493,10 +694,20 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    /**
+     Verify that an entered direct command does not contain any special
+     shell characters.
+     FROM 1.5.0
+     
+     - Note Should probably reverse the output.
+     
+     - Parameters
+        - command: The command to check.
+     
+     - Returns `true` if the command contains shell characters, otherwise `false`.
+     */
     func checkDirectCommand(_ command: String) -> Bool {
-
-        // ADDED 1.5.0
-        // Check for common shell characters in a direct-action command
+        
         let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
         for shellChar in shellChars {
             if (command as NSString).contains(shellChar) {
@@ -508,17 +719,24 @@ final class AddUserItemViewController: NSViewController,
     }
 
 
+    /**
+     Check for a relative path and return the absolute version.
+     (or the input path if it is already absolute).
+     FROM 1.5.0
+     
+     - Note Refactored to a function to simplify testing.
+     
+     - Parameters
+        - path: The relative path to process.
+     
+     - Returns The absolute path.
+     */
     func makeAbsolutePath(_ path: String) -> String {
-
-        // ADDED 1.5.0
-        // Check for a relative path and return the absolute version
-        // (or the input path if it is already absolute)
-        // NOTE Refactored to a function to simplify testing
-
+        
         // Separate input path into space-separated sub-paths
         var returnPath: String = ""
         let parts: [String] = (path as NSString).components(separatedBy: " ")
-
+        
         // Fix up each sub-path
         for i in 0..<parts.count {
             var part: String = parts[i]
@@ -536,17 +754,27 @@ final class AddUserItemViewController: NSViewController,
                 returnPath += " "
             }
         }
-
+        
         return returnPath
     }
 
-
+    
+    /**
+     Check the modifier keys selected have not been already assigned to another menu item.
+     
+     An alert is presented if the modifiers are invalid.
+     
+     - Parameters
+        - modFlags: A bitfield indicating the selected modififiers.
+     
+     - Returns `true` if the modifiers are valid, otherwise `false`.
+     */
     private func checkModifiers(_ modFlags: UInt) -> Bool {
-
+        
         if self.keyEquivalentText.stringValue == "" {
             return true
         }
-
+        
         if let list: MenuItemList = self.currentMenuItems {
             if list.items.count > 0 {
                 if let newMenuItem: MenuItem = self.newMenuItem {
@@ -568,16 +796,17 @@ final class AddUserItemViewController: NSViewController,
                 }
             }
         }
-
-        return true;
+        
+        return true
     }
 
 
     // MARK: - Helper Functions
-
+    
+    /**
+     Present an alert to warn the user and offer a single way forward.
+     */
     private func showAlert(_ title: String, _ message: String) {
-
-        // Present an alert to warn the user, with only one option
         
         let alert: NSAlert = NSAlert()
         alert.messageText = title
@@ -587,12 +816,12 @@ final class AddUserItemViewController: NSViewController,
                               completionHandler: nil)
     }
 
-
+    /**
+     Present and alert to warn the user and provide two alternatives.
+     FROM 1.5.0
+     */
     private func showDirectAlert() {
-
-        // FROM 1.5.0
-        // Present an alert to warn the user, with two options
-
+        
         self.directAlert = NSAlert()
         self.directAlert!.messageText = "Your direct command contains one or more common shell characters"
         self.directAlert!.informativeText = "Direct commands are not processed by a shell. Are you sure you want to save this command?"
@@ -609,12 +838,13 @@ final class AddUserItemViewController: NSViewController,
 
     // MARK: - NSTextFieldDelegate Functions
 
+    /**
+     This function is used to trap text entry into the `itemText` field and to limit it to x characters,
+     where x is set by `MNU_CONSTANTS.MENU_TEXT_LEN`.
+     */
     func controlTextDidChange(_ obj: Notification) {
-
-        // We use this to trap text entry into the 'itemText' field and limit it to x characters
-        // where x is set by 'MNU_CONSTANTS.MENU_TEXT_LEN'
+        
         let sender: NSTextField = obj.object as! NSTextField
-
         if sender == self.menuTitleText {
             if self.menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
                 // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
@@ -632,12 +862,13 @@ final class AddUserItemViewController: NSViewController,
 
     // MARK: - NSWindowDelegate Methods
 
+    /**
+     Assign a custom Field Editor to the modifier keys NSTextField.
+     See `AddUserItemKeyFieldEditor.swift`.
+     FROM 1.7.0
+     */
     func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
-
-        // ADDED 1.7.0
-        // Assign a custom Field Editor to the modifier keys NSTextField
-        // See `AddUserItemKeyFieldEditor.swift`
-
+        
         if let anyClient: Any = client {
             if anyClient is AddUserItemKeyTextField {
                 if self.keyFieldEditor == nil {
@@ -658,7 +889,7 @@ final class AddUserItemViewController: NSViewController,
                 return self.keyFieldEditor!
             }
         }
-
+        
         return nil
     }
 }

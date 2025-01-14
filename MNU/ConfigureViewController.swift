@@ -131,7 +131,7 @@ final class ConfigureViewController:  NSViewController,
         let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED),
                        object: nil)
 
         // Set up the About MNU... tab text
@@ -548,7 +548,7 @@ final class ConfigureViewController:  NSViewController,
         
         // FROM 1.6.0
         // Notify the menu that it needs to change
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_TABBING_SET),
                                         object: self)
     }
 
@@ -573,7 +573,7 @@ final class ConfigureViewController:  NSViewController,
                          forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
             
             // Notify the mai app that it needs to change
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_UPDATED),
                                             object: self)
         }
     }
@@ -768,9 +768,8 @@ final class ConfigureViewController:  NSViewController,
 
     @objc private func processNewItem() {
 
-        // This function is called in response to a "com.bps.mnu.item-added" notification
-        // from the AddUserItemViewController that an existing item was edited,
-        // or a new item created
+        // This function is called in response to a MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED notification
+        // from the AddUserItemViewController that an existing item was edited, or a new item created
 
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
@@ -992,7 +991,7 @@ final class ConfigureViewController:  NSViewController,
                     self.configureWindow!.close()
                     if self.lastChance {
                         // We're bailing, so inform the host app we can quit at last
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
+                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.CAN_QUIT),
                                                         object: self)
                     }
                 }

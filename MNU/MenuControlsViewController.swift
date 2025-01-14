@@ -70,7 +70,7 @@ final class MenuControlsViewController: NSViewController {
     @IBAction @objc private func doQuit(sender: Any?) {
 
         // Quit the app
-        NSApp.terminate(self)
+        NSApp.terminate(nil)
     }
 
 
@@ -87,7 +87,7 @@ final class MenuControlsViewController: NSViewController {
     @IBAction @objc private func doConfigure(sender: Any?) {
 
         // Tell the app delegate to open the Configure window
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.SHOW_CONFIGURE),
                                         object: self)
     }
     

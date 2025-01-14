@@ -72,6 +72,7 @@ final class AppDelegate: NSObject,
     private var output: String = ""
     private var doShowOutput: Bool = false
     private var autoSeparationInForce: Bool = false     // Auto separate visible menu items (as per 1.x)
+    private var customIcons: [String:NSImage] = [:]     // Custom images
 
 
     // MARK: - App Lifecycle Functions
@@ -110,12 +111,12 @@ final class AppDelegate: NSObject,
         // Watch for changes to the startup launch preference
         nc.addObserver(self,
                        selector: #selector(self.enableAutoStart),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.startup-enabled"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED),
                        object: self.cwvc)
 
         nc.addObserver(self,
                        selector: #selector(self.disableAutoStart),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.startup-disabled"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED),
                        object: self.cwvc)
         
         // Watch for an 'it's OK to quit' message from the Configure Window
@@ -124,27 +125,27 @@ final class AppDelegate: NSObject,
         //      this puts it back on track by calling 'performTermination()'
         nc.addObserver(self,
                        selector: #selector(self.performTermination),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.CAN_QUIT),
                        object: self.cwvc)
         
         // Watch for the appearance of the Configure Window
         // NOTE This is sent by the Menu Controls view controller
         nc.addObserver(self,
                        selector: #selector(self.showConfigureWindow),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.show-configure"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.SHOW_CONFIGURE),
                        object: self.acvc)
         
         // FROM 1.6.0
         // The user has changed their preferred terminal
         nc.addObserver(self,
                        selector: #selector(self.switchTerminal),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_UPDATED),
                        object: self.cwvc)
         
         // The user has changed their tab openning preference
         nc.addObserver(self,
                        selector: #selector(self.toggleTerminalTabbing),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_TABBING_SET),
                        object: self.cwvc)
         
         // FROM 2.0.0
@@ -192,6 +193,31 @@ final class AppDelegate: NSObject,
 
         // Save the current menu - this is redundant and may be removed
         saveItems()
+        
+        // FROM 2.0.0
+        // Garbage file collection
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: getImageStorePath("").unixpath())
+            for file in files {
+                var got = false
+                for (key, _) in self.customIcons {
+                    if key == file {
+                        got = true
+                        break
+                    }
+                }
+                
+                if !got {
+                    do {
+                        try FileManager.default.removeItem(atPath: getImageStorePath(file).unixpath())
+                    } catch {
+                        print("Could not delete \(file)")
+                    }
+                }
+            }
+        } catch {
+            print("No custom file store")
+        }
 
         // Disable notification listening (to be tidy)
         NotificationCenter.default.removeObserver(self)
@@ -985,7 +1011,11 @@ final class AppDelegate: NSObject,
                         menuItem.image = NSImage.init(named: "logo_brew")
                     default:
                         // Default is a standard icon from the list
-                        menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+                        if item.iconIndex == 99 {
+                            menuItem.image = getCustomImage(item.customImagePath)
+                        } else {
+                            menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+                        }
                 }
             }
             
@@ -993,6 +1023,43 @@ final class AppDelegate: NSObject,
         }
     }
     
+    
+    /**
+     Extract an already loaded menu image from storage or load
+     the image from disk.
+     FROM 2.0.0
+     
+     - Parameters
+        - path: The path of the stored file.
+     
+     - Returns An image
+     */
+    private func getCustomImage(_ path: String) -> NSImage {
+        
+        // Have we the image already loaded?
+        let filename = (path as NSString).lastPathComponent
+        if let image = self.customIcons[filename] {
+            return image
+        }
+        
+        // No, so load it and save it
+        if let imageBytes = loadImage(URL.init(fileURLWithPath: path)) {
+            if let image = NSImage.init(data: imageBytes) {
+                image.isTemplate = true
+                image.size = NSSize(width: 20.0, height: 20.0)
+                self.customIcons[filename] = image
+                return image
+            }
+        }
+        
+        // Error case: load 'missing' icon
+        if let image = NSImage.init(named: "logo_missing") {
+            return image
+        }
+        
+        // Fallthough on error: return an empty image
+        return NSImage.init(size: NSSize(width: 20.0, height: 20.0))
+    }
     
     private func addAppMenuItem(_ doSeparate: Bool) {
 

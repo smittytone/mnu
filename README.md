@@ -17,6 +17,7 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 - 2.0.0 *Unreleased*
     - Updated configuration UI.
     - Allow you to add separators to the menu list, or choose to have separators placed automatically to replicate the look of MNU 1.x.
+    - Allow you to add custom icon images.
     - Allow MNU to be restored to its default settings.
 - 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.

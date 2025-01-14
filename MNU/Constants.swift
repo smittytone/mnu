@@ -126,11 +126,18 @@ struct MNU_CONSTANTS {
         static let SHOW_DIRECT_OUTPUT           = "com.bps.mnu.show-direct-output"
     }
     
-    
     struct NOTIFICATION_IDS {
         
         static let UPDATE_LIST                  = "com.bps.mnu.list-updated"
         static let RESTORE_DEFAULTS             = "com.bps.mnu.restore-defaults"
+        static let ICON_SELECTED                = "com.bps.mnu.select-image"
+        static let ITEM_ADDED                   = "com.bps.mnu.item-added"
+        static let AUTOSTART_ENABLED            = "com.bps.mnu.startup-enabled"
+        static let AUTOSTART_DISABLED           = "com.bps.mnu.startup-disabled"
+        static let CAN_QUIT                     = "com.bps.mnu.can-quit"
+        static let SHOW_CONFIGURE               = "com.bps.mnu.show-configure"
+        static let TERM_UPDATED                 = "com.bps.mnu.term-updated"
+        static let TERM_TABBING_SET             = "com.bps.mnu.term-tab-updated"
     }
     
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0

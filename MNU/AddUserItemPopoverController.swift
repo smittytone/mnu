@@ -100,10 +100,15 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Clear the current selection and select the icon that matches the one
         // shown by the host view's icon button
-        collectionView.deselectAll(self)
-        let set: Set<IndexPath> = [IndexPath.init(item: button.index, section: 0)]
-        collectionView.selectItems(at: set,
-                                   scrollPosition: NSCollectionView.ScrollPosition.top)
+        self.collectionView.deselectAll(self)
+        
+        // FROM 2.0.0
+        // Only select a button if we don't have a custom image
+        if self.button.index != 99 {
+            let set: Set<IndexPath> = [IndexPath.init(item: self.button.index, section: 0)]
+            collectionView.selectItems(at: set,
+                                       scrollPosition: NSCollectionView.ScrollPosition.top)
+        }
     }
 
 
@@ -178,7 +183,7 @@ final class AddUserItemPopoverController: NSViewController,
                 // Send the selected item's index to the AddUserItemViewController
                 let item = obj as! AddUserItemCollectionViewItem
                 let nc: NotificationCenter = NotificationCenter.default
-                nc.post(name: NSNotification.Name(rawValue: "com.bps.mnu.select-image"),
+                nc.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
                         object: NSNumber.init(value: item.index))
             }
         }
