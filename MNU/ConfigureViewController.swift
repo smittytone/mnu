@@ -91,8 +91,6 @@ final class ConfigureViewController:  NSViewController,
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
-    // FROM 2.0.0
-    var autoSeparateInForce: Bool = false
     
     
     // MARK: - Private Class Properties
@@ -104,6 +102,9 @@ final class ConfigureViewController:  NSViewController,
     private var systemVersionMinor: Int = 14
     // FROM 2.0.0
     private var tabManager: PMTabManager = PMTabManager.init()
+    private var autoSeparateInForce: Bool = false
+    private var newItemIndex: Int = 0
+    
     
     // MARK: - Lifecycle Functions
 
@@ -462,6 +463,9 @@ final class ConfigureViewController:  NSViewController,
     }
     
     
+    /**
+     Delete the selected table view row.
+     */
     @IBAction @objc private func doContextDeleteScript(sender: Any) {
         
         // Get the Menu Item from the reference stored in the contextual menu item
@@ -473,7 +477,23 @@ final class ConfigureViewController:  NSViewController,
     
     
     /**
-     Add a separator below the selected table view row
+     Add a new item below the selected table view row.
+     */
+    @IBAction @objc private func doContextAddNewItem(sender: Any) {
+        
+        // Get the Menu Item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            if let index = self.menuItems?.items.firstIndex(of: item) {
+                self.newItemIndex = index
+                doNewScriptItem(sender: self)
+            }
+        }
+    }
+    
+    
+    /**
+     Add a separator below the selected table view row.
      */
     @IBAction @objc private func doContextAddSeparator(sender: Any) {
         
@@ -766,15 +786,20 @@ final class ConfigureViewController:  NSViewController,
     
     // MARK: - Notification Handlers
 
+    /**
+     This function is called in response to a `MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED` notification
+     from the `AddUserItemViewController` that an existing item was edited, or a new item created
+     */
     @objc private func processNewItem() {
-
-        // This function is called in response to a MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED notification
-        // from the AddUserItemViewController that an existing item was edited, or a new item created
-
+        
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
             if let item: MenuItem = self.aivc.newMenuItem {
-                self.menuItems!.items.append(item)
+                if self.newItemIndex != 0 {
+                    self.menuItems!.items.insert(item, at: self.newItemIndex + 1)
+                } else {
+                    self.menuItems!.items.append(item)
+                }
             }
         }
             

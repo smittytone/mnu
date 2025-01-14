@@ -1091,6 +1091,12 @@ Gw
                         <action selector="doContextDeleteScriptWithSender:" target="qtv-Yg-ACO" id="BeT-L0-FFF"/>
                     </connections>
                 </menuItem>
+                <menuItem title="Add New Item Below" id="1ZS-3M-GcA">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="doContextAddNewItemWithSender:" target="qtv-Yg-ACO" id="zKZ-4U-7Ey"/>
+                    </connections>
+                </menuItem>
                 <menuItem title="Insert Separator Below" id="YIZ-j2-c4b">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
