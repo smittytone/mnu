@@ -104,7 +104,7 @@ final class AddUserItemPopoverController: NSViewController,
         
         // FROM 2.0.0
         // Only select a button if we don't have a custom image
-        if self.button.index != 99 {
+        if self.button.index < MNU_CONSTANTS.ICONS.count {
             let set: Set<IndexPath> = [IndexPath.init(item: self.button.index, section: 0)]
             collectionView.selectItems(at: set,
                                        scrollPosition: NSCollectionView.ScrollPosition.top)

@@ -1011,7 +1011,7 @@ final class AppDelegate: NSObject,
                         menuItem.image = NSImage.init(named: "logo_brew")
                     default:
                         // Default is a standard icon from the list
-                        if item.iconIndex == 99 {
+                        if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
                             menuItem.image = getCustomImage(item.customImagePath)
                         } else {
                             menuItem.image = icons.object(at: item.iconIndex) as? NSImage

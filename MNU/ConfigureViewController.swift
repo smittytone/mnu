@@ -104,6 +104,7 @@ final class ConfigureViewController:  NSViewController,
     private var tabManager: PMTabManager = PMTabManager.init()
     private var autoSeparateInForce: Bool = false
     private var newItemIndex: Int = 0
+    private var customIcons: NSMutableArray = NSMutableArray.init()
     
     
     // MARK: - Lifecycle Functions
@@ -899,14 +900,19 @@ final class ConfigureViewController:  NSViewController,
                 
                 // FROM 2.0.0
                 // Do we need to disable the cell?
-                if self.autoSeparateInForce && item.type == .separator {
-                    cell!.buttonA.isEnabled = false
-                    cell!.buttonB.isEnabled = false
-                    cell!.cellSwitch.isEnabled = false
-                    
-                    cell!.buttonB.toolTip = "MNU-managed separators can’t be edited"
-                    cell!.buttonA.toolTip = "MNU-managed separators can’t be deleted"
-                    cell!.cellSwitch.toolTip = "MNU-managed separators are shown automatically"
+                if item.type == .separator {
+                    if self.autoSeparateInForce {
+                        cell!.buttonA.isEnabled = false
+                        cell!.buttonB.isEnabled = false
+                        cell!.cellSwitch.isEnabled = false
+                        
+                        cell!.buttonA.toolTip = "MNU-managed separators can’t be deleted"
+                        cell!.buttonB.toolTip = "MNU-managed separators can’t be edited"
+                        cell!.cellSwitch.toolTip = "MNU-managed separators are shown automatically"
+                    } else {
+                        cell!.buttonB.isEnabled = false
+                        cell!.buttonB.toolTip = "Separators can’t be edited"
+                    }
                 }
                 
                 return cell
@@ -1109,25 +1115,33 @@ final class ConfigureViewController:  NSViewController,
                 let item: MenuItem = items.items[clickedRow]
                 // Set the contextual menu's three items (Show/Hide, Edit, Delete)
                 // to point to the Menu Item represented at the clicked row
-                menu.item(at: 0)!.representedObject = item
-                menu.item(at: 1)!.representedObject = item
-                menu.item(at: 2)!.representedObject = item
-                menu.item(at: 3)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.representedObject = item
                 
                 // Contextualise the Show/Hide menu item's title
-                menu.item(at: 0)?.title = item.isHidden ? "Show" : "Hide"
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)?.title = item.isHidden ? "Show" : "Hide"
                 
                 // Assume all of the NSMenuItems are required...
-                menu.item(at: 0)!.isEnabled = true
-                menu.item(at: 1)!.isEnabled = true
-                menu.item(at: 2)!.isEnabled = true
-                menu.item(at: 3)!.isEnabled = !self.autoSeparateInForce
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.isEnabled = !self.autoSeparateInForce
                 
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)
                 if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                    menu.item(at: 1)!.isEnabled = false
-                    menu.item(at: 2)!.isEnabled = false
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = false
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.isEnabled = false
+                }
+                
+                // FROM 2.0.0
+                // Turn off editing for separators
+                if item.type == .separator {
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = false
                 }
             }
         }

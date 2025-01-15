@@ -140,6 +140,16 @@ struct MNU_CONSTANTS {
         static let TERM_TABBING_SET             = "com.bps.mnu.term-tab-updated"
     }
     
+    struct CONFIG_TABLE_CONTEXT_MENU {
+        
+        static let SHOW_HIDE                    = 0
+        static let EDIT                         = 1
+        static let DELETE                       = 2
+        static let NEW                          = 3
+        static let SEPARATOR                    = 4
+        
+    }
+    
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0
     
 }

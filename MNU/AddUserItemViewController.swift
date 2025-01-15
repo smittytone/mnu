@@ -66,6 +66,8 @@ final class AddUserItemViewController: NSViewController,
     var isEditing: Bool = false
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
+    // FROM 2.0.0
+    var customImageCount: Int = 0
 
 
     // MARK: - Public Class Properties
@@ -76,8 +78,8 @@ final class AddUserItemViewController: NSViewController,
     // FROM 1.7.0
     private var keyFieldEditor: AddUserItemKeyFieldEditor? = nil
     // FROM 2.0.0
-    private var newImageURL: URL? = nil
-    private var hasNewImage: Bool = false
+    private var newCustomImageUrl: URL? = nil
+    private var hasNewCustomImage: Bool = false
     
     
     // MARK: - Lifecycle Functions
@@ -140,17 +142,21 @@ final class AddUserItemViewController: NSViewController,
         }
     }
 
-
+    
+    /**
+     Present the controller's sheet, customising it to either display an existing
+     Menu Item's details for editing, or empty fields for a new Menu Item.
+     */
     func showSheet() {
-
-        // Present the controller's sheet, customising it to either display an existing
-        // Menu Item's details for editing, or empty fields for a new Menu Item
 
         // FROM 1.7.0
         // Reset the segment control
         self.modifierKeysSegment.selectedSegment = -1
 
-        if self.isEditing {
+        // FROM 2.0.0
+        self.hasNewCustomImage = false
+        
+         if self.isEditing {
             // We are presenting an existing item, so get it and populate
             // the sheet's fields accordingly
             if let item: MenuItem = self.newMenuItem {
@@ -185,19 +191,18 @@ final class AddUserItemViewController: NSViewController,
                 }
                 
                 // FROM 2.0.0
-                if !item.customImagePath.isEmpty {
+                self.iconButton.index = item.iconIndex
+                if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
                     // We have a custom menu item icon to load
                     if let imageBytes = loadImage(URL.init(fileURLWithPath: item.customImagePath)) {
                         if let image = NSImage.init(data: imageBytes) {
                             image.isTemplate = true
                             self.iconButton.image = image
-                            self.iconButton.index = 99
                         }
                     }
                 } else {
                     // Load up a pre-installed icon
                     self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
-                    self.iconButton.index = item.iconIndex
                 }
             } else {
                 NSLog("Could not access the supplied MenuItem")
@@ -218,9 +223,7 @@ final class AddUserItemViewController: NSViewController,
             self.directCheck.state = .off
             // FROM 1.7.0
             self.keyEquivalentText.stringValue = ""
-            // FROM 2.0.0
-            self.hasNewImage = false
-            self.newImageURL = nil
+            
         }
 
         // Present the sheet
@@ -243,8 +246,7 @@ final class AddUserItemViewController: NSViewController,
             self.iconButton.index = index.intValue
             
             // FROM 2.0.0
-            self.hasNewImage = false
-            self.newImageURL = nil
+            self.hasNewCustomImage = false
         }
     }
 
@@ -394,22 +396,13 @@ final class AddUserItemViewController: NSViewController,
                 }
                 
                 // FROM 2.0.0
-                if self.hasNewImage {
+                if self.hasNewCustomImage {
                     // A custom image has been chosen, replacing either an older custom image
                     // or a pre-installed icon selection
-                    if let oldPath = self.newImageURL?.unixpath() {
-                        // An image path was previously saved
-                        if item.customImagePath != oldPath {
-                            // TODO Assumes users has reloaded the same image, which may actually
-                            //      have been edited and altered
-                            itemHasChanged = true
-                        }
-                    } else {
-                        NSLog("Missing custom image URL")
-                    }
+                    itemHasChanged = true
+                    item.iconIndex = self.iconButton.index
                 } else {
-                    // No custom image selected so we can check the icon button's
-                    // `index` value to see if a different icon has been selected.
+                    // No custom image selected so we check for a change of pre-installed icon
                     if item.iconIndex != self.iconButton.index {
                         itemHasChanged = true
                         item.iconIndex = self.iconButton.index
@@ -444,12 +437,9 @@ final class AddUserItemViewController: NSViewController,
             newItem.keyModFlags = modKeys
             
             // FROM 2.0.0
-            if self.hasNewImage {
-                newItem.customImagePath = self.newImageURL?.unixpath() ?? "ERROR"
-                newItem.iconIndex = 99
-            } else {
-                newItem.iconIndex = self.iconButton.index
-            }
+            newItem.iconIndex = self.iconButton.index
+            // NOTE Don't store the image path here --
+            //      it's set when the image is saved (see `saveImage()`)
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -588,7 +578,9 @@ final class AddUserItemViewController: NSViewController,
     
     /**
      Convert a loaded custom image into a form that can be used by menu items,
-     ie. 60x60 and set as a template.
+     ie. 60x60 and set as a template. Once the image is ready, we can apply it,
+     so this is where the icon custom index (25 or greater, where 25 is the fixed
+     number of pre-installed icons) is set.
      
      - Parameters
         - imageBytes: The image data loaded from disk.
@@ -601,9 +593,9 @@ final class AddUserItemViewController: NSViewController,
             if let scaledImage = image.resize(to: NSSize(width: 60.0, height: 60.0)) {
                 scaledImage.isTemplate = true
                 self.iconButton.image = scaledImage
-                self.iconButton.index = 99
-                self.hasNewImage = true
-                self.newImageURL = imageUrl
+                self.iconButton.index = 25 + self.customImageCount
+                self.hasNewCustomImage = true
+                self.customImageCount += 1
                 return
             }
         }
@@ -615,25 +607,25 @@ final class AddUserItemViewController: NSViewController,
      FROM 2.0.0
      */
     private func saveImage() {
-    
-        if let item = self.newMenuItem, self.hasNewImage {
+        
+        if let item = self.newMenuItem, self.hasNewCustomImage {
+            self.hasNewCustomImage = false
             if let bitmap = self.iconButton.image!.tiffRepresentation {
-                if makeConfig() {
-                    let filename = UUID().uuidString
-                    let path = getImageStorePath(filename)
-                    
-                    do {
-                        try bitmap.write(to: path)
-                        item.customImagePath = path.unixpath()
-                        item.iconIndex = 99
-                    } catch {
-                        print(error)
-                    }
+                // Try to make (or get) the image store path and
+                // only proceed if it's there
+                guard makeConfig() else { return }
+                
+                let filename = UUID().uuidString
+                let path = getImageStorePath(filename)
+                
+                do {
+                    try bitmap.write(to: path)
+                    item.customImagePath = path.unixpath()
+                } catch {
+                    print(error)
                 }
             }
         }
-        
-        // TODO Needs better error handling
     }
         
     
