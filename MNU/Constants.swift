@@ -89,7 +89,7 @@ struct MNU_CONSTANTS {
     static let MENU_UNDO_KEY        = "z"
     static let MENU_REDO_KEY        = "Z"
     
-    static let MAX_ITEM_COUNT       = 25
+    static let MAX_ITEM_COUNT       = 30
     
     static let BASE_DEFAULT_COUNT   = 6
     
@@ -113,7 +113,6 @@ struct MNU_CONSTANTS {
         "web", "cloud", "nas", "server", "mac",
         "cog", "sync", "power", "app", "x"
     ]
-    
     
     // FROM 2.0.0
     struct SETTINGS_IDS {

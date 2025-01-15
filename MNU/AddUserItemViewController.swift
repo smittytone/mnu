@@ -67,19 +67,20 @@ final class AddUserItemViewController: NSViewController,
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
     // FROM 2.0.0
-    var customImageCount: Int = 0
+    var customIcons: [CustomIcon] = []
 
 
     // MARK: - Public Class Properties
     private var iconPopover: NSPopover? = nil
-    private var icons: NSMutableArray = NSMutableArray.init()
+    private var icons: [NSImage] = []
     // FROM 1.5.0
     private var directAlert: NSAlert? = nil
     // FROM 1.7.0
     private var keyFieldEditor: AddUserItemKeyFieldEditor? = nil
     // FROM 2.0.0
-    private var newCustomImageUrl: URL? = nil
-    private var hasNewCustomImage: Bool = false
+    //private var newCustomIconUrl: URL? = nil
+    private var hasNewCustomIcon: Bool = false
+    private var customIconCount: Int = 0
     
     
     // MARK: - Lifecycle Functions
@@ -125,7 +126,7 @@ final class AddUserItemViewController: NSViewController,
         
         for i in 0..<MNU_CONSTANTS.ICONS.count {
             let image: NSImage? = NSImage.init(named: "picon_" + MNU_CONSTANTS.ICONS[i])
-            self.icons.add(image!)
+            self.icons.append(image!)
         }
     }
 
@@ -154,7 +155,7 @@ final class AddUserItemViewController: NSViewController,
         self.modifierKeysSegment.selectedSegment = -1
 
         // FROM 2.0.0
-        self.hasNewCustomImage = false
+        self.hasNewCustomIcon = false
         
          if self.isEditing {
             // We are presenting an existing item, so get it and populate
@@ -202,7 +203,7 @@ final class AddUserItemViewController: NSViewController,
                     }
                 } else {
                     // Load up a pre-installed icon
-                    self.iconButton.image = self.icons.object(at: item.iconIndex) as? NSImage
+                    self.iconButton.image = self.icons[item.iconIndex]
                 }
             } else {
                 NSLog("Could not access the supplied MenuItem")
@@ -216,7 +217,7 @@ final class AddUserItemViewController: NSViewController,
             self.menuTitleText.stringValue = ""
             self.saveButton.title = "Add"
             self.titleText.stringValue = "Add A New Command"
-            self.iconButton.image = self.icons.object(at: 0) as? NSImage
+            self.iconButton.image = self.icons[0]
             self.iconButton.index = 0
             self.textCount.stringValue = "0/30"
             self.openCheck.state = .off
@@ -225,7 +226,25 @@ final class AddUserItemViewController: NSViewController,
             self.keyEquivalentText.stringValue = ""
             
         }
-
+        
+        // FROM 2.0.0
+        // Add the existing custom icons to the collection of icons available.
+        // This only occurs when the quanity of custom icons is non-zero and greater than the number
+        // already added to the icon collection - ie. when there are new ones to add
+        if self.customIcons.count > 0 && self.icons.count != MNU_CONSTANTS.ICONS.count + self.customIcons.count {
+            // We have custom icons to add.
+            self.icons.removeLast(self.icons.count - MNU_CONSTANTS.ICONS.count)
+        
+            // Add all the custom
+            for customIcon in self.customIcons {
+                self.icons.append(customIcon.image!)
+            }
+            
+            self.iconPopoverController.icons = self.icons
+            self.iconPopoverController.collectionView.reloadData()
+            self.customIconCount = self.customIcons.count
+        }
+        
         // Present the sheet
         if let window = self.parentWindow {
             window.beginSheet(self.addItemSheet, completionHandler: nil)
@@ -242,11 +261,19 @@ final class AddUserItemViewController: NSViewController,
         if let obj: Any = note.object {
             // Decode the notification object
             let index = obj as! NSNumber
-            self.iconButton.image = self.icons.object(at: index.intValue) as? NSImage
+            
+            // FROM 2.0.0
+            if index.intValue >= MNU_CONSTANTS.ICONS.count {
+                // Generate fresh images from the loaded custom icon template
+                self.iconButton.image = self.icons[index.intValue].modedImage()
+            } else {
+                self.iconButton.image = self.icons[index.intValue]
+            }
+            
             self.iconButton.index = index.intValue
             
             // FROM 2.0.0
-            self.hasNewCustomImage = false
+            self.hasNewCustomIcon = false
         }
     }
 
@@ -396,7 +423,7 @@ final class AddUserItemViewController: NSViewController,
                 }
                 
                 // FROM 2.0.0
-                if self.hasNewCustomImage {
+                if self.hasNewCustomIcon {
                     // A custom image has been chosen, replacing either an older custom image
                     // or a pre-installed icon selection
                     itemHasChanged = true
@@ -406,6 +433,12 @@ final class AddUserItemViewController: NSViewController,
                     if item.iconIndex != self.iconButton.index {
                         itemHasChanged = true
                         item.iconIndex = self.iconButton.index
+                        
+                        if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
+                            // Get the custom icon path
+                            let customIcon = customIcons[item.iconIndex - MNU_CONSTANTS.ICONS.count]
+                            item.customImagePath = customIcon.path
+                        }
                     }
                 }
             }
@@ -440,6 +473,12 @@ final class AddUserItemViewController: NSViewController,
             newItem.iconIndex = self.iconButton.index
             // NOTE Don't store the image path here --
             //      it's set when the image is saved (see `saveImage()`)
+            
+            if newItem.iconIndex >= MNU_CONSTANTS.ICONS.count {
+                // Get the custom icon path
+                let customIcon = customIcons[newItem.iconIndex - MNU_CONSTANTS.ICONS.count]
+                newItem.customImagePath = customIcon.path
+            }
 
             // Store the new menu item
             self.newMenuItem = newItem
@@ -481,6 +520,10 @@ final class AddUserItemViewController: NSViewController,
      */
     @IBAction @objc func doShowIcons(sender: Any) {
         
+        let rows = self.icons.count % 5 == 0 ? self.icons.count / 5 : (self.icons.count / 5) + 1
+        self.iconPopover!.contentSize = CGSize(width: Double(64 * 5), height: Double(rows * 64))
+        let pvc = self.iconPopover!.contentViewController as! AddUserItemPopoverController
+        pvc.collectionView.reloadData()
         self.iconPopover!.show(relativeTo: self.iconButton.bounds,
                                of: self.iconButton,
                                preferredEdge: NSRectEdge.maxY)
@@ -593,9 +636,9 @@ final class AddUserItemViewController: NSViewController,
             if let scaledImage = image.resize(to: NSSize(width: 60.0, height: 60.0)) {
                 scaledImage.isTemplate = true
                 self.iconButton.image = scaledImage
-                self.iconButton.index = 25 + self.customImageCount
-                self.hasNewCustomImage = true
-                self.customImageCount += 1
+                self.iconButton.index = 25 + self.customIconCount
+                self.hasNewCustomIcon = true
+                self.customIconCount += 1
                 return
             }
         }
@@ -608,8 +651,8 @@ final class AddUserItemViewController: NSViewController,
      */
     private func saveImage() {
         
-        if let item = self.newMenuItem, self.hasNewCustomImage {
-            self.hasNewCustomImage = false
+        if let item = self.newMenuItem, self.hasNewCustomIcon {
+            self.hasNewCustomIcon = false
             if let bitmap = self.iconButton.image!.tiffRepresentation {
                 // Try to make (or get) the image store path and
                 // only proceed if it's there

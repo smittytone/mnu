@@ -104,7 +104,7 @@ final class ConfigureViewController:  NSViewController,
     private var tabManager: PMTabManager = PMTabManager.init()
     private var autoSeparateInForce: Bool = false
     private var newItemIndex: Int = 0
-    private var customIcons: NSMutableArray = NSMutableArray.init()
+    private var customIcons: [CustomIcon] = []
     
     
     // MARK: - Lifecycle Functions
@@ -229,6 +229,31 @@ final class ConfigureViewController:  NSViewController,
         // Set up auto separation and its effect on controls
         self.prefsAutoSeparateButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
         self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
+        
+        // FROM 2.0.0
+        // Assemble set of custom icons
+        if let items = self.menuItems?.items {
+            for item in items {
+                if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
+                    if let imageBytes = loadImage(URL.init(fileURLWithPath: item.customImagePath)) {
+                        if let image = NSImage.init(data: imageBytes) {
+                            let customIcon = CustomIcon()
+                            customIcon.image = image
+                            customIcon.path = item.customImagePath
+                            
+                            // Replace an existing item, or extend the array to accomodate a new one
+                            if item.iconIndex - MNU_CONSTANTS.ICONS.count < self.customIcons.count {
+                                self.customIcons[item.iconIndex - MNU_CONSTANTS.ICONS.count] = customIcon
+                            } else {
+                                while item.iconIndex - MNU_CONSTANTS.ICONS.count >= self.customIcons.count {
+                                    self.customIcons.append(customIcon)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     
@@ -324,6 +349,7 @@ final class ConfigureViewController:  NSViewController,
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.itemScriptText.stringValue = ""
         self.aivc.menuTitleText.stringValue = ""
+        self.aivc.customIcons = self.customIcons
         self.aivc.showSheet()
     }
     
@@ -373,6 +399,7 @@ final class ConfigureViewController:  NSViewController,
         self.aivc.isEditing = true
         self.aivc.currentMenuItems = self.menuItems
         self.aivc.parentWindow = self.configureWindow!
+        self.aivc.customIcons = self.customIcons
         self.aivc.showSheet()
     }
     

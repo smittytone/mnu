@@ -1062,6 +1062,7 @@ Gw
         <viewController id="vBD-l2-SeN" userLabel="Popover View Controller" customClass="AddUserItemPopoverController" customModule="MNU" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="ecd-BA-2ts" id="YQO-CR-5H4"/>
+                <outlet property="myPopover" destination="u3O-7s-2mr" id="4O1-Eh-RSo"/>
                 <outlet property="view" destination="ecd-BA-2ts" id="ff6-3c-bcb"/>
             </connections>
         </viewController>

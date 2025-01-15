@@ -75,3 +75,77 @@ extension URL {
     }
 }
 
+
+public extension NSImage {
+
+    func inverted() -> NSImage {
+        guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
+            return self
+        }
+
+        let ciImage = CIImage(cgImage: cgImage)
+        guard let filter = CIFilter(name: "CIColorInvert") else {
+            return self
+        }
+
+        filter.setValue(ciImage, forKey: kCIInputImageKey)
+        guard let outputImage = filter.outputImage else {
+            return self
+        }
+
+        guard let outputCgImage = outputImage.toCGImage() else {
+            return self
+        }
+
+        return NSImage(cgImage: outputCgImage, size: self.size)
+    }
+    
+    
+    /**
+     Generate a version of the image suitable for display in light more or dark mode.
+     The image is always a template, ie. black + clear.
+     
+     - Returns The appropriately moded image.
+     */
+    func modedImage() -> NSImage {
+
+        return NSImage.init(size: self.size,
+                     flipped: false,
+                     drawingHandler: { rect in
+            
+            // Get the current mode (dark or light)
+            let mode = NSAppearance.currentDrawing()
+            if mode.bestMatch(from: [NSAppearance.Name.aqua, NSAppearance.Name.darkAqua]) == .aqua {
+                // Draw the black image (it's a template)
+                self.draw(in: rect)
+            } else {
+                // Convert the black image to white and then drae
+                self.inverted().draw(in: rect)
+            }
+                
+            return true
+        })
+    }
+}
+
+
+fileprivate extension CIImage {
+
+    func toCGImage() -> CGImage? {
+        let context = CIContext(options: nil)
+        if let cgImage = context.createCGImage(self, from: self.extent) {
+            return cgImage
+        }
+        
+        return nil
+    }
+}
+
+
+extension NSApplication {
+    
+    func isMacInLightMode() -> Bool {
+        
+        return (self.effectiveAppearance.name.rawValue == "NSAppearanceNameAqua")
+    }
+}

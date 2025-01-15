@@ -42,8 +42,8 @@ final class AppDelegate: NSObject,
     
     // MARK: - Public App Properties
     
-    var icons: NSMutableArray = NSMutableArray.init()
-                                                        // Menu icons list
+    //var icons: NSMutableArray = NSMutableArray.init() // Menu icons list
+    var icons: [NSImage] = []
     // FROM 1.6.0
     var terminalIndex: Int = 0                          // Which terminal has the user selected?
                                                         // 0  - macOS Terminal (default)
@@ -1014,7 +1014,7 @@ final class AppDelegate: NSObject,
                         if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
                             menuItem.image = getCustomImage(item.customImagePath)
                         } else {
-                            menuItem.image = icons.object(at: item.iconIndex) as? NSImage
+                            menuItem.image = self.icons[item.iconIndex]
                         }
                 }
             }
@@ -1082,7 +1082,7 @@ final class AppDelegate: NSObject,
         if self.icons.count == 0 {
             for i in 0..<MNU_CONSTANTS.ICONS.count {
                 let image: NSImage? = NSImage.init(named: "logo_" + MNU_CONSTANTS.ICONS[i])
-                self.icons.add(image!)
+                self.icons.append(image!)
             }
         }
     }
