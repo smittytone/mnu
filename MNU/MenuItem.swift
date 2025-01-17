@@ -59,7 +59,7 @@ final class MenuItem: NSObject,
     var keyModFlags: UInt = 0                           // Modifier key field
     var uuid: String = UUID().uuidString                // Unique item ID
     // FROM 2.0.0
-    var customImagePath: String = ""                    // Custom menu image (unsupported, but reserving)
+    var customImageId: String = ""                      // Custom menu image ID
     var showDirectOutput: Bool = false                  // Log output from direct command
 
 
@@ -82,7 +82,7 @@ final class MenuItem: NSObject,
         itemCopy.keyModFlags = self.keyModFlags
         itemCopy.uuid = self.uuid
         // FROM 2.0.0
-        itemCopy.customImagePath = self.customImagePath
+        itemCopy.customImageId = self.customImageId
         itemCopy.showDirectOutput = self.showDirectOutput
         return itemCopy
     }

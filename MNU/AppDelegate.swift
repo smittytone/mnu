@@ -72,7 +72,7 @@ final class AppDelegate: NSObject,
     private var output: String = ""
     private var doShowOutput: Bool = false
     private var autoSeparationInForce: Bool = false     // Auto separate visible menu items (as per 1.x)
-    private var customIcons: [String:NSImage] = [:]     // Custom images
+    private var customIcons: [CustomIcon] = []          // Custom images
 
 
     // MARK: - App Lifecycle Functions
@@ -196,28 +196,7 @@ final class AppDelegate: NSObject,
         
         // FROM 2.0.0
         // Garbage file collection
-        do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: getImageStorePath("").unixpath())
-            for file in files {
-                var got = false
-                for (key, _) in self.customIcons {
-                    if key == file {
-                        got = true
-                        break
-                    }
-                }
-                
-                if !got {
-                    do {
-                        try FileManager.default.removeItem(atPath: getImageStorePath(file).unixpath())
-                    } catch {
-                        print("Could not delete \(file)")
-                    }
-                }
-            }
-        } catch {
-            print("No custom file store")
-        }
+        fileGarbageCollection()
 
         // Disable notification listening (to be tidy)
         NotificationCenter.default.removeObserver(self)
@@ -904,7 +883,7 @@ final class AppDelegate: NSObject,
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
         
-        // Iteratre through the menu items, creating NSMenuItems to represent the visible ones
+        // Iterate through the menu items, creating NSMenuItems to represent the visible ones
         for item: MenuItem in self.items {
             placeMenuItem(item, self.optionClick)
         }
@@ -937,6 +916,10 @@ final class AppDelegate: NSObject,
         
         // Regenerate the menu
         updateMenu()
+        
+        // FROM 2.0.0
+        // Garbage-collect custom icons
+        //wrangleCustomIcons()
         
         // Save the update menu item list
         saveItems()
@@ -1012,7 +995,7 @@ final class AppDelegate: NSObject,
                     default:
                         // Default is a standard icon from the list
                         if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
-                            menuItem.image = getCustomImage(item.customImagePath)
+                            menuItem.image = getCustomImage(item.customImageId)
                         } else {
                             menuItem.image = self.icons[item.iconIndex]
                         }
@@ -1037,17 +1020,22 @@ final class AppDelegate: NSObject,
     private func getCustomImage(_ path: String) -> NSImage {
         
         // Have we the image already loaded?
-        let filename = (path as NSString).lastPathComponent
-        if let image = self.customIcons[filename] {
-            return image
+        let fileId = (path as NSString).lastPathComponent
+        for customIcon in self.customIcons {
+            if customIcon.id == fileId {
+                return customIcon.image!
+            }
         }
         
-        // No, so load it and save it
-        if let imageBytes = loadImage(URL.init(fileURLWithPath: path)) {
+        // No, so load it and record it
+        if let imageBytes = loadImage(getImageStoreUrl(fileId)) {
             if let image = NSImage.init(data: imageBytes) {
                 image.isTemplate = true
                 image.size = NSSize(width: 20.0, height: 20.0)
-                self.customIcons[filename] = image
+                let newCustomImage = CustomIcon()
+                newCustomImage.id = fileId
+                newCustomImage.image = image
+                self.customIcons.append(newCustomImage)
                 return image
             }
         }
@@ -1326,6 +1314,71 @@ final class AppDelegate: NSObject,
             alert.informativeText = text
             alert.addButton(withTitle: "OK")
             alert.runModal()
+        }
+    }
+    
+    
+    /**
+     Check for any files in the store that are no longer referenced,
+     and delete them
+     
+     FROM 2.0.0
+     */
+    private func fileGarbageCollection() {
+        
+        do {
+            let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
+            for file in files {
+                var got = false
+                for customIcon in self.customIcons {
+                    if customIcon.id == file {
+                        got = true
+                        break
+                    }
+                }
+                
+                if !got {
+                    do {
+                        try FileManager.default.removeItem(atPath: getImageStoreUrl(file).unixpath())
+                    } catch {
+                        print("Could not delete \(file)")
+                    }
+                }
+            }
+        } catch {
+            print("No custom file store")
+        }
+    }
+    
+    
+    /**
+     Remmove any custom icons no longer in use.
+     */
+    private func wrangleCustomIcons() {
+        
+        
+        var toRemove: [Int] = []
+        var count = 0
+        for customIcon in self.customIcons {
+            var got = false
+            for item in self.items {
+                if getImageStoreUrl(customIcon.id).unixpath() == item.customImageId {
+                    got = true
+                    break
+                }
+            }
+            
+            if !got {
+                toRemove.append(count)
+            }
+            
+            count += 1
+        }
+        
+        if count > 0 {
+            for index in toRemove {
+                self.customIcons.remove(at: index)
+            }
         }
     }
 

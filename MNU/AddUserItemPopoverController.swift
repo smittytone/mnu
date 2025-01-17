@@ -42,8 +42,10 @@ final class AddUserItemPopoverController: NSViewController,
     
     // MARK: - Public Class Properties
     
-    var icons: [NSImage] = []
+    var availableIcons: [NSImage] = []
     var button: AddUserItemIconButton = AddUserItemIconButton()
+    var rows: Int = 5
+    var columns: Int = 5
     
     
     // MARK: - Private Class Properties
@@ -116,24 +118,23 @@ final class AddUserItemPopoverController: NSViewController,
      */
     private func configureCollectionView() {
         
-        let rows = self.icons.count % 5 == 0 ? self.icons.count / 5 : (self.icons.count / 5) + 1
-        let gridLayout: NSCollectionViewFlowLayout = NSCollectionViewFlowLayout.init()
-        gridLayout.itemSize = NSMakeSize(64, 64)
+        let flowLayout: NSCollectionViewFlowLayout = NSCollectionViewFlowLayout.init()
+        flowLayout.itemSize = NSMakeSize(64, 64)
+        flowLayout.minimumInteritemSpacing = 0.0
+        flowLayout.minimumLineSpacing = 0.0
         //gridLayout.minimumItemSize = NSMakeSize(64, 64)
         //gridLayout.maximumNumberOfRows = rows
         //gridLayout.maximumNumberOfColumns = 5
-        gridLayout.minimumInteritemSpacing = 0.0
-        gridLayout.minimumLineSpacing = 0.0
         //gridLayout.margins = NSEdgeInsetsMake(4.0, 4.0, 4.0, 4.0)
         
-        // Add the grid layout to the collection view and configure the collection view
-        self.collectionView.collectionViewLayout = gridLayout
-        self.collectionView.layer?.backgroundColor = NSColor.textBackgroundColor.cgColor
+        // Add the flow layout to the collection view and configure the collection view
+        self.collectionView.collectionViewLayout = flowLayout
+        self.collectionView.layer?.backgroundColor = .clear // NSColor.textBackgroundColor.cgColor
         self.collectionView.isSelectable = true
         self.collectionView.allowsEmptySelection = true
         view.wantsLayer = true
         
-        self.view.frame = NSMakeRect(self.view.frame.minX, self.view.frame.minY, self.view.frame.width, CGFloat(rows * 64))
+        self.view.frame = NSMakeRect(self.view.frame.minX, self.view.frame.minY, CGFloat(columns * 64), CGFloat(rows * 64))
     }
 
     // MARK: - NSCollectionViewDelegate Functions
@@ -150,7 +151,7 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Just return the number of icons we have
         
-        return self.icons.count
+        return self.availableIcons.count
     }
     
     
@@ -159,7 +160,7 @@ final class AddUserItemPopoverController: NSViewController,
         let item: NSCollectionViewItem = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
                                                                  for: indexPath)
         guard let collectionViewItem: AddUserItemCollectionViewItem = item as? AddUserItemCollectionViewItem else { return item }
-        let image = self.icons[self.count]
+        let image = self.availableIcons[self.count]
         
         if self.count >= MNU_CONSTANTS.ICONS.count {
             // Custom image, ie. template
@@ -179,7 +180,7 @@ final class AddUserItemPopoverController: NSViewController,
         
         // Increase the icon index
         self.count += 1
-        if self.count == self.icons.count {
+        if self.count == self.availableIcons.count {
             self.count = 0
         }
         

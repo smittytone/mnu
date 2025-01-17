@@ -96,7 +96,7 @@ struct Serializer {
         dict["keymodflags"] = item.keyModFlags
         dict["uuid"] = item.uuid
         // FROM 2.0.0
-        dict["image"] = item.customImagePath
+        dict["image"] = item.customImageId
         dict["output"] = item.showDirectOutput
         return dict
     }
@@ -178,7 +178,7 @@ struct Serializer {
         newItem.keyModFlags = dict["keymodflags"] as? UInt ?? 0
         newItem.uuid = dict["uuid"] as? String ?? UUID().uuidString
         // FROM 2.0.0
-        newItem.customImagePath = dict["image"] as? String ?? ""
+        newItem.customImageId = dict["image"] as? String ?? ""
         newItem.showDirectOutput = dict["output"] as? Bool ?? false
         return newItem
     }

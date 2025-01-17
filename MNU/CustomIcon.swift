@@ -29,8 +29,12 @@
 import AppKit
 
 
+/*
+ * Simple class to hold image metadata and the image itself.
+ */
+
 class CustomIcon {
     
+    var id: String = ""
     var image: NSImage? = nil
-    var path: String = ""
 }

@@ -63,7 +63,7 @@ func loadImage(_ imageUrl: URL) -> Data? {
  
  - Returns The file's full URL.
  */
-func getImageStorePath(_ filename: String) -> URL {
+func getImageStoreUrl(_ filename: String) -> URL {
     
     var url = FileManager.default.homeDirectoryForCurrentUser.appendingPathComponent(".config").appendingPathComponent("mnu")
     

@@ -103,7 +103,7 @@ final class ConfigureViewController:  NSViewController,
     // FROM 2.0.0
     private var tabManager: PMTabManager = PMTabManager.init()
     private var autoSeparateInForce: Bool = false
-    private var newItemIndex: Int = 0
+    private var newMenuItemIndex: Int = 0
     private var customIcons: [CustomIcon] = []
     
     
@@ -231,29 +231,8 @@ final class ConfigureViewController:  NSViewController,
         self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
         
         // FROM 2.0.0
-        // Assemble set of custom icons
-        if let items = self.menuItems?.items {
-            for item in items {
-                if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
-                    if let imageBytes = loadImage(URL.init(fileURLWithPath: item.customImagePath)) {
-                        if let image = NSImage.init(data: imageBytes) {
-                            let customIcon = CustomIcon()
-                            customIcon.image = image
-                            customIcon.path = item.customImagePath
-                            
-                            // Replace an existing item, or extend the array to accomodate a new one
-                            if item.iconIndex - MNU_CONSTANTS.ICONS.count < self.customIcons.count {
-                                self.customIcons[item.iconIndex - MNU_CONSTANTS.ICONS.count] = customIcon
-                            } else {
-                                while item.iconIndex - MNU_CONSTANTS.ICONS.count >= self.customIcons.count {
-                                    self.customIcons.append(customIcon)
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        // Assemble a set of custom icons
+        getCustomIcons()
     }
 
     
@@ -262,6 +241,62 @@ final class ConfigureViewController:  NSViewController,
         // Update the visibility state
         self.isVisible = true
         super.viewDidAppear()
+    }
+    
+    
+    /**
+     Assemble a list of custom icons from the menu item records.
+     This will only include icons that existing menu items know about
+     
+     FROM 2.0.0
+     */
+    private func getCustomIcons() {
+        
+        if let menuItems = self.menuItems?.items {
+            // Clear the custom icon list if it is populated
+            if !self.customIcons.isEmpty {
+                self.customIcons.removeAll()
+            }
+            
+            // Iterate over the menu item list looking for those with custom icons,
+            // ie. their `customIconPath` property is set
+            for menuItem in menuItems {
+                if !menuItem.customImageId.isEmpty {
+                    // Check that a menu item's custom index doesn't reference one
+                    // already loaded -- if so, note its index and move to the next item
+                    if self.customIcons.count > 0 {
+                        var index = 0
+                        var got = false
+                        for customIcon in self.customIcons {
+                            if menuItem.customImageId == customIcon.id {
+                                menuItem.iconIndex = index + MNU_CONSTANTS.ICONS.count
+                                got = true
+                                break
+                            }
+                            
+                            index += 1
+                        }
+                        
+                        if got {
+                            continue
+                        }
+                    }
+                    
+                    // The menu item's custom icon has not yet been loaded - try to do so now
+                    if let imageBytes = loadImage(getImageStoreUrl(menuItem.customImageId)) {
+                        if let image = NSImage.init(data: imageBytes) {
+                            // Only record a custom icon if we have a path to its file, the data can be
+                            // loaded and them converted to an image
+                            let customIcon = CustomIcon()
+                            customIcon.image = image
+                            customIcon.id = menuItem.customImageId
+                            self.customIcons.append(customIcon)
+                            menuItem.iconIndex = MNU_CONSTANTS.ICONS.count - 1 + self.customIcons.count
+                        }
+                    }
+                }
+            }
+        }
     }
     
     
@@ -325,95 +360,89 @@ final class ConfigureViewController:  NSViewController,
     
     @IBAction @objc private func doNewScriptItem(sender: Any?) {
         
-        // Check that the user has not added too many items already
-        // current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'
-        // TODO Calculate the number of DISPLAYED items and limit that rather than the total
-        if let items: MenuItemList = self.menuItems {
-            if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
-                // Limit reached - warn the user
-                let alert: NSAlert = NSAlert()
-                alert.messageText = "You have already added the maximum number of items to MNU"
-                alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
-                alert.addButton(withTitle: "OK")
-                alert.beginSheetModal(for: self.configureWindow!,
-                                      completionHandler: nil)
-                return
-            }
-        }
-        
-        // Tell the Add User Item view controller to display its own sheet
-        // and be ready to accept the entry of a new item
-        self.aivc.appDelegate = self.appDelegate
-        self.aivc.isEditing = false
-        self.aivc.currentMenuItems = self.menuItems
-        self.aivc.parentWindow = self.configureWindow!
-        self.aivc.itemScriptText.stringValue = ""
-        self.aivc.menuTitleText.stringValue = ""
-        self.aivc.customIcons = self.customIcons
-        self.aivc.showSheet()
+        doAdd(self.menuItems?.items.count ?? 99)
     }
     
     
-    @objc private func doShowHideSwitch(sender: Any) {
+    @IBAction @objc private func doShowExtras(sender: NSButton) {
 
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        // FROM 1.1.0
+        // Pop up the import/export buttons
+        let yDelta: CGFloat = 4.0
+        let buttonPosition = NSPoint(x: 0, y: yDelta + sender.frame.size.height)
+        self.extrasMenu!.popUp(positioning: nil,
+                               at: buttonPosition,
+                               in: sender)
+    }
+
+    /**
+     NO LONGER IN USE
+     
+    @objc private func doExtraHelp() {
+
+        // FROM 1.1.0
+        // Just call the existing 'doShowHelp()' function as if we were a button
+        doShowHelp(sender: self.extrasButton)
+    }
+     */
+    
+    
+    // MARK: - Menu Items Action Handler Support Functions
+    
+    /**
+     Invoke the Add New Item sheet for the creation of a new item.
+     
+     FROM 2.0.0
+     */
+    private func doAdd(_ additionPoint: Int) {
         
-        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
-        if let item: MenuItem = theSwitch.menuItem {
-            doShowHide(item)
-        }
+        guard checkMenuItemCount() else { return }
+        
+        self.aivc.newMenuItem = nil
+        prepareAddEditSheet(false)
     }
     
     
-    private func doShowHide(_ item: MenuItem) {
-        
-        // Flip the item's recorded state and update the table
-        
-        item.isHidden = !item.isHidden
-        self.hasChanged = true
-        self.applyChangesButton.isEnabled = true
-        
-        // Reload the table data and update the status line
-        self.menuItemsTableView.reloadData()
-        displayItemCount()
-    }
-
-    
-    @objc private func doEditScript(sender: Any) {
-
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
-        
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
-            doEdit(item)
-        }
-    }
-
-    
+    /**
+     Invoke the Add New Item sheet for the editing of an existing item.
+     
+     - Paramaters
+        - item: The menu item selected for editing.
+     */
     private func doEdit(_ item: MenuItem) {
         
-        // Tell the add user item view controller to display its sheet
-        // and to opulate the sheet's fields for editing an existing item
-        self.aivc.appDelegate = self.appDelegate
         self.aivc.newMenuItem = item
-        self.aivc.isEditing = true
-        self.aivc.currentMenuItems = self.menuItems
+        prepareAddEditSheet(true)
+    }
+    
+    
+    /**
+     Generic settings to be applied before the Add New Item sheet is revealed
+     in either Add Item or Edit Item mode.
+     
+     FROM 2.0.0
+     
+     - Paramaters
+        - isEditing: `true` if the sheet is to be presented in editing mode,
+                     otherwise `false`.
+     */
+    private func prepareAddEditSheet(_ isEditing: Bool) {
+        
+        self.aivc.appDelegate = self.appDelegate
         self.aivc.parentWindow = self.configureWindow!
+        self.aivc.currentMenuItems = self.menuItems
         self.aivc.customIcons = self.customIcons
+        self.aivc.isEditing = isEditing
         self.aivc.showSheet()
     }
     
     
-    @objc private func doDeleteScript(sender: Any) {
-
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
-            doDelete(item)
-        }
-    }
-    
-    
+    /**
+     Delete a menu item, but offer the user a way out first.
+     
+     - Paramaters
+        - item: The menu item selected for deletion.
+     */
     private func doDelete(_ item: MenuItem) {
         
         // Present an alert to warn the user about deleting the Menu Item
@@ -447,27 +476,53 @@ final class ConfigureViewController:  NSViewController,
             }
         }
     }
-
-
-    @IBAction @objc private func doShowExtras(sender: NSButton) {
-
-        // FROM 1.1.0
-        // Pop up the import/export buttons
-        let yDelta: CGFloat = 4.0
-        let buttonPosition = NSPoint(x: 0, y: yDelta + sender.frame.size.height)
-        self.extrasMenu!.popUp(positioning: nil,
-                               at: buttonPosition,
-                               in: sender)
+    
+    
+    private func doShowHide(_ item: MenuItem) {
+        
+        // Flip the item's recorded state and update the table
+        
+        item.isHidden = !item.isHidden
+        self.hasChanged = true
+        self.applyChangesButton.isEnabled = true
+        
+        // Reload the table data and update the status line
+        self.menuItemsTableView.reloadData()
+        displayItemCount()
     }
+    
+    
+    // MARK: - Menu Items Table Button Selector Functions
+    
+    @objc private func doShowHideSwitch(sender: Any) {
 
-
-    @objc private func doExtraHelp() {
-
-        // FROM 1.1.0
-        // Just call the existing 'doShowHelp()' function as if we were a button
-        doShowHelp(sender: self.extrasButton)
+        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
+        if let item: MenuItem = theSwitch.menuItem {
+            doShowHide(item)
+        }
     }
+    
+    
+    @objc private func doTableButtonEditScript(sender: Any) {
 
+        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MenuItem = button.menuItem {
+            doEdit(item)
+        }
+    }
+    
+    
+    @objc private func doDeleteScript(sender: Any) {
+
+        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MenuItem = button.menuItem {
+            doDelete(item)
+        }
+    }
+    
     
     // MARK: - Contextual Menu Action Functions
     
@@ -513,8 +568,8 @@ final class ConfigureViewController:  NSViewController,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
             if let index = self.menuItems?.items.firstIndex(of: item) {
-                self.newItemIndex = index
-                doNewScriptItem(sender: self)
+                self.newMenuItemIndex = index
+                doAdd(index)
             }
         }
     }
@@ -823,8 +878,8 @@ final class ConfigureViewController:  NSViewController,
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
             if let item: MenuItem = self.aivc.newMenuItem {
-                if self.newItemIndex != 0 {
-                    self.menuItems!.items.insert(item, at: self.newItemIndex + 1)
+                if self.newMenuItemIndex != 0 {
+                    self.menuItems!.items.insert(item, at: self.newMenuItemIndex + 1)
                 } else {
                     self.menuItems!.items.append(item)
                 }
@@ -841,6 +896,11 @@ final class ConfigureViewController:  NSViewController,
         self.applyChangesButton.isEnabled = true
         self.menuItemsTableView.reloadData()
         displayItemCount()
+        
+        // FROM 2.0.0
+        // Need to add in any new custom icons but keep unused ones
+        // for now (they'll be zapped when this window reappears.
+        self.customIcons = self.aivc.customIcons
     }
 
     
@@ -900,7 +960,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage.init(named: "NSTouchBarComposeTemplate")
-                cell!.buttonB.action = #selector(self.doEditScript(sender:))
+                cell!.buttonB.action = #selector(self.doTableButtonEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit this menu item"
                 cell!.buttonB.isEnabled = item.type != .separator
                 cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
@@ -1214,7 +1274,33 @@ final class ConfigureViewController:  NSViewController,
         menuItemsCountText.stringValue = "MNU is showing \(countText) of \(total) \(itemText) (Option-click the menu to show all items)"
     }
 
+    
+    /**
+     Check that the user has not added too many items already
+     current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'.
+     
+     TODO Calculate the number of DISPLAYED items and limit that rather than the total
+     
+     */
+    private func checkMenuItemCount() -> Bool {
+        
+        if let items: MenuItemList = self.menuItems {
+            if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
+                // Limit reached - warn the user
+                let alert: NSAlert = NSAlert()
+                alert.messageText = "You have already added the maximum number of items to MNU"
+                alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
+                alert.addButton(withTitle: "OK")
+                alert.beginSheetModal(for: self.configureWindow!,
+                                      completionHandler: nil)
+                return false
+            }
+        }
+        
+        return true
+    }
 
+    
     private func showAlert(_ title: String, _ message: String) {
 
         // Present an alert to warn the user about deleting the Menu Item
