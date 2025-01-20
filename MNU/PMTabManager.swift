@@ -52,45 +52,42 @@ class PMTabManager {
         }
 
         // Make sure we have access to the parent controller
-        guard let cvc: ConfigureViewController = self.parent else {
-            return
-        }
+        guard let cvc: ConfigureViewController = self.parent else { return }
         
         // Select the required tab based on the button clicked
-        if let nextIndex: Int = self.buttons.firstIndex(of: button) {
-            self.currentIndex = nextIndex
-            
-            // Enable the current tab's button and disable the rest
-            for i in 0..<self.buttons.count {
-                if i != nextIndex {
-                    self.buttons[i].state = .off
-                    self.buttons[i].contentTintColor = .gray
-                } else {
-                    self.buttons[i].state = .on
-                    self.buttons[i].contentTintColor = .controlAccentColor
-                }
+        guard let nextIndex: Int = self.buttons.firstIndex(of: button) else { return }
+        
+        // Enable the current tab's button and disable the rest
+        self.currentIndex = nextIndex
+        for i in 0..<self.buttons.count {
+            if i != nextIndex {
+                self.buttons[i].state = .off
+                self.buttons[i].contentTintColor = .gray
+            } else {
+                self.buttons[i].state = .on
+                self.buttons[i].contentTintColor = .controlAccentColor
             }
-            
-            // Perform tab-specific logic BEFORE switching
-            // NOTE These closures are set in the app delegate
-            switch self.currentIndex {
-                case 1:
-                    if let handler = self.callbacks[1] {
-                        handler()
-                    }
-                case 2:
-                    if let handler = self.callbacks[2] {
-                        handler()
-                    }
-                default: // 0
-                    if let handler = self.callbacks[0] {
-                        handler()
-                    }
-            }
-            
-            // Select the tab we're going to show
-            cvc.windowTabView.selectTabViewItem(at: nextIndex)
         }
+        
+        // Perform tab-specific logic BEFORE switching
+        // NOTE These closures are set in the app delegate
+        switch nextIndex {
+            case 1:
+                if let handler = self.callbacks[1] {
+                    handler()
+                }
+            case 2:
+                if let handler = self.callbacks[2] {
+                    handler()
+                }
+            default: // 0
+                if let handler = self.callbacks[0] {
+                    handler()
+                }
+        }
+        
+        // Select the tab we're going to show
+        cvc.windowTabView.selectTabViewItem(at: nextIndex)
     }
     
     
