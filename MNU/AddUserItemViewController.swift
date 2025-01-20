@@ -707,12 +707,14 @@ final class AddUserItemViewController: NSViewController,
         
         // Ensure we are working with a custom icon and it's valid
         guard self.iconButton.index >= MNU_CONSTANTS.ICONS.count else { return }
-        guard let bitmap = self.customIcons[self.iconButton.index].image?.tiffRepresentation else { return }
+        
+        let customImageIndex = self.iconButton.index - MNU_CONSTANTS.ICONS.count
+        guard let bitmap = self.customIcons[customImageIndex].image?.tiffRepresentation else { return }
         
         // Try to make (or get) the image store path and only proceed if it's there
         guard makeConfig() else { return }
         
-        if self.customIcons[self.iconButton.index].id == "" {
+        if self.customIcons[customImageIndex].id == "" {
             // This is a totally new image because this value is never set on image load, even
             // if multiple images have been loaded so give the imge store file a unique name...
             let filename = UUID().uuidString
