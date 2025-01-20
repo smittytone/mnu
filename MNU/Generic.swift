@@ -73,3 +73,23 @@ func getImageStoreUrl(_ filename: String) -> URL {
     
     return url
 }
+
+
+/**
+ Preset a generic, simple alert with no completion handler.
+ 
+ - Parameters
+    - title:   The alert heading.
+    - message: The alert body.
+    - window:  The window the alert will be modal for.
+ */
+func showAlert(_ title: String, _ message: String, _ window: NSWindow) {
+    
+    // Present an alert to warn the user about deleting the Menu Item
+    let alert: NSAlert = NSAlert()
+    alert.messageText = title
+    alert.informativeText = message
+    alert.addButton(withTitle: "OK")
+    alert.beginSheetModal(for: window,
+                          completionHandler: nil)
+}
