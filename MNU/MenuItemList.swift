@@ -37,5 +37,33 @@ final class MenuItemList: NSObject {
     //      nil - at minimum it is an empty array
     
     var items: [MenuItem] = []
-
+    
+    
+    /**
+     Encode the instance to a JSON string for backup tasks.
+     
+     - Returns The list of menu items as a string, or a thrown error.
+     */
+    func encode() throws -> String {
+        
+        let result = Serializer.jsonizeAll(self)
+        guard !result.isEmpty else { throw Serializer.error.BadGroupSerialization }
+        return result
+    }
+    
+    
+    /**
+     Create a new instance from JSON data.
+     
+     - Parameters
+        - json: The data from which to decode to MenuItemList.
+     
+     - Returns The list of menu items, or a thrown error.
+     */
+    static func decode(_ json: Data) throws -> MenuItemList {
+        
+        let result = Serializer.dejsonizeAll(json)
+        guard let realResult = result else { throw Serializer.error.BadGroupDeserialization }
+        return realResult
+    }
 }

@@ -439,7 +439,12 @@ final class AppDelegate: NSObject,
         var savedItems: [Any] = []
         
         for item: MenuItem in self.items {
-            savedItems.append(Serializer.jsonize(item))
+            do {
+                let encoded = try item.encode()
+                savedItems.append(encoded)
+            } catch {
+                NSLog("Could not encode item \(item.title)")
+            }
         }
         
         let defaults: UserDefaults = UserDefaults.standard
@@ -693,6 +698,54 @@ final class AppDelegate: NSObject,
             // NSMenuItems
             
             for loadedItem: String in loadedItems {
+                do {
+                    let itemInstance = try MenuItem.decode(loadedItem)
+                    
+                    // Add the Menu Item to the list
+                    self.items.append(itemInstance)
+                    
+                    // FROM 1.7.0
+                    // Inject new keys + key mods for..
+                    // ... Switch mode
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE && itemInstance.keyEquivalent == "" {
+                        itemInstance.keyEquivalent = "z"
+                        itemInstance.keyModFlags = 12
+                    }
+
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE && itemInstance.keyEquivalent == ""  {
+                        itemInstance.keyEquivalent = "h"
+                        itemInstance.keyModFlags = 12
+                    }
+
+                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE && itemInstance.keyEquivalent == "" {
+                        itemInstance.keyEquivalent = "h"
+                        itemInstance.keyModFlags = 9
+                    }
+
+                    placeMenuItem(itemInstance)
+                } catch {
+                    // We couldn't load one of the saved list of MNU items, so ask the user what to do
+                    DispatchQueue.main.async {
+                        let alert: NSAlert = NSAlert.init()
+                        alert.messageText = "Stored MNU items are damaged"
+                        alert.informativeText = "Do you wish to continue with the default items?"
+                        alert.addButton(withTitle: "Continue")
+                        alert.addButton(withTitle: "Quit MNU")
+                        
+                        if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
+                            // User chose to reload defaults
+                            self.reloadDefaults = true
+                            self.createMenu()
+                        } else {
+                            // User chose to quit
+                            NSApplication.shared.terminate(self)
+                        }
+                    }
+                    
+                    return
+                }
+                
+                /*
                 if let itemInstance: MenuItem = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
                     self.items.append(itemInstance)
@@ -739,7 +792,7 @@ final class AppDelegate: NSObject,
 
                     return
                 }
-                
+                */
                 // FROM 1.6.0
                 // Add new defaults to the menu if the user has already customised the menu
                 let insertNewDefaults: Int = defaults.integer(forKey: "com.bps.mnu.new-defs-1-6")

@@ -86,5 +86,34 @@ final class MenuItem: NSObject,
         itemCopy.showDirectOutput = self.showDirectOutput
         return itemCopy
     }
+    
+    
+    /**
+     Convert the menu item to a JSON string.
+     
+     - Returns The JSON string
+     */
+    func encode() throws -> String {
+        
+        let result = Serializer.jsonize(self)
+        guard !result.isEmpty else { throw Serializer.error.BadSingleSerialization }
+        return result
+    }
+    
+    
+    /**
+     Create a new instance from a JSON string.
+     
+     - Parameters
+        - json: The string from which to decode to MenuItem.
+     
+     - Returns The list of menu items, or a thrown error.
+     */
+    static func decode(_ json: String) throws -> MenuItem {
+        
+        let result = Serializer.dejsonize(json)
+        guard let realResult = result else { throw Serializer.error.BadSingleDeserialization }
+        return realResult
 
+    }
 }

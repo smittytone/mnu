@@ -32,6 +32,13 @@ import Foundation
 
 struct Serializer {
 
+    enum error: Error {
+        case BadSingleSerialization
+        case BadGroupSerialization
+        case BadSingleDeserialization
+        case BadGroupDeserialization
+    }
+    
     
     static func jsonize(_ item: MenuItem) -> String {
 
