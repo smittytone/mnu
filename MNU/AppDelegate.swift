@@ -39,6 +39,9 @@ final class AppDelegate: NSObject,
 
     @IBOutlet var cwvc: ConfigureViewController!        // The Configure window controller
     @IBOutlet var acvc: MenuControlsViewController!     // The control bar view controller
+    // FROM 2.0.0
+    @IBOutlet weak var outputWindow: DirectOutputWindow!
+    
     
     // MARK: - Public App Properties
     
@@ -154,10 +157,16 @@ final class AppDelegate: NSObject,
                        selector: #selector(self.performReset),
                        name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.RESTORE_DEFAULTS),
                        object: self.cwvc)
+        
+        nc.addObserver(self,
+                       selector: #selector(self.setDirectOutput),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.OUTPUT_UPDATED),
+                       object: self.cwvc)
     }
 
                        
-    @objc private func performTermination() {
+    @objc
+    private func performTermination() {
         
         // Tell the application can now terminate, following the issuing of a
         // NSApplication.TerminateReply.terminateLater (see 'applicationShouldTerminate()')
@@ -340,19 +349,22 @@ final class AppDelegate: NSObject,
         
         // FROM 2.0.0
         self.autoSeparationInForce = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
+        self.doShowOutput = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
     }
     
     
     // MARK: - Auto-start Functions
 
-    @objc private func enableAutoStart() {
+    @objc
+    private func enableAutoStart() {
 
         // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: true)
     }
 
 
-    @objc private func disableAutoStart() {
+    @objc
+    private func disableAutoStart() {
 
         // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: false)
@@ -375,7 +387,8 @@ final class AppDelegate: NSObject,
     }
     
     
-    @objc private func switchTerminal() {
+    @objc
+    private func switchTerminal() {
         
         // FROM 1.6.0
         // This function is called in response to a change of terminal being
@@ -397,12 +410,20 @@ final class AppDelegate: NSObject,
     }
     
     
-    @objc private func toggleTerminalTabbing() {
+    @objc
+    private func toggleTerminalTabbing() {
         
         // FROM 1.6.0
         // Update internal record of the user's tab opening choice: current window or new
         // Configure Window has already saved the preference
         self.doNewTermTab = self.cwvc.tabOpenChoice
+    }
+    
+    
+    @objc
+    private func setDirectOutput() {
+        
+        self.doShowOutput = self.cwvc.doShowOutput
     }
     
     
@@ -453,7 +474,8 @@ final class AppDelegate: NSObject,
     }
     
     
-    @objc private func performReset() {
+    @objc
+    private func performReset() {
         
         // Set the appropriate flags and make sure the
         // control panel menu item has been removed.
@@ -471,7 +493,9 @@ final class AppDelegate: NSObject,
 
     // MARK: - App Action Functions
 
-    @IBAction @objc private func doModeSwitch(sender: Any?) {
+    @IBAction
+    @objc
+    private func doModeSwitch(sender: Any?) {
 
         // Switch mode record
         self.inDarkMode = !self.inDarkMode
@@ -502,7 +526,9 @@ final class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc private func doDesktopSwitch(sender: Any?) {
+    @IBAction
+    @objc
+    private func doDesktopSwitch(sender: Any?) {
 
         // Switch the stored state
         self.useDesktop = !self.useDesktop
@@ -535,7 +561,9 @@ final class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc private func doShowHiddenFilesSwitch(sender: Any?) {
+    @IBAction
+    @objc
+    private func doShowHiddenFilesSwitch(sender: Any?) {
 
         // Switch the stored state
         self.showHidden = !self.showHidden
@@ -568,7 +596,9 @@ final class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc private func doGit(sender: Any?) {
+    @IBAction
+    @objc
+    private func doGit(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'gitup'
         // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
@@ -581,7 +611,9 @@ final class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc private func doBrewUpdate(sender: Any?) {
+    @IBAction
+    @objc
+    private func doBrewUpdate(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew update'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
@@ -601,7 +633,9 @@ final class AppDelegate: NSObject,
     }
 
 
-    @IBAction @objc private func doBrewUpgrade(sender: Any?) {
+    @IBAction
+    @objc
+    private func doBrewUpgrade(sender: Any?) {
 
         // Set up the script that will open Terminal and run 'brew upgrade'
         // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
@@ -620,7 +654,9 @@ final class AppDelegate: NSObject,
    }
 
     
-    @IBAction @objc private func doScript(sender: Any?) {
+    @IBAction
+    @objc
+    private func doScript(sender: Any?) {
 
         // Get the source Menu Item that the menu button is linked to
         let menuItem: NSMenuItem = sender as! NSMenuItem
@@ -641,7 +677,8 @@ final class AppDelegate: NSObject,
     }
 
 
-    @objc private func showConfigureWindow() {
+    @objc
+    private func showConfigureWindow() {
 
         // Duplicate the current item list to pass on to the configure window view controller
         let list: MenuItemList = MenuItemList()
@@ -673,7 +710,8 @@ final class AppDelegate: NSObject,
 
     // MARK: - Menu And View Controller Maker Functions
 
-    @objc private func createMenu() {
+    @objc
+    private func createMenu() {
 
         // Create the app's menu when the app is run
         
@@ -927,7 +965,8 @@ final class AppDelegate: NSObject,
     }
     
     
-    @objc private func updateMenu() {
+    @objc
+    private func updateMenu() {
         
         // Redraw the menu based on the current list of items
         // NOTE If 'optionClick' has been set, we show all items, even if they would normally
@@ -956,7 +995,8 @@ final class AppDelegate: NSObject,
     }
     
     
-    @objc private func updateAndSaveMenu() {
+    @objc
+    private func updateAndSaveMenu() {
         
         // We have received a notification from the Configure Window's controller that the
         // list of Menu Items has changed in some way, so rebuild the menu from scratch
@@ -1103,7 +1143,7 @@ final class AppDelegate: NSObject,
     }
     
     private func addAppMenuItem(_ doSeparate: Bool) {
-
+        
         // Add the app's control bar item
         // We always add this after creating or updating the menu
         // FROM 1.3.0 - Add a 'show separator' parameter
@@ -1115,7 +1155,7 @@ final class AppDelegate: NSObject,
     }
 
     
-    func makeIconMatrix() {
+    internal func makeIconMatrix() {
         
         // Build the array of icons that we will use for the popover selector
         // and the button that triggers its appearance
@@ -1131,8 +1171,8 @@ final class AppDelegate: NSObject,
     
     // MARK: Dark Mode Switching
 
-    func makeModeSwitch() -> MenuItem {
-
+    internal func makeModeSwitch() -> MenuItem {
+        
         // Make and return a stock UI mode switch
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
@@ -1146,8 +1186,8 @@ final class AppDelegate: NSObject,
 
     // MARK: Desktop Usage Switching
 
-    func makeDesktopSwitch() -> MenuItem {
-
+    internal func makeDesktopSwitch() -> MenuItem {
+        
         // Make and return a stock desktop usage mode switch
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
@@ -1159,8 +1199,8 @@ final class AppDelegate: NSObject,
 
     // MARK: Show Hidden Files Switching
 
-    func makeHiddenFilesSwitch() -> MenuItem {
-
+    internal func makeHiddenFilesSwitch() -> MenuItem {
+        
         // Make and return a stock desktop usage mode switch
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
@@ -1172,8 +1212,8 @@ final class AppDelegate: NSObject,
 
     // MARK: Update Git Trigger
 
-    func makeGitScript() -> MenuItem {
-
+    internal func makeGitScript() -> MenuItem {
+        
         // Make and return a stock Git Update item
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
@@ -1185,8 +1225,8 @@ final class AppDelegate: NSObject,
 
     // MARK: Update Brew Trigger
 
-    func makeBrewUpdateScript() -> MenuItem {
-
+    internal func makeBrewUpdateScript() -> MenuItem {
+        
         // Make and return a stock Brew Update item
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
@@ -1198,8 +1238,8 @@ final class AppDelegate: NSObject,
 
     // MARK: Upgrade Brew Trigger
 
-    func makeBrewUpgradeScript() -> MenuItem {
-
+    internal func makeBrewUpgradeScript() -> MenuItem {
+        
         // Make and return a stock Brew Update item
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
@@ -1211,10 +1251,15 @@ final class AppDelegate: NSObject,
 
     // MARK: Show IP Address Trigger
 
-    func makeShowIPScript() -> MenuItem {
-
-        // FROM 1.6.0
-        // Make and return a stock Show IP Address item
+    /**
+     Make and return a stock Show IP Address item.
+     
+     FROM 1.6.0
+     
+     - Returns The constructed menu item.
+     */
+    internal func makeShowIPScript() -> MenuItem {
+        
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
@@ -1227,10 +1272,15 @@ final class AppDelegate: NSObject,
 
     // MARK: Show Disk Usage Trigger
 
-    func makeShowDiskFullScript() -> MenuItem {
-
-        // FROM 1.6.0
-        // Make and return a stock Show Disk Free Space item
+    /**
+     Make and return a stock Show Disk Free Space item.
+     
+     FROM 1.6.0
+     
+     - Returns The constructed menu item.
+     */
+    internal func makeShowDiskFullScript() -> MenuItem {
+        
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_DF
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF
@@ -1243,10 +1293,15 @@ final class AppDelegate: NSObject,
 
     // MARK: Show Grab Window Trigger
 
-    func makeGetScreenshotOpen() -> MenuItem {
-
-        // FROM 1.6.0
-        // Make and return a stock Grab Windw item
+    /**
+     Make and return a stock Grab Windw item.
+     
+     FROM 1.6.0
+     
+     - Returns The constructed menu item.
+     */
+    internal func makeGetScreenshotOpen() -> MenuItem {
+        
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GRAB_WINDOW
         newItem.code = MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW
@@ -1327,40 +1382,58 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     Confirm that the user has the requisite script on their system
+     and warn them if it does not. Returns true of the script exists.
+     
+     FROM 1.5.0
+     
+     - Note Second parameter used to prevent alert being shown during unit testing.
+     
+     - Parameters
+        - path: The script's location.
+        - isTest: `true` if we're running a test.
+     
+     - Returns `true` of a file exists at the specified path, otherwise `false`.
+     */
     func checkScriptExists(_ path: String, _ isTest: Bool = false) -> Bool {
-
-        // FROM 1.5.0
-        // Confirm that the user has the requisite script on their system
-        // and warn them if it does not. Returns true of the script exists
-        // NOTE Second parameter used to prevent alert being shown during unit testing
-
+        
         if FileManager.default.fileExists(atPath: path) {
             // Command exists
             return true
         }
-
+        
         if !isTest {
             let scriptName: String = (path as NSString).lastPathComponent
-            showError("\(scriptName) is not installed", "You will need to install this script to run this MNU item (or hide the item).")
+            showErrorOnMainThread("\(scriptName) is not installed", "You will need to install this script to run this MNU item (or hide the item).")
         }
         
         return false
     }
 
 
+    /**
+     Present a basic alert if an internal, non fatal error occurred.
+     
+     - Note This is primarily a debugging tool.
+     */
     private func presentError() {
-
-        // Present a basic alert if an internal, non fatal error occurred.
-        // This is primarily a debugging tool
-        showError("Sorry, an internal error occurred", "Please check the details in your computer's log.")
+        
+        showErrorOnMainThread("Sorry, an internal error occurred", "Please check the details in your computer's log.")
     }
 
 
-    private func showError(_ head: String, _ text: String) {
-
-        // FROM 1.3.0
-        // Show an error modal dialog on the main (UI) thread
-
+    /**
+     Show an error modal dialog on the main (UI) thread.
+     
+     FROM 1.3.0
+     
+     - Parameters
+        - head: The alert title.
+        - text: The alert body copy.
+     */
+    private func showErrorOnMainThread(_ head: String, _ text: String) {
+        
         DispatchQueue.main.async {
             let alert: NSAlert = NSAlert.init()
             alert.messageText = head
@@ -1373,7 +1446,7 @@ final class AppDelegate: NSObject,
     
     /**
      Check for any files in the store that are no longer referenced,
-     and delete them
+     and delete them.
      
      FROM 2.0.0
      */
@@ -1409,7 +1482,6 @@ final class AppDelegate: NSObject,
      */
     private func wrangleCustomIcons() {
         
-        
         var toRemove: [Int] = []
         var count = 0
         for customIcon in self.customIcons {
@@ -1438,20 +1510,25 @@ final class AppDelegate: NSObject,
 
     // MARK: - External Process Management Functions
 
-    func runScriptDirect(_ code: String) {
+    /**
+     Run command line apps direct, without Terminal.
+     
+     - Parameters
+        - code: The command (plus args) to run.
+     */
+    internal func runScriptDirect(_ code: String) {
 
-        // Run command line apps direct, without Terminal
-
-        #if DEBUG
+#if DEBUG
         NSLog("MNU running direct command \'\(code)\'")
-        #endif
-
-        // FROM 1.3.0 - Make sure we have a command to run
+#endif
+        
+        // FROM 1.3.0
+        // Make sure we have a command to run
         if code.count == 0 {
-            showError("Command Error", "The MNU item has no command entered.")
+            showErrorOnMainThread("Command Error", "The MNU item has no command entered.")
             return
         }
-
+        
         // Decode the passed string into the app and arguments
         // For example:
         //   '/usr/local/bin/pdfmaker -f jpg -s /Users/z/source -d /users/z/target'
@@ -1461,19 +1538,19 @@ final class AppDelegate: NSObject,
         // FROM 1.6.0 -- first handle for path space escapes
         let spacedCode: String = (code as NSString).replacingOccurrences(of: "\\ ", with: "!--ESC_SPACE--!")
         let parts = (spacedCode as NSString).components(separatedBy: " ")
-
+        
         // FROM 1.3.0 - Just in case that didn't quite work...
         if parts.count == 0 {
-            showError("Command Error", "The command triggerd by the MNU item was malformed and couldn’t be run. Please check your code.")
+            showErrorOnMainThread("Command Error", "The command triggerd by the MNU item was malformed and couldn’t be run. Please check your code.")
             return
         }
-
+        
         // TODO Add limited quoting
-
+        
         // Get the app and its arguments
         let app: String = parts[0]
         var args: [String] = [String]()
-
+        
         if parts.count > 1 {
             // Copy args beyond index 0 (the app)
             for i in 1..<parts.count {
@@ -1481,12 +1558,13 @@ final class AppDelegate: NSObject,
                 args.append((parts[i] as NSString).replacingOccurrences(of: "!--ESC_SPACE--!", with: " "))
             }
         }
-
+        
         // Run the process
         // NOTE This time we wait for its conclusion
         runProcess(app: app,
                    with: (args.count > 0 ? args : []),
-                   doBlock: true)
+                   doBlock: true,
+                   isDirect: true)
     }
 
 
@@ -1497,14 +1575,14 @@ final class AppDelegate: NSObject,
         - code: The code to be issued to the Terminal.
      */
     func runScript(_ code: String) {
-
-        #if DEBUG
+        
+#if DEBUG
         NSLog("MNU running shell command \'\(code)\'")
-        #endif
-
+#endif
+        
         // Handle escapable characters
         let escapedCode: NSString = escaper(code)
-
+        
         // FROM 1.6.0
         // Support multiple terminals
         let script: String
@@ -1551,9 +1629,9 @@ final class AppDelegate: NSObject,
             }
         }
         
-        #if DEBUG
+#if DEBUG
         NSLog("MNU running AppleScript:\n\(script)")
-        #endif
+#endif
         
         runProcess(app: "/usr/bin/osascript",
                    with: ["-e", script],
@@ -1578,8 +1656,8 @@ final class AppDelegate: NSObject,
      - Parameters
         - appName: The name of the script in the bundle.
      */
-    func escaper(_ unescapedString: String) -> NSString {
-
+    internal func escaper(_ unescapedString: String) -> NSString {
+        
         // Convert the script string to an NSString so we can run 'replacingOccurrences()'
         var escapedCode: NSString = unescapedString as NSString
         
@@ -1601,37 +1679,38 @@ final class AppDelegate: NSObject,
         
         // Put back user-escaped DQs
         escapedCode = escapedCode.replacingOccurrences(of: "!-USER-ESCAPED-D-QUOTES-!", with: "\\\\\\\"") as NSString
-
+        
         return escapedCode
     }
 
 
     /**
      Open an application (ie. one with a `.app` extension) directly, not via Terminal.
+     
      FROM 1.2.0
      
      - Parameters
         - appName: The name of the script in the bundle.
      */
     func openApp(_ appName: String) {
-
-        #if DEBUG
+        
+#if DEBUG
         NSLog("MNU opening app \'\(appName)\'")
-        #endif
-
+#endif
+        
         // FROM 1.5.0
         // Get the app's valid path (or nil if there isn't one)
         if let path: String = getAppPath(appName) {
             #if DEBUG
             NSLog("MNU running script \'open \(path)\'")
             #endif
-
+            
             // Call 'open'
             runProcess(app: "/usr/bin/open",
                        with: [path],
                        doBlock: false)
         } else {
-            showError("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
+            showErrorOnMainThread("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
         }
     }
     
@@ -1648,8 +1727,8 @@ final class AppDelegate: NSObject,
         - Returns The app's absolute path including `.app` as an extension,
                   or `nil` on error.
      */
-    func getAppPath(_ appName: String) -> String? {
-
+    internal func getAppPath(_ appName: String) -> String? {
+        
         // Various possible Application locations are...
         var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
         
@@ -1674,13 +1753,13 @@ final class AppDelegate: NSObject,
             if !appPath.contains(basePath) {
                 appPath = basePath + "/" + appPath
             }
-
+                
             // Check if the app is there -- if it is, return the full path
             if FileManager.default.fileExists(atPath: appPath) {
                 return appPath
             }
         }
-
+        
         // No match for the named app in any location,
         // so issue a failure note
         return nil
@@ -1696,11 +1775,8 @@ final class AppDelegate: NSObject,
                      script call (see below).
      */
     private func runBundleScript(named scriptName: String, doAddPath: Bool) {
-
-        //
-
-        if let scriptPath: String = Bundle.main.path(forResource: scriptName,
-                                                     ofType: "scpt") {
+        
+        if let scriptPath: String = Bundle.main.path(forResource: scriptName, ofType: "scpt") {
             let appPath: String = Bundle.main.bundlePath
             var args: [String] = [scriptPath]
             if doAddPath {
@@ -1709,15 +1785,15 @@ final class AppDelegate: NSObject,
                 // for the AppleScript 'RemoveLogin'
                 args.append(appPath)
             }
-
+            
             // Run the process
             runProcess(app: "/usr/bin/osascript",
                        with: args,
                        doBlock: true)
         }
     }
-    
-    
+
+
     /**
      Spawn and run a new process, displaying output if requested by the user.
      
@@ -1726,9 +1802,29 @@ final class AppDelegate: NSObject,
         - with:     The command's arguments.
         - doBlock: `true` to await the outcome of the call. This is the recommended
                     setting for the MNU use case.
+        - isDirect: `true` if the command to be run outside of a terminal.
      */
-    private func runProcess(app path: String, with args: [String], doBlock: Bool) {
-
+    private func runProcess(app path: String, with args: [String], doBlock: Bool, isDirect: Bool = false) {
+        
+        // FROM 2.0.0
+        // Prep the output window if we need to
+        if isDirect && self.doShowOutput {
+            // Use the command and args to generate the window's subtitle
+            var subtitle = "\(path)"
+            if isDirect {
+                for arg in args {
+                    subtitle += " \(arg)"
+                }
+            }
+            
+            // This will display the window, ready for output
+            DispatchQueue.main.async {
+                self.outputWindow.backgroundColor  = NSApp.isMacInLightMode() ? .white        : .black
+                self.outputWindow.foregroundColour = NSApp.isMacInLightMode() ? .systemPurple : .cyan
+                self.outputWindow.prepareForOutput(subtitle)
+            }
+        }
+        
         // FROM 1.6.1
         // Run the process on a secondary thread
         let processQueue: DispatchQueue = DispatchQueue.init(label: "com.bps.mnu.process-q")
@@ -1742,67 +1838,59 @@ final class AppDelegate: NSObject,
             task.standardOutput = outputPipe
             task.standardError = outputPipe
 
-            /*let outputHandle = outputPipe.fileHandleForReading
-            // WARNING THIS LEADS TO EXCESS CPU USAGE DURING RUN
-            var outString: String = ""
-            outputHandle.readabilityHandler = { fshandle in
-                if let line = String(data: fshandle.availableData, encoding: String.Encoding.utf8) {
-                    outString += line
-                }
-            }*/
-            
             let outputHandle = outputPipe.fileHandleForReading
             outputHandle.readabilityHandler = { [weak self] fileHandle in
                 // NOTE Pass in `weak self` to avoid reference cycle to `self`.
                 //      Hence the following check: bail if the instance reference
                 //      is `nil`.
                 guard let strongSelf = self else { return }
-                guard strongSelf.doShowOutput else {return }
+                guard (isDirect && strongSelf.doShowOutput) else {return }
                 
                 // If there's available output to the redirected file handle,
                 // get it and store it for processing later
                 let data = fileHandle.availableData
-                if let string = String(data: data, encoding: .utf8) {
-                    strongSelf.output += string
-                    
-                    /*
+                if let output = String(data: data, encoding: .utf8) {
+                    // TODO Extract (and then parse) ANSI strings, eg. ESC [ 31 m
                     DispatchQueue.main.async {
-                        self.logWindow.log.stringValue = strongSelf.output
+                        strongSelf.outputWindow.appendText(output)
                     }
-                    */
                 }
             }
-
+            
             do {
                 try task.run()
             } catch {
                 // The script exited with an error -- most likely it doesn't exist
-                self.showError("Command Error", "The app called by the MNU item doesn’t exist. Please check your code.")
+                self.showErrorOnMainThread("Command Error", "The app called by the MNU item doesn’t exist. Please check your code.")
                 return
             }
-
+            
             if doBlock {
                 // Block until the task has completed (short tasks ONLY)
                 task.waitUntilExit()
             }
-
-            if !task.isRunning  && task.terminationStatus != 0 {
+            
+            if !task.isRunning && task.terminationStatus != 0 && !self.doShowOutput {
                 // Command failed -- collect the output if there is any
-                // DOES THIS EVEN WORK?
-                let outputHandle: FileHandle = outputPipe.fileHandleForReading
                 var outString: String = ""
                 if let line: String = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
                     outString = line
                 }
-
+                
                 if outString.count > 0 {
-                    self.showError("Command Error", "The MNU item’s command reported an error: \(outString)")
+                    self.showErrorOnMainThread("Command Error", "The MNU item’s command reported an error: \(outString)")
                 } else {
-                    self.showError("Command Error", "The MNU item’s command reported an error.\nExit code \(task.terminationStatus)")
+                    self.showErrorOnMainThread("Command Error", "The MNU item’s command reported an error.\nExit code \(task.terminationStatus)")
                 }
+            }
+            
+            // FROM 2.0.0
+            if !task.isRunning && task.terminationReason != .exit {
+                self.showErrorOnMainThread("Command Terminated by macOS", "The command was terminated because it failed to catch a signal.")
             }
         }
     }
+
 
     /**
      Set up a task to kill the macOS Finder and, optionally, the Dock.
@@ -1810,11 +1898,11 @@ final class AppDelegate: NSObject,
      - Parameters
         - andDock: `true` if the Dock should be restarted too.
      */
-    func killFinder(andDock: Bool) {
-
+    internal func killFinder(andDock: Bool) {
+        
         var args: [String] = ["Finder"]
         if andDock { args.append("Dock") }
-
+        
         // Run the process
         runProcess(app: "/usr/bin/killall",
                    with: args,
@@ -1831,8 +1919,8 @@ final class AppDelegate: NSObject,
      - Parameters
         - menu: The menu that has closed.
      */
-    func menuDidClose(_ menu: NSMenu) {
-
+    internal func menuDidClose(_ menu: NSMenu) {
+        
         // The menu has closed - tell the subviews
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                         object: self)
@@ -1847,8 +1935,8 @@ final class AppDelegate: NSObject,
      - Parameters
         - menu: The menu that is about to open.
      */
-    func menuWillOpen(_ menu: NSMenu) {
-
+    internal func menuWillOpen(_ menu: NSMenu) {
+        
         // Check to see if the Option key was down when the menu was clicked
         if NSEvent.modifierFlags.contains(NSEvent.ModifierFlags.option) {
             // Option key held down for the time, so refresh the menu with the alternative view

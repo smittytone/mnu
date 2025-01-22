@@ -91,6 +91,8 @@ final class ConfigureViewController:  NSViewController,
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
+    // FROM 2.0.0
+    var doShowOutput = false
     
     
     // MARK: - Private Class Properties
@@ -229,6 +231,10 @@ final class ConfigureViewController:  NSViewController,
         // Set up auto separation and its effect on controls
         self.prefsAutoSeparateButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
         self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
+        
+        // Set up output for direct commands
+        self.prefsDirectOutpuButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT) ? .on : .off
+        self.doShowOutput = self.prefsDirectOutpuButton.state == .on ? true : false
         
         // FROM 2.0.0
         // Assemble a set of custom icons
@@ -746,9 +752,11 @@ final class ConfigureViewController:  NSViewController,
         let state = self.prefsDirectOutpuButton.state == .on ? true : false
         defaults.set(state,
                      forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
+        
+        self.doShowOutput = state
 
         // Notify the menu that it needs to change
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.OUTPUT_UPDATED),
                                         object: self)
     }
     
@@ -1298,10 +1306,15 @@ final class ConfigureViewController:  NSViewController,
         
         if let list: MenuItemList = self.menuItems {
             if list.items.count > 0 {
-                total = list.items.count
                 for item: MenuItem in list.items {
-                    if !item.isHidden {
+                    if !item.isHidden && item.type != .separator {
+                        // Real items, visible
                         count += 1
+                    }
+                    
+                    if !item.isHidden {
+                        // Real items, all
+                        total += 1
                     }
                 }
             }
@@ -1318,7 +1331,7 @@ final class ConfigureViewController:  NSViewController,
     
     /**
      Check that the user has not added too many items already
-     current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'.
+     current limit is set as ` MNU_CONSTANTS.MAX_ITEM_COUNT'.
      
      TODO Calculate the number of DISPLAYED items and limit that rather than the total
      

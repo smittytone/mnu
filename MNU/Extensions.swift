@@ -76,7 +76,7 @@ extension URL {
 }
 
 
-public extension NSImage {
+extension NSImage {
 
     func inverted() -> NSImage {
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
@@ -149,3 +149,12 @@ extension NSApplication {
         return (self.effectiveAppearance.name.rawValue == "NSAppearanceNameAqua")
     }
 }
+
+
+extension String {
+    
+    func replace(_ base: String, with: String) -> String {
+        return self.replacingOccurrences(of: base, with: with, options: .literal, range: nil)
+    }
+}
+

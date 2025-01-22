@@ -38,6 +38,7 @@
 		3BE25D1E2B039B7E00C2349F /* Secrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE25D1C2B039B7E00C2349F /* Secrets.swift */; };
 		3BE25D1F2B039C5800C2349F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BE25D1B2B039B3800C2349F /* Assets.xcassets */; };
 		3BE25D202B039C5900C2349F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BE25D1B2B039B3800C2349F /* Assets.xcassets */; };
+		3BE532922D40F1C6006670AA /* DirectOutputWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */; };
 		3BF8085E2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		3BD30C992A3094DF00F022F9 /* AddUserItemKeyTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyTextField.swift; sourceTree = "<group>"; };
 		3BE25D1B2B039B3800C2349F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
 		3BE25D1C2B039B7E00C2349F /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Secrets.swift"; sourceTree = SOURCE_ROOT; };
+		3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectOutputWindow.swift; sourceTree = "<group>"; };
 		3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyFieldEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -176,6 +178,7 @@
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
 				3B9180B223439E3A00A5CE3B /* Serializer.swift */,
 				3BA0416C2D35CAAD00164E2D /* Extensions.swift */,
+				3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */,
 				3B4117932D3677FA00CB291D /* Generic.swift */,
 				3BE25D1A2B039B2600C2349F /* YOU MUST SUPPLY */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
@@ -349,6 +352,7 @@
 				3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */,
 				3B01F0DF22EC175C0045A78A /* FeedbackSheetViewController.swift in Sources */,
 				3B5E13CD2D302654007DB1C8 /* PMTabManager.swift in Sources */,
+				3BE532922D40F1C6006670AA /* DirectOutputWindow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -510,9 +514,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MNU/Bundle Entities/MNU.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 561;
+				CURRENT_PROJECT_VERSION = 620;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -539,9 +544,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "MNU/Bundle Entities/MNU.entitlements";
 				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 561;
+				CURRENT_PROJECT_VERSION = 620;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				ENABLE_HARDENED_RUNTIME = YES;

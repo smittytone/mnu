@@ -137,6 +137,7 @@ struct MNU_CONSTANTS {
         static let SHOW_CONFIGURE               = "com.bps.mnu.show-configure"
         static let TERM_UPDATED                 = "com.bps.mnu.term-updated"
         static let TERM_TABBING_SET             = "com.bps.mnu.term-tab-updated"
+        static let OUTPUT_UPDATED               = "com.bps.mnu.output-updated"
     }
     
     struct CONFIG_TABLE_CONTEXT_MENU {
