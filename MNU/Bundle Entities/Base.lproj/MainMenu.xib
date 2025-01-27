@@ -410,7 +410,7 @@
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AsU-8H-CFq">
                                                     <rect key="frame" x="-2" y="-1" width="397" height="18"/>
-                                                    <buttonCell key="cell" type="check" title="Show direct command output in a window" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6C0-Tj-18A">
+                                                    <buttonCell key="cell" type="check" title="Show direct command output in a window" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="6C0-Tj-18A">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
@@ -1180,7 +1180,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask"/>
+                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
