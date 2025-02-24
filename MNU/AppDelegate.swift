@@ -59,7 +59,7 @@ final class AppDelegate: NSObject,
     private var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
     private var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
     private var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
-    private var task: Process? = nil                    // A sub-process we use for triggered scripts
+    //private var task: Process? = nil                    // A sub-process we use for triggered scripts
     private var doNewTermTab: Bool = false              // Should we open terminal scripts in a new window
     private var showImages: Bool = false                // Should we show menu icons as well as names
     private var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
@@ -88,8 +88,8 @@ final class AppDelegate: NSObject,
         // MARK: DEBUG SWITCHES
         // Uncomment the next three lines to wipe stored prefs
         //let defaults: UserDefaults = UserDefaults.standard
-        //defaults.set([], forKey: "com.bps.mnu.item-order")
-        //defaults.set(true, forKey: "com.bps.mnu.first-run")
+        //defaults.set([], forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS)
+        //defaults.set(true, forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
         
         // Register default preferences
         registerPreferences()
@@ -212,13 +212,15 @@ final class AppDelegate: NSObject,
     }
 
 
+    /*
     func applicationWillResignActive(_ notification: Notification) {
 
         // App is backgrounding - inform interested view controllers
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                         object: self)
     }
-
+     */
+    
 
     private func firstRunCheck() {
 
@@ -227,11 +229,11 @@ final class AppDelegate: NSObject,
 
         // Read in the defaults to see if this is MNU's first run: value will be true
         let defaults: UserDefaults = UserDefaults.standard
-        let isFirstRun: Bool = defaults.bool(forKey: "com.bps.mnu.first-run")
+        let isFirstRun: Bool = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
         if isFirstRun {
             // This is the first run - set the default to false so we don't
             // ever do this again
-            defaults.set(false, forKey: "com.bps.mnu.first-run")
+            defaults.set(false, forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
 
             // Ask the user if they want to run MNU at startup
             let alert: NSAlert = NSAlert.init()
@@ -245,7 +247,7 @@ final class AppDelegate: NSObject,
                 enableAutoStart()
 
                 // Update MNU's own prefs
-                defaults.set(true, forKey: "com.bps.mnu.startup-launch")
+                defaults.set(true, forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH)
             }
         }
     }
@@ -382,7 +384,7 @@ final class AppDelegate: NSObject,
         // FROM 1.5.2
         // Make sure preference is saved
         let defaults: UserDefaults = UserDefaults.standard
-        defaults.set(doTurnOn, forKey: "com.bps.mnu.startup-launch")
+        defaults.set(doTurnOn, forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH)
         defaults.synchronize()
     }
     
@@ -469,7 +471,7 @@ final class AppDelegate: NSObject,
         }
         
         let defaults: UserDefaults = UserDefaults.standard
-        defaults.set(savedItems, forKey: "com.bps.mnu.item-order")
+        defaults.set(savedItems, forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS)
         defaults.synchronize()
     }
     
@@ -513,7 +515,7 @@ final class AppDelegate: NSObject,
 
         // Run the AppleScript
         // FROM 1.7.0 -- Run off the main thread
-        let apsQueue: DispatchQueue = DispatchQueue.init(label: "com.bps.mnu.aps-q")
+        let apsQueue: DispatchQueue = DispatchQueue.init(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
         apsQueue.async {
             if let aps: NSAppleScript = NSAppleScript.init(source: arg) {
                 aps.executeAndReturnError(nil)
@@ -728,7 +730,7 @@ final class AppDelegate: NSObject,
         
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
         let defaults: UserDefaults = UserDefaults.standard
-        let loadedItems: [String] = defaults.array(forKey: "com.bps.mnu.item-order") as! [String]
+        let loadedItems: [String] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS) as! [String]
 
         if !self.reloadDefaults && loadedItems.count > 0 {
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
@@ -833,7 +835,7 @@ final class AppDelegate: NSObject,
                 */
                 // FROM 1.6.0
                 // Add new defaults to the menu if the user has already customised the menu
-                let insertNewDefaults: Int = defaults.integer(forKey: "com.bps.mnu.new-defs-1-6")
+                let insertNewDefaults: Int = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6)
                 if insertNewDefaults > 0 {
                     let defaultItems: [Int] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) as! [Int]
                     for i: Int in 0..<insertNewDefaults {
@@ -845,7 +847,7 @@ final class AppDelegate: NSObject,
                     }
                     
                     // Record for next time that the operation was done
-                    defaults.set(0, forKey: "com.bps.mnu.new-defs-1-6")
+                    defaults.set(0, forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6)
                     
                     // Save the update menu item list
                     saveItems()
@@ -874,7 +876,6 @@ final class AppDelegate: NSObject,
         // Now add the app menu to the macOS menu bar
         let bar: NSStatusBar = NSStatusBar.system
         self.statusItem = bar.statusItem(withLength: NSStatusItem.squareLength)
-
         if self.statusItem != nil && self.appMenu != nil {
             self.statusItem!.button!.image = NSImage.init(named: "menu_icon")
             self.statusItem!.button!.isHighlighted = false
@@ -885,7 +886,7 @@ final class AppDelegate: NSObject,
             self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version) (\(build))"
             self.statusItem!.isVisible = true
         } else {
-            NSLog("Error in MNU.createMenu()(): Could not initialise menu")
+            NSLog("Error in MNU.createMenu(): Could not initialise menu")
             presentError()
         }
     }
@@ -1318,18 +1319,18 @@ final class AppDelegate: NSObject,
 
         // Called by the app at launch to register its initial defaults
         // Set up the following keys/values:
-        //   MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS  - Array - MNU's default items
-        //   "com.bps.mnu.item-order"     - Array - MNU's actual items (default and user-defined),
-        //                                          set once the user makes any change to the default set
-        //   "com.bps.mnu.startup-launch" - Bool  - Is MNU set to launch at login?
-        //   "com.bps.mnu.first-run"      - Bool  - Is this MNU's first run? Set to false afterwards
-        //   MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB   - Bool  - Should MNU run scripts in a new Terminal tab
-        //   MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES  - Bool  - Should MNU show icons in the menu?
+        //   MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS       - Array - MNU's default items
+        //   MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS        - Array - MNU's actual items (default and user-defined),
+        //                                                            set once the user makes any change to the default set
+        //   MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH      - Bool  - Is MNU set to launch at login?
+        //   MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN           - Bool  - Is this MNU's first run? Set to false afterwards
+        //   MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB        - Bool  - Should MNU run scripts in a new Terminal tab
+        //   MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES    - Bool  - Should MNU show icons in the menu?
         //   From 1.6.0
-        //   MNU_CONSTANTS.SETTINGS_IDS.TERMINAL    - Int   - Preferred Terminal by index
-        //                                          0 = Apple Terminal
-        //                                          1 = iTerm
-        //   "com.bps.mnu.new-defs-1-6"   - Bool  - Have stored items been updated?
+        //   MNU_CONSTANTS.SETTINGS_IDS.TERMINAL            - Int   - Preferred Terminal by index
+        //                                                              0 = Apple Terminal
+        //                                                              1 = iTerm
+        //   MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6     - Bool  - Have stored items been updated?
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
         
@@ -1341,15 +1342,15 @@ final class AppDelegate: NSObject,
                                        MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW]
 
         let keyArray: [String] = [MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS,
-                                  "com.bps.mnu.item-order",
-                                  "com.bps.mnu.startup-launch",
-                                  "com.bps.mnu.first-run",
+                                  MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS,
+                                  MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH,
+                                  MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN,
                                   MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB,
                                   MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES,
                                   MNU_CONSTANTS.SETTINGS_IDS.TERMINAL,
                                   MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE,
                                   MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT,
-                                  "com.bps.mnu.new-defs-1-6"]
+                                  MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6]
 
         let valueArray: [Any]  = [defaultItemArray,
                                   [Any](),
@@ -1819,15 +1820,13 @@ final class AppDelegate: NSObject,
             
             // This will display the window, ready for output
             DispatchQueue.main.async {
-                self.outputWindow.backgroundColor  = NSApp.isMacInLightMode() ? .white        : .black
-                self.outputWindow.foregroundColour = NSApp.isMacInLightMode() ? .systemPurple : .cyan
-                self.outputWindow.prepareForOutput(subtitle)
+                self.outputWindow.prepareForOutput(subtitle, !self.inDarkMode)
             }
         }
         
         // FROM 1.6.1
         // Run the process on a secondary thread
-        let processQueue: DispatchQueue = DispatchQueue.init(label: "com.bps.mnu.process-q")
+        let processQueue: DispatchQueue = DispatchQueue.init(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
         processQueue.async {
             let task: Process = Process.init()
             task.executableURL = URL.init(fileURLWithPath: path)
@@ -1888,10 +1887,23 @@ final class AppDelegate: NSObject,
             if !task.isRunning && task.terminationReason != .exit {
                 self.showErrorOnMainThread("Command Terminated by macOS", "The command was terminated because it failed to catch a signal.")
             }
+            
+            if self.doShowOutput {
+                self.scrollToEndOnMain()
+            }
         }
     }
 
 
+    func scrollToEndOnMain() {
+        
+        DispatchQueue.main.async {
+            self.outputWindow.appendRule()
+            self.outputWindow.outputTextView.scrollToEndOfDocument(self)
+        }
+    }
+    
+    
     /**
      Set up a task to kill the macOS Finder and, optionally, the Dock.
      
@@ -1918,14 +1930,14 @@ final class AppDelegate: NSObject,
      
      - Parameters
         - menu: The menu that has closed.
-     */
+     
     internal func menuDidClose(_ menu: NSMenu) {
         
         // The menu has closed - tell the subviews
         NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
                                         object: self)
     }
-
+    */
 
     /**
      The menu ia about to be opened after a click by the user so check if the

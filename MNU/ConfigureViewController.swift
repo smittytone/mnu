@@ -80,7 +80,7 @@ final class ConfigureViewController:  NSViewController,
 
     var menuItems: MenuItemList? = nil
     var configureWindow: NSWindow? = nil
-    let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
+    let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
@@ -206,7 +206,7 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? .on : .off
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH) ? .on : .off
         self.prefsNewTermTabButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
         self.prefsShowImagesButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
         // FROM 1.6.0
@@ -643,7 +643,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleLaunchAtLogin(sender: Any?) {
 
-        let action: String = "com.bps.mnu.startup-" + (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
+        let action: String = (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
                                         object: self)
     }

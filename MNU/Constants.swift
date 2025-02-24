@@ -118,11 +118,15 @@ struct MNU_CONSTANTS {
     struct SETTINGS_IDS {
         
         static let DEFAULT_ITEMS                = "com.bps.mnu.default-items"
+        static let STORED_ITEMS                 = "com.bps.mnu.item-order"
         static let SHOW_MENU_IMAGES             = "com.bps.mnu.show-controls"
         static let NEW_TERM_TAB                 = "com.bps.mnu.new-term-tab"
         static let TERMINAL                     = "com.bps.mnu.term-choice"
         static let AUTO_SEPARATE                = "com.bps.mnu.auto-separate-items"
         static let SHOW_DIRECT_OUTPUT           = "com.bps.mnu.show-direct-output"
+        static let FIRST_RUN                    = "com.bps.mnu.first-run"
+        static let STARTUP_LAUNCH               = "com.bps.mnu.startup-launch"
+        static let DEFINITIONS_1_6              = "com.bps.mnu.new-defs-1-6"
     }
     
     struct NOTIFICATION_IDS {
@@ -140,6 +144,13 @@ struct MNU_CONSTANTS {
         static let OUTPUT_UPDATED               = "com.bps.mnu.output-updated"
     }
     
+    struct MISC_IDS {
+        
+        static let APS_QUEUE                        = "com.bps.mnu.aps-queue"
+        static let PROCESS_QUEUE                    = "com.bps.mnu.process-q"
+        static let PASTEBOARD                       = "com.bps.mnu.pb"
+    }
+    
     struct CONFIG_TABLE_CONTEXT_MENU {
         
         static let SHOW_HIDE                    = 0
@@ -147,7 +158,6 @@ struct MNU_CONSTANTS {
         static let DELETE                       = 2
         static let NEW                          = 3
         static let SEPARATOR                    = 4
-        
     }
     
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0

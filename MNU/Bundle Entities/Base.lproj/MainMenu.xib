@@ -410,7 +410,7 @@
                                                 </button>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="AsU-8H-CFq">
                                                     <rect key="frame" x="-2" y="-1" width="397" height="18"/>
-                                                    <buttonCell key="cell" type="check" title="Show direct command output in a window" bezelStyle="regularSquare" imagePosition="left" enabled="NO" inset="2" id="6C0-Tj-18A">
+                                                    <buttonCell key="cell" type="check" title="Show direct command output in a window" bezelStyle="regularSquare" imagePosition="left" inset="2" id="6C0-Tj-18A">
                                                         <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                         <font key="font" metaFont="system"/>
                                                     </buttonCell>
@@ -1234,7 +1234,7 @@ Gw
                             <rect key="frame" x="0.0" y="0.0" width="880" height="600"/>
                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                             <subviews>
-                                <textView wantsLayer="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" id="q78-f0-xf3">
+                                <textView wantsLayer="YES" importsGraphics="NO" richText="NO" verticallyResizable="YES" smartInsertDelete="YES" layoutManager="textKit1" id="q78-f0-xf3">
                                     <rect key="frame" x="0.0" y="0.0" width="880" height="600"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1261,6 +1261,7 @@ Gw
                 </constraints>
             </view>
             <connections>
+                <outlet property="outputScrollView" destination="bQu-cE-U5g" id="daM-lg-wbh"/>
                 <outlet property="outputTextView" destination="q78-f0-xf3" id="9Nz-jF-478"/>
             </connections>
             <point key="canvasLocation" x="1474" y="-527"/>

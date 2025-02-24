@@ -34,32 +34,11 @@ class DirectOutputWindow: NSPanel {
     // MARK: - UI Properties
     
     @IBOutlet weak var outputTextView: NSTextView!
-    
+    @IBOutlet weak var outputScrollView: NSScrollView!
     
     // MARK: - Public Properties
     
-    public var textAttrributes: [NSAttributedString.Key : Any]? = nil
-    public var foregroundColour: NSColor {
-        
-        set {
-            self.backingForegroundColour = newValue
-            
-            // Update the displayed view's attributed string
-            if self.outputTextView.attributedString().length != 0 {
-                if var textAtts = self.textAttrributes {
-                    textAtts[.foregroundColor] = newValue
-                    
-                    if let textStore = self.outputTextView.textStorage {
-                        textStore.setAttributes(textAtts, range: NSMakeRange(0, self.outputTextView.attributedString().length))
-                    }
-                }
-            }
-        }
-        
-        get {
-            return self.backingForegroundColour
-        }
-    }
+    public var textAttributes: [NSAttributedString.Key : Any]? = nil
     
     
     // MARK: - Private Properties
@@ -69,19 +48,16 @@ class DirectOutputWindow: NSPanel {
     
     // MARK: - Window Preparation Functions
     
-    public func prepareForOutput(_ subtitle: String) {
+    public func prepareForOutput(_ subtitle: String, _ isLight: Bool) {
         
-        // Set up the text view for fresh content
-        self.outputTextView.string = ""
-        
-        if self.textAttrributes == nil {
+        if self.textAttributes == nil {
             let outputFont = NSFont.monospacedSystemFont(ofSize: 13.0, weight: .semibold)
-            self.textAttrributes = [
+            self.textAttributes = [
                 .font: outputFont,
-                .foregroundColor: self.backingForegroundColour
+                .foregroundColor: isLight ? NSColor.purple : NSColor.green
             ]
         } else {
-            self.textAttrributes?[.foregroundColor] = self.backingForegroundColour
+            self.textAttributes?[.foregroundColor] = isLight ? NSColor.purple : NSColor.green
         }
         
         // Set up the window itself
@@ -105,7 +81,19 @@ class DirectOutputWindow: NSPanel {
     public func appendText(_ text: String) {
         
         if let textStore = self.outputTextView.textStorage {
-            textStore.append(NSAttributedString.init(string: text, attributes: self.textAttrributes))
+            textStore.append(NSAttributedString.init(string: text, attributes: self.textAttributes))
+        }
+    }
+    
+    
+    public func appendRule() {
+        
+        if let textStore = self.outputTextView.textStorage {
+            if var ruleAtts = self.textAttributes {
+                ruleAtts[.strikethroughStyle] = NSUnderlineStyle.thick.rawValue
+                ruleAtts[.strikethroughColor] = NSColor.labelColor
+                textStore.append(NSAttributedString.init(string: "\n\u{00A0}\u{0009}\u{00A0}\n\n", attributes: ruleAtts))
+            }
         }
     }
     
