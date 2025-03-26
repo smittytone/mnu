@@ -115,6 +115,11 @@ struct MNU_CONSTANTS {
     ]
 
     // FROM 2.0.0
+    struct TERMINAL {
+        static let MACOS                        = 0
+        static let ITERM                        = 1
+    }
+
     struct SETTINGS_IDS {
 
         static let DEFAULT_ITEMS                = "com.bps.mnu.default-items"
