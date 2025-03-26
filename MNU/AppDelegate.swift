@@ -205,8 +205,10 @@ final class AppDelegate: NSObject,
         
         // FROM 2.0.0
         // Garbage file collection
-        fileGarbageCollection()
-
+        if UserDefaults.standard.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.IMAGE_CLEANUP) {
+            fileGarbageCollection()
+        }
+        
         // Disable notification listening (to be tidy)
         NotificationCenter.default.removeObserver(self)
     }
@@ -1331,6 +1333,10 @@ final class AppDelegate: NSObject,
         //                                                              0 = Apple Terminal
         //                                                              1 = iTerm
         //   MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6     - Bool  - Have stored items been updated?
+        //   From 2.0.0
+        //   MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE       - Bool  - Auto separate menu items
+        //   MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT  - Bool  - Direct commands output is displayed
+        //   MNU_CONSTANTS.SETTINGS_IDS.IMAGE_CLEANUP       - Bool  - Clean unused images on quit
 
         // NOTE The index of a user item in the 'item-order' array is its location in the menu.
         
@@ -1347,10 +1353,13 @@ final class AppDelegate: NSObject,
                                   MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN,
                                   MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB,
                                   MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES,
+                                  // 1.6.0
                                   MNU_CONSTANTS.SETTINGS_IDS.TERMINAL,
+                                  MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6,
+                                  // 2.0.0
                                   MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE,
                                   MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT,
-                                  MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6]
+                                  MNU_CONSTANTS.SETTINGS_IDS.IMAGE_CLEANUP]
 
         let valueArray: [Any]  = [defaultItemArray,
                                   [Any](),
@@ -1358,10 +1367,13 @@ final class AppDelegate: NSObject,
                                   true,
                                   false,
                                   true,
+                                  // 1.6.0
                                   0,
                                   false,
+                                  // 2.0.0
                                   false,
-                                  3]
+                                  false,
+                                  true]
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
@@ -1473,7 +1485,7 @@ final class AppDelegate: NSObject,
                 }
             }
         } catch {
-            print("No custom file store")
+            showErrorOnMainThread("No custom file store", "")
         }
     }
     

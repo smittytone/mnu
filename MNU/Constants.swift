@@ -127,6 +127,7 @@ struct MNU_CONSTANTS {
         static let FIRST_RUN                    = "com.bps.mnu.first-run"
         static let STARTUP_LAUNCH               = "com.bps.mnu.startup-launch"
         static let DEFINITIONS_1_6              = "com.bps.mnu.new-defs-1-6"
+        static let IMAGE_CLEANUP                = "com.bps.mnu.image-cleanup"
     }
     
     struct NOTIFICATION_IDS {
