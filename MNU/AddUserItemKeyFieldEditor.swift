@@ -3,7 +3,7 @@
     MNU
 
     Created by Tony Smith on 11/06/2023.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -97,11 +97,24 @@ final class AddUserItemKeyFieldEditor: NSTextView {
     }
 
 
+    @objc
+    func undo() {
+        
+        processStandard(MNU_CONSTANTS.EDIT_CMD_UNDO)
+    }
+
+
     // MARK: - Internal Key Combination Handlers
 
+    /**
+     A generic key press handler.
+     
+     - Parameters
+        - event: The event containing the key press.
+     
+     - Returns `true` if a modifier was applied, otherwise `false`.
+     */
     private func processEvent(_ event: NSEvent) -> Bool {
-
-        // A generic key press handler
 
         var modKeyUsed: Bool = false
 
@@ -149,32 +162,29 @@ final class AddUserItemKeyFieldEditor: NSTextView {
     }
 
 
+    /**
+     Handle the Field Editor's standard text editing key equivalents.
+     These are not trapped by `performKeyEquivalent()`.
+     
+     - Parameters
+        - code: The key code.
+     */
     private func processStandard(_ code: Int) {
-
-        // Handle the Field Editor's standard text editing key equivalents.
-        // These are not trapped by `performKeyEquivalent()`.
-
+        
         let rawKeys: [String] = ["C", "X", "V", "A", "Z"]
-
+        
         if let keyTextField: AddUserItemKeyTextField = self.keyTextField {
             if let segment: NSSegmentedControl = keyTextField.segment {
                 // Deselect all segments...
                 segment.selectedSegment = -1
-
+                
                 // ...then select the segment representing the pressed modifier
                 segment.selectedSegment = MNU_CONSTANTS.MOD_KEY_CMD
             }
-
+            
             // Set the text field's string
             keyTextField.stringValue = rawKeys[code]
         }
     }
-
-
-    @objc func undo() {
-
-        // Handler for Undo operations
-        
-        processStandard(MNU_CONSTANTS.EDIT_CMD_UNDO)
-    }
+    
 }

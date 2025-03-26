@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 05/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -42,36 +42,45 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet var windowTabView: NSTabView!
 
     // Menu Items Tab
-    @IBOutlet var menuItemsTableView: NSTableView!
-    @IBOutlet var menuItemsCountText: NSTextField!
-    @IBOutlet var showHelpButton: NSButton!
-    @IBOutlet var aivc: AddUserItemViewController!
+    @IBOutlet weak var menuItemsTableView: NSTableView!
+    @IBOutlet weak var menuItemsCountText: NSTextField!
+    @IBOutlet weak var showHelpButton: NSButton!
+    @IBOutlet weak var aivc: AddUserItemViewController!
     // FROM 1.1.0
-    @IBOutlet var extrasButton: NSButton!
-    @IBOutlet var menuItemsAddButton: NSButton!
-    @IBOutlet var applyChangesButton: NSButton!
+    @IBOutlet weak var extrasButton: NSButton!
+    @IBOutlet weak var menuItemsAddButton: NSButton!
+    @IBOutlet weak var applyChangesButton: NSButton!
 
-    // Preferences Tab
-    @IBOutlet var prefsLaunchAtLoginButton: NSButton!
-    @IBOutlet var prefsNewTermTabButton: NSButton!
-    @IBOutlet var prefsShowControlsButton: NSButton!
-    @IBOutlet var prefsHelpButton: NSButton!
+    // Settings Tab
+    @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
+    @IBOutlet weak var prefsNewTermTabButton: NSButton!
+    @IBOutlet weak var prefsShowImagesButton: NSButton!
+    @IBOutlet weak var prefsHelpButton: NSButton!
     // FROM 1.6.0
-    @IBOutlet var prefsTerminalChoiceTerminal: NSButton!
-    @IBOutlet var prefsTerminalChoiceITerm2: NSButton!
+    @IBOutlet weak var prefsTerminalChoiceTerminal: NSButton!
+    @IBOutlet weak var prefsTerminalChoiceITerm2: NSButton!
+    // FROM 2.0.0
+    @IBOutlet weak var prefsAutoSeparateButton: NSButton!
+    @IBOutlet weak var prefsDirectOutpuButton: NSButton!
 
     // About... Tab
-    @IBOutlet var aboutVersionText: NSTextField!
-    @IBOutlet var fbvc: FeedbackSheetViewController!
+    @IBOutlet weak var aboutVersionText: NSTextField!
+    @IBOutlet weak var fbvc: FeedbackSheetViewController!
     // FROM 1.1.0
-    @IBOutlet var feedbackButton: NSButton!
-    
-    
+    @IBOutlet weak var feedbackButton: NSButton!
+
+    // Tab control buttons
+    // FROM 2.0.0
+    @IBOutlet weak var tabButtonMenu: NSButton!
+    @IBOutlet weak var tabButtonSettings: NSButton!
+    @IBOutlet weak var tabButtonAbout: NSButton!
+
+
     // MARK: - Public Class Properties
 
     var menuItems: MenuItemList? = nil
     var configureWindow: NSWindow? = nil
-    let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: "com.bps.mnu.pb")
+    let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
@@ -82,17 +91,24 @@ final class ConfigureViewController:  NSViewController,
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
-    
-    
+    // FROM 2.0.0
+    var doShowOutput = false
+
+
     // MARK: - Private Class Properties
-    
+
     private var systemVersion: Int = 10
     // FROM 1.1.0
     private var extrasMenu: NSMenu? = nil
     // FROM 1.7.0
     private var systemVersionMinor: Int = 14
-    
-    
+    // FROM 2.0.0
+    private var tabManager: PMTabManager = PMTabManager.init()
+    private var autoSeparateInForce: Bool = false
+    private var newMenuItemIndex: Int = 0
+    private var customIcons: [CustomIcon] = []
+
+
     // MARK: - Lifecycle Functions
 
     override func viewDidLoad() {
@@ -105,7 +121,7 @@ final class ConfigureViewController:  NSViewController,
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
         self.systemVersion = sysVer.majorVersion
         self.systemVersionMinor = sysVer.minorVersion
-        
+
         // Ask our window to make the  first responder (for key presses)
         self.configureWindow = self.view.window
         self.configureWindow!.makeFirstResponder(self)
@@ -119,19 +135,21 @@ final class ConfigureViewController:  NSViewController,
         let nc: NotificationCenter = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
-                       name: NSNotification.Name(rawValue: "com.bps.mnu.item-added"),
+                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED),
                        object: nil)
 
         // Set up the About MNU... tab text
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
         self.aboutVersionText.stringValue = "Version \(version) (\(build))"
-        
+
         // FROM 1.1.0
         // Prepare the extras... button
         self.extrasMenu = NSMenu()
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU data...", action: #selector(self.doExport), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore MNU data...", action: #selector(self.doImport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem.separator())
+        self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore defaults", action: #selector(self.restoreDefaults), keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.separator())
         self.extrasMenu!.addItem(NSMenuItem.init(title: "Send feedback...", action: #selector(self.submitFeedback), keyEquivalent: ""))
 
@@ -142,21 +160,37 @@ final class ConfigureViewController:  NSViewController,
         self.applyChangesButton.toolTip = "Click to apply any changes you have made"
         self.showHelpButton.toolTip = "Click here for help with this tab"
 
-        // Preferences Tab
+        // Preferences/Settings Tab
         self.prefsHelpButton.toolTip = "Click here for help with this tab"
         self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
         self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
-        self.prefsShowControlsButton.toolTip = "Check to display images alongside MNU menu items"
-        
+        self.prefsShowImagesButton.toolTip = "Check to display images alongside MNU menu items"
+
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
+
+        // Configure the tab manager
+        self.tabManager.parent = self
+        self.tabManager.buttons.append(self.tabButtonMenu)
+        self.tabManager.buttons.append(self.tabButtonSettings)
+        self.tabManager.buttons.append(self.tabButtonAbout)
+
+        // Add callback closures, one per tab, to the tab manager
+        // NOTE Can probably remove this
+        self.tabManager.callbacks.append(nil)   // Info tab
+        self.tabManager.callbacks.append(nil)   // Settings tab
+        self.tabManager.callbacks.append(nil)   // Feedback tab
+
+        self.tabButtonMenu.toolTip = "Configure MNU’s menu items"
+        self.tabButtonSettings.toolTip = "Apply MNU settings"
+        self.tabButtonAbout.toolTip = "Learn more about MNU"
     }
 
 
     override func viewWillAppear() {
-        
+
         super.viewWillAppear()
-        
+
         // FROM 1.3.1
         // Scale up table view row height according to macOS version
         self.menuItemsTableView.rowSizeStyle = .custom
@@ -165,240 +199,106 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.0.0: move from the app delegate
         // Update the item table
         self.menuItemsTableView.reloadData()
-        
+
         // Update the menu item list count indicator
         displayItemCount()
-        
+
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: "com.bps.mnu.startup-launch") ? NSControl.StateValue.on : .off
-        self.prefsNewTermTabButton.state = defaults.bool(forKey: "com.bps.mnu.new-term-tab") ? NSControl.StateValue.on : .off
-        self.prefsShowControlsButton.state = defaults.bool(forKey: "com.bps.mnu.show-controls") ? NSControl.StateValue.on : .off
-        
+        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH) ? .on : .off
+        self.prefsNewTermTabButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
+        self.prefsShowImagesButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
         // FROM 1.6.0
-        self.terminalChoice = defaults.integer(forKey: "com.bps.mnu.term-choice")
+        self.terminalChoice = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
         switch(self.terminalChoice) {
-        case MNU_CONSTANTS.TERMINAL.ITERM:
-            self.prefsTerminalChoiceITerm2.state = .on
-        // Add other non-zero cases here to include other terminals
-        default:
-            self.prefsTerminalChoiceTerminal.state = .on
+            case 1:
+                self.prefsTerminalChoiceITerm2.state = .on
+            // Add other non-zero cases here to include other terminals
+            default:
+                self.prefsTerminalChoiceTerminal.state = .on
         }
-        
+
         // FROM 1.1.0
         // Disable/enable the Apply button until changes are made
         self.applyChangesButton.isEnabled = self.hasChanged
+
+        // FROM 2.0.0
+        // Manually select the first tab
+        self.tabManager.programmaticallyClickButton(at: 0)
+
+        // FROM 2.0.0
+        // Set up auto separation and its effect on controls
+        self.prefsAutoSeparateButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
+        self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
+
+        // Set up output for direct commands
+        self.prefsDirectOutpuButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT) ? .on : .off
+        self.doShowOutput = self.prefsDirectOutpuButton.state == .on ? true : false
+
+        // FROM 2.0.0
+        // Assemble a set of custom icons
+        getCustomIcons()
     }
 
-    
+
     override func viewDidAppear() {
 
         // Update the visibility state
         self.isVisible = true
         super.viewDidAppear()
     }
-    
-    
-    func show() {
-
-        // Show the controller's own window in the centre of the display
-        // NOTE This triggers calls to 'viewWillAppear()', 'viewdidAppear()', etc.
-        self.windowTabView.selectTabViewItem(at: 0)
-        self.configureWindow!.center()
-        self.configureWindow!.makeKeyAndOrderFront(nil)
-        self.applyChangesButton.isEnabled = false
-        
-        // The following is required to bring the window to the front properly
-        NSApp.activate(ignoringOtherApps: true)
-    }
-    
-    
-    override func resignFirstResponder() -> Bool {
-        
-        // Make sure we can continue to track key events
-        // NOTE Currently disabled (to restore table drag'n'drop)
-        return true
-    }
-    
-    
-    // MARK: - Action Functions
-    // MARK: Menu Items List Functions
-    
-    @IBAction @objc func doCancel(sender: Any?) {
-
-        // The user clicked 'Cancel', so hust close the configure window
-        self.configureWindow!.performClose(sender)
-        
-        // Update the visibility state
-        self.isVisible = false
-    }
 
 
-    @IBAction @objc private func doSave(sender: Any?) {
+    /**
+     Assemble a list of custom icons from the menu item records.
+     This will only include icons that existing menu items know about
 
-        // If any changes have been made to the item list, inform the app delegate
-        if self.hasChanged {
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
-                                            object: self)
-            self.hasChanged = false
-            self.applyChangesButton.isEnabled = false
+     FROM 2.0.0
+     */
+    private func getCustomIcons() {
+
+        guard let menuItems = self.menuItems?.items else { return }
+
+        // Clear the custom icon list if it is populated
+        if !self.customIcons.isEmpty {
+            self.customIcons.removeAll()
         }
 
-        // DISABLED FROM BUILD 3
-        // Close the Configure window
-        // self.configureWindow!.close()
-    }
-
-    
-    @IBAction @objc private func doNewScriptItem(sender: Any?) {
-        
-        // Check that the user has not added too many items already
-        // current limit is set as 'MNU_CONSTANTS.MAX_ITEM_COUNT'
-        // TODO Calculate the number of DISPLAYED items and limit that rather than the total
-        if let items: MenuItemList = self.menuItems {
-            if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
-                // Limit reached - warn the user
-                let alert: NSAlert = NSAlert()
-                alert.messageText = "You have already added the maximum number of items to MNU"
-                alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
-                alert.addButton(withTitle: "OK")
-                alert.beginSheetModal(for: self.configureWindow!,
-                                      completionHandler: nil)
-                return
-            }
-        }
-        
-        // Tell the Add User Item view controller to display its own sheet
-        // and be ready to accept the entry of a new item
-        self.aivc.appDelegate = self.appDelegate
-        self.aivc.isEditing = false
-        self.aivc.currentMenuItems = self.menuItems
-        self.aivc.parentWindow = self.configureWindow!
-        self.aivc.itemScriptText.stringValue = ""
-        self.aivc.menuTitleText.stringValue = ""
-        self.aivc.showSheet()
-    }
-    
-    
-    @IBAction @objc private func doContextShowHide(sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        let item: MenuItem = menuItem.representedObject as! MenuItem
-        doShowHide(item)
-    }
-
-    
-    @objc private func doShowHideSwitch(sender: Any) {
-
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
-        
-        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
-        if let item: MenuItem = theSwitch.menuItem {
-            doShowHide(item)
-        }
-    }
-    
-    
-    private func doShowHide(_ item: MenuItem) {
-        
-        // Flip the item's recorded state and update the table
-        
-        item.isHidden = !item.isHidden
-        self.hasChanged = true
-        self.applyChangesButton.isEnabled = true
-        
-        // Reload the table data and update the status line
-        self.menuItemsTableView.reloadData()
-        displayItemCount()
-    }
-
-    
-    @IBAction private func doContextEditScript (sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            doEdit(item)
-        }
-    }
-    
-    
-    @objc private func doEditScript(sender: Any) {
-
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
-        
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
-            doEdit(item)
-        }
-    }
-
-    
-    private func doEdit(_ item: MenuItem) {
-        
-        // Tell the add user item view controller to display its sheet
-        // and to opulate the sheet's fields for editing an existing item
-        self.aivc.appDelegate = self.appDelegate
-        self.aivc.newMenuItem = item
-        self.aivc.isEditing = true
-        self.aivc.currentMenuItems = self.menuItems
-        self.aivc.parentWindow = self.configureWindow!
-        self.aivc.showSheet()
-    }
-    
-    
-    @IBAction @objc private func doContextDeleteScript(sender: Any) {
-        
-        // Get the Menu Item from the reference stored in the contextual menu item
-        
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
-            doDelete(item)
-        }
-    }
-    
-    
-    @objc private func doDeleteScript(sender: Any) {
-
-        // Get the Menu Item from the reference stored in the MenuItemTableCellButton
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
-            doDelete(item)
-        }
-    }
-    
-    
-    private func doDelete(_ item: MenuItem) {
-        
-        // Present an alert to warn the user about deleting the Menu Item
-        let alert: NSAlert = NSAlert()
-        alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
-        alert.addButton(withTitle: "Yes")
-        alert.addButton(withTitle: "No")
-        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
-            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
-                // The user clicked 'Yes' so find the item referenced by the button,
-                // and remove it from the configure window controller's list
-                if let list = self.menuItems {
-                    if list.items.count > 0 {
-                        var index = -1
-                        for i in 0..<list.items.count {
-                            let anItem: MenuItem = list.items[i]
-                            if anItem == item {
-                                index = i
-                                break
-                            }
+        // Iterate over the menu item list looking for those with custom icons,
+        // ie. their `customIconPath` property is set
+        for menuItem in menuItems {
+            if !menuItem.customImageId.isEmpty {
+                // Check that a menu item's custom index doesn't reference one
+                // already loaded -- if so, note its index and move to the next item
+                if self.customIcons.count > 0 {
+                    var index = 0
+                    var got = false
+                    for customIcon in self.customIcons {
+                        if menuItem.customImageId == customIcon.id {
+                            menuItem.iconIndex = index + MNU_CONSTANTS.ICONS.count
+                            got = true
+                            break
                         }
-                        
-                        if index != -1 {
-                            list.items.remove(at: index)
-                            self.hasChanged = true
-                            self.applyChangesButton.isEnabled = true
-                            self.menuItemsTableView.reloadData()
-                        }
+
+                        index += 1
+                    }
+
+                    if got {
+                        continue
+                    }
+                }
+
+                // The menu item's custom icon has not yet been loaded - try to do so now
+                if let imageBytes = loadImage(getImageStoreUrl(menuItem.customImageId)) {
+                    if let image = NSImage.init(data: imageBytes) {
+                        // Only record a custom icon if we have a path to its file, the data can be
+                        // loaded and them converted to an image
+                        let customIcon = CustomIcon()
+                        customIcon.image = image
+                        customIcon.id = menuItem.customImageId
+                        self.customIcons.append(customIcon)
+                        menuItem.iconIndex = MNU_CONSTANTS.ICONS.count - 1 + self.customIcons.count
                     }
                 }
             }
@@ -406,7 +306,86 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    @IBAction @objc private func doShowExtras(sender: NSButton) {
+    /**
+     Show the controller's own window in the centre of the display,
+     eg. called by the app delegate in response to a notification from the
+     controls view controller.
+
+     - Note This triggers calls to `viewWillAppear()`, `viewdidAppear()`, etc.
+     */
+    func show() {
+
+        self.windowTabView.selectTabViewItem(at: 0)
+        self.configureWindow!.center()
+        self.configureWindow!.makeKeyAndOrderFront(nil)
+        self.applyChangesButton.isEnabled = false
+
+        // The following is required to bring the window to the front properly
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+
+    override func resignFirstResponder() -> Bool {
+
+        // Make sure we can continue to track key events
+        // NOTE Currently disabled (to restore table drag'n'drop)
+        return true
+    }
+
+
+    // MARK: - Tab View Action Functions
+
+    @IBAction
+    private
+    func doSwitchTab(sender: NSButton) {
+
+        self.tabManager.buttonClicked(sender)
+    }
+
+
+    // MARK: - Menu Items Tab Action Functions
+
+    @IBAction
+    @objc
+    func doCancel(sender: Any?) {
+
+        // The user clicked 'Cancel', so just close the configure window
+        self.configureWindow!.performClose(sender)
+
+        // Update the visibility state
+        self.isVisible = false
+    }
+
+
+    @IBAction
+    @objc
+    private func doSave(sender: Any?) {
+
+        // If any changes have been made to the item list, inform the app delegate
+        if self.hasChanged {
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+                                            object: self)
+            self.hasChanged = false
+            self.applyChangesButton.isEnabled = false
+        }
+
+        // Disabled -- this is now handled by the notification code called above
+        // Close the Configure window
+        // self.configureWindow!.close()
+    }
+
+
+    @IBAction
+    @objc
+    private func doNewScriptItem(sender: Any?) {
+
+        doAdd(self.menuItems?.items.count ?? -1)
+    }
+
+
+    @IBAction
+    @objc
+    private func doShowExtras(sender: NSButton) {
 
         // FROM 1.1.0
         // Pop up the import/export buttons
@@ -417,6 +396,8 @@ final class ConfigureViewController:  NSViewController,
                                in: sender)
     }
 
+    /**
+     NO LONGER IN USE -- REMOVE AFTER RELEASE>
 
     @objc private func doExtraHelp() {
 
@@ -424,90 +405,371 @@ final class ConfigureViewController:  NSViewController,
         // Just call the existing 'doShowHelp()' function as if we were a button
         doShowHelp(sender: self.extrasButton)
     }
+     */
 
 
-    // MARK: About... Pane Functions
-    
-    @IBAction @objc private func submitFeedback(sender: Any?) {
+    // MARK: - Menu Items Action Handler Support Functions
+
+    /**
+     Invoke the Add User Item sheet for the creation of a new item.
+
+     FROM 2.0.0
+     */
+    private func doAdd(_ additionPoint: Int) {
+
+        guard checkMenuItemCount() else { return }
+
+        self.aivc.newMenuItem = nil
+        prepareAddEditSheet(false)
+    }
+
+
+    /**
+     Invoke the Add User Item sheet for the editing of an existing item.
+
+     - Paramaters
+        - item: The menu item selected for editing.
+     */
+    private func doEdit(_ item: MenuItem) {
+
+        self.aivc.newMenuItem = item
+        prepareAddEditSheet(true)
+    }
+
+
+    /**
+     Generic settings to be applied before the Add New Item sheet is revealed
+     in either Add Item or Edit Item mode.
+
+     FROM 2.0.0
+
+     - Paramaters
+        - isEditing: `true` if the sheet is to be presented in editing mode,
+                     otherwise `false`.
+     */
+    private func prepareAddEditSheet(_ isEditing: Bool) {
+
+        self.aivc.appDelegate = self.appDelegate
+        self.aivc.parentWindow = self.configureWindow!
+        self.aivc.currentMenuItems = self.menuItems
+        self.aivc.customIcons = self.customIcons
+        self.aivc.isEditing = isEditing
+        self.aivc.showSheet()
+    }
+
+
+    /**
+     Delete a menu item, but offer the user a way out first.
+
+     - Paramaters
+        - item: The menu item selected for deletion.
+     */
+    private func doDelete(_ item: MenuItem) {
+
+        // Present an alert to warn the user about deleting the Menu Item
+        let alert: NSAlert = NSAlert()
+        alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user clicked 'Yes' so find the item referenced by the button,
+                // and remove it from the configure window controller's list
+                guard let list = self.menuItems else { return }
+                guard list.items.count > 0 else { return }
+
+                // Get the index of the menu item to be deleted
+                var index = -1
+                for i in 0..<list.items.count {
+                    let anItem: MenuItem = list.items[i]
+                    if anItem == item {
+                        index = i
+                        break
+                    }
+                }
+
+                // We found the item's index, so we can proceed to remove it
+                if index != -1 {
+                    list.items.remove(at: index)
+                    self.hasChanged = true
+                    self.applyChangesButton.isEnabled = true
+                    self.menuItemsTableView.reloadData()
+                }
+            }
+        }
+    }
+
+
+    /**
+     Flip the item's recorded state and update the table.
+     */
+    private func doShowHide(_ item: MenuItem) {
+
+        item.isHidden = !item.isHidden
+        self.hasChanged = true
+        self.applyChangesButton.isEnabled = true
+
+        // Reload the table data and update the status line
+        self.menuItemsTableView.reloadData()
+        displayItemCount()
+    }
+
+
+    // MARK: - Menu Items Table Button Selector Functions
+
+    @objc
+    private func doShowHideSwitch(sender: Any) {
+
+        // Get the menu item from the reference stored in the table cell's switch object
+        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
+        if let item: MenuItem = theSwitch.menuItem {
+            doShowHide(item)
+        }
+    }
+
+
+    @objc
+    private func doTableButtonEditScript(sender: Any) {
+
+        // Get the menu item from the reference stored in the table cell's edit button
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MenuItem = button.menuItem {
+            doEdit(item)
+        }
+    }
+
+
+    @objc
+    private func doDeleteScript(sender: Any) {
+
+        // Get the menu item from the reference stored in the table cell's delete button
+        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
+        if let item: MenuItem = button.menuItem {
+            doDelete(item)
+        }
+    }
+
+
+    // MARK: - Contextual Menu Action Functions
+
+    @IBAction
+    @objc
+    private func doContextShowHide(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doShowHide(item)
+        }
+    }
+
+
+    @IBAction
+    private func doContextEditScript (sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doEdit(item)
+        }
+    }
+
+
+    @IBAction
+    @objc
+    private func doContextDeleteScript(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            doDelete(item)
+        }
+    }
+
+
+    @IBAction
+    @objc
+    private func doContextAddNewItem(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            if let index = self.menuItems?.items.firstIndex(of: item) {
+                self.newMenuItemIndex = index
+                doAdd(index)
+            }
+        }
+    }
+
+
+    @IBAction
+    @objc
+    private func doContextAddSeparator(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem: NSMenuItem = sender as! NSMenuItem
+        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+            if let index = self.menuItems?.items.firstIndex(of: item) {
+                let newMenuItem = MenuItem.init()
+                newMenuItem.type = .separator
+                newMenuItem.title = "Separator"
+                newMenuItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
+                self.menuItems?.items.insert(newMenuItem, at: index + 1)
+                self.hasChanged = true
+                self.applyChangesButton.isEnabled = true
+                self.menuItemsTableView.reloadData()
+            }
+        }
+    }
+
+
+    // MARK: - About Tab Action Functions
+
+    @IBAction
+    private func submitFeedback(sender: Any?) {
 
         // Get the feedback sheet view controller to show its sheet
         self.fbvc.parentWindow = self.configureWindow!
         self.fbvc.showSheet()
     }
 
-    
-    // MARK: Preferences Pane Functions
-    
-    @IBAction @objc private func doToggleLaunchAtLogin(sender: Any?) {
 
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
-        let action: String = "com.bps.mnu.startup-" + (prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? "enabled" : "disabled")
+    // MARK: - Settings Tab Action Functions
+
+    /**
+     The user has toggled the 'launch at login' checkbox, so send a suitable
+     notification to the app delegate.
+     */
+    @IBAction
+    private func doToggleLaunchAtLogin(sender: Any?) {
+
+        let action: String = (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
                                         object: self)
     }
-    
-    
-    @IBAction @objc private func doSetTermPref(sender: Any?) {
-        
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
+
+
+    /**
+     The user has toggled the 'show item images' checkbox, so set a suitable
+     notification to the app delegate.
+     */
+    @IBAction
+    private func doToggleItemImages(sender: Any?) {
+
         let defaults: UserDefaults = UserDefaults.standard
-        self.tabOpenChoice = self.prefsNewTermTabButton.state == NSControl.StateValue.on ? true : false
-        defaults.set(self.tabOpenChoice,
-                     forKey: "com.bps.mnu.new-term-tab")
-        
-        // FROM 1.6.0
-        // Notify the menu that it needs to change
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-tab-updated"),
-                                        object: self)
-    }
-
-
-    @IBAction @objc private func doShowControls(sender: Any?) {
-
-        // The user has toggled the 'launch at login' checkbox, so send a suitable
-        // notification to the app delegate
-        let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsShowControlsButton.state == NSControl.StateValue.on ? true : false
+        let state = self.prefsShowImagesButton.state == .on ? true : false
         defaults.set(state,
-                     forKey: "com.bps.mnu.show-controls")
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
 
         // Notify the menu that it needs to change
-        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.list-updated"),
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
                                         object: self)
     }
 
-    
-    @IBAction @objc private func doToggleTerminalChoice(sender: Any?) {
-            
+
+    /**
+     The user has toggled the 'new terminal tab' checkbox, so set a suitable
+     notification to the app delegate.
+     */
+    @IBAction
+    private func doSetTermPref(sender: Any?) {
+
+        let defaults: UserDefaults = UserDefaults.standard
+        self.tabOpenChoice = self.prefsNewTermTabButton.state == .on ? true : false
+        defaults.set(self.tabOpenChoice,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
+
         // FROM 1.6.0
-        // The user has changed their preferred terminal
-        var termChoice: Int = MNU_CONSTANTS.TERMINAL.MACOS
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_TABBING_SET),
+                                        object: self)
+    }
+
+
+    /**
+     The user has changed their preferred terminal app.
+
+     FROM 1.6.0
+     */
+    @IBAction
+    private func doToggleTerminalChoice(sender: Any?) {
+
+        var termChoice: Int = 0
         if self.prefsTerminalChoiceITerm2.state == .on {
             termChoice = MNU_CONSTANTS.TERMINAL.ITERM
         }
 
         // Add more Terminal choices by index here...
-        
+
         // Only write out the choice if it's different -- it should be
         if termChoice != self.terminalChoice {
             self.terminalChoice = termChoice
             let defaults: UserDefaults = UserDefaults.standard
             defaults.set(termChoice,
-                         forKey: "com.bps.mnu.term-choice")
-            
-            // Notify the main app that it needs to change
-            NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.term-updated"),
+                         forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
+
+            // Notify the mai app that it needs to change
+            NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_UPDATED),
                                             object: self)
         }
     }
-    
-    
-    @IBAction @objc private func doShowHelp(sender: Any?) {
-        
-        // Show the 'Help' via the website
-        // TODO provide offline help
+
+
+    /**
+     The user has toggled the 'auto separate' checkbox, so set a suitable
+     notification to the app delegate.
+
+     FROM 2.0.0
+     */
+    @IBAction
+    private func doToggleAutoSeparate(sender: Any?) {
+
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = self.prefsAutoSeparateButton.state == .on ? true : false
+        defaults.set(state,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
+
+        // Setting this disables manually created separators so enable/disable
+        // the separator setting controls as required
+        self.autoSeparateInForce = state
+        self.menuItemsTableView.reloadData()
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
+                                        object: self)
+    }
+
+
+    /**
+     The user has toggled the 'show direct output' checkbox, so set a suitable
+     notification to the app delegate.
+
+     FROM 2.0.0
+     */
+    @IBAction
+    private func doToggleShowDirectOutput(sender: Any?) {
+
+        let defaults: UserDefaults = UserDefaults.standard
+        let state = self.prefsDirectOutpuButton.state == .on ? true : false
+        defaults.set(state,
+                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
+
+        self.doShowOutput = state
+
+        // Notify the menu that it needs to change
+        NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.OUTPUT_UPDATED),
+                                        object: self)
+    }
+
+
+    /**
+     Show the 'Help' via the website.
+
+     TODO provide offline help
+     */
+    @IBAction
+    private func doShowHelp(sender: Any?) {
+
         var path: String = MNU_SECRETS.WEBSITE.URL_MAIN
         let button: NSButton = sender as! NSButton
         path += button == self.prefsHelpButton ? "#mnu-preferences" : "#how-to-configure-mnu"
@@ -516,13 +778,18 @@ final class ConfigureViewController:  NSViewController,
             NSWorkspace.shared.open(helpURL)
         }
     }
-    
-    
-    // MARK: - List Import/Export Functions
 
-    @objc private func doExport() {
-        
-        // FROM 1.1.0
+
+    // MARK: - List Import/Export/Reset Functions
+
+    /**
+     Export the menu list as a backup. This currently outputs a plaintext JSON file.
+
+     FROM 1.1.0
+     */
+    @objc
+    private func doExport() {
+
         // Create a save panel for the export operation...
         let savePanel: NSSavePanel = NSSavePanel()
         savePanel.allowedFileTypes = ["json"]
@@ -533,45 +800,54 @@ final class ConfigureViewController:  NSViewController,
 
         // ...and show it
         savePanel.beginSheetModal(for: self.view.window!) { (response) in
-            
+
             if response == NSApplication.ModalResponse.OK {
                 // The user clicked the Save button
-                if let targetUrl = savePanel.url {
-                    // Create a JSON string representation of the menu data
-                    let dataString: String = Serializer.jsonizeAll(self.menuItems!)
+                guard let targetUrl = savePanel.url else { return }
+
+                // Create a JSON string representation of the menu data
+                do {
+                    let dataString: String = try self.menuItems!.encode()
 
                     // Convert the string to data for saving
                     if let fileData: Data = dataString.data(using: String.Encoding.utf8) {
-                    
+
                         // Save the data
-                        let success = FileManager.default.createFile(atPath: targetUrl.path,
-                                                                     contents:fileData,
-                                                                     attributes: nil)
-                        if !success {
+                        if !FileManager.default.createFile(atPath: targetUrl.path,
+                                                           contents:fileData,
+                                                           attributes: nil) {
                             self.showExportAlert()
                         }
-                    } else {
-                        // Could not convert the JSON string to UTF-8 data
-                        self.showExportAlert()
                     }
+                } catch {
+                    self.showExportAlert()
                 }
             }
         }
     }
 
 
+    /**
+     Multi-use call from `doExport()` (see above).
+
+     FROM 1.1.0
+     */
     private func showExportAlert() {
 
-        // FROM 1.1.0
-        // Multi-use call from 'doExport()'
         showAlert("File Export Error",
-                  "Sorry, but the menu items back-up file could not be created. Please try again.")
+                  "Sorry, but the menu items back-up file could not be created. Please try again.",
+                  self.view.window!)
     }
-    
-    
-    @objc private func doImport() {
-        
-        // FROM 1.1.0
+
+
+    /**
+     Import a backup menu item list.
+
+     FROM 1.1.0
+     */
+    @objc
+    private func doImport() {
+
         // Create an open panel for the import operation...
         let openPanel: NSOpenPanel = NSOpenPanel()
         openPanel.allowedFileTypes = ["json"]
@@ -588,59 +864,93 @@ final class ConfigureViewController:  NSViewController,
                     // Load the data if we have a valid file URL
                     do {
                         let fileData: Data = try Data.init(contentsOf: targetUrl)
-                        let newMenu: MenuItemList? = Serializer.dejsonizeAll(fileData)
-
-                        if newMenu != nil {
-                            // If we have a valid menu loaded, retain it
-                            // and update the UI
-                            self.menuItems = newMenu
-                            self.hasChanged = true
-                            self.applyChangesButton.isEnabled = true
-                            self.menuItemsTableView.reloadData()
-                        } else {
-                            // Show Error message
-                            self.showAlert("File Import Error",
-                                           "Sorry, but the menu items back-up file could not be processed. Is it a MNU file?")
-                        }
+                        let newMenu: MenuItemList = try MenuItemList.decode(fileData)
+                        self.menuItems = newMenu
+                        self.hasChanged = true
+                        self.applyChangesButton.isEnabled = true
+                        self.menuItemsTableView.reloadData()
+                    } catch Serializer.error.BadGroupDeserialization {
+                        showAlert("File Processing Error",
+                                  "Sorry, but the menu items back-up file could not be processed. Is it a MNU file?",
+                                  self.view.window!)
                     } catch {
-                        // Post Warning
-                        self.showAlert("File Import Error",
-                                       "Sorry, but the menu items back-up file could not be loaded from disk. Is it a MNU file?")
+                        showAlert("File Import Error",
+                                  "Sorry, but the menu items back-up file could not be loaded from disk. Is it a MNU file?",
+                                  self.view.window!)
                     }
                 }
             }
         }
     }
-    
-    
+
+
+    /**
+     Factory Reset.
+     */
+    @objc
+    private func restoreDefaults() {
+
+        let alert: NSAlert = NSAlert()
+        alert.messageText = "Are you sure you wish to restore MNU’s defaults?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
+            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user clicked 'Yes': notify the menu that it needs to change
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.RESTORE_DEFAULTS),
+                                                object: self)
+
+                // App delegate will rebuild the item list, so the config
+                // window is now redundant -- so close it. Also, we're implicitly ignoring
+                // any exxisting changes made as the user has explicitly said YES to
+                // restoring the defaults.
+                self.hasChanged = false
+                self.applyChangesButton.isEnabled = false
+                self.configureWindow!.close()
+            }
+        }
+    }
+
+
     // MARK: - Notification Handlers
 
-    @objc private func processNewItem() {
-
-        // This function is called in response to a "com.bps.mnu.item-added" notification
-        // from the AddUserItemViewController that an existing item was edited,
-        // or a new item created
+    /**
+     This function is called in response to a `MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED` notification
+     from the `AddUserItemViewController` that an existing item was edited, or a new item created
+     */
+    @objc
+    private func processNewItem() {
 
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
             if let item: MenuItem = self.aivc.newMenuItem {
-                self.menuItems!.items.append(item)
+                if self.newMenuItemIndex != 0 {
+                    self.menuItems!.items.insert(item, at: self.newMenuItemIndex + 1)
+                } else {
+                    self.menuItems!.items.append(item)
+                }
             }
         }
-            
+
         // FROM 1.6.0
         // Switch off editing mode for the AddUserItemViewController
         // NOTE Previously done in the controller's code
         self.aivc.isEditing = false
-        
+
         // Update the Configure Window
         self.hasChanged = true
         self.applyChangesButton.isEnabled = true
         self.menuItemsTableView.reloadData()
         displayItemCount()
+
+        // FROM 2.0.0
+        // Need to add in any new custom icons but keep unused ones
+        // for now in case the user edits the item and selects one.
+        // For now, they'll be zapped when this window reappears.
+        self.customIcons = self.aivc.customIcons
     }
 
-    
+
     // MARK: - TableView Data Source and Delegate Functions
 
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -658,42 +968,85 @@ final class ConfigureViewController:  NSViewController,
         if let items: MenuItemList = self.menuItems {
             let item: MenuItem = items.items[row]
             let cell: MenuItemTableCellView? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
-            
+
             if cell != nil {
                 // Configure the cell's title and its three buttons
                 // NOTE 'buttonA' is the right-most button
                 cell!.title.stringValue = item.title
-                
+
+                // FROM 2.0.0
+                // Is the item a separator line? If so this requires special text formatting
+                if item.type == .separator {
+                    let labelParagraphStyle = NSMutableParagraphStyle()
+                    labelParagraphStyle.alignment = .left
+
+                    var labelFont = NSFont.systemFont(ofSize: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE)
+                    if let font: NSFont = NSFontManager.shared.font(withFamily: labelFont.familyName!,
+                                                                    traits: .italicFontMask,
+                                                                    weight: 5,
+                                                                    size: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE) {
+                        labelFont = font
+                    }
+
+                    let labelText = item.title + (self.autoSeparateInForce ? " only visible when separators not added automatically" : "")
+                    let attrTitle = NSMutableAttributedString.init(string: labelText, attributes: [
+                        .font: labelFont,
+                        .paragraphStyle: labelParagraphStyle,
+                        .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.labelColor
+                    ])
+
+                    cell!.title.attributedStringValue = attrTitle
+                }
+
+                // NOTE Buttons named in order, from the Left to Right
                 cell!.buttonA.image = NSImage.init(named: "NSTouchBarDeleteTemplate")
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
-                cell!.buttonA.toolTip = "Delete Item"
+                cell!.buttonA.toolTip = "Delete this menu item"
                 cell!.buttonA.isEnabled = true
                 cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage.init(named: "NSTouchBarComposeTemplate")
-                cell!.buttonB.action = #selector(self.doEditScript(sender:))
-                cell!.buttonB.toolTip = "Edit Item"
-                cell!.buttonB.isEnabled = true
+                cell!.buttonB.action = #selector(self.doTableButtonEditScript(sender:))
+                cell!.buttonB.toolTip = "Edit this menu item"
+                cell!.buttonB.isEnabled = item.type != .separator
                 cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonB.menuItem = item
-                
+
                 // FROM 1.7.0
                 // Drop Button C (red/green image button) in favour of a switch
                 cell!.cellSwitch.menuItem = item
                 cell!.cellSwitch.state = item.isHidden ? .off : .on
                 cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
-                cell!.cellSwitch.toolTip = "Show/Hide Item"
-                
-                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                cell!.cellSwitch.toolTip = "Show or hide this menu item"
+                cell!.cellSwitch.isEnabled = true
+
+                if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
                     cell!.buttonA.isEnabled = false
-                    
+
                     // FROM 1.3.0
                     // Change tooltips for built-ins
-                    cell!.buttonB.toolTip = "Built-in items can’t be edited"
-                    cell!.buttonA.toolTip = "Built-in items can’t be deleted"
+                    cell!.buttonB.toolTip = "Built-in menu items can’t be edited"
+                    cell!.buttonA.toolTip = "Built-in menu items can’t be deleted"
+                }
+
+                // FROM 2.0.0
+                // Do we need to disable the cell?
+                if item.type == .separator {
+                    if self.autoSeparateInForce {
+                        cell!.buttonA.isEnabled = false
+                        cell!.buttonB.isEnabled = false
+                        cell!.cellSwitch.isEnabled = false
+
+                        cell!.buttonA.toolTip = "MNU-managed separators can’t be deleted"
+                        cell!.buttonB.toolTip = "MNU-managed separators can’t be edited"
+                        cell!.cellSwitch.toolTip = "MNU-managed separators are shown automatically"
+                    } else {
+                        cell!.buttonB.isEnabled = false
+                        cell!.buttonB.toolTip = "Separators can’t be edited"
+                    }
                 }
 
                 return cell
@@ -767,7 +1120,7 @@ final class ConfigureViewController:  NSViewController,
 
             // FROM 1.3.1 - bugfix: enable Apply button
             self.applyChangesButton.isEnabled = true
-            
+
             return true
         }
 
@@ -778,60 +1131,61 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - NSWindowDelegate Functions
 
     func windowShouldClose(_ sender: NSWindow) -> Bool {
-        
+
         // Before the Configure Window closes, check for un-applied changes
         // NOTE This follows from any call to 'doCancel()'
-        if self.hasChanged {
-            // There are unsaved changes - warn the user
-            let alert: NSAlert = NSAlert.init()
-            alert.messageText = "You have unapplied changes"
-            alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
-            alert.addButton(withTitle: "Yes")
-            alert.addButton(withTitle: "No")
-            if !self.lastChance {
-                alert.addButton(withTitle: "Cancel")
-            }
-            
-            alert.beginSheetModal(for: self.configureWindow!) { (selection) in
-                if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
-                    // The user said YES, so add MNU to the login items system preference
-                    self.doSave(sender: nil)
-                }
-                
-                if selection != NSApplication.ModalResponse.alertThirdButtonReturn {
-                    // The user said YES or NO, so close the window
-                    self.configureWindow!.close()
-                    if self.lastChance {
-                        // We're bailing, so inform the host app we can quit at last
-                        NotificationCenter.default.post(name: NSNotification.Name(rawValue: "com.bps.mnu.can-quit"),
-                                                        object: self)
-                    }
-                }
-            }
+        guard self.hasChanged else { return true }
 
-            return false
+        // There are unsaved changes - warn the user
+        let alert: NSAlert = NSAlert.init()
+        alert.messageText = "You have unapplied changes"
+        alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
+        alert.addButton(withTitle: "Yes")
+        alert.addButton(withTitle: "No")
+
+        if !self.lastChance {
+            alert.addButton(withTitle: "Cancel")
         }
 
-        return true
+        alert.beginSheetModal(for: self.configureWindow!) { (selection) in
+            if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
+                // The user said YES, so add MNU to the login items system preference
+                self.doSave(sender: nil)
+            }
+
+            if selection != NSApplication.ModalResponse.alertThirdButtonReturn {
+                // The user said YES or NO, so close the window
+                self.configureWindow!.close()
+
+                if self.lastChance {
+                    // We're bailing, so inform the host app we can quit at last
+                    NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.CAN_QUIT),
+                                                    object: self)
+                }
+            }
+        }
+
+        // Dont' close yet
+        return false
     }
 
-    
+
     // MARK: - Key Event Handling Functions
-    
+
     override func keyDown(with event: NSEvent) {
-        
+
         // Catch key events to trap ESC (close window), arrows (cycle through tabs), CMD-M (minimize)
-        
+
         if event.keyCode == MNU_CONSTANTS.MENU_ESC_KEY {
             // ESC key pressed
             // Make sure the sheets aren't visible and close
             if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
                 doCancel(sender: self)
             }
-            
+
             return
         }
-        
+
         if (event.keyCode == MNU_CONSTANTS.MENU_ARR_KEY) {
             // Right Arrow key pressed
             // Cycle through the tabs in that direction
@@ -843,12 +1197,12 @@ final class ConfigureViewController:  NSViewController,
                         return
                     }
                 }
-                
+
                 self.windowTabView.selectNextTabViewItem(self)
                 return
             }
         }
-        
+
         if (event.keyCode == MNU_CONSTANTS.MENU_ARL_KEY) {
             // Left Arrow key pressed
             // Cycle through the tabs in that direction
@@ -860,35 +1214,35 @@ final class ConfigureViewController:  NSViewController,
                         return
                     }
                 }
-                
+
                 self.windowTabView.selectPreviousTabViewItem(self)
                 return
             }
         }
-        
+
         if event.keyCode == 46 && event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
             // CMD-M pressed
             // Minimize the window
             self.configureWindow!.miniaturize(self)
             return
         }
-        
+
         // Pass on allow other key events
         super.keyDown(with: event)
     }
-    
-    
+
+
     // MARK: - NSMenuDelegate Functions
-    
+
     func menuNeedsUpdate(_ menu: NSMenu) {
-        
+
         // We come here before displaying the NSTableView's set contextual menu
         // (its 'menu' property, set in Interface Builder) in order to update
         // the menu's items for the Menu Item clicked on
-        
+
         // Get the NSTableView row that the user clicked
         let clickedRow: Int = self.menuItemsTableView.clickedRow
-        
+
         if clickedRow > -1 {
             // If the click was on a valid row, use that index to
             // get the MenuItem represented at the clicked row
@@ -896,23 +1250,33 @@ final class ConfigureViewController:  NSViewController,
                 let item: MenuItem = items.items[clickedRow]
                 // Set the contextual menu's three items (Show/Hide, Edit, Delete)
                 // to point to the Menu Item represented at the clicked row
-                menu.item(at: 0)!.representedObject = item
-                menu.item(at: 1)!.representedObject = item
-                menu.item(at: 2)!.representedObject = item
-                
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.representedObject = item
+
                 // Contextualise the Show/Hide menu item's title
-                menu.item(at: 0)?.title = item.isHidden ? "Show" : "Hide"
-                
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)?.title = item.isHidden ? "Show" : "Hide"
+
                 // Assume all of the NSMenuItems are required...
-                menu.item(at: 0)!.isEnabled = true
-                menu.item(at: 1)!.isEnabled = true
-                menu.item(at: 2)!.isEnabled = true
-                
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.isEnabled = !self.autoSeparateInForce
+
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)
-                if item.type == MNU_CONSTANTS.TYPES.SWITCH || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
-                    menu.item(at: 1)!.isEnabled = false
-                    menu.item(at: 2)!.isEnabled = false
+                if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = false
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.isEnabled = false
+                }
+
+                // FROM 2.0.0
+                // Turn off editing for separators
+                if item.type == .separator {
+                    menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = false
                 }
             }
         }
@@ -933,18 +1297,25 @@ final class ConfigureViewController:  NSViewController,
 
     // MARK: - Misc Functions
 
+    /**
+     Update the count of current menu items and present it in the relevant label.
+     */
     private func displayItemCount() {
 
-        // Update the count of current menu items
         var total = 0
         var count = 0
 
         if let list: MenuItemList = self.menuItems {
             if list.items.count > 0 {
-                total = list.items.count
                 for item: MenuItem in list.items {
-                    if !item.isHidden {
+                    if !item.isHidden && item.type != .separator {
+                        // Real items, visible
                         count += 1
+                    }
+
+                    if !item.isHidden {
+                        // Real items, all
+                        total += 1
                     }
                 }
             }
@@ -959,15 +1330,29 @@ final class ConfigureViewController:  NSViewController,
     }
 
 
-    private func showAlert(_ title: String, _ message: String) {
+    /**
+     Check that the user has not added too many items already
+     current limit is set as ` MNU_CONSTANTS.MAX_ITEM_COUNT'.
 
-        // Present an alert to warn the user about deleting the Menu Item
-        let alert: NSAlert = NSAlert()
-        alert.messageText = title
-        alert.informativeText = message
-        alert.addButton(withTitle: "OK")
-        alert.beginSheetModal(for: self.view.window!,
-                              completionHandler: nil)
+     TODO Calculate the number of DISPLAYED items and limit that rather than the total
+
+     */
+    private func checkMenuItemCount() -> Bool {
+
+        if let items: MenuItemList = self.menuItems {
+            if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
+                // Limit reached - warn the user
+                let alert: NSAlert = NSAlert()
+                alert.messageText = "You have already added the maximum number of items to MNU"
+                alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
+                alert.addButton(withTitle: "OK")
+                alert.beginSheetModal(for: self.configureWindow!,
+                                      completionHandler: nil)
+                return false
+            }
+        }
+
+        return true
     }
 
 }

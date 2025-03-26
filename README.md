@@ -1,4 +1,4 @@
-# MNU 1.7.2 #
+# MNU 2.0.0 #
 
 For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
@@ -14,8 +14,12 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 
 ## Release Notes ##
 
-- 1.7.2 *Unreleased*
-    - Under-the-hood changes.
+- 2.0.0 *Unreleased*
+    - Updated configuration UI.
+    - Allow you to add separators to the menu list, or choose to have separators placed automatically to replicate the look of MNU 1.x.
+    - Allow you to add custom icon images.
+    - Allow you to view output from direct commands (experimental).
+    - Allow MNU to be restored to its default settings.
 - 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.
     - Fix some typos.
@@ -107,7 +111,7 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
 
 ## Copyright ##
 
-MNU is copyright &copy; 2024, Tony Smith.
+MNU is copyright &copy; 2025, Tony Smith.
 
 ## Licence ##
 

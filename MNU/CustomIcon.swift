@@ -1,9 +1,9 @@
 
 /*
-    AddUserItemCollectionViewItem.swift
+    CustomImage.swift
     MNU
 
-    Created by Tony Smith on 22/08/2019.
+    Created by Tony Smith on 05/07/2019.
     Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
@@ -26,38 +26,15 @@
     SOFTWARE.
  */
 
-
-import Cocoa
-
-
-final class AddUserItemCollectionViewItem: NSCollectionViewItem {
+import AppKit
 
 
-    // MARK: - Class Properties
+/*
+ * Simple class to hold image metadata and the image itself.
+ */
 
-    var index: Int = -1
-
-    var image: NSImage? {
-        didSet {
-            guard isViewLoaded else { return }
-
-            if let image = image {
-                imageView?.image = image
-            } else {
-                imageView?.image = nil
-            }
-        }
-    }
-
-    override var isSelected: Bool {
-
-        didSet {
-            // Cast the item's view as our custom class then tell the view
-            // whether it is selected or not, and to redew
-            let auicv: AddUserItemCollectionView = self.view as! AddUserItemCollectionView
-            auicv.isSelected = isSelected
-            auicv.needsDisplay = true
-        }
-    }
-
+class CustomIcon {
+    
+    var id: String = ""
+    var image: NSImage? = nil
 }

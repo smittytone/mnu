@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 27/07/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -53,9 +53,10 @@ final class FeedbackSheetViewController: NSViewController,
 
     // MARK: - Lifecycle Functions
 
+    /**
+     This function should be called to prepare the feedback sheet for viewing.
+     */
     func showSheet() {
-        
-        // This function should be called to prepare the feedback sheet for viewing
         
         // Reset the UI
         self.connectionProgress.stopAnimation(self)
@@ -72,32 +73,33 @@ final class FeedbackSheetViewController: NSViewController,
 
     
     // MARK: - User Actions
-
-    @IBAction @objc func doCancel(sender: Any?) {
-
-        // User has clicked 'Cancel', so just close the sheet
-
-        // FROM 1.7.0 -- stop editing the NSTextField
+    
+    @IBAction
+    @objc
+    func doCancel(sender: Any?) {
+        
+        // FROM 1.7.0
+        // Stop editing the NSTextField
         if let theText: NSText = self.feedbackText.currentEditor() {
             self.feedbackText.endEditing(theText)
         }
-
+        
         // Close the sheet
         self.parentWindow!.endSheet(self.feedbackSheet)
         self.parentWindow = nil
     }
 
 
-    @IBAction @objc func doSend(sender: Any?) {
-
-        // User clicked 'Send' so get the message (if there is one) from the text field and send it
+    @IBAction
+    @objc
+    func doSend(sender: Any?) {
         
         let feedback: String = self.feedbackText.stringValue
-
+        
         if feedback.count > 0 {
             // Start the connection indicator if it's not already visible
             self.connectionProgress.startAnimation(self)
-
+            
             // Send the string etc.
             let userAgent: String = getUserAgentForFeedback()
             let dateString: String = getDateForFeedback()
@@ -110,21 +112,21 @@ final class FeedbackSheetViewController: NSViewController,
              *Feedback:*
              \(feedback)
              """
-
+            
             let dict: NSMutableDictionary = NSMutableDictionary()
             dict.setObject(dataString, forKey: NSString.init(string: "text"))
             dict.setObject(true, forKey: NSString.init(string: "mrkdown"))
-
+            
             if let url: URL = URL.init(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
                 var request: URLRequest = URLRequest.init(url: url)
                 request.httpMethod = "POST"
                 do {
                     request.httpBody = try JSONSerialization.data(withJSONObject: dict,
                                                                   options:JSONSerialization.WritingOptions.init(rawValue: 0))
-
+                    
                     request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
                     request.addValue("application/json", forHTTPHeaderField: "Content-type")
-
+                    
                     let config: URLSessionConfiguration = URLSessionConfiguration.ephemeral
                     let session: URLSession = URLSession.init(configuration: config,
                                                               delegate: self,
@@ -145,9 +147,8 @@ final class FeedbackSheetViewController: NSViewController,
     // MARK: - URLSession Delegate Functions
 
     func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-
-        // Some sort of connection error - report it
         
+        // Some sort of connection error - report it
         sendFeedbackError()
     }
 
@@ -170,54 +171,64 @@ final class FeedbackSheetViewController: NSViewController,
                 if let theText: NSText = self.feedbackText.currentEditor() {
                     self.feedbackText.endEditing(theText)
                 }
-
+                
                 // Close the feedback window when the modal alert returns
                 self.parentWindow!.endSheet(self.feedbackSheet)
             }
         }
-
+        
         // FROM 1.7.0 -- Stop the animation
         self.connectionProgress.stopAnimation(self)
     }
 
-    
+
     // MARK: - Misc Functions
 
+    /**
+     Present an error message specific to sending feedback.
+     This is called from multiple locations: if the initial request can't be created,
+     there was a send failure, or a server error.
+     */
     func sendFeedbackError() {
-
-        // Present an error message specific to sending feedback
-        // This is called from multiple locations: if the initial request can't be created,
-        // there was a send failure, or a server error
         
         let alert: NSAlert = NSAlert()
         alert.messageText = "Feedback Could Not Be Sent"
         alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."
         alert.addButton(withTitle: "OK")
         alert.beginSheetModal(for: self.feedbackSheet) { (resp) in
-            // FROM 1.7.0 -- stop editing the NSTextField
+            // FROM 1.7.0
+            // Stop editing the NSTextField
             if let theText: NSText = self.feedbackText.currentEditor() {
                 self.feedbackText.endEditing(theText)
             }
         }
     }
-    
-    
+
+
+    /**
+     Build a basic 'major.manor' version string for prefs usage.
+     
+     // FROM 1.5.1
+     
+     - Returns The version string.
+     */
     func getVersion() -> String {
-
-        // FROM 1.5.1
-        // Build a basic 'major.manor' version string for prefs usage
-
+        
         let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let parts: [String] = (version as NSString).components(separatedBy: ".")
         return parts[0] + "-" + parts[1]
     }
-    
-    
+
+
+    /**
+     Get the current date.
+     
+     FROM 1.5.1 -- Refactor code out into separate function for clarity.
+     
+     - Returns The date string.
+     */
     func getDateForFeedback() -> String {
-
-        // FROM 1.5.1
-        // Refactor code out into separate function for clarity
-
+        
         let date: Date = Date()
         let dateFormatter: DateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
@@ -227,17 +238,23 @@ final class FeedbackSheetViewController: NSViewController,
     }
 
 
+    /**
+     Get the user agent.
+     
+     FROM 1.5.1 -- Refactor code out into separate function for clarity.
+     
+     - Returns The user agent string.
+     */
     func getUserAgentForFeedback() -> String {
-
-        // FROM 1.5.1
-        // Refactor code out into separate function for clarity
-
+        
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
         let bundle: Bundle = Bundle.main
         let app: String = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
         let version: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
         let build: String = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-        // FROM 1.7.0 -- standardise user agent format
+        
+        // FROM 1.7.0
+        // Standardise the user agent format
         return "\(app)/\(version)-\(build) (macOS/\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
     }
 

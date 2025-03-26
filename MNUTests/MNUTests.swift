@@ -3,7 +3,7 @@
 //  MNUTests
 //
 //  Created by Tony Smith on 21/07/2020.
-//  Copyright © 2024 Tony Smith. All rights reserved.
+//  Copyright © 2025 Tony Smith. All rights reserved.
 //
 
 import XCTest
@@ -180,7 +180,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeModeSwitch()
         XCTAssert(menuItem.title == "macOS Dark Mode")
         XCTAssert(menuItem.code == 0)
-        XCTAssert(menuItem.type == 0)
+        XCTAssert(menuItem.type == .switch)
     }
 
 
@@ -189,7 +189,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeDesktopSwitch()
         XCTAssert(menuItem.title == "Show Files on Desktop")
         XCTAssert(menuItem.code == 1)
-        XCTAssert(menuItem.type == 0)
+        XCTAssert(menuItem.type == .switch)
     }
 
 
@@ -198,7 +198,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeHiddenFilesSwitch()
         XCTAssert(menuItem.title == "Show Hidden Files")
         XCTAssert(menuItem.code == 2)
-        XCTAssert(menuItem.type == 0)
+        XCTAssert(menuItem.type == .switch)
     }
 
 
@@ -207,7 +207,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeGitScript()
         XCTAssert(menuItem.title == "Update Git with Gitup")
         XCTAssert(menuItem.code == 10)
-        XCTAssert(menuItem.type == 1)
+        XCTAssert(menuItem.type == .script)
     }
 
     func testMakeBrewDateScript() throws {
@@ -215,7 +215,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeBrewUpdateScript()
         XCTAssert(menuItem.title == "Update Homebrew")
         XCTAssert(menuItem.code == 11)
-        XCTAssert(menuItem.type == 1)
+        XCTAssert(menuItem.type == .script)
     }
 
     func testMakeBrewUpgradeScript() throws {
@@ -223,7 +223,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeBrewUpgradeScript()
         XCTAssert(menuItem.title == "Upgrade Homebrew")
         XCTAssert(menuItem.code == 12)
-        XCTAssert(menuItem.type == 1)
+        XCTAssert(menuItem.type == .script)
     }
 
     func testMakeShowIPScript() throws {
@@ -231,7 +231,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeShowIPScript()
         XCTAssert(menuItem.title == "Show Mac IP address")
         XCTAssert(menuItem.code == 13)
-        XCTAssert(menuItem.type == 1)
+        XCTAssert(menuItem.type == .script)
     }
     
     func testMakeShowDiskFullScript() throws {
@@ -239,7 +239,7 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeShowDiskFullScript()
         XCTAssert(menuItem.title == "Show free disk space")
         XCTAssert(menuItem.code == 14)
-        XCTAssert(menuItem.type == 1)
+        XCTAssert(menuItem.type == .script)
     }
     
     func testMakeGetScreenshotOpen() throws {
@@ -247,15 +247,15 @@ class MNUTests: XCTestCase {
         let menuItem: MenuItem = self.appDelegate.makeGetScreenshotOpen()
         XCTAssert(menuItem.title == "Screengrab a window")
         XCTAssert(menuItem.code == 15)
-        XCTAssert(menuItem.type == 2)
+        XCTAssert(menuItem.type == .open)
     }
     
     func testMakeIconMatrix() throws {
 
         let list = ["logo_generic", "logo_bash", "logo_brew", "logo_github", "logo_gitlab", "logo_python", "logo_node", "logo_java", "logo_lua", "logo_rust", "logo_perl", "logo_ruby", "logo_as", "logo_multipass", "logo_php", "logo_js", "logo_docker", "logo_doc", "logo_dir", "logo_app", "logo_cog", "logo_sync", "logo_power", "logo_mac", "logo_x"]
 
-        let icons = self.appDelegate.icons
-        icons.removeAllObjects()
+        var icons = self.appDelegate.icons
+        icons.removeAll()
         self.appDelegate.makeIconMatrix()
         XCTAssert(icons.count == list.count)
     }
@@ -315,7 +315,7 @@ class MNUTests: XCTestCase {
         let jsonString: String = #"{"code":-1,"direct":false,"hidden":false,"icon":0,"script":"open \"test\";","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#
         let menuItem: MenuItem? = Serializer.dejsonize(jsonString)
         if let item: MenuItem = menuItem {
-            XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == -1 && item.script == "open \"test\";")
+            XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == .unknown && item.script == "open \"test\";")
         } else {
             XCTAssertNotNil(menuItem)
         }
@@ -329,7 +329,7 @@ class MNUTests: XCTestCase {
             let menuItems: MenuItemList? = Serializer.dejsonizeAll(jsonData)
             if let items: MenuItemList = menuItems {
                 let item = items.items[0]
-                XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == -1 && item.script == "")
+                XCTAssert(item.isHidden == false && item.iconIndex == 0 && item.code == -1 && item.isDirect == false && item.title == "" && item.type == .unknown && item.script == "")
             } else {
                 XCTAssertNotNil(menuItems)
             }

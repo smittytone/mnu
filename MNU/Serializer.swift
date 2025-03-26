@@ -4,7 +4,7 @@
     MNU
 
     Created by Tony Smith on 01/10/2019.
-    Copyright © 2024 Tony Smith. All rights reserved.
+    Copyright © 2025 Tony Smith. All rights reserved.
 
     MIT License
     Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -32,6 +32,13 @@ import Foundation
 
 struct Serializer {
 
+    enum error: Error {
+        case BadSingleSerialization
+        case BadGroupSerialization
+        case BadSingleDeserialization
+        case BadGroupDeserialization
+    }
+    
     
     static func jsonize(_ item: MenuItem) -> String {
 
@@ -84,7 +91,7 @@ struct Serializer {
 
         var dict: [String:Any] = [:]
         dict["title"] = item.title
-        dict["type"] = item.type
+        dict["type"] = item.type.rawValue
         dict["code"] = item.code
         dict["icon"] = item.iconIndex
         dict["script"] = item.script
@@ -95,6 +102,9 @@ struct Serializer {
         dict["keyequivalent"] = item.keyEquivalent
         dict["keymodflags"] = item.keyModFlags
         dict["uuid"] = item.uuid
+        // FROM 2.0.0
+        dict["image"] = item.customImageId
+        dict["output"] = item.showDirectOutput
         return dict
     }
 
@@ -165,7 +175,7 @@ struct Serializer {
         newItem.iconIndex = iconIndex != nil ? iconIndex! : 0
         newItem.title = dict["title"] as? String ?? "Unknown"
         newItem.script = dict["script"] as? String ?? ""
-        newItem.type = dict["type"] as? Int ?? 1
+        newItem.type = MNUItemType(rawValue: (dict["type"] as? Int ?? -1)) ?? .unknown
         newItem.code = dict["code"] as? Int ?? 20
         newItem.isHidden = dict["hidden"] as? Bool ?? false
         // FROM 1.2.2
@@ -174,6 +184,9 @@ struct Serializer {
         newItem.keyEquivalent = dict["keyequivalent"] as? String ?? ""
         newItem.keyModFlags = dict["keymodflags"] as? UInt ?? 0
         newItem.uuid = dict["uuid"] as? String ?? UUID().uuidString
+        // FROM 2.0.0
+        newItem.customImageId = dict["image"] as? String ?? ""
+        newItem.showDirectOutput = dict["output"] as? Bool ?? false
         return newItem
     }
     
