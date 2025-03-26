@@ -20,6 +20,7 @@ Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in thi
     - Allow you to add custom icon images.
     - Allow you to view output from direct commands (experimental).
     - Allow MNU to be restored to its default settings.
+    - End support for macOS 10.x: 11.0 (BigSur, 2020) is the new minium supported version.
 - 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.
     - Fix some typos.
