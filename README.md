@@ -2,6 +2,8 @@
 
 For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
+![MNU in action](./images/mnu.webp)
+
 ### Development Scripts ###
 
 Run `mnuprep.sh` from the `Scripts` folder to prep in-app menu and popover graphics. Source: one or more large-size masters (PNGs or JPEGs).
