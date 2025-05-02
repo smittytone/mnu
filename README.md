@@ -12,7 +12,7 @@ The script `postinstall.sh` is used to kill an existing app instance after re-in
 
 ### Building the App ###
 
-Items in the Xcode project-view folder `YOU MUST SUPPLY` are not included in this repo. You build the code, you must either replace these items with your own (app icon, menu bar icon, menu item images, menu item selection images and other visual assets) or comment out the code that makes use of them.
+Items in the Xcode project-view folder `YOU MUST SUPPLY` are proprietary and not included in this repo. To build the code, you must either replace these items with your own (app icon, menu bar icon, menu item images, menu item selection images and other visual assets) or comment out the code that makes use of them.
 
 ## Release Notes ##
 
