@@ -18,6 +18,7 @@
 		3B4117942D3677FA00CB291D /* Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4117932D3677FA00CB291D /* Generic.swift */; };
 		3B4DF32A24C72D670065DAAE /* MNUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DF32924C72D670065DAAE /* MNUTests.swift */; };
 		3B5E13CD2D302654007DB1C8 /* PMTabManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E13CC2D302654007DB1C8 /* PMTabManager.swift */; };
+		3B5EA4062EDA51A2001617F0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 3B5EA4052EDA51A2001617F0 /* AppIcon.icon */; };
 		3B663CE12316D4570020A1DB /* AddUserItemCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B663CE02316D4570020A1DB /* AddUserItemCollectionView.swift */; };
 		3B787A8F230EECA800468D3F /* AddUserItemIconButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */; };
 		3B787A94230EF0B400468D3F /* AddUserItemCollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */; };
@@ -69,6 +70,7 @@
 		3B4DF32924C72D670065DAAE /* MNUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNUTests.swift; sourceTree = "<group>"; };
 		3B4DF32B24C72D670065DAAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3B5E13CC2D302654007DB1C8 /* PMTabManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PMTabManager.swift; sourceTree = "<group>"; };
+		3B5EA4052EDA51A2001617F0 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		3B663CE02316D4570020A1DB /* AddUserItemCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemCollectionView.swift; sourceTree = "<group>"; };
 		3B787A8E230EECA800468D3F /* AddUserItemIconButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemIconButton.swift; sourceTree = "<group>"; };
 		3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemCollectionViewItem.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 				3B787A93230EF0B400468D3F /* AddUserItemCollectionViewItem.xib */,
 				3B083B8122CC3C300025F081 /* Info.plist */,
 				3B083B8222CC3C300025F081 /* MNU.entitlements */,
+				3B5EA4052EDA51A2001617F0 /* AppIcon.icon */,
 			);
 			path = "Bundle Entities";
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				3B787A95230EF0B400468D3F /* AddUserItemCollectionViewItem.xib in Resources */,
 				3BC6F64622EBE252004FBF22 /* AddToLogin.scpt in Resources */,
 				3BC6F64822EBE61F004FBF22 /* RemoveLogin.scpt in Resources */,
+				3B5EA4062EDA51A2001617F0 /* AppIcon.icon in Resources */,
 				3BE25D1F2B039C5800C2349F /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
