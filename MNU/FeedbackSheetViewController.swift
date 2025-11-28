@@ -114,23 +114,23 @@ final class FeedbackSheetViewController: NSViewController,
              """
             
             let dict: NSMutableDictionary = NSMutableDictionary()
-            dict.setObject(dataString, forKey: NSString.init(string: "text"))
-            dict.setObject(true, forKey: NSString.init(string: "mrkdown"))
+            dict.setObject(dataString, forKey: NSString(string: "text"))
+            dict.setObject(true, forKey: NSString(string: "mrkdown"))
             
-            if let url: URL = URL.init(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
-                var request: URLRequest = URLRequest.init(url: url)
+            if let url: URL = URL(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
+                var request: URLRequest = URLRequest(url: url)
                 request.httpMethod = "POST"
                 do {
                     request.httpBody = try JSONSerialization.data(withJSONObject: dict,
-                                                                  options:JSONSerialization.WritingOptions.init(rawValue: 0))
+                                                                  options:JSONSerialization.WritingOptions(rawValue: 0))
                     
                     request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
                     request.addValue("application/json", forHTTPHeaderField: "Content-type")
                     
                     let config: URLSessionConfiguration = URLSessionConfiguration.ephemeral
-                    let session: URLSession = URLSession.init(configuration: config,
-                                                              delegate: self,
-                                                              delegateQueue: OperationQueue.main)
+                    let session: URLSession = URLSession(configuration: config,
+                                                         delegate: self,
+                                                         delegateQueue: OperationQueue.main)
                     self.feedbackTask = session.dataTask(with: request)
                     self.feedbackTask?.resume()
                 } catch {

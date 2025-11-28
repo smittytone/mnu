@@ -126,7 +126,7 @@
                                                                         <rect key="frame" x="0.0" y="0.0" width="542" height="28"/>
                                                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                         <subviews>
-                                                                            <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
+                                                                            <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n7Y-Oz-8fP">
                                                                                 <rect key="frame" x="1" y="6" width="417" height="16"/>
                                                                                 <textFieldCell key="cell" lineBreakMode="truncatingTail" allowsUndo="NO" sendsActionOnEndEditing="YES" title="Table View Cell" id="3Wj-7W-gYv">
                                                                                     <font key="font" metaFont="system"/>
@@ -239,7 +239,7 @@
                                                 <action selector="doNewScriptItemWithSender:" target="qtv-Yg-ACO" id="xIY-v3-bkJ"/>
                                             </connections>
                                         </button>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAX-ej-8rF">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eAX-ej-8rF">
                                             <rect key="frame" x="105" y="54" width="477" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="Xdt-NX-D0p"/>
@@ -306,7 +306,7 @@
                                                 <action selector="doShowHelpWithSender:" target="qtv-Yg-ACO" id="JQ9-W6-fdS"/>
                                             </connections>
                                         </button>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lLj-TG-Lr5">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lLj-TG-Lr5">
                                             <rect key="frame" x="45" y="24" width="537" height="14"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="14" id="amN-KU-S19"/>
@@ -359,7 +359,7 @@
                                                         <action selector="doSetTermPrefWithSender:" target="qtv-Yg-ACO" id="COU-Ji-Ib9"/>
                                                     </connections>
                                                 </button>
-                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Szs-YE-A1b">
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Szs-YE-A1b">
                                                     <rect key="frame" x="-2" y="236" width="399" height="16"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="tZ4-iy-5qh"/>
@@ -370,7 +370,7 @@
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
-                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaJ-sI-hCQ">
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XaJ-sI-hCQ">
                                                     <rect key="frame" x="18" y="170" width="379" height="14"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="14" id="P6I-ol-rME"/>
@@ -434,7 +434,7 @@
                                                         <action selector="doToggleAutoSeparateWithSender:" target="qtv-Yg-ACO" id="P0W-75-GGz"/>
                                                     </connections>
                                                 </button>
-                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mw-IW-ELX">
+                                                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0mw-IW-ELX">
                                                     <rect key="frame" x="18" y="62" width="379" height="14"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="375" id="6XT-pe-Zlp"/>
@@ -497,7 +497,7 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="317"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qz0-WE-dEO">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Qz0-WE-dEO">
                                             <rect key="frame" x="48" y="280" width="504" height="24"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="24" id="T99-sT-gAZ"/>
@@ -509,7 +509,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-9d-QDC">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-9d-QDC">
                                             <rect key="frame" x="64" y="230" width="473" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="22" id="ZRp-OU-Nvz"/>
@@ -521,7 +521,7 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pOe-I6-BRt">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="pOe-I6-BRt">
                                             <rect key="frame" x="48" y="200" width="504" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="500" id="c5G-3n-DCB"/>
@@ -544,7 +544,7 @@
                                                 </connections>
                                             </buttonCell>
                                         </button>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzj-J5-dUM">
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rzj-J5-dUM">
                                             <rect key="frame" x="63" y="73" width="475" height="104"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="104" id="ZiN-CK-xhY"/>
@@ -725,7 +725,7 @@ Gw
                             <action selector="doShowHelpWithSender:" target="8Wq-hu-xtq" id="SYa-LF-jXa"/>
                         </connections>
                     </button>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-Om-6Ns">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-Om-6Ns">
                         <rect key="frame" x="18" y="324" width="524" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="q1V-qY-SVu"/>
@@ -736,7 +736,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
+                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="295" width="520" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
@@ -750,7 +750,7 @@ Gw
                             <outlet property="delegate" destination="8Wq-hu-xtq" id="Ntr-2m-KWW"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
                         <rect key="frame" x="18" y="356" width="520" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="b9N-BZ-58f"/>
@@ -774,7 +774,7 @@ Gw
                             <action selector="doCheckBoxWithSender:" target="8Wq-hu-xtq" id="OaL-3J-xDa"/>
                         </connections>
                     </button>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="luN-mo-wfm">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="luN-mo-wfm">
                         <rect key="frame" x="18" y="208" width="524" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="tbB-1R-3UW"/>
@@ -785,7 +785,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIQ-xd-jED" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
+                    <textField verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIQ-xd-jED" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="179" width="520" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="JAk-Wm-1tI"/>
@@ -799,7 +799,7 @@ Gw
                             <outlet property="delegate" destination="8Wq-hu-xtq" id="nll-Tk-ky2"/>
                         </connections>
                     </textField>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oWJ-xC-IC0">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oWJ-xC-IC0">
                         <rect key="frame" x="18" y="155" width="524" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="zbG-iz-GfB"/>
@@ -824,7 +824,7 @@ Gw
                             <action selector="doShowIconsWithSender:" target="8Wq-hu-xtq" id="eww-DT-ntE"/>
                         </connections>
                     </button>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-Df-MOS">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="TZc-Df-MOS">
                         <rect key="frame" x="18" y="60" width="273" height="17"/>
                         <constraints>
                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="164" id="c3x-Yc-pQt"/>
@@ -849,7 +849,7 @@ Gw
                             <action selector="doCheckBoxWithSender:" target="8Wq-hu-xtq" id="JsQ-Db-lIz"/>
                         </connections>
                     </button>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VJE-2G-TZ5">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VJE-2G-TZ5">
                         <rect key="frame" x="18" y="131" width="524" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="Jrg-rc-z0B"/>
@@ -884,7 +884,7 @@ Gw
                             </segments>
                         </segmentedCell>
                     </segmentedControl>
-                    <textField focusRingType="none" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X29-Bo-ixK" customClass="AddUserItemKeyTextField" customModule="MNU" customModuleProvider="target">
+                    <textField verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="X29-Bo-ixK" customClass="AddUserItemKeyTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="286" y="98" width="92" height="21"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Key" drawsBackground="YES" usesSingleLineMode="YES" id="1hG-V3-G4u">
@@ -1032,7 +1032,7 @@ Gw
                             <action selector="doCancelWithSender:" target="qsm-LN-R5T" id="v1U-sx-wuO"/>
                         </connections>
                     </button>
-                    <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="icw-5T-cay">
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="icw-5T-cay">
                         <rect key="frame" x="18" y="324" width="544" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="fvq-ts-r1v"/>
@@ -1043,7 +1043,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zIz-BS-udt">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="zIz-BS-udt">
                         <rect key="frame" x="18" y="268" width="544" height="48"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="48" id="8jh-Ur-fiT"/>
@@ -1055,7 +1055,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="JZN-PK-D1t">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="JZN-PK-D1t">
                         <rect key="frame" x="18" y="43" width="544" height="40"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="40" id="aIn-SS-uIm"/>
@@ -1067,7 +1067,7 @@ Gw
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
-                    <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIy-xK-Fn3" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
+                    <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIy-xK-Fn3" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
                         <rect key="frame" x="20" y="91" width="540" height="169"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="169" id="rgM-Ce-kcr"/>

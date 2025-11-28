@@ -49,7 +49,7 @@ struct Serializer {
 
         do {
             let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.sortedKeys)
-            json = String.init(data: data, encoding: String.Encoding.utf8) ?? ""
+            json = String(data: data, encoding: String.Encoding.utf8) ?? ""
         } catch {
             NSLog("Menu item \(item.title) could not be serialized")
         }
@@ -76,7 +76,7 @@ struct Serializer {
 
         do {
             let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.sortedKeys)
-            jsonString = String.init(data: data, encoding: String.Encoding.utf8) ?? ""
+            jsonString = String(data: data, encoding: String.Encoding.utf8) ?? ""
         } catch {
             NSLog("Could not serialize MNU items")
         }

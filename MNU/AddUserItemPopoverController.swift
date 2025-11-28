@@ -107,9 +107,8 @@ final class AddUserItemPopoverController: NSViewController,
         // shown by the host view's icon button
         self.collectionView.deselectAll(self)
         
-        let set: Set<IndexPath> = [IndexPath.init(item: self.button.index, section: 0)]
-        collectionView.selectItems(at: set,
-                                   scrollPosition: NSCollectionView.ScrollPosition.top)
+        let set: Set<IndexPath> = [IndexPath(item: self.button.index, section: 0)]
+        collectionView.selectItems(at: set, scrollPosition: NSCollectionView.ScrollPosition.top)
     }
     
     
@@ -118,7 +117,7 @@ final class AddUserItemPopoverController: NSViewController,
      */
     private func configureCollectionView() {
         
-        let flowLayout: NSCollectionViewFlowLayout = NSCollectionViewFlowLayout.init()
+        let flowLayout: NSCollectionViewFlowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSMakeSize(64, 64)
         flowLayout.minimumInteritemSpacing = 0.0
         flowLayout.minimumLineSpacing = 0.0
@@ -200,7 +199,7 @@ final class AddUserItemPopoverController: NSViewController,
                 let item = obj as! AddUserItemCollectionViewItem
                 let nc: NotificationCenter = NotificationCenter.default
                 nc.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
-                        object: NSNumber.init(value: item.index))
+                        object: NSNumber(value: item.index))
             }
         }
     }

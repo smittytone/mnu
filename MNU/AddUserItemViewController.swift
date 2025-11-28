@@ -124,7 +124,7 @@ final class AddUserItemViewController: NSViewController,
     private func makeIconMatrix() {
         
         for i in 0..<MNU_CONSTANTS.ICONS.count {
-            let image: NSImage? = NSImage.init(named: "picon_" + MNU_CONSTANTS.ICONS[i])
+            let image: NSImage? = NSImage(named: "picon_" + MNU_CONSTANTS.ICONS[i])
             self.icons.append(image!)
         }
     }
@@ -136,7 +136,7 @@ final class AddUserItemViewController: NSViewController,
     private func makePopover() {
         
         if self.iconPopover == nil {
-            self.iconPopover = NSPopover.init()
+            self.iconPopover = NSPopover()
             self.iconPopover!.contentViewController = self.iconPopoverController
             self.iconPopover!.delegate = self
             self.iconPopover!.behavior = NSPopover.Behavior.transient
@@ -196,7 +196,7 @@ final class AddUserItemViewController: NSViewController,
                 if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
                     // We have a custom menu item icon to load
                     if let imageBytes = loadImage(getImageStoreUrl(item.customImageId)) {
-                        if let image = NSImage.init(data: imageBytes) {
+                        if let image = NSImage(data: imageBytes) {
                             image.isTemplate = true
                             self.iconButton.image = image
                         }
@@ -530,7 +530,7 @@ final class AddUserItemViewController: NSViewController,
     @objc
     func doShowHelp(sender: Any?) {
         
-        if let helpURL: URL = URL.init(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
+        if let helpURL: URL = URL(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
             NSWorkspace.shared.open(helpURL)
         }
     }
@@ -616,19 +616,19 @@ final class AddUserItemViewController: NSViewController,
     func doChooseImage(sender: Any) {
         
         // Prepare an Open dialog
-        let openDialog = NSOpenPanel.init()
+        let openDialog = NSOpenPanel()
         openDialog.canChooseFiles = true
         openDialog.canChooseDirectories = false
         openDialog.allowsMultipleSelection = false
         openDialog.delegate = self
-        openDialog.directoryURL = URL.init(fileURLWithPath: "")
+        openDialog.directoryURL = URL(fileURLWithPath: "")
         
         // Limit opening to PNG files
-        if let typo = UTType.init(filenameExtension: "png") {
+        if let typo = UTType(filenameExtension: "png") {
             openDialog.allowedContentTypes = [typo]
         }
         
-        if let typo = UTType.init(filenameExtension: "webp") {
+        if let typo = UTType(filenameExtension: "webp") {
             openDialog.allowedContentTypes.append(typo)
         }
         
@@ -671,7 +671,7 @@ final class AddUserItemViewController: NSViewController,
     private func processCustomImage(_ imageBytes: Data, _ imageUrl: URL) {
         
         // Convert the image data to an image object
-        guard let image = NSImage.init(data: imageBytes) else { return }
+        guard let image = NSImage(data: imageBytes) else { return }
                 
         // Get a scaled version of the image at the required size
         // TODO Report error here (or above)?
@@ -959,7 +959,7 @@ final class AddUserItemViewController: NSViewController,
         if let anyClient: Any = client {
             if anyClient is AddUserItemKeyTextField {
                 if self.keyFieldEditor == nil {
-                    self.keyFieldEditor = AddUserItemKeyFieldEditor.init()
+                    self.keyFieldEditor = AddUserItemKeyFieldEditor()
                 }
 
                 // Don't process Tab, Enter etc.

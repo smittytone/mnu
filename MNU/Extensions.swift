@@ -109,9 +109,9 @@ extension NSImage {
      */
     func modedImage() -> NSImage {
 
-        return NSImage.init(size: self.size,
-                     flipped: false,
-                     drawingHandler: { rect in
+        return NSImage(size: self.size,
+                       flipped: false,
+                       drawingHandler: { rect in
             
             // Get the current mode (dark or light)
             let mode = NSAppearance.currentDrawing()

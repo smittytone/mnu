@@ -92,7 +92,7 @@ final class ConfigureViewController:  NSViewController,
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
     // FROM 2.0.0
-    var doShowOutput = false
+    var doShowOutput: Bool = false
 
 
     // MARK: - Private Class Properties
@@ -103,7 +103,7 @@ final class ConfigureViewController:  NSViewController,
     // FROM 1.7.0
     private var systemVersionMinor: Int = 14
     // FROM 2.0.0
-    private var tabManager: PMTabManager = PMTabManager.init()
+    private var tabManager: PMTabManager = PMTabManager()
     private var autoSeparateInForce: Bool = false
     private var newMenuItemIndex: Int = 0
     private var customIcons: [CustomIcon] = []
@@ -146,25 +146,33 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.1.0
         // Prepare the extras... button
         self.extrasMenu = NSMenu()
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Backup MNU data...", action: #selector(self.doExport), keyEquivalent: ""))
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore MNU data...", action: #selector(self.doImport), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem(title: "Backup MNU data...",
+                                            action: #selector(self.doExport),
+                                            keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem(title: "Restore MNU data...",
+                                            action: #selector(self.doImport),
+                                            keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.separator())
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Restore defaults", action: #selector(self.restoreDefaults), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem(title: "Restore defaults",
+                                            action: #selector(self.restoreDefaults),
+                                            keyEquivalent: ""))
         self.extrasMenu!.addItem(NSMenuItem.separator())
-        self.extrasMenu!.addItem(NSMenuItem.init(title: "Send feedback...", action: #selector(self.submitFeedback), keyEquivalent: ""))
+        self.extrasMenu!.addItem(NSMenuItem(title: "Send feedback...",
+                                            action: #selector(self.submitFeedback),
+                                            keyEquivalent: ""))
 
         // FROM 1.1.0
         // Add tooltips: Menu Items Tab
         self.menuItemsAddButton.toolTip = "Add a new menu item"
-        self.extrasButton.toolTip = "Click here for further actions"
+        self.extrasButton.toolTip       = "Click here for further actions"
         self.applyChangesButton.toolTip = "Click to apply any changes you have made"
-        self.showHelpButton.toolTip = "Click here for help with this tab"
+        self.showHelpButton.toolTip     = "Click here for help with this tab"
 
         // Preferences/Settings Tab
-        self.prefsHelpButton.toolTip = "Click here for help with this tab"
+        self.prefsHelpButton.toolTip          = "Click here for help with this tab"
         self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
-        self.prefsNewTermTabButton.toolTip = "Check to run commands in new Terminal tabs"
-        self.prefsShowImagesButton.toolTip = "Check to display images alongside MNU menu items"
+        self.prefsNewTermTabButton.toolTip    = "Check to run commands in new Terminal tabs"
+        self.prefsShowImagesButton.toolTip    = "Check to display images alongside MNU menu items"
 
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
@@ -181,9 +189,9 @@ final class ConfigureViewController:  NSViewController,
         self.tabManager.callbacks.append(nil)   // Settings tab
         self.tabManager.callbacks.append(nil)   // Feedback tab
 
-        self.tabButtonMenu.toolTip = "Configure MNU’s menu items"
+        self.tabButtonMenu.toolTip     = "Configure MNU’s menu items"
         self.tabButtonSettings.toolTip = "Apply MNU settings"
-        self.tabButtonAbout.toolTip = "Learn more about MNU"
+        self.tabButtonAbout.toolTip    = "Learn more about MNU"
     }
 
 
@@ -266,7 +274,7 @@ final class ConfigureViewController:  NSViewController,
         }
 
         // Iterate over the menu item list looking for those with custom icons,
-        // ie. their `customIconPath` property is set
+        // ie. their `customImageId` property is set
         for menuItem in menuItems {
             if !menuItem.customImageId.isEmpty {
                 // Check that a menu item's custom index doesn't reference one
@@ -291,7 +299,7 @@ final class ConfigureViewController:  NSViewController,
 
                 // The menu item's custom icon has not yet been loaded - try to do so now
                 if let imageBytes = loadImage(getImageStoreUrl(menuItem.customImageId)) {
-                    if let image = NSImage.init(data: imageBytes) {
+                    if let image = NSImage(data: imageBytes) {
                         // Only record a custom icon if we have a path to its file, the data can be
                         // loaded and them converted to an image
                         let customIcon = CustomIcon()
@@ -395,17 +403,6 @@ final class ConfigureViewController:  NSViewController,
                                at: buttonPosition,
                                in: sender)
     }
-
-    /**
-     NO LONGER IN USE -- REMOVE AFTER RELEASE>
-
-    @objc private func doExtraHelp() {
-
-        // FROM 1.1.0
-        // Just call the existing 'doShowHelp()' function as if we were a button
-        doShowHelp(sender: self.extrasButton)
-    }
-     */
 
 
     // MARK: - Menu Items Action Handler Support Functions
@@ -610,7 +607,7 @@ final class ConfigureViewController:  NSViewController,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         if let item: MenuItem = menuItem.representedObject as? MenuItem {
             if let index = self.menuItems?.items.firstIndex(of: item) {
-                let newMenuItem = MenuItem.init()
+                let newMenuItem = MenuItem()
                 newMenuItem.type = .separator
                 newMenuItem.title = "Separator"
                 newMenuItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
@@ -643,7 +640,10 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleLaunchAtLogin(sender: Any?) {
 
-        let action: String = (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
+        let action: String = (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on
+                              ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED
+                              : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
+
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
                                         object: self)
     }
@@ -658,8 +658,7 @@ final class ConfigureViewController:  NSViewController,
 
         let defaults: UserDefaults = UserDefaults.standard
         let state = self.prefsShowImagesButton.state == .on ? true : false
-        defaults.set(state,
-                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
+        defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
 
         // Notify the menu that it needs to change
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
@@ -676,8 +675,7 @@ final class ConfigureViewController:  NSViewController,
 
         let defaults: UserDefaults = UserDefaults.standard
         self.tabOpenChoice = self.prefsNewTermTabButton.state == .on ? true : false
-        defaults.set(self.tabOpenChoice,
-                     forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
+        defaults.set(self.tabOpenChoice, forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
 
         // FROM 1.6.0
         // Notify the menu that it needs to change
@@ -705,8 +703,7 @@ final class ConfigureViewController:  NSViewController,
         if termChoice != self.terminalChoice {
             self.terminalChoice = termChoice
             let defaults: UserDefaults = UserDefaults.standard
-            defaults.set(termChoice,
-                         forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
+            defaults.set(termChoice, forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
 
             // Notify the mai app that it needs to change
             NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.TERM_UPDATED),
@@ -726,8 +723,7 @@ final class ConfigureViewController:  NSViewController,
 
         let defaults: UserDefaults = UserDefaults.standard
         let state = self.prefsAutoSeparateButton.state == .on ? true : false
-        defaults.set(state,
-                     forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
+        defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
 
         // Setting this disables manually created separators so enable/disable
         // the separator setting controls as required
@@ -751,10 +747,8 @@ final class ConfigureViewController:  NSViewController,
 
         let defaults: UserDefaults = UserDefaults.standard
         let state = self.prefsDirectOutpuButton.state == .on ? true : false
-        defaults.set(state,
-                     forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
-
         self.doShowOutput = state
+        defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
 
         // Notify the menu that it needs to change
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.OUTPUT_UPDATED),
@@ -774,7 +768,7 @@ final class ConfigureViewController:  NSViewController,
         let button: NSButton = sender as! NSButton
         path += button == self.prefsHelpButton ? "#mnu-preferences" : "#how-to-configure-mnu"
 
-        if let helpURL: URL = URL.init(string: path) {
+        if let helpURL: URL = URL(string: path) {
             NSWorkspace.shared.open(helpURL)
         }
     }
@@ -863,7 +857,7 @@ final class ConfigureViewController:  NSViewController,
                 if let targetUrl = openPanel.url {
                     // Load the data if we have a valid file URL
                     do {
-                        let fileData: Data = try Data.init(contentsOf: targetUrl)
+                        let fileData: Data = try Data(contentsOf: targetUrl)
                         let newMenu: MenuItemList = try MenuItemList.decode(fileData)
                         self.menuItems = newMenu
                         self.hasChanged = true
@@ -967,7 +961,8 @@ final class ConfigureViewController:  NSViewController,
 
         if let items: MenuItemList = self.menuItems {
             let item: MenuItem = items.items[row]
-            let cell: MenuItemTableCellView? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"), owner: self) as? MenuItemTableCellView
+            let cell: MenuItemTableCellView? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"),
+                                                                  owner: self) as? MenuItemTableCellView
 
             if cell != nil {
                 // Configure the cell's title and its three buttons
@@ -989,24 +984,22 @@ final class ConfigureViewController:  NSViewController,
                     }
 
                     let labelText = item.title + (self.autoSeparateInForce ? " only visible when separators not added automatically" : "")
-                    let attrTitle = NSMutableAttributedString.init(string: labelText, attributes: [
-                        .font: labelFont,
-                        .paragraphStyle: labelParagraphStyle,
-                        .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.labelColor
-                    ])
+                    let attrTitle = NSMutableAttributedString(string: labelText, attributes: [.font: labelFont,
+                                                                                              .paragraphStyle: labelParagraphStyle,
+                                                                                              .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.labelColor])
 
                     cell!.title.attributedStringValue = attrTitle
                 }
 
                 // NOTE Buttons named in order, from the Left to Right
-                cell!.buttonA.image = NSImage.init(named: "NSTouchBarDeleteTemplate")
+                cell!.buttonA.image = NSImage(named: "NSTouchBarDeleteTemplate")
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.toolTip = "Delete this menu item"
                 cell!.buttonA.isEnabled = true
                 cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
-                cell!.buttonB.image = NSImage.init(named: "NSTouchBarComposeTemplate")
+                cell!.buttonB.image = NSImage(named: "NSTouchBarComposeTemplate")
                 cell!.buttonB.action = #selector(self.doTableButtonEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit this menu item"
                 cell!.buttonB.isEnabled = item.type != .separator
@@ -1137,7 +1130,7 @@ final class ConfigureViewController:  NSViewController,
         guard self.hasChanged else { return true }
 
         // There are unsaved changes - warn the user
-        let alert: NSAlert = NSAlert.init()
+        let alert: NSAlert = NSAlert()
         alert.messageText = "You have unapplied changes"
         alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
         alert.addButton(withTitle: "Yes")

@@ -46,13 +46,16 @@ import AppKit
 func loadImage(_ imageUrl: URL) -> Data? {
     
     do {
-        let data: Data = try Data.init(contentsOf: imageUrl)
+        let data: Data = try Data(contentsOf: imageUrl)
         return data
     } catch {
-        print(error)
+#if DEBUG
+        print(error.localizedDescription)
+#else
+        NSLog(error.localizedDescription)
+#endif
+        return nil
     }
-    
-    return nil
 }
 
 
@@ -90,6 +93,5 @@ func showAlert(_ title: String, _ message: String, _ window: NSWindow) {
     alert.messageText = title
     alert.informativeText = message
     alert.addButton(withTitle: "OK")
-    alert.beginSheetModal(for: window,
-                          completionHandler: nil)
+    alert.beginSheetModal(for: window, completionHandler: nil)
 }

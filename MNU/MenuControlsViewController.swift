@@ -53,13 +53,13 @@ final class MenuControlsViewController: NSViewController {
 
         // Set up the control bar button tooltips
         self.appControlConfigureButton.toolTip = "Click to configure MNU"
-        self.appControlQuitButton.toolTip = "Click to quit MNU"
-        self.appControlHelpButton.toolTip = "Click to view online help information"
+        self.appControlQuitButton.toolTip      = "Click to quit MNU"
+        self.appControlHelpButton.toolTip      = "Click to view online help information"
 
         // Set up the menu item
-        self.controlMenuItem = NSMenuItem.init(title: "APP-CONTROL",
-                                               action: nil,
-                                               keyEquivalent: "")
+        self.controlMenuItem = NSMenuItem(title: "APP-CONTROL",
+                                          action: nil,
+                                          keyEquivalent: "")
         self.controlMenuItem!.view = self.appControlView
         self.controlMenuItem!.target = self
     }
@@ -67,24 +67,30 @@ final class MenuControlsViewController: NSViewController {
 
     // MARK: - App Action Functions
 
-    @IBAction @objc private func doQuit(sender: Any?) {
+    @IBAction
+    @objc
+    private func doQuit(sender: Any?) {
 
         // Quit the app
         NSApp.terminate(nil)
     }
 
 
-    @IBAction @objc private func doHelp(sender: Any?) {
+    @IBAction
+    @objc
+    private func doHelp(sender: Any?) {
 
         // Show the 'Help' via the website
         // TODO provide offline help
-        if let helpURL: URL = URL.init(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-use-mnu") {
+        if let helpURL: URL = URL(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-use-mnu") {
             NSWorkspace.shared.open(helpURL)
         }
     }
 
 
-    @IBAction @objc private func doConfigure(sender: Any?) {
+    @IBAction
+    @objc
+    private func doConfigure(sender: Any?) {
 
         // Tell the app delegate to open the Configure window
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.SHOW_CONFIGURE),

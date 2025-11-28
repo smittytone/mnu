@@ -81,7 +81,7 @@ class DirectOutputWindow: NSPanel {
     public func appendText(_ text: String) {
         
         if let textStore = self.outputTextView.textStorage {
-            textStore.append(NSAttributedString.init(string: text, attributes: self.textAttributes))
+            textStore.append(NSAttributedString(string: text, attributes: self.textAttributes))
         }
     }
     
@@ -92,7 +92,7 @@ class DirectOutputWindow: NSPanel {
             if var ruleAtts = self.textAttributes {
                 ruleAtts[.strikethroughStyle] = NSUnderlineStyle.thick.rawValue
                 ruleAtts[.strikethroughColor] = NSColor.labelColor
-                textStore.append(NSAttributedString.init(string: "\n\u{00A0}\u{0009}\u{00A0}\n\n", attributes: ruleAtts))
+                textStore.append(NSAttributedString(string: "\n\u{00A0}\u{0009}\u{00A0}\n\n", attributes: ruleAtts))
             }
         }
     }

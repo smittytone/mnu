@@ -45,8 +45,7 @@ final class AppDelegate: NSObject,
     
     // MARK: - Public App Properties
     
-    //var icons: NSMutableArray = NSMutableArray.init() // Menu icons list
-    var icons: [NSImage] = []
+    var icons: [NSImage] = []                           // Menu icons list
     // FROM 1.6.0
     var terminalIndex: Int = 0                          // Which terminal has the user selected?
                                                         // 0  - macOS Terminal (default)
@@ -59,7 +58,6 @@ final class AppDelegate: NSObject,
     private var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
     private var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
     private var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
-    //private var task: Process? = nil                    // A sub-process we use for triggered scripts
     private var doNewTermTab: Bool = false              // Should we open terminal scripts in a new window
     private var showImages: Bool = false                // Should we show menu icons as well as names
     private var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
@@ -238,7 +236,7 @@ final class AppDelegate: NSObject,
             defaults.set(false, forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
 
             // Ask the user if they want to run MNU at startup
-            let alert: NSAlert = NSAlert.init()
+            let alert: NSAlert = NSAlert()
             alert.messageText = "Run MNU at Login?"
             alert.informativeText = "Do you wish to set your Mac to run MNU when you log in? This can also be set in MNU’s Preferences."
             alert.addButton(withTitle: "Yes")
@@ -287,12 +285,13 @@ final class AppDelegate: NSObject,
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
 
         // FROM 1.3.1
+        // UPDATE 2.1.0
         // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
-        if sysVer.majorVersion == 10 && sysVer.minorVersion < 14 {
+        if sysVer.majorVersion < 11 {
             // Wrong version, so present a warning message
-            let alert: NSAlert = NSAlert.init()
+            let alert: NSAlert = NSAlert()
             alert.messageText = "Unsupported version of macOS"
-            alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please conisder upgrading to macOS 10.14 or higher."
+            alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please consider upgrading to macOS 11 or higher."
             alert.addButton(withTitle: "OK")
             alert.runModal()
             self.disableDarkMode = true
@@ -309,13 +308,15 @@ final class AppDelegate: NSObject,
 
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
+        // OS MODE
         let defaults: UserDefaults = UserDefaults.standard
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
             if let anyValue: Any = defaultsDict["AppleInterfaceStyle"] {
                 self.inDarkMode = getTrueBool(anyValue, "Dark")
             }
         }
-        
+
+        // FINDER DESKTOP USE, SHOW HIDDEN FILES
         if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
             if let anyValue: Any = defaultsDict["CreateDesktop"] {
                 self.useDesktop = getTrueBool(anyValue)
@@ -380,9 +381,8 @@ final class AppDelegate: NSObject,
         // Enable or disable (depending on the value of 'doTurnOn') the launching
         // of MNU at user login. This is activated by a notification from the
         // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
-        runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"),
-                        doAddPath: doTurnOn)
-        
+        runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"), doAddPath: doTurnOn)
+
         // FROM 1.5.2
         // Make sure preference is saved
         let defaults: UserDefaults = UserDefaults.standard
@@ -509,9 +509,9 @@ final class AppDelegate: NSObject,
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
             if #available(macOS 26, *) {
-                menuItem.image = NSImage.init(named: "t_mode_dark_icon")
+                menuItem.image = NSImage(named: "t_mode_dark_icon")
             } else {
-                menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+                menuItem.image = NSImage(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
             }
         }
 
@@ -521,9 +521,9 @@ final class AppDelegate: NSObject,
 
         // Run the AppleScript
         // FROM 1.7.0 -- Run off the main thread
-        let apsQueue: DispatchQueue = DispatchQueue.init(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
+        let apsQueue: DispatchQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
         apsQueue.async {
-            if let aps: NSAppleScript = NSAppleScript.init(source: arg) {
+            if let aps: NSAppleScript = NSAppleScript(source: arg) {
                 aps.executeAndReturnError(nil)
             }
         }
@@ -546,9 +546,9 @@ final class AppDelegate: NSObject,
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
         if self.showImages {
             if #available(macOS 26, *) {
-                menuItem.image = NSImage.init(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
+                menuItem.image = NSImage(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
             } else {
-                menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                menuItem.image = NSImage(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
             }
         }
 
@@ -565,8 +565,7 @@ final class AppDelegate: NSObject,
         }
 
         // Write the defaults back out
-        defaults.setPersistentDomain(defaultsDict,
-                                     forName: "com.apple.finder")
+        defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Run the task to restart the Finder
         killFinder(andDock: false)
@@ -585,9 +584,9 @@ final class AppDelegate: NSObject,
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
         if self.showImages {
             if #available(macOS 26, *) {
-                menuItem.image = NSImage.init(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
+                menuItem.image = NSImage(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
             } else {
-                menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                menuItem.image = NSImage(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
             }
         }
 
@@ -622,8 +621,10 @@ final class AppDelegate: NSObject,
         //      and will fail (in Terminal) if it is not
 
         // Check for installation of gitup and warn if it's missing
-        if checkScriptExists("/usr/local/bin/gitup") {
+        if checkScriptExists("/usr/local/bin/gitup", true) || checkScriptExists("/opt/homebrew/bin/gitup", true) {
             runScript("gitup")
+        } else {
+            _ = checkScriptExists("/usr/local/bin/gitup")
         }
     }
 
@@ -736,7 +737,7 @@ final class AppDelegate: NSObject,
         makeIconMatrix()
         
         // Prepare the NSMenu
-        self.appMenu = NSMenu.init(title: "MNU")
+        self.appMenu = NSMenu(title: "MNU")
         self.appMenu?.autoenablesItems = false
         self.appMenu?.delegate = self
 
@@ -781,7 +782,7 @@ final class AppDelegate: NSObject,
                 } catch {
                     // We couldn't load one of the saved list of MNU items, so ask the user what to do
                     DispatchQueue.main.async {
-                        let alert: NSAlert = NSAlert.init()
+                        let alert: NSAlert = NSAlert()
                         alert.messageText = "Stored MNU items are damaged"
                         alert.informativeText = "Do you wish to continue with the default items?"
                         alert.addButton(withTitle: "Continue")
@@ -848,6 +849,7 @@ final class AppDelegate: NSObject,
                     return
                 }
                 */
+
                 // FROM 1.6.0
                 // Add new defaults to the menu if the user has already customised the menu
                 let insertNewDefaults: Int = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6)
@@ -892,7 +894,7 @@ final class AppDelegate: NSObject,
         let bar: NSStatusBar = NSStatusBar.system
         self.statusItem = bar.statusItem(withLength: NSStatusItem.squareLength)
         if self.statusItem != nil && self.appMenu != nil {
-            self.statusItem!.button!.image = NSImage.init(named: "menu_icon")
+            self.statusItem!.button!.image = NSImage(named: "menu_icon")
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
@@ -998,9 +1000,9 @@ final class AppDelegate: NSObject,
         
         // No items being shown at all? Then add a note about it!
         if self.appMenu!.items.count < 1 {
-            let noteItem: NSMenuItem = NSMenuItem.init(title: "You have hidden all your items",
-                                                       action: #selector(self.showConfigureWindow),
-                                                       keyEquivalent: "")
+            let noteItem: NSMenuItem = NSMenuItem(title: "You have hidden all your items",
+                                                  action: #selector(self.showConfigureWindow),
+                                                  keyEquivalent: "")
             noteItem.isEnabled = false
             self.appMenu!.addItem(noteItem)
             self.appMenu!.addItem(NSMenuItem.separator())
@@ -1042,9 +1044,9 @@ final class AppDelegate: NSObject,
             return NSMenuItem.separator()
         } else {
             // Create and return an NSMenuItem for the specified Menu Item instance
-            let menuItem: NSMenuItem = NSMenuItem.init(title: item.title,
-                                                       action: nil,
-                                                       keyEquivalent: item.keyEquivalent)
+            let menuItem: NSMenuItem = NSMenuItem(title: item.title,
+                                                  action: nil,
+                                                  keyEquivalent: item.keyEquivalent)
             
             // FROM 1.7.0
             // Implement key modifiers if required
@@ -1065,7 +1067,10 @@ final class AppDelegate: NSObject,
             // or fall back to default behaviour which as per user-added items
             switch item.code {
                 case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                    if self.disableDarkMode { menuItem.isEnabled = false }
+                    if self.disableDarkMode {
+                        menuItem.isEnabled = false
+                    }
+
                     menuItem.action = #selector(self.doModeSwitch(sender:))
                     menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
                 case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
@@ -1093,28 +1098,28 @@ final class AppDelegate: NSObject,
                 switch item.code {
                     case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
                         if #available(macOS 26, *) {
-                            menuItem.image = NSImage.init(named: "t_mode_dark_icon")
+                            menuItem.image = NSImage(named: "t_mode_dark_icon")
                         } else {
-                            menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+                            menuItem.image = NSImage(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
                         }
                     case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
                         if #available(macOS 26, *) {
-                            menuItem.image = NSImage.init(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
+                            menuItem.image = NSImage(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
                         } else {
-                            menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                            menuItem.image = NSImage(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
                         }
                     case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
                         if #available(macOS 26, *) {
-                            menuItem.image = NSImage.init(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
+                            menuItem.image = NSImage(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
                         } else {
-                            menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                            menuItem.image = NSImage(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
                         }
                     case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
-                        menuItem.image = NSImage.init(named: "logo_git")
+                        menuItem.image = NSImage(named: "logo_git")
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
-                        menuItem.image = NSImage.init(named: "logo_brew")
+                        menuItem.image = NSImage(named: "logo_brew")
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
-                        menuItem.image = NSImage.init(named: "logo_brew")
+                        menuItem.image = NSImage(named: "logo_brew")
                     default:
                         // Default is a standard icon from the list
                         if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
@@ -1158,7 +1163,7 @@ final class AppDelegate: NSObject,
         
         // No, so load it and record it
         if let imageBytes = loadImage(getImageStoreUrl(fileId)) {
-            if let image = NSImage.init(data: imageBytes) {
+            if let image = NSImage(data: imageBytes) {
                 image.isTemplate = true
                 image.size = NSSize(width: 20.0, height: 20.0)
                 let newCustomImage = CustomIcon()
@@ -1170,12 +1175,12 @@ final class AppDelegate: NSObject,
         }
         
         // Error case: load 'missing' icon
-        if let image = NSImage.init(named: "logo_missing") {
+        if let image = NSImage(named: "logo_missing") {
             return image
         }
         
         // Fallthough on error: return an empty image
-        return NSImage.init(size: NSSize(width: 20.0, height: 20.0))
+        return NSImage(size: NSSize(width: 20.0, height: 20.0))
     }
     
     private func addAppMenuItem(_ doSeparate: Bool) {
@@ -1198,7 +1203,7 @@ final class AppDelegate: NSObject,
 
         if self.icons.count == 0 {
             for i in 0..<MNU_CONSTANTS.ICONS.count {
-                let image: NSImage? = NSImage.init(named: "logo_" + MNU_CONSTANTS.ICONS[i])
+                let image: NSImage? = NSImage(named: "logo_" + MNU_CONSTANTS.ICONS[i])
                 self.icons.append(image!)
             }
         }
@@ -1481,7 +1486,7 @@ final class AppDelegate: NSObject,
     private func showErrorOnMainThread(_ head: String, _ text: String) {
         
         DispatchQueue.main.async {
-            let alert: NSAlert = NSAlert.init()
+            let alert: NSAlert = NSAlert()
             alert.messageText = head
             alert.informativeText = text
             alert.addButton(withTitle: "OK")
@@ -1871,10 +1876,10 @@ final class AppDelegate: NSObject,
         
         // FROM 1.6.1
         // Run the process on a secondary thread
-        let processQueue: DispatchQueue = DispatchQueue.init(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
+        let processQueue: DispatchQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
         processQueue.async {
-            let task: Process = Process.init()
-            task.executableURL = URL.init(fileURLWithPath: path)
+            let task: Process = Process()
+            task.executableURL = URL(fileURLWithPath: path)
             if args.count > 0 { task.arguments = args }
 
             // Pipe out the output to avoid putting it in the log
@@ -1964,6 +1969,18 @@ final class AppDelegate: NSObject,
         runProcess(app: "/usr/bin/killall",
                    with: args,
                    doBlock: true)
+    }
+
+
+    /**
+     Print the supplied message in the terminal.
+
+     - Parameters
+        - message: The message to print.
+     */
+    private func echo(_ message: String) {
+
+        runScript("echo \(message)")
     }
 
 
