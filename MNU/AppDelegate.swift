@@ -508,7 +508,11 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
-            menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+            if #available(macOS 26, *) {
+                menuItem.image = NSImage.init(named: "t_mode_dark_icon")
+            } else {
+                menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+            }
         }
 
         // Set up the script that will switch the UI mode
@@ -541,7 +545,11 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
         if self.showImages {
-            menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+            if #available(macOS 26, *) {
+                menuItem.image = NSImage.init(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
+            } else {
+                menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+            }
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
@@ -576,12 +584,18 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
         if self.showImages {
-            menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+            if #available(macOS 26, *) {
+                menuItem.image = NSImage.init(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
+            } else {
+                menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+            }
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
         let defaults: UserDefaults = UserDefaults.standard
-        var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
+        guard var defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") else {
+            return
+        }
 
         if self.showHidden {
             // Show Hidden is ON, so add the 'AppleShowAllFiles' key to 'com.apple.finder'
@@ -592,8 +606,7 @@ final class AppDelegate: NSObject,
         }
 
         // Write the defaults back out
-        defaults.setPersistentDomain(defaultsDict,
-                                     forName: "com.apple.finder")
+        defaults.setPersistentDomain(defaultsDict, forName: "com.apple.finder")
 
         // Run the task to restart the Finder
         killFinder(andDock: false)
@@ -1075,13 +1088,27 @@ final class AppDelegate: NSObject,
             }
             
             if self.showImages {
+                // FROM 2.1.0
+                // Include Tahoe-specific images
                 switch item.code {
                     case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                        menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+                        if #available(macOS 26, *) {
+                            menuItem.image = NSImage.init(named: "t_mode_dark_icon")
+                        } else {
+                            menuItem.image = NSImage.init(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
+                        }
                     case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                        menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                        if #available(macOS 26, *) {
+                            menuItem.image = NSImage.init(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
+                        } else {
+                            menuItem.image = NSImage.init(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
+                        }
                     case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                        menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                        if #available(macOS 26, *) {
+                            menuItem.image = NSImage.init(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
+                        } else {
+                            menuItem.image = NSImage.init(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
+                        }
                     case MNU_CONSTANTS.ITEMS.SCRIPT.GIT:
                         menuItem.image = NSImage.init(named: "logo_git")
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE:
@@ -1095,6 +1122,12 @@ final class AppDelegate: NSObject,
                         } else {
                             menuItem.image = self.icons[item.iconIndex]
                         }
+                }
+
+                // FROM 2.1.0
+                // Adjust the icon size down to Tahoe standard
+                if #available(macOS 26, *) {
+                    menuItem.image?.size = CGSize(width: 16.0, height: 16.0)
                 }
             }
             
