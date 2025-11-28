@@ -168,4 +168,8 @@ struct MNU_CONSTANTS {
 
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0
 
+    // FROM 2.1.0
+    static let TAHOE_ICON_SIZE                  = 16.0
+    static let BIG_SUR_ICON_SIZE                = 20.0
+    static let CONFIG_TABLE_ROW_HEIGHT          = 32.0
 }

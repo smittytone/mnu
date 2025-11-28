@@ -67,13 +67,13 @@ final class AppDelegate: NSObject,
     private var optionClick: Bool = false               // Did the user option-click the menu
     // FROM 1.3.0
     private var reloadDefaults: Bool = false            // Do we need to reload preferences?
-    // FROM 1.3.1
-    private var isElevenPlus: Bool = false              // Are we running on Big Sur?
     // FROM 2.0.0
     private var output: String = ""
     private var doShowOutput: Bool = false
     private var autoSeparationInForce: Bool = false     // Auto separate visible menu items (as per 1.x)
     private var customIcons: [CustomIcon] = []          // Custom images
+    // FROM 2.1.0
+    private var isTahoePlus: Bool = false
 
 
     // MARK: - App Lifecycle Functions
@@ -297,9 +297,8 @@ final class AppDelegate: NSObject,
             self.disableDarkMode = true
         }
 
-        // Are we running on Big Sur?
-        self.isElevenPlus = sysVer.majorVersion >= 11
-        self.cwvc.isElevenPlus = self.isElevenPlus
+        // Are we running on Tahoe?
+        self.isTahoePlus = sysVer.majorVersion > 15
 
         // Set the default values for the states we control
         self.inDarkMode = false
@@ -508,7 +507,7 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
-            if #available(macOS 26, *) {
+            if self.isTahoePlus {
                 menuItem.image = NSImage(named: "t_mode_dark_icon")
             } else {
                 menuItem.image = NSImage(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
@@ -545,7 +544,7 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
         if self.showImages {
-            if #available(macOS 26, *) {
+            if self.isTahoePlus {
                 menuItem.image = NSImage(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
             } else {
                 menuItem.image = NSImage(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
@@ -583,7 +582,7 @@ final class AppDelegate: NSObject,
         let menuItem: NSMenuItem = sender as! NSMenuItem
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
         if self.showImages {
-            if #available(macOS 26, *) {
+            if self.isTahoePlus {
                 menuItem.image = NSImage(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
             } else {
                 menuItem.image = NSImage(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
@@ -709,15 +708,10 @@ final class AppDelegate: NSObject,
         }
 
         self.cwvc.menuItems = list
-        // FROM 1.0.1 - move the following line to the view controller
-        // self.cwvc.menuItemsTableView.reloadData()
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
 
-        // FROM 1.3.1
-        self.cwvc.isElevenPlus = self.isElevenPlus
-        
         // FROM 1.5.0
         self.cwvc.appDelegate = self
 
@@ -1097,19 +1091,19 @@ final class AppDelegate: NSObject,
                 // Include Tahoe-specific images
                 switch item.code {
                     case MNU_CONSTANTS.ITEMS.SWITCH.UIMODE:
-                        if #available(macOS 26, *) {
+                        if self.isTahoePlus {
                             menuItem.image = NSImage(named: "t_mode_dark_icon")
                         } else {
                             menuItem.image = NSImage(named: (self.inDarkMode ? "mode_light_icon" : "mode_dark_icon"))
                         }
                     case MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP:
-                        if #available(macOS 26, *) {
+                        if self.isTahoePlus {
                             menuItem.image = NSImage(named: (self.useDesktop ? "t_desktop_clear" : "t_desktop_full"))
                         } else {
                             menuItem.image = NSImage(named: (self.useDesktop ? "desktop_icon_off" : "desktop_icon_on"))
                         }
                     case MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN:
-                        if #available(macOS 26, *) {
+                        if self.isTahoePlus {
                             menuItem.image = NSImage(named: (self.showHidden ? "t_hidden_hide" : "t_hidden_show"))
                         } else {
                             menuItem.image = NSImage(named: (self.showHidden ? "hidden_files_icon_off" : "hidden_files_icon_on"))
@@ -1131,8 +1125,8 @@ final class AppDelegate: NSObject,
 
                 // FROM 2.1.0
                 // Adjust the icon size down to Tahoe standard
-                if #available(macOS 26, *) {
-                    menuItem.image?.size = CGSize(width: 16.0, height: 16.0)
+                if self.isTahoePlus {
+                    menuItem.image?.size = CGSize(width: MNU_CONSTANTS.TAHOE_ICON_SIZE, height: MNU_CONSTANTS.TAHOE_ICON_SIZE)
                 }
             }
             
@@ -1165,7 +1159,7 @@ final class AppDelegate: NSObject,
         if let imageBytes = loadImage(getImageStoreUrl(fileId)) {
             if let image = NSImage(data: imageBytes) {
                 image.isTemplate = true
-                image.size = NSSize(width: 20.0, height: 20.0)
+                image.size = NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE)
                 let newCustomImage = CustomIcon()
                 newCustomImage.id = fileId
                 newCustomImage.image = image
@@ -1180,7 +1174,7 @@ final class AppDelegate: NSObject,
         }
         
         // Fallthough on error: return an empty image
-        return NSImage(size: NSSize(width: 20.0, height: 20.0))
+        return NSImage(size: NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE))
     }
     
     private func addAppMenuItem(_ doSeparate: Bool) {
@@ -1532,30 +1526,29 @@ final class AppDelegate: NSObject,
      Remmove any custom icons no longer in use.
      */
     private func wrangleCustomIcons() {
-        
-        var toRemove: [Int] = []
-        var count = 0
-        for customIcon in self.customIcons {
-            var got = false
+
+        var count: Int = 0
+        repeat {
+            if count >= self.customIcons.count {
+                break
+            }
+
+            let customIcon = self.customIcons[count]
+            var used = false
             for item in self.items {
                 if getImageStoreUrl(customIcon.id).unixpath() == item.customImageId {
-                    got = true
+                    used = true
                     break
                 }
             }
             
-            if !got {
-                toRemove.append(count)
+            if !used {
+                self.customIcons.remove(at: count)
+                continue
             }
             
             count += 1
-        }
-        
-        if count > 0 {
-            for index in toRemove {
-                self.customIcons.remove(at: index)
-            }
-        }
+        } while true
     }
 
 

@@ -84,8 +84,6 @@ final class ConfigureViewController:  NSViewController,
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
-    // FROM 1.3.1
-    var isElevenPlus: Bool = false
     // FROM 1.5.0
     var appDelegate: AppDelegate? = nil
     // FROM 1.6.0
@@ -202,7 +200,7 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.3.1
         // Scale up table view row height according to macOS version
         self.menuItemsTableView.rowSizeStyle = .custom
-        self.menuItemsTableView.rowHeight = isElevenPlus ? 24.0 : 18.0;
+        self.menuItemsTableView.rowHeight = MNU_CONSTANTS.CONFIG_TABLE_ROW_HEIGHT
 
         // FROM 1.0.0: move from the app delegate
         // Update the item table
@@ -1052,9 +1050,7 @@ final class ConfigureViewController:  NSViewController,
 
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
 
-        // FROM 1.4.6
-        // Set the table row height based on host OS major version
-        return self.systemVersion > 10 ? 32.0 : 26.0
+        return MNU_CONSTANTS.CONFIG_TABLE_ROW_HEIGHT
     }
 
 
