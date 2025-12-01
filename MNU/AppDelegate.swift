@@ -1022,10 +1022,6 @@ final class AppDelegate: NSObject,
         // Regenerate the menu
         updateMenu()
         
-        // FROM 2.0.0
-        // Garbage-collect custom icons
-        //wrangleCustomIcons()
-        
         // Save the update menu item list
         saveItems()
     }

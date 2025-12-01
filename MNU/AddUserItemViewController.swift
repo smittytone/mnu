@@ -622,7 +622,20 @@ final class AddUserItemViewController: NSViewController,
         openDialog.allowsMultipleSelection = false
         openDialog.delegate = self
         openDialog.directoryURL = URL(fileURLWithPath: "")
-        
+
+        // FROM 2.1.0
+        // Add graphics guidance
+        // TODO Make this appear automatically and not just when `Show Options` is clicked.
+        let av: NSTextField = NSTextField(frame: NSMakeRect(0.0, 0.0, 600.0, 64.0))
+        av.isEditable = false
+        av.isSelectable = false
+        av.usesSingleLineMode = false
+        av.isBezeled = false
+        av.isBordered = false
+        av.lineBreakMode = .byWordWrapping
+        av.stringValue = "Images should be in PNG or WEBP format and sized to at least 256x256 pixels. Images are applied as macOS template images, so they should contain only black pixels, transparent pixels and/or pixels with opacities between these two extremes."
+        openDialog.accessoryView = av
+
         // Limit opening to PNG files
         if let typo = UTType(filenameExtension: "png") {
             openDialog.allowedContentTypes = [typo]
