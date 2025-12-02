@@ -71,7 +71,7 @@ final class AppDelegate: NSObject,
     private var output: String = ""
     private var doShowOutput: Bool = false
     private var autoSeparationInForce: Bool = false     // Auto separate visible menu items (as per 1.x)
-    private var customIcons: [CustomIcon] = []          // Custom images
+    private var customIcons: [CustomIcon] = []          // Custom images - used for local caching only (not passed to configure view)
     // FROM 2.1.0
     private var isTahoePlus: Bool = false
 
@@ -119,7 +119,7 @@ final class AppDelegate: NSObject,
                        selector: #selector(self.disableAutoStart),
                        name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED),
                        object: self.cwvc)
-        
+
         // Watch for an 'it's OK to quit' message from the Configure Window
         // NOTE This is issued in response to an attempt to quit the app when the Configure
         //      Window has unapplied changes, which will interrupt the termination flow -
@@ -201,12 +201,6 @@ final class AppDelegate: NSObject,
         // Save the current menu - this is redundant and may be removed
         saveItems()
         
-        // FROM 2.0.0
-        // Garbage file collection
-        if UserDefaults.standard.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.IMAGE_CLEANUP) {
-            fileGarbageCollection()
-        }
-        
         // Disable notification listening (to be tidy)
         NotificationCenter.default.removeObserver(self)
     }
@@ -274,13 +268,16 @@ final class AppDelegate: NSObject,
         return false
     }
     
-    
+
+    /**
+     Get system and state information and record it for use during run.
+
+     FROM 1.6.0
+     Refactored from `applicationDidFinishLaunching()`
+
+     */
     private func recordSystemState() {
-        
-        // FROM 1.6.0
-        // Refactored from 'applicationDidFinishLaunching()'
-        // Get system and state information and record it for use during run
-        
+
         // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
         let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
 
@@ -326,15 +323,19 @@ final class AppDelegate: NSObject,
             }
         }
     }
-    
-    
+
+
+    /**
+     Register certain preferences.
+
+     FROM 1.6.0
+
+     NOTE We read and store the following two preferences because
+             we need to refer to them regularly. We only re-read the
+             saved value in response to a notification that it has
+             been changed by the user
+     */
     private func recordKeyPreferences() {
-        
-        // FROM 1.6.0
-        // NOTE We read and store the following two preferences because
-        //      we need to refer to them regularly. We only re-read the
-        //      saved value in response to a notification that it has
-        //      been changed by the user
         
         let defaults: UserDefaults = UserDefaults.standard
         
@@ -359,27 +360,35 @@ final class AppDelegate: NSObject,
     
     // MARK: - Auto-start Functions
 
+    /**
+     Notification handler for the launch at login preference.
+     */
     @objc
     private func enableAutoStart() {
 
-        // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: true)
     }
 
 
+    /**
+     Notification handler for the launch at login preference.
+     */
     @objc
     private func disableAutoStart() {
 
-        // Notification handler for the launch at login preference
         toggleStartupLaunch(doTurnOn: false)
     }
 
 
+    /**
+     Enable or disablethe launching of MNU at user login. This is activated by a notification from the
+     Configure Window view controller (via `enableAutoStart()` and `disableAutoStart()`.
+
+     - Parameters:
+        - doTurnOn - `true` to enable, `false` to disable.
+     */
     private func toggleStartupLaunch(doTurnOn: Bool) {
 
-        // Enable or disable (depending on the value of 'doTurnOn') the launching
-        // of MNU at user login. This is activated by a notification from the
-        // Configure Window view controller (via 'enableAutoStart()' and 'disableAutoStart()'
         runBundleScript(named: (doTurnOn ? "AddToLogin" : "RemoveLogin"), doAddPath: doTurnOn)
 
         // FROM 1.5.2
@@ -388,15 +397,18 @@ final class AppDelegate: NSObject,
         defaults.set(doTurnOn, forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH)
         defaults.synchronize()
     }
-    
-    
+
+
+    /**
+     This function is called in response to a change of terminal being
+     made in the Prefs pane of the ConfigureViewController, via the
+     `com.bps.mnu.term-updated` notification.
+
+     FROM 1.6.0
+     */
     @objc
     private func switchTerminal() {
         
-        // FROM 1.6.0
-        // This function is called in response to a change of terminal being
-        // made in the Prefs pane of the ConfigureViewController, via the
-        // 'com.bps.mnu.term-updated' notification
         if self.cwvc.terminalChoice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal,
             // so check that it's available for use
@@ -411,14 +423,17 @@ final class AppDelegate: NSObject,
         // NOTE This doesn't affect the stored preferences
         self.terminalIndex = self.cwvc.terminalChoice
     }
-    
-    
+
+
+    /**
+     Update internal record of the user's tab opening choice: current window or new
+     Configure Window has already saved the preference.
+
+     FROM 1.6.0
+     */
     @objc
     private func toggleTerminalTabbing() {
         
-        // FROM 1.6.0
-        // Update internal record of the user's tab opening choice: current window or new
-        // Configure Window has already saved the preference
         self.doNewTermTab = self.cwvc.tabOpenChoice
     }
     
@@ -428,8 +443,8 @@ final class AppDelegate: NSObject,
         
         self.doShowOutput = self.cwvc.doShowOutput
     }
-    
-    
+
+
     private func isTerminalMissing(_ choice: Int) -> Bool {
         
         // FROM 1.6.0
@@ -453,15 +468,17 @@ final class AppDelegate: NSObject,
 
     // MARK: - Loading And Saving Serialization Functions
 
+    /**
+     Store the current state of the menu if it has changed.
+
+     NOTE We convert Menu Item objects into basic JSON strings and save
+             these into an array that we will use to recreate the Menu Item list
+             at next start up. This is because Strings can be PLIST'ed whereas
+             custom objects cannot.
+     */
     private func saveItems() {
         
-        // Store the current state of the menu if it has changed
-        // NOTE We convert Menu Item objects into basic JSON strings and save
-        //      these into an array that we will use to recreate the Menu Item list
-        //      at next start up. This is because Strings can be PLIST'ed whereas
-        //      custom objects cannot
         var savedItems: [Any] = []
-        
         for item: MenuItem in self.items {
             do {
                 let encoded = try item.encode()
@@ -611,13 +628,15 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     Set up the script that will open Terminal and run `gitup`.
+
+     NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
+          and will fail (in Terminal) if it is not.
+     */
     @IBAction
     @objc
     private func doGit(sender: Any?) {
-
-        // Set up the script that will open Terminal and run 'gitup'
-        // NOTE This requires that the user has gitup installed (see https://github.com/earwig/git-repo-updater)
-        //      and will fail (in Terminal) if it is not
 
         // Check for installation of gitup and warn if it's missing
         if checkScriptExists("/usr/local/bin/gitup", true) || checkScriptExists("/opt/homebrew/bin/gitup", true) {
@@ -628,12 +647,14 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     Set up the script that will open Terminal and run `brew update`.
+
+     NOTE This requires that the user has homebrew installed (see https://brew.sh/).
+     */
     @IBAction
     @objc
     private func doBrewUpdate(sender: Any?) {
-
-        // Set up the script that will open Terminal and run 'brew update'
-        // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
 
         // Check for installation of brew and warn if it's missing
         // FROM 1.5.1 Support standard ARM Mac install location too
@@ -650,12 +671,15 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     Set up the script that will open Terminal and run `brew upgrade`.
+
+     NOTE This requires that the user has homebrew installed (see https://brew.sh/).
+     */
     @IBAction
     @objc
     private func doBrewUpgrade(sender: Any?) {
 
-        // Set up the script that will open Terminal and run 'brew upgrade'
-        // NOTE This requires that the user has homebrew installed (see https://brew.sh/)
         // Check for installation of brew and warn if it's missing
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
@@ -670,7 +694,7 @@ final class AppDelegate: NSObject,
         }
    }
 
-    
+
     @IBAction
     @objc
     private func doScript(sender: Any?) {
@@ -722,11 +746,12 @@ final class AppDelegate: NSObject,
 
     // MARK: - Menu And View Controller Maker Functions
 
+    /**
+     Create the app's menu when the app is run.
+     */
     @objc
     private func createMenu() {
 
-        // Create the app's menu when the app is run
-        
         // Load the icons
         makeIconMatrix()
         
@@ -902,7 +927,7 @@ final class AppDelegate: NSObject,
         }
     }
 
-    
+
     private func placeMenuItem(_ item: MenuItem, _ showAll: Bool = false) {
         
         // If the item is not hidden, add it to the menu
@@ -919,7 +944,8 @@ final class AppDelegate: NSObject,
             }
         }
     }
-    
+
+
     private func getNewMenuItem(_ itemCode: Int) -> MenuItem? {
         
         // FROM 1.6.0
@@ -975,14 +1001,16 @@ final class AppDelegate: NSObject,
         
         return newItem
     }
-    
-    
+
+
+    /**
+     Redraw the menu based on the current list of items.
+
+     NOTE If `optionClick` has been set, we show all items, even if they would normally
+          be hidden from view via the Configure Window.
+     */
     @objc
     private func updateMenu() {
-        
-        // Redraw the menu based on the current list of items
-        // NOTE If 'optionClick' has been set, we show all items, even if they would normally
-        //      be hidden from view via the Configure Window
         
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
@@ -1005,8 +1033,8 @@ final class AppDelegate: NSObject,
         // Finally, add the app menu item at the end of the menu
         addAppMenuItem(!self.showImages)
     }
-    
-    
+
+
     @objc
     private func updateAndSaveMenu() {
         
@@ -1025,7 +1053,6 @@ final class AppDelegate: NSObject,
         // Save the update menu item list
         saveItems()
     }
-    
 
 
     private func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
@@ -1111,8 +1138,8 @@ final class AppDelegate: NSObject,
                     case MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE:
                         menuItem.image = NSImage(named: "logo_brew")
                     default:
-                        // Default is a standard icon from the list
-                        if item.iconIndex >= MNU_CONSTANTS.ICONS.count {
+                        // Default is a standard icon from the list or a custom one
+                        if item.iconIndex >= MNU_CONSTANTS.DEFAULT_ICONS.count {
                             menuItem.image = getCustomImage(item.customImageId)
                         } else {
                             menuItem.image = self.icons[item.iconIndex]
@@ -1129,13 +1156,13 @@ final class AppDelegate: NSObject,
             return menuItem
         }
     }
-    
-    
+
+
     /**
-     Extract an already loaded menu image from storage or load
-     the image from disk.
+     Extract an already loaded menu image from storage or load the image from disk.
+
      FROM 2.0.0
-     
+
      - Parameters
         - path: The path of the stored file.
      
@@ -1155,11 +1182,14 @@ final class AppDelegate: NSObject,
         if let imageBytes = loadImage(getImageStoreUrl(fileId)) {
             if let image = NSImage(data: imageBytes) {
                 image.isTemplate = true
-                image.size = NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE)
-                let newCustomImage = CustomIcon()
-                newCustomImage.id = fileId
-                newCustomImage.image = image
-                self.customIcons.append(newCustomImage)
+                image.size = isTahoePlus
+                                ? NSSize(width: MNU_CONSTANTS.TAHOE_ICON_SIZE, height: MNU_CONSTANTS.TAHOE_ICON_SIZE)
+                                : NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE)
+
+                let newCustomIcon = CustomIcon()
+                newCustomIcon.id = fileId
+                newCustomIcon.image = image
+                self.customIcons.append(newCustomIcon)
                 return image
             }
         }
@@ -1170,41 +1200,54 @@ final class AppDelegate: NSObject,
         }
         
         // Fallthough on error: return an empty image
-        return NSImage(size: NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE))
+        return NSImage(size: isTahoePlus
+                       ? NSSize(width: MNU_CONSTANTS.TAHOE_ICON_SIZE, height: MNU_CONSTANTS.TAHOE_ICON_SIZE)
+                       : NSSize(width: MNU_CONSTANTS.BIG_SUR_ICON_SIZE, height: MNU_CONSTANTS.BIG_SUR_ICON_SIZE))
     }
-    
+
+
+    /**
+     Add the app's control bar item.
+     We always add this after creating or updating the menu.
+
+     FROM 1.3.0 - Add a 'show separator' parameter.
+
+     - Parameters:
+        - doSeparate - `true` to prefix the item with a separator.
+     */
     private func addAppMenuItem(_ doSeparate: Bool) {
         
-        // Add the app's control bar item
-        // We always add this after creating or updating the menu
-        // FROM 1.3.0 - Add a 'show separator' parameter
-
         if let appItem: NSMenuItem = self.acvc.controlMenuItem {
             self.appMenu!.addItem(NSMenuItem.separator())
             self.appMenu!.addItem(appItem)
         }
     }
 
-    
+
+    /**
+     Build the array of icons that we will use for the popover selector
+     and the button that triggers its appearance.
+     */
     internal func makeIconMatrix() {
         
-        // Build the array of icons that we will use for the popover selector
-        // and the button that triggers its appearance
-
         if self.icons.count == 0 {
-            for i in 0..<MNU_CONSTANTS.ICONS.count {
-                let image: NSImage? = NSImage(named: "logo_" + MNU_CONSTANTS.ICONS[i])
+            for i in 0..<MNU_CONSTANTS.DEFAULT_ICONS.count {
+                let image: NSImage? = NSImage(named: "logo_" + MNU_CONSTANTS.DEFAULT_ICONS[i])
                 self.icons.append(image!)
             }
         }
     }
-    
-    
+
+
     // MARK: Dark Mode Switching
 
+    /**
+     Make and return a stock UI mode switch.
+
+     - Returns The constructed menu item.
+     */
     internal func makeModeSwitch() -> MenuItem {
-        
-        // Make and return a stock UI mode switch
+
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
@@ -1217,9 +1260,13 @@ final class AppDelegate: NSObject,
 
     // MARK: Desktop Usage Switching
 
+    /**
+     Make and return a stock desktop usage mode switch.
+
+     - Returns The constructed menu item.
+     */
     internal func makeDesktopSwitch() -> MenuItem {
         
-        // Make and return a stock desktop usage mode switch
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
@@ -1230,9 +1277,13 @@ final class AppDelegate: NSObject,
 
     // MARK: Show Hidden Files Switching
 
+    /**
+     Make and return a stock desktop usage mode switch.
+
+     - Returns The constructed menu item.
+     */
     internal func makeHiddenFilesSwitch() -> MenuItem {
-        
-        // Make and return a stock desktop usage mode switch
+
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
@@ -1243,9 +1294,13 @@ final class AppDelegate: NSObject,
 
     // MARK: Update Git Trigger
 
+    /**
+     Make and return a stock Git Update item.
+
+     - Returns The constructed menu item.
+     */
     internal func makeGitScript() -> MenuItem {
         
-        // Make and return a stock Git Update item
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
@@ -1256,9 +1311,13 @@ final class AppDelegate: NSObject,
 
     // MARK: Update Brew Trigger
 
+    /**
+     Make and return a stock Brew Update item.
+
+     - Returns The constructed menu item.
+     */
     internal func makeBrewUpdateScript() -> MenuItem {
         
-        // Make and return a stock Brew Update item
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
@@ -1269,9 +1328,13 @@ final class AppDelegate: NSObject,
 
     // MARK: Upgrade Brew Trigger
 
+    /**
+     Make and return a stock Brew Update item.
+
+     - Returns The constructed menu item.
+     */
     internal func makeBrewUpgradeScript() -> MenuItem {
-        
-        // Make and return a stock Brew Update item
+
         let newItem: MenuItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
@@ -1419,6 +1482,7 @@ final class AppDelegate: NSObject,
             }
         }
         
+        // NOTE This is deprecated and no longer needed
         defaults.synchronize()
     }
 
@@ -1482,69 +1546,6 @@ final class AppDelegate: NSObject,
             alert.addButton(withTitle: "OK")
             alert.runModal()
         }
-    }
-    
-    
-    /**
-     Check for any files in the store that are no longer referenced,
-     and delete them.
-     
-     FROM 2.0.0
-     */
-    private func fileGarbageCollection() {
-        
-        do {
-            let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
-            for file in files {
-                var got = false
-                for customIcon in self.customIcons {
-                    if customIcon.id == file {
-                        got = true
-                        break
-                    }
-                }
-                
-                if !got {
-                    do {
-                        try FileManager.default.removeItem(atPath: getImageStoreUrl(file).unixpath())
-                    } catch {
-                        print("Could not delete \(file)")
-                    }
-                }
-            }
-        } catch {
-            showErrorOnMainThread("No custom file store", "")
-        }
-    }
-    
-    
-    /**
-     Remmove any custom icons no longer in use.
-     */
-    private func wrangleCustomIcons() {
-
-        var count: Int = 0
-        repeat {
-            if count >= self.customIcons.count {
-                break
-            }
-
-            let customIcon = self.customIcons[count]
-            var used = false
-            for item in self.items {
-                if getImageStoreUrl(customIcon.id).unixpath() == item.customImageId {
-                    used = true
-                    break
-                }
-            }
-            
-            if !used {
-                self.customIcons.remove(at: count)
-                continue
-            }
-            
-            count += 1
-        } while true
     }
 
 
@@ -1689,8 +1690,9 @@ final class AppDelegate: NSObject,
      we have to double-escape everything, ie. make the string:
            echo \\\"$GIT\\\""
      osascript then correctly interprets all the escapes
+
      FROM 1.2.0
-     
+
      - Note See also `MNUTests.swift::testEscaper()` for more examples.
      
      - Parameters
@@ -1753,8 +1755,8 @@ final class AppDelegate: NSObject,
             showErrorOnMainThread("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
         }
     }
-    
-    
+
+
     /**
      Check that the named app exists in one of the Mac's possible app locations.
      FROM 1.5.0
@@ -1804,8 +1806,8 @@ final class AppDelegate: NSObject,
         // so issue a failure note
         return nil
     }
-    
-    
+
+
     /**
      Load and run the named script from the application bundle.
      
@@ -1941,8 +1943,8 @@ final class AppDelegate: NSObject,
             self.outputWindow.outputTextView.scrollToEndOfDocument(self)
         }
     }
-    
-    
+
+
     /**
      Set up a task to kill the macOS Finder and, optionally, the Dock.
      

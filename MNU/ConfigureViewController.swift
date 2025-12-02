@@ -28,6 +28,7 @@
 
 
 import Cocoa
+import UniformTypeIdentifiers
 
 
 final class ConfigureViewController:  NSViewController,
@@ -35,7 +36,8 @@ final class ConfigureViewController:  NSViewController,
                                       NSTableViewDataSource,
                                       NSTableViewDelegate,
                                       NSWindowDelegate,
-                                      NSMenuDelegate {
+                                      NSMenuDelegate,
+                                      NSOpenSavePanelDelegate {
 
     // MARK: - UI Outlets
 
@@ -95,16 +97,16 @@ final class ConfigureViewController:  NSViewController,
 
     // MARK: - Private Class Properties
 
-    private var systemVersion: Int = 10
+    private  var systemVersion: Int = 10
     // FROM 1.1.0
-    private var extrasMenu: NSMenu? = nil
+    private  var extrasMenu: NSMenu? = nil
     // FROM 1.7.0
-    private var systemVersionMinor: Int = 14
+    private  var systemVersionMinor: Int = 14
     // FROM 2.0.0
-    private var tabManager: PMTabManager = PMTabManager()
-    private var autoSeparateInForce: Bool = false
-    private var newMenuItemIndex: Int = 0
-    private var customIcons: [CustomIcon] = []
+    private  var tabManager: PMTabManager = PMTabManager()
+    private  var autoSeparateInForce: Bool = false
+    private  var newMenuItemIndex: Int = 0
+    internal var customIcons: [CustomIcon] = []
 
 
     // MARK: - Lifecycle Functions
@@ -154,6 +156,12 @@ final class ConfigureViewController:  NSViewController,
         self.extrasMenu!.addItem(NSMenuItem(title: "Restore defaults",
                                             action: #selector(self.restoreDefaults),
                                             keyEquivalent: ""))
+        // FROM 2.1.0
+        self.extrasMenu!.addItem(NSMenuItem.separator())
+        self.extrasMenu!.addItem(NSMenuItem(title: "Clean unused custom icons",
+                                            action: #selector(self.imageFileGarbageCollection),
+                                            keyEquivalent: ""))
+        // FROM 1.1.0
         self.extrasMenu!.addItem(NSMenuItem.separator())
         self.extrasMenu!.addItem(NSMenuItem(title: "Send feedback...",
                                             action: #selector(self.submitFeedback),
@@ -282,7 +290,7 @@ final class ConfigureViewController:  NSViewController,
                     var got = false
                     for customIcon in self.customIcons {
                         if menuItem.customImageId == customIcon.id {
-                            menuItem.iconIndex = index + MNU_CONSTANTS.ICONS.count
+                            menuItem.iconIndex = index + MNU_CONSTANTS.DEFAULT_ICONS.count
                             got = true
                             break
                         }
@@ -304,7 +312,7 @@ final class ConfigureViewController:  NSViewController,
                         customIcon.image = image
                         customIcon.id = menuItem.customImageId
                         self.customIcons.append(customIcon)
-                        menuItem.iconIndex = MNU_CONSTANTS.ICONS.count - 1 + self.customIcons.count
+                        menuItem.iconIndex = MNU_CONSTANTS.DEFAULT_ICONS.count - 1 + self.customIcons.count
                     }
                 }
             }
@@ -446,9 +454,10 @@ final class ConfigureViewController:  NSViewController,
 
         self.aivc.appDelegate = self.appDelegate
         self.aivc.parentWindow = self.configureWindow!
-        self.aivc.currentMenuItems = self.menuItems
+        self.aivc.menuItems = self.menuItems
         self.aivc.customIcons = self.customIcons
         self.aivc.isEditing = isEditing
+        self.aivc.cvc = self
         self.aivc.showSheet()
     }
 
@@ -842,10 +851,16 @@ final class ConfigureViewController:  NSViewController,
 
         // Create an open panel for the import operation...
         let openPanel: NSOpenPanel = NSOpenPanel()
-        openPanel.allowedFileTypes = ["json"]
         openPanel.allowsOtherFileTypes = false
         openPanel.allowsMultipleSelection = false
         openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+        openPanel.delegate = self
+
+        // FROM 2.1.0
+        // Replace deprecated `allowedFileTypes` property
+        if let fileType = UTType(filenameExtension: "json") {
+            openPanel.allowedContentTypes = [fileType]
+        }
 
         // ...and show it
         openPanel.beginSheetModal(for: self.view.window!) { (response) in
@@ -899,6 +914,41 @@ final class ConfigureViewController:  NSViewController,
                 self.hasChanged = false
                 self.applyChangesButton.isEnabled = false
                 self.configureWindow!.close()
+            }
+        }
+    }
+
+
+    /**
+     Check for any files in the store that are no longer referenced, and delete them.
+
+     FROM 2.1.0
+     */
+    @objc
+    private func imageFileGarbageCollection() {
+
+        if self.customIcons.count > 0 {
+            do {
+                let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
+                for file in files {
+                    var got = false
+                    for customIcon in self.customIcons {
+                        if customIcon.id == file {
+                            got = true
+                            break
+                        }
+                    }
+
+                    if !got {
+                        do {
+                            try FileManager.default.removeItem(atPath: getImageStoreUrl(file).unixpath())
+                        } catch {
+                            print("Could not delete \(file)")
+                        }
+                    }
+                }
+            } catch {
+                // NOP
             }
         }
     }

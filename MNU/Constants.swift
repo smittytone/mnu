@@ -106,7 +106,7 @@ struct MNU_CONSTANTS {
     static let EDIT_CMD_UNDO        = 4
 
     // THIS IS THE DEFINITIVE ICON ORDER
-    static let ICONS: [String] = [
+    static let DEFAULT_ICONS: [String] = [
         "generic", "bash", "z", "brew", "macports",
         "as", "python", "swift", "node", "code",
         "docker", "multipass", "emulation", "git", "ssh",
@@ -148,6 +148,7 @@ struct MNU_CONSTANTS {
         static let TERM_UPDATED                 = "com.bps.mnu.term-updated"
         static let TERM_TABBING_SET             = "com.bps.mnu.term-tab-updated"
         static let OUTPUT_UPDATED               = "com.bps.mnu.output-updated"
+        static let CLEAN_ICONS                  = "com.bps.mnu.do-clean-icons"
     }
 
     struct MISC_IDS {

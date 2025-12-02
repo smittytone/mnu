@@ -42,7 +42,7 @@ final class AddUserItemPopoverController: NSViewController,
     
     // MARK: - Public Class Properties
     
-    var availableIcons: [NSImage] = []
+    var availableIconImages: [NSImage] = []
     var button: AddUserItemIconButton = AddUserItemIconButton()
     var rows: Int = 5
     var columns: Int = 5
@@ -61,7 +61,7 @@ final class AddUserItemPopoverController: NSViewController,
         super.viewDidLoad()
         
         // Add icon tooltips
-        // NOTE You MUST sync this with `MNU_CONSTANTS.ICONS`
+        // NOTE You MUST sync this with `MNU_CONSTANTS.DEFAULT_ICONS`
         self.tooltips.append("Hash Bang")
         self.tooltips.append("Bash")
         self.tooltips.append("Z Shell")
@@ -150,7 +150,7 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Just return the number of icons we have
         
-        return self.availableIcons.count
+        return self.availableIconImages.count
     }
     
     
@@ -159,27 +159,17 @@ final class AddUserItemPopoverController: NSViewController,
         let item: NSCollectionViewItem = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
                                                                  for: indexPath)
         guard let collectionViewItem: AddUserItemCollectionViewItem = item as? AddUserItemCollectionViewItem else { return item }
-        let image = self.availableIcons[self.count]
-        
-        if self.count >= MNU_CONSTANTS.ICONS.count {
-            // Custom image, ie. template
-            collectionViewItem.image = image.modedImage()
-        } else {
-            collectionViewItem.image = image
-        }
-        
+
+        let image = self.availableIconImages[self.count]
+        collectionViewItem.image = self.count >= MNU_CONSTANTS.DEFAULT_ICONS.count ? image.modedImage() : image
         collectionViewItem.index = self.count
         
         // FROM 2.0.0
-        if self.count >= MNU_CONSTANTS.ICONS.count {
-            collectionViewItem.view.toolTip = "Custom image"
-        } else {
-            collectionViewItem.view.toolTip = self.tooltips[self.count]
-        }
+        collectionViewItem.view.toolTip = self.count >= MNU_CONSTANTS.DEFAULT_ICONS.count ? "Custom image" : self.tooltips[self.count]
         
         // Increase the icon index
         self.count += 1
-        if self.count == self.availableIcons.count {
+        if self.count == self.availableIconImages.count {
             self.count = 0
         }
         

@@ -35,6 +35,6 @@ import AppKit
 
 class CustomIcon {
     
-    var id: String = ""
-    var image: NSImage? = nil
+    var id: String = ""                 // The file name/UUID of a saved image
+    var image: NSImage? = nil           // The actual image data
 }

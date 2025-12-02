@@ -2,6 +2,9 @@
 
 - 2.1.0 *Unreleased*
     - Support macOS 26 Tahoe.
+    - Add Configuration panel extras menu item to remove unused custom icons from the store.
+    - Add an accessory view to the custom image selection panel to indicated supported image file types and useful image information.
+    - Improve custom menu icon image-handling code.
 - 2.0.0 *2 May 2025*
     - Updated configuration UI.
     - Allows you to add separators to the menu list, or choose to have separators placed automatically to replicate the look of MNU 1.x.
