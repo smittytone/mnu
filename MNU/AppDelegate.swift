@@ -57,7 +57,7 @@ final class AppDelegate: NSObject,
     
     private var statusItem: NSStatusItem? = nil         // The macOS main menu item providing the menu
     private var appMenu: NSMenu? = nil                  // The NSMenu presenting the switches and scripts
-    private var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
+    //private var items: [MenuItem] = []                  // The menu items that are present (but may be hidden)
     private var doNewTermTab: Bool = false              // Should we open terminal scripts in a new window
     private var showImages: Bool = false                // Should we show menu icons as well as names
     private var disableDarkMode: Bool = false           // Should the menu disable the dark mode control (ie. not supported on the host)
@@ -74,6 +74,7 @@ final class AppDelegate: NSObject,
     private var customIcons: [CustomIcon] = []          // Custom images - used for local caching only (not passed to configure view)
     // FROM 2.1.0
     private var isTahoePlus: Bool = false
+    private var itemList: MenuItemList = MenuItemList() // The menu items that are present (but may be hidden)
 
 
     // MARK: - App Lifecycle Functions
@@ -479,7 +480,7 @@ final class AppDelegate: NSObject,
     private func saveItems() {
         
         var savedItems: [Any] = []
-        for item: MenuItem in self.items {
+        for item: MenuItem in self.itemList.items {
             do {
                 let encoded = try item.encode()
                 savedItems.append(encoded)
@@ -721,15 +722,18 @@ final class AppDelegate: NSObject,
     @objc
     private func showConfigureWindow() {
 
-        // Duplicate the current item list to pass on to the configure window view controller
-        let list: MenuItemList = MenuItemList()
+        // Duplicate the current item list to pass on to the configure window view controller.
+        // We copy because the configure view controller may modify the list, but until the
+        // user clicks `Apply`, we don't want the menu to be affected by the changes
+        let list: MenuItemList = self.itemList.copy() as! MenuItemList //MenuItemList()
 
-        if self.items.count > 0 {
-            for item: MenuItem in self.items {
+        /*if self.itemList.items.count > 0 {
+            for item: MenuItem in self.itemList.items {
                 let itemCopy: MenuItem = item.copy() as! MenuItem
                 list.items.append(itemCopy)
             }
         }
+         */
 
         self.cwvc.menuItems = list
 
@@ -761,8 +765,8 @@ final class AppDelegate: NSObject,
         self.appMenu?.delegate = self
 
         // Clear the items list
-        self.items.removeAll()
-        
+        self.itemList.items.removeAll()
+
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
         let defaults: UserDefaults = UserDefaults.standard
         let loadedItems: [String] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS) as! [String]
@@ -777,8 +781,8 @@ final class AppDelegate: NSObject,
                     let itemInstance = try MenuItem.decode(loadedItem)
                     
                     // Add the Menu Item to the list
-                    self.items.append(itemInstance)
-                    
+                    self.itemList.items.append(itemInstance)
+
                     // FROM 1.7.0
                     // Inject new keys + key mods for..
                     // ... Switch mode
@@ -823,8 +827,8 @@ final class AppDelegate: NSObject,
                 /*
                 if let itemInstance: MenuItem = Serializer.dejsonize(loadedItem) {
                     // Add the Menu Item to the list
-                    self.items.append(itemInstance)
-                    
+                    self.itemList.items.append(itemInstance)
+
                     // FROM 1.7.0
                     // Inject new keys + key mods for..
                     // ... Switch mode
@@ -877,7 +881,7 @@ final class AppDelegate: NSObject,
                     for i: Int in 0..<insertNewDefaults {
                         if let item: MenuItem = getNewMenuItem(defaultItems[MNU_CONSTANTS.BASE_DEFAULT_COUNT + i]) {
                             // Add the menu item to the list and make a menu item
-                            self.items.append(item)
+                            self.itemList.items.append(item)
                             placeMenuItem(item)
                         }
                     }
@@ -897,7 +901,7 @@ final class AppDelegate: NSObject,
             for itemCode in defaultItems {
                 if let item: MenuItem = getNewMenuItem(itemCode) {
                     // Add the menu item to the list
-                    self.items.append(item)
+                    self.itemList.items.append(item)
                     placeMenuItem(item)
                 }
             }
@@ -1016,7 +1020,7 @@ final class AppDelegate: NSObject,
         self.appMenu!.removeAllItems()
         
         // Iterate through the menu items, creating NSMenuItems to represent the visible ones
-        for item: MenuItem in self.items {
+        for item: MenuItem in self.itemList.items {
             placeMenuItem(item, self.optionClick)
         }
         
@@ -1040,10 +1044,20 @@ final class AppDelegate: NSObject,
         
         // We have received a notification from the Configure Window's controller that the
         // list of Menu Items has changed in some way, so rebuild the menu from scratch
+        /*
         if let itemList: MenuItemList = cwvc.menuItems {
-            self.items = itemList.items
+            //self.items = itemList.items
+            self.items.removeAll()
+            for item in itemList.items {
+                self.items.append(item)
+            }
         }
-        
+        */
+
+        if let itemList: MenuItemList = cwvc.menuItems {
+            self.itemList = itemList
+        }
+
         // FROM 1.6.0
         recordKeyPreferences()
         

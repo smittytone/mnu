@@ -30,7 +30,8 @@
 import Cocoa
 
 
-final class MenuItemList: NSObject {
+final class MenuItemList: NSObject,
+                          NSCopying {
 
     // NOTE This very simple class is used solely to allow us to pass
     //      the item list around by reference. The property 'items' is never
@@ -65,5 +66,16 @@ final class MenuItemList: NSObject {
         let result = Serializer.dejsonizeAll(json)
         guard let realResult = result else { throw Serializer.error.BadGroupDeserialization }
         return realResult
+    }
+
+
+    func copy(with zone: NSZone? = nil) -> Any {
+
+        let listCopy = MenuItemList()
+        for item in self.items {
+            listCopy.items.append(item)
+        }
+
+        return listCopy
     }
 }
