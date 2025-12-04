@@ -150,6 +150,7 @@ final class AddUserItemPopoverController: NSViewController,
 
         // Just return the number of icons we have
         
+        self.count = 0
         return self.availableIconImages.count
     }
     

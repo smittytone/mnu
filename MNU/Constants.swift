@@ -173,4 +173,5 @@ struct MNU_CONSTANTS {
     static let TAHOE_ICON_SIZE                  = 16.0
     static let BIG_SUR_ICON_SIZE                = 20.0
     static let CONFIG_TABLE_ROW_HEIGHT          = 32.0
+    static let CUSTOM_ICON_WIDTH                = 192.0     // Picon @3x width
 }

@@ -64,8 +64,6 @@ final class AddUserItemViewController: NSViewController,
     var menuItems: MenuItemList? = nil
     var parentWindow: NSWindow? = nil
     var isEditing: Bool = false
-    // FROM 1.5.0
-    var appDelegate: AppDelegate? = nil
     // FROM 2.0.0
     var customIcons: [CustomIcon] = []
     // FROM 2.1.0
@@ -195,11 +193,21 @@ final class AddUserItemViewController: NSViewController,
                 // FROM 2.0.0
                 self.iconButton.index = item.iconIndex
                 if item.iconIndex >= MNU_CONSTANTS.DEFAULT_ICONS.count {
-                    // We have a custom menu item icon to load
-                    if let imageBytes = loadImage(getImageStoreUrl(item.customImageId)) {
-                        if let image = NSImage(data: imageBytes) {
-                            image.isTemplate = true
-                            self.iconButton.image = image
+                    var loaded = false
+                    for customIcon in self.customIcons {
+                        if customIcon.id == item.customImageId && customIcon.image != nil {
+                            loaded = true
+                            self.iconButton.image = customIcon.image
+                        }
+                    }
+
+                    if !loaded {
+                        // We have a custom menu item icon to load
+                        if let imageBytes = loadImage(getImageStoreUrl(item.customImageId)) {
+                            if let image = NSImage(data: imageBytes) {
+                                image.isTemplate = true
+                                self.iconButton.image = image
+                            }
                         }
                     }
                 } else {
@@ -342,11 +350,9 @@ final class AddUserItemViewController: NSViewController,
         // FROM 1.5.0
         // If we've created an 'open' action, check that the target exists
         if isOpenAction {
-            if let ad: AppDelegate = self.appDelegate {
-                if ad.getAppPath(self.itemScriptText.stringValue) == nil {
-                    showAlert("The app ‘\(self.itemScriptText.stringValue)’ cannot be found", "Please check that you have it installed on your Mac.", self.addItemSheet)
-                    return
-                }
+            if getAppPath(self.itemScriptText.stringValue) == nil {
+                showAlert("The app ‘\(self.itemScriptText.stringValue)’ cannot be found", "Please check that you have it installed on your Mac.", self.addItemSheet)
+                return
             }
         }
 
@@ -700,8 +706,8 @@ final class AddUserItemViewController: NSViewController,
                 
         // Get a scaled version of the image at the required size
         // TODO Report error here (or above)?
-        guard let processedImage = image.resize(to: NSSize(width: 60.0, height: 60.0)) else { return }
-        
+        guard let processedImage = image.resize(to: NSSize(width: MNU_CONSTANTS.CUSTOM_ICON_WIDTH, height: MNU_CONSTANTS.CUSTOM_ICON_WIDTH)) else { return }
+
         // Complete processing (scaling) and set the icon selection button's image
         processedImage.isTemplate = true
         self.hasNewCustomIcon = true

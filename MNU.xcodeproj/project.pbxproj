@@ -15,7 +15,7 @@
 		3B279CC622E7D683005D037D /* MenuItemTableCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */; };
 		3B279CC822E7DD1E005D037D /* MenuItemTableCellButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */; };
 		3B34AB352A2F3BB900F7BDFB /* MenuItemTableCellSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B34AB342A2F3BB900F7BDFB /* MenuItemTableCellSwitch.swift */; };
-		3B4117942D3677FA00CB291D /* Generic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4117932D3677FA00CB291D /* Generic.swift */; };
+		3B4117942D3677FA00CB291D /* Common.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4117932D3677FA00CB291D /* Common.swift */; };
 		3B4DF32A24C72D670065DAAE /* MNUTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B4DF32924C72D670065DAAE /* MNUTests.swift */; };
 		3B5E13CD2D302654007DB1C8 /* PMTabManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3B5E13CC2D302654007DB1C8 /* PMTabManager.swift */; };
 		3B5EA4062EDA51A2001617F0 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 3B5EA4052EDA51A2001617F0 /* AppIcon.icon */; };
@@ -65,7 +65,7 @@
 		3B279CC522E7D683005D037D /* MenuItemTableCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellView.swift; sourceTree = "<group>"; };
 		3B279CC722E7DD1E005D037D /* MenuItemTableCellButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellButton.swift; sourceTree = "<group>"; };
 		3B34AB342A2F3BB900F7BDFB /* MenuItemTableCellSwitch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuItemTableCellSwitch.swift; sourceTree = "<group>"; };
-		3B4117932D3677FA00CB291D /* Generic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Generic.swift; sourceTree = "<group>"; };
+		3B4117932D3677FA00CB291D /* Common.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Common.swift; sourceTree = "<group>"; };
 		3B4DF32724C72D670065DAAE /* MNUTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MNUTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4DF32924C72D670065DAAE /* MNUTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MNUTests.swift; sourceTree = "<group>"; };
 		3B4DF32B24C72D670065DAAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -181,9 +181,9 @@
 				3BCAC5C52D3820D000E35581 /* CustomIcon.swift */,
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
 				3B9180B223439E3A00A5CE3B /* Serializer.swift */,
-				3BA0416C2D35CAAD00164E2D /* Extensions.swift */,
 				3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */,
-				3B4117932D3677FA00CB291D /* Generic.swift */,
+				3BA0416C2D35CAAD00164E2D /* Extensions.swift */,
+				3B4117932D3677FA00CB291D /* Common.swift */,
 				3BE25D1A2B039B2600C2349F /* YOU MUST SUPPLY */,
 				3B01F0DB22EBEBDE0045A78A /* AppleScripts */,
 				3B01F0DC22EBEBF30045A78A /* Bundle Entities */,
@@ -343,7 +343,7 @@
 				3BD30C9A2A3094DF00F022F9 /* AddUserItemKeyTextField.swift in Sources */,
 				3B9180B323439E3B00A5CE3B /* Serializer.swift in Sources */,
 				3B663CE12316D4570020A1DB /* AddUserItemCollectionView.swift in Sources */,
-				3B4117942D3677FA00CB291D /* Generic.swift in Sources */,
+				3B4117942D3677FA00CB291D /* Common.swift in Sources */,
 				3B083B7B22CC3C2E0025F081 /* AppDelegate.swift in Sources */,
 				3BA0416D2D35CAAD00164E2D /* Extensions.swift in Sources */,
 				3BF8085E2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift in Sources */,
@@ -526,7 +526,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 681;
+				CURRENT_PROJECT_VERSION = 682;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
@@ -560,7 +560,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 681;
+				CURRENT_PROJECT_VERSION = 682;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
