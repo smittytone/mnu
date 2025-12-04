@@ -86,8 +86,6 @@ final class ConfigureViewController:  NSViewController,
     var hasChanged: Bool = false
     var isVisible: Bool = false
     var lastChance: Bool = false
-    // FROM 1.5.0
-    var appDelegate: AppDelegate? = nil
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
@@ -310,6 +308,7 @@ final class ConfigureViewController:  NSViewController,
                         // loaded and them converted to an image
                         let customIcon = CustomIcon()
                         customIcon.image = image
+                        customIcon.image?.isTemplate = true
                         customIcon.id = menuItem.customImageId
                         self.customIcons.append(customIcon)
                         menuItem.iconIndex = MNU_CONSTANTS.DEFAULT_ICONS.count - 1 + self.customIcons.count
@@ -452,7 +451,6 @@ final class ConfigureViewController:  NSViewController,
      */
     private func prepareAddEditSheet(_ isEditing: Bool) {
 
-        self.aivc.appDelegate = self.appDelegate
         self.aivc.parentWindow = self.configureWindow!
         self.aivc.menuItems = self.menuItems
         self.aivc.customIcons = self.customIcons
@@ -931,6 +929,9 @@ final class ConfigureViewController:  NSViewController,
             do {
                 let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
                 for file in files {
+                    // Iterate over the files in the store. For each one, check that
+                    // there is an entry in the custom icons list that matches it. If
+                    // none does, delete the file.
                     var got = false
                     for customIcon in self.customIcons {
                         if customIcon.id == file {
@@ -940,6 +941,7 @@ final class ConfigureViewController:  NSViewController,
                     }
 
                     if !got {
+                        // The file has no match in the custom icons list, so zep it
                         do {
                             try FileManager.default.removeItem(atPath: getImageStoreUrl(file).unixpath())
                         } catch {

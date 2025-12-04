@@ -446,19 +446,27 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     Check that the selected terminal is installed by making sure
+     it is in one of the standard Application folders (see `getAppPath()`).
+     Configure Window has already saved the preference.
+
+     FROM 1.6.0
+
+     - Parameters:
+        - choice - The terminal selection.
+
+     - Returns `true` if the terminal is NOT present, `false` if it IS present
+     */
     private func isTerminalMissing(_ choice: Int) -> Bool {
         
-        // FROM 1.6.0
-        // Check that the selected terminal is installed by making sure
-        // it is in the standard Application folders (see 'getAppPath()')
-        // Configure Window has already saved the preference
-        // NOTE Returns 'true' if the app is NOT present, false if it IS present
         if choice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal
             let terminals: [String] = ["iTerm"]
             
-            // 'getAppPath()' returns nil if the app isn't present
-            // Remember to zero-index 'choice'
+            // `getAppPath()` returns nil if the app isn't present
+            // Remember to zero-index `choice` because its zero value
+            // is the macOS terminal
             return getAppPath(terminals[choice - 1]) == nil
         }
         
@@ -739,9 +747,6 @@ final class AppDelegate: NSObject,
 
         // Close the menu - required for controls within views added to menu items
         self.appMenu!.cancelTracking()
-
-        // FROM 1.5.0
-        self.cwvc.appDelegate = self
 
         // Tell the configure window controller to show its window
         self.cwvc.show()
@@ -1768,57 +1773,6 @@ final class AppDelegate: NSObject,
         } else {
             showErrorOnMainThread("App \(appName) cannot be found", "Please provide an absolute path for this app in MNU’s settings")
         }
-    }
-
-
-    /**
-     Check that the named app exists in one of the Mac's possible app locations.
-     FROM 1.5.0
-     
-     - Parameters
-        - named:     The name of the script in the bundle.
-        - doAddPath: `true` to include the `addPath` argument to the
-                     script call (see below).
-    
-        - Returns The app's absolute path including `.app` as an extension,
-                  or `nil` on error.
-     */
-    internal func getAppPath(_ appName: String) -> String? {
-        
-        // Various possible Application locations are...
-        var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
-        
-        // ...and another is...
-        let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
-        if FileManager.default.fileExists(atPath: homeAppPath) {
-            basePaths.append(homeAppPath)
-        }
-        
-        // Run through the above list and check if the name app is there;
-        // if it is, return it
-        for basePath: String in basePaths {
-            // Build the full app path
-            var appPath: String = appName
-            
-            // Make sure our temporary full path ends in '.app'
-            if !appPath.contains(".app") {
-                appPath += ".app"
-            }
-            
-            // Prefix the temp path with the current app folder
-            if !appPath.contains(basePath) {
-                appPath = basePath + "/" + appPath
-            }
-                
-            // Check if the app is there -- if it is, return the full path
-            if FileManager.default.fileExists(atPath: appPath) {
-                return appPath
-            }
-        }
-        
-        // No match for the named app in any location,
-        // so issue a failure note
-        return nil
     }
 
 

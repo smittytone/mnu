@@ -29,14 +29,23 @@
 import AppKit
 
 
+extension URL {
+    
+    func unixpath() -> String {
+        
+        return self.absoluteString.replacingOccurrences(of: "file://", with: "")
+    }
+}
+
+
 extension NSImage {
 
     /**
      Return a copy of the image in the specified size.
-     
+
      - Parameters
         - newSize: The chosen size.
-     
+
      - Returns The resized version of the image, or `nil` on error.
      */
     func resize(to newSize: NSSize) -> NSImage? {
@@ -64,21 +73,15 @@ extension NSImage {
 
         return nil
     }
-}
 
 
-extension URL {
-    
-    func unixpath() -> String {
-        
-        return self.absoluteString.replacingOccurrences(of: "file://", with: "")
-    }
-}
+    /**
+     Generated a negative version, ie. inverted colours, of the image.
 
-
-extension NSImage {
-
+     - Returns An inverted NSImage, or the image itself.
+     */
     func inverted() -> NSImage {
+
         guard let cgImage = self.cgImage(forProposedRect: nil, context: nil, hints: nil) else {
             return self
         }
@@ -99,8 +102,8 @@ extension NSImage {
 
         return NSImage(cgImage: outputCgImage, size: self.size)
     }
-    
-    
+
+
     /**
      Generate a version of the image suitable for display in light more or dark mode.
      The image is always a template, ie. black + clear.
@@ -131,6 +134,11 @@ extension NSImage {
 
 fileprivate extension CIImage {
 
+    /**
+     Convert the CIImage to a CGImage.
+
+     - Returns The image's CGImage equivalent, or `nil` on error.
+     */
     func toCGImage() -> CGImage? {
         let context = CIContext(options: nil)
         if let cgImage = context.createCGImage(self, from: self.extent) {
@@ -143,7 +151,12 @@ fileprivate extension CIImage {
 
 
 extension NSApplication {
-    
+
+    /**
+     Indicate whether the app is in Light mode or not.
+
+     - Returns `true` if the Mac is in light mode, otherwise `false`.
+     */
     func isMacInLightMode() -> Bool {
         
         return (self.effectiveAppearance.name.rawValue == "NSAppearanceNameAqua")
@@ -153,6 +166,11 @@ extension NSApplication {
 
 extension String {
     
+    /**
+     Replace substrings within a String, using Strings.
+
+     - Returns A copy of the String including the replacements.
+     */
     func replace(_ base: String, with: String) -> String {
         return self.replacingOccurrences(of: base, with: with, options: .literal, range: nil)
     }

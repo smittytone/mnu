@@ -1,6 +1,6 @@
 
 /*
-    Generic.swift
+    Common.swift
     MNU
 
     Created by Tony Smith on 01/10/2019.
@@ -94,4 +94,54 @@ func showAlert(_ title: String, _ message: String, _ window: NSWindow) {
     alert.informativeText = message
     alert.addButton(withTitle: "OK")
     alert.beginSheetModal(for: window, completionHandler: nil)
+}
+
+
+/**
+ Check that the named app exists in one of the Mac's possible app locations.
+
+ FROM 1.5.0
+ MOVED 2.1.0
+
+ - Parameters
+    - appName: The name of the script in the bundle.
+
+ - Returns The app's absolute path including `.app` as an extension, or `nil` on error.
+ */
+func getAppPath(_ appName: String) -> String? {
+
+    // Various possible Application locations are...
+    var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
+
+    // ...and another is...
+    let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
+    if FileManager.default.fileExists(atPath: homeAppPath) {
+        basePaths.append(homeAppPath)
+    }
+
+    // Run through the above list and check if the name app is there;
+    // if it is, return it
+    for basePath: String in basePaths {
+        // Build the full app path
+        var appPath: String = appName
+
+        // Make sure our temporary full path ends in '.app'
+        if !appPath.contains(".app") {
+            appPath += ".app"
+        }
+
+        // Prefix the temp path with the current app folder
+        if !appPath.contains(basePath) {
+            appPath = basePath + "/" + appPath
+        }
+
+        // Check if the app is there -- if it is, return the full path
+        if FileManager.default.fileExists(atPath: appPath) {
+            return appPath
+        }
+    }
+
+    // No match for the named app in any location,
+    // so issue a failure note
+    return nil
 }
