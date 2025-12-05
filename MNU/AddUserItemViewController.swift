@@ -157,7 +157,7 @@ final class AddUserItemViewController: NSViewController,
         // FROM 2.0.0
         self.hasNewCustomIcon = false
         
-         if self.isEditing {
+        if self.isEditing {
             // We are presenting an existing item, so get it and populate the sheet's fields accordingly
             if let item: MenuItem = self.newMenuItem {
                 // Populate the fields from the MenuItem property
@@ -203,6 +203,10 @@ final class AddUserItemViewController: NSViewController,
 
                     if !loaded {
                         // We have a custom menu item icon to load
+                        // NOTE This is a backup and is unlikely to be called because loading
+                        //      has been done by `ConfigureViewController`, which passes its
+                        //      list of custom icons (inlcuding loaded images) to
+                        //      `AddUserItemViewController`
                         if let imageBytes = loadImage(getImageStoreUrl(item.customImageId)) {
                             if let image = NSImage(data: imageBytes) {
                                 image.isTemplate = true

@@ -156,7 +156,7 @@ final class ConfigureViewController:  NSViewController,
                                             keyEquivalent: ""))
         // FROM 2.1.0
         self.extrasMenu!.addItem(NSMenuItem.separator())
-        self.extrasMenu!.addItem(NSMenuItem(title: "Clean unused custom icons",
+        self.extrasMenu!.addItem(NSMenuItem(title: "Delete unused custom icons",
                                             action: #selector(self.imageFileGarbageCollection),
                                             keyEquivalent: ""))
         // FROM 1.1.0
@@ -263,10 +263,12 @@ final class ConfigureViewController:  NSViewController,
 
 
     /**
-     Assemble a list of custom icons from the menu item records.
-     This will only include icons that existing menu items know about
+     Assemble a list of custom icons from the icon store.
+     This will include icons mapped to menu items plus any stored
+     images orphaned from menu items.
 
      FROM 2.0.0
+     MODIFIED 2.1.0
      */
     private func getCustomIcons() {
 
@@ -277,45 +279,56 @@ final class ConfigureViewController:  NSViewController,
             self.customIcons.removeAll()
         }
 
-        // Iterate over the menu item list looking for those with custom icons,
-        // ie. their `customImageId` property is set
-        for menuItem in menuItems {
-            if !menuItem.customImageId.isEmpty {
-                // Check that a menu item's custom index doesn't reference one
-                // already loaded -- if so, note its index and move to the next item
-                if self.customIcons.count > 0 {
-                    var index = 0
-                    var got = false
-                    for customIcon in self.customIcons {
-                        if menuItem.customImageId == customIcon.id {
-                            menuItem.iconIndex = index + MNU_CONSTANTS.DEFAULT_ICONS.count
-                            got = true
-                            break
+        // Populate the custom icon list
+        do {
+            // Get the files currently in the store at `~/.congfig/mnu`
+            let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
+            for file in files {
+                // Add the image file to the custom icon list
+                if let customIcon = getCustomIcon(file) {
+                    self.customIcons.append(customIcon)
+
+                    // Determine if one or more menu items claims the current custom icon
+                    for menuItem in menuItems {
+                        if menuItem.customImageId == file {
+                            // The menu item claims the custom icon, so mark the current custom icon as in use...
+                            customIcon.inUse = true
+
+                            // ...and point the menu item at the custom icon in the list
+                            menuItem.iconIndex = MNU_CONSTANTS.DEFAULT_ICONS.count - 1 + self.customIcons.count
                         }
-
-                        index += 1
                     }
-
-                    if got {
-                        continue
-                    }
-                }
-
-                // The menu item's custom icon has not yet been loaded - try to do so now
-                if let imageBytes = loadImage(getImageStoreUrl(menuItem.customImageId)) {
-                    if let image = NSImage(data: imageBytes) {
-                        // Only record a custom icon if we have a path to its file, the data can be
-                        // loaded and them converted to an image
-                        let customIcon = CustomIcon()
-                        customIcon.image = image
-                        customIcon.image?.isTemplate = true
-                        customIcon.id = menuItem.customImageId
-                        self.customIcons.append(customIcon)
-                        menuItem.iconIndex = MNU_CONSTANTS.DEFAULT_ICONS.count - 1 + self.customIcons.count
-                    }
+                } else {
+                    // TODO Better error presentation
+                    print("Could not load image file '\(file)' from the store")
                 }
             }
+        } catch {
+            // NOP
         }
+    }
+
+
+    /**
+     Create a custom item object for a file loaded from disk.
+
+     - Parameters:
+        - filename: The name of the image file to load.
+
+     - Returns A CustomIcon instance, or `nil` on error.
+     */
+    private func getCustomIcon(_ filename: String) -> CustomIcon? {
+        if let imageBytes = loadImage(getImageStoreUrl(filename)) {
+            if let image = NSImage(data: imageBytes) {
+                let customIcon = CustomIcon()
+                image.isTemplate = true
+                customIcon.image = image
+                customIcon.id = filename
+                return customIcon
+            }
+        }
+
+        return nil
     }
 
 
@@ -429,7 +442,7 @@ final class ConfigureViewController:  NSViewController,
     /**
      Invoke the Add User Item sheet for the editing of an existing item.
 
-     - Paramaters
+     - Parameters:
         - item: The menu item selected for editing.
      */
     private func doEdit(_ item: MenuItem) {
@@ -445,7 +458,7 @@ final class ConfigureViewController:  NSViewController,
 
      FROM 2.0.0
 
-     - Paramaters
+     - Parameters:
         - isEditing: `true` if the sheet is to be presented in editing mode,
                      otherwise `false`.
      */
@@ -463,7 +476,7 @@ final class ConfigureViewController:  NSViewController,
     /**
      Delete a menu item, but offer the user a way out first.
 
-     - Paramaters
+     - Parameters:
         - item: The menu item selected for deletion.
      */
     private func doDelete(_ item: MenuItem) {
@@ -927,31 +940,34 @@ final class ConfigureViewController:  NSViewController,
 
         if self.customIcons.count > 0 {
             do {
+                // Iterate over the files in the store.
                 let files = try FileManager.default.contentsOfDirectory(atPath: getImageStoreUrl("").unixpath())
                 for file in files {
-                    // Iterate over the files in the store. For each one, check that
-                    // there is an entry in the custom icons list that matches it. If
-                    // none does, delete the file.
-                    var got = false
+                    // Iterate over the custom icon list to see if any of them claim the file
+                    var claimed = false
                     for customIcon in self.customIcons {
-                        if customIcon.id == file {
-                            got = true
+                        if customIcon.id == file && customIcon.inUse {
+                            claimed = true
                             break
                         }
                     }
 
-                    if !got {
-                        // The file has no match in the custom icons list, so zep it
+                    if !claimed {
+                        // The file has no match in the custom icons list, so zap it as requested
                         do {
                             try FileManager.default.removeItem(atPath: getImageStoreUrl(file).unixpath())
                         } catch {
-                            print("Could not delete \(file)")
+                            // TODO Better error presentation
+                            print("Could not delete unused image file '\(file)' from the store")
                         }
                     }
                 }
             } catch {
                 // NOP
             }
+
+            // Recreate the custom icons list
+            getCustomIcons()
         }
     }
 
@@ -987,10 +1003,8 @@ final class ConfigureViewController:  NSViewController,
         self.menuItemsTableView.reloadData()
         displayItemCount()
 
-        // FROM 2.0.0
-        // Need to add in any new custom icons but keep unused ones
-        // for now in case the user edits the item and selects one.
-        // For now, they'll be zapped when this window reappears.
+        // FROM 2.1.0
+        // Get the custom icon list back from `AddUserItemViewController`
         self.customIcons = self.aivc.customIcons
     }
 

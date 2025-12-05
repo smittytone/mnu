@@ -37,4 +37,6 @@ class CustomIcon {
     
     var id: String = ""                 // The file name/UUID of a saved image
     var image: NSImage? = nil           // The actual image data
+    // FROM 2.1.0
+    var inUse: Bool = false             // Is the icon claimed by a menu item?
 }

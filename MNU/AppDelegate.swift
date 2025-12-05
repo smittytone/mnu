@@ -1483,7 +1483,7 @@ final class AppDelegate: NSObject,
                                   // 2.0.0
                                   false,
                                   false,
-                                  true]
+                                  false]
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
