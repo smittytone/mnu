@@ -103,6 +103,14 @@ class MNUTests: XCTestCase {
 
     func testRunScriptiTerm() throws {
 
+        // FROM 2.1.0 -- only test if iTerm is present
+        let fm = FileManager.default
+        if !fm.fileExists(atPath: "/Applications/iTerm.app") {
+            print("[WARNING] iTerm not installed -- cannot run this test")
+            XCTAssert(true)
+            return
+        }
+
         let codeSample = "cd \"$HOME\"; rm test.txt; echo TEST > test.txt"
         self.appDelegate.terminalIndex = 1
         self.appDelegate.runScript(codeSample)
@@ -110,7 +118,6 @@ class MNUTests: XCTestCase {
         let expectation = XCTestExpectation(description: "Script run")
 
         let _ = Timer.scheduledTimer(withTimeInterval: allowedOpenTime, repeats: false) { (firedTimer) in
-            let fm = FileManager.default
             let npath: NSString = "~/test.txt"
             XCTAssert(fm.fileExists(atPath: npath.expandingTildeInPath))
             expectation.fulfill()
@@ -254,10 +261,11 @@ class MNUTests: XCTestCase {
 
         let list = ["logo_generic", "logo_bash", "logo_brew", "logo_github", "logo_gitlab", "logo_python", "logo_node", "logo_java", "logo_lua", "logo_rust", "logo_perl", "logo_ruby", "logo_as", "logo_multipass", "logo_php", "logo_js", "logo_docker", "logo_doc", "logo_dir", "logo_app", "logo_cog", "logo_sync", "logo_power", "logo_mac", "logo_x"]
 
-        var icons = self.appDelegate.icons
-        icons.removeAll()
+        // FROM 2.1.0 -- Use correct array instance
+        self.appDelegate.icons.removeAll()
         self.appDelegate.makeIconMatrix()
-        XCTAssert(icons.count == list.count)
+        print("\(self.appDelegate.icons.count) should match \(list.count)")
+        XCTAssert(self.appDelegate.icons.count == list.count)
     }
 
 
@@ -287,13 +295,15 @@ class MNUTests: XCTestCase {
         var result: String = Serializer.jsonize(item)
         print(result)
         // Update for 1.7.0 -- add extra members
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
+        // Update for 2.1.0 -- add extra members
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"image":"","keyequivalent":"","keymodflags":0,"output":false,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
 
         item.script = "open \"test\";"
         result = Serializer.jsonize(item)
         print(result)
         // Update for 1.7.0 -- add extra members
-        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"open \"test\";","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
+        // Update for 2.1.0 -- add extra members
+        XCTAssert(result == #"{"code":-1,"direct":false,"hidden":false,"icon":0,"image":"","keyequivalent":"","keymodflags":0,"output":false,"script":"open \"test\";","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}"#)
     }
 
 
@@ -306,7 +316,8 @@ class MNUTests: XCTestCase {
         items.items.append(item)
         let result: String = Serializer.jsonizeAll(items)
         print("*** ",result)
-        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"keyequivalent":"","keymodflags":0,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}]}"#)
+        // Update for 2.1.0 -- add extra members
+        XCTAssert(result == #"{"data":[{"code":-1,"direct":false,"hidden":false,"icon":0,"image":"","keyequivalent":"","keymodflags":0,"output":false,"script":"","title":"","type":-1,"uuid":"8222D482-B44B-4EB5-AD62-1D60D7EA8DBD"}]}"#)
     }
 
 
@@ -338,18 +349,18 @@ class MNUTests: XCTestCase {
 
     
     func testGetAppPath() throws {
-        
+
         var app: String = "Visual Studio Code"
-        XCTAssertNotNil(appDelegate.getAppPath(app))
-        XCTAssert(appDelegate.getAppPath(app)! == "/Applications/Visual Studio Code.app")
+        XCTAssertNotNil(getAppPath(app))
+        XCTAssert(getAppPath(app)! == "/Applications/Visual Studio Code.app")
         
         app = "TextEdit"
-        XCTAssertNotNil(appDelegate.getAppPath(app))
-        XCTAssert(appDelegate.getAppPath(app)! == "/System/Applications/TextEdit.app")
+        XCTAssertNotNil(getAppPath(app))
+        XCTAssert(getAppPath(app)! == "/System/Applications/TextEdit.app")
         
         app = "Screenshot"
-        XCTAssertNotNil(appDelegate.getAppPath(app))
-        XCTAssert(appDelegate.getAppPath(app)! == "/System/Applications/Utilities/Screenshot.app")
+        XCTAssertNotNil(getAppPath(app))
+        XCTAssert(getAppPath(app)! == "/System/Applications/Utilities/Screenshot.app")
         
         
     }
