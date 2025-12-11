@@ -533,6 +533,7 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = MNU;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "MNU sends AppleEvents to Terminal and the OS to trigger the commands you add to its menu.";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -567,6 +568,7 @@
 				ENABLE_APP_SANDBOX = NO;
 				ENABLE_HARDENED_RUNTIME = YES;
 				INFOPLIST_FILE = "MNU/Bundle Entities/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = MNU;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSAppleEventsUsageDescription = "MNU sends AppleEvents to Terminal and the OS to trigger the commands you add to its menu.";
 				LD_RUNPATH_SEARCH_PATHS = (

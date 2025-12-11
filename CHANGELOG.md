@@ -1,6 +1,6 @@
 ## Release Notes ##
 
-- 2.1.0 *Unreleased*
+- 2.1.0 *11 December 2025*
     - Support macOS 26 Tahoe.
     - Add Configuration panel extras menu item to remove unused custom icons from the store.
     - Add an accessory view to the custom image selection panel to indicated supported image file types and useful image information.
