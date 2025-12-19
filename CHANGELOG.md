@@ -1,5 +1,7 @@
 ## Release Notes ##
 
+- 2.1.1 *19 December 2025*
+    - Add sample menu icons for macOS 26.x Tahoe users. **No app code changes**
 - 2.1.0 *11 December 2025*
     - Support macOS 26 Tahoe.
     - Add Configuration panel extras menu item to remove unused custom icons from the store.
