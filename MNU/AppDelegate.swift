@@ -396,6 +396,8 @@ final class AppDelegate: NSObject,
         // Make sure preference is saved
         let defaults: UserDefaults = UserDefaults.standard
         defaults.set(doTurnOn, forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH)
+
+        // NOTE This is deprecated and no longer needed
         defaults.synchronize()
     }
 
@@ -499,6 +501,8 @@ final class AppDelegate: NSObject,
         
         let defaults: UserDefaults = UserDefaults.standard
         defaults.set(savedItems, forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS)
+
+        // NOTE This is deprecated and no longer needed
         defaults.synchronize()
     }
     
@@ -1453,9 +1457,9 @@ final class AppDelegate: NSObject,
         // FROM 1.6.0
         let defaultItemArray: [Int] = [MNU_CONSTANTS.ITEMS.SWITCH.UIMODE, MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP,
                                        MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN, MNU_CONSTANTS.ITEMS.SCRIPT.GIT,
-                                       MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE,
-                                       MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP, MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF,
-                                       MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW]
+                                       MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE, MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE]
+                                       //MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP, MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF,
+                                       //MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW]
 
         let keyArray: [String] = [MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS,
                                   MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS,

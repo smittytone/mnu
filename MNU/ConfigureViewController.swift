@@ -1078,7 +1078,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.cellSwitch.toolTip = "Show or hide this menu item"
                 cell!.cellSwitch.isEnabled = true
 
-                if item.type == .switch || item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                if item.type == .switch {
                     // This is a built-in switch, so disable the edit, delete buttons
                     cell!.buttonB.isEnabled = false
                     cell!.buttonA.isEnabled = false
@@ -1087,6 +1087,12 @@ final class ConfigureViewController:  NSViewController,
                     // Change tooltips for built-ins
                     cell!.buttonB.toolTip = "Built-in menu items can’t be edited"
                     cell!.buttonA.toolTip = "Built-in menu items can’t be deleted"
+                }
+
+                if item.type == .script && item.code != MNU_CONSTANTS.ITEMS.SCRIPT.USER {
+                    // This is a built-in switch, so disable the edit button
+                    cell!.buttonB.isEnabled = false
+                    cell!.buttonB.toolTip = "Built-in menu items can’t be edited"
                 }
 
                 // FROM 2.0.0
