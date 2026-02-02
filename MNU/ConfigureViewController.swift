@@ -1050,7 +1050,7 @@ final class ConfigureViewController:  NSViewController,
                     let labelText = item.title + (self.autoSeparateInForce ? " only visible when separators not added automatically" : "")
                     let attrTitle = NSMutableAttributedString(string: labelText, attributes: [.font: labelFont,
                                                                                               .paragraphStyle: labelParagraphStyle,
-                                                                                              .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.labelColor])
+                                                                                              .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.controlAccentColor])
 
                     cell!.title.attributedStringValue = attrTitle
                 }
