@@ -167,7 +167,7 @@ final class AddUserItemViewController: NSViewController,
                 self.itemScriptText.becomeFirstResponder()
                 self.itemScriptText.currentEditor()?.selectedRange = NSMakeRange(0, 0)
                 self.saveButton.title = "Update"
-                self.textCount.stringValue = "\(item.title.count)/30"
+                self.textCount.stringValue = "\(item.title.count)/128"
                 self.openCheck.state = item.type == .script ? .off : .on
                 self.directCheck.state = item.isDirect ? .on : .off
                 
@@ -232,7 +232,7 @@ final class AddUserItemViewController: NSViewController,
             self.saveButton.title = "Add"
             self.iconButton.image = self.iconImages[0]
             self.iconButton.index = 0
-            self.textCount.stringValue = "0/30"
+            self.textCount.stringValue = "0/128"
             self.openCheck.state = .off
             self.directCheck.state = .off
             // FROM 1.7.0

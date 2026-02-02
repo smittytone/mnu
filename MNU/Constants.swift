@@ -77,7 +77,7 @@ struct MNU_CONSTANTS {
         static let GRAB_WINDOW      = "Screengrab a window"
     }
 
-    static let MENU_TEXT_LEN        = 30
+    static let MENU_TEXT_LEN        = 128
 
     static let MENU_ESC_KEY         = 53
     static let MENU_ARR_KEY         = 124

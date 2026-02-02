@@ -103,7 +103,7 @@
                                             <rect key="frame" x="20" y="81" width="560" height="236"/>
                                             <clipView key="contentView" id="vmc-NL-Sfl">
                                                 <rect key="frame" x="1" y="1" width="558" height="234"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                                <autoresizingMask key="autoresizingMask"/>
                                                 <subviews>
                                                     <tableView focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" tableStyle="fullWidth" alternatingRowBackgroundColors="YES" columnResizing="NO" multipleSelection="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="28" viewBased="YES" floatsGroupRows="NO" id="2ab-77-HWZ">
                                                         <rect key="frame" x="0.0" y="0.0" width="558" height="234"/>
@@ -779,7 +779,7 @@ Gw
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="tbB-1R-3UW"/>
                         </constraints>
-                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a menu label for the command (30 characters max.):" id="OsI-jf-7AS">
+                        <textFieldCell key="cell" lineBreakMode="clipping" title="Enter a menu label for the command (128 characters max.):" id="OsI-jf-7AS">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
