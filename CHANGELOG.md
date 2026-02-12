@@ -5,6 +5,7 @@
     - Increase commands' menu titles from 30 characters to 128.
     - Increase the size of the Configure window to show more items.
     - Allow some sample commands to be deleted.
+    - Make separator lines easier to see in the Configure window.
 - 2.1.1 *19 December 2025*
     - Add sample menu icons for macOS 26.x Tahoe users. **No app code changes**
 - 2.1.0 *11 December 2025*
