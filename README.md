@@ -20,7 +20,7 @@ See [CHANGELOG.md](./CHANGELOG.md)
 
 ## Copyright ##
 
-MNU is copyright &copy; 2025, Tony Smith.
+MNU is copyright &copy; 2026, Tony Smith.
 
 ## Licence ##
 
