@@ -78,8 +78,8 @@
 		3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemPopoverController.swift; sourceTree = "<group>"; };
 		3B910AF52A2DF45500650D14 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		3B910AF62A2DF45500650D14 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = SOURCE_ROOT; };
-		3B910AFC2A2DF55900650D14 /* mnuprep.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = mnuprep.sh; path = scripts/mnuprep.sh; sourceTree = "<group>"; };
-		3B910AFD2A2DF55900650D14 /* postinstall.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = postinstall.sh; path = scripts/postinstall.sh; sourceTree = "<group>"; };
+		3B910AFC2A2DF55900650D14 /* mnuprep.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = mnuprep.sh; path = ../mnu/scripts/mnuprep.sh; sourceTree = "<group>"; };
+		3B910AFD2A2DF55900650D14 /* postinstall.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; name = postinstall.sh; path = ../mnu/scripts/postinstall.sh; sourceTree = "<group>"; };
 		3B9180B223439E3A00A5CE3B /* Serializer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Serializer.swift; sourceTree = "<group>"; };
 		3B938E8F2ED9B7FE00E4B346 /* CHANGELOG.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CHANGELOG.md; sourceTree = "<group>"; };
 		3BA0416C2D35CAAD00164E2D /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -526,7 +526,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 686;
+				CURRENT_PROJECT_VERSION = 200;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
@@ -561,7 +561,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 686;
+				CURRENT_PROJECT_VERSION = 200;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = Y5J3K52DNA;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
