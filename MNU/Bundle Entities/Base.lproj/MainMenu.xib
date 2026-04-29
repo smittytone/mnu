@@ -91,8 +91,6 @@
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <userGuides>
                     <userLayoutGuide affinity="maxY"/>
-                    <userLayoutGuide location="393" affinity="minY"/>
-                    <userLayoutGuide location="379" affinity="minY"/>
                 </userGuides>
                 <subviews>
                     <tabView drawsBackground="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="sBi-nr-qbJ">
@@ -324,7 +322,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <customView translatesAutoresizingMaskIntoConstraints="NO" id="Gdv-8a-wSf">
-                                            <rect key="frame" x="103" y="46" width="395" height="335"/>
+                                            <rect key="frame" x="103" y="57" width="395" height="335"/>
                                             <subviews>
                                                 <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Wit-jC-Lfb">
                                                     <rect key="frame" x="0.0" y="79" width="395" height="16"/>
@@ -502,7 +500,7 @@
                                         <constraint firstItem="WdZ-qr-xzQ" firstAttribute="leading" secondItem="RX0-XS-Gl5" secondAttribute="leading" constant="20" id="mx6-G2-7lz"/>
                                         <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerX" secondItem="RX0-XS-Gl5" secondAttribute="centerX" id="pin-IL-cTQ"/>
                                         <constraint firstAttribute="bottom" secondItem="WdZ-qr-xzQ" secondAttribute="bottom" constant="20" id="vgE-Kn-6Tm"/>
-                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" constant="11.5" id="z8L-bl-J5b"/>
+                                        <constraint firstItem="Gdv-8a-wSf" firstAttribute="centerY" secondItem="RX0-XS-Gl5" secondAttribute="centerY" constant="0.5" id="z8L-bl-J5b"/>
                                     </constraints>
                                 </view>
                             </tabViewItem>
@@ -523,8 +521,8 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
-                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-9d-QDC">
-                                            <rect key="frame" x="50" y="363" width="500" height="22"/>
+                                        <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OVH-9d-QDC">
+                                            <rect key="frame" x="64" y="363" width="473" height="22"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="22" id="ZRp-OU-Nvz"/>
                                                 <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="451" id="z9j-Z4-KMr"/>
@@ -694,14 +692,14 @@ Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
             <value key="minFullScreenContentSize" type="size" width="560" height="384"/>
             <value key="maxFullScreenContentSize" type="size" width="560" height="384"/>
             <view key="contentView" id="kbT-Jg-8jd">
-                <rect key="frame" x="0.0" y="0.0" width="560" height="384"/>
+                <rect key="frame" x="0.0" y="0.0" width="563" height="384"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <userGuides>
                     <userLayoutGuide location="280" affinity="minX"/>
                 </userGuides>
                 <subviews>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WiG-6V-3VE">
-                        <rect key="frame" x="487" y="20" width="53" height="21"/>
+                        <rect key="frame" x="490" y="20" width="53" height="21"/>
                         <buttonCell key="cell" type="push" title="Add" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="uEy-HJ-TK1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -715,7 +713,7 @@ Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
                         </connections>
                     </button>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jm6-VI-8yC">
-                        <rect key="frame" x="405" y="20" width="70" height="21"/>
+                        <rect key="frame" x="408" y="20" width="70" height="21"/>
                         <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="eG8-XP-Wzo">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -746,7 +744,7 @@ Gw
                         </connections>
                     </button>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="v9D-Om-6Ns">
-                        <rect key="frame" x="18" y="324" width="524" height="16"/>
+                        <rect key="frame" x="18" y="324" width="527" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="q1V-qY-SVu"/>
                         </constraints>
@@ -757,7 +755,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3GM-GK-4Xv" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
-                        <rect key="frame" x="20" y="295" width="520" height="21"/>
+                        <rect key="frame" x="20" y="295" width="523" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="cF4-BX-Y42"/>
                         </constraints>
@@ -771,7 +769,7 @@ Gw
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Bc4-ey-6Gh">
-                        <rect key="frame" x="18" y="356" width="520" height="16"/>
+                        <rect key="frame" x="18" y="356" width="523" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="b9N-BZ-58f"/>
                         </constraints>
@@ -782,7 +780,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RJf-rp-4EB">
-                        <rect key="frame" x="20" y="271" width="520" height="16"/>
+                        <rect key="frame" x="20" y="271" width="523" height="16"/>
                         <buttonCell key="cell" type="check" title="Check this box if you just want MNU to open the named application" bezelStyle="regularSquare" imagePosition="leading" inset="2" id="hNT-ID-jQC">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -795,7 +793,7 @@ Gw
                         </connections>
                     </button>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="luN-mo-wfm">
-                        <rect key="frame" x="18" y="208" width="524" height="16"/>
+                        <rect key="frame" x="18" y="208" width="527" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="tbB-1R-3UW"/>
                         </constraints>
@@ -806,7 +804,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <textField focusRingType="none" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIQ-xd-jED" customClass="AddUserItemTextField" customModule="MNU" customModuleProvider="target">
-                        <rect key="frame" x="20" y="179" width="520" height="21"/>
+                        <rect key="frame" x="20" y="179" width="523" height="21"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="21" id="JAk-Wm-1tI"/>
                         </constraints>
@@ -820,7 +818,7 @@ Gw
                         </connections>
                     </textField>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="oWJ-xC-IC0">
-                        <rect key="frame" x="18" y="155" width="524" height="16"/>
+                        <rect key="frame" x="18" y="155" width="527" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="zbG-iz-GfB"/>
                         </constraints>
@@ -857,7 +855,7 @@ Gw
                         </textFieldCell>
                     </textField>
                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Ujx-c9-tjN">
-                        <rect key="frame" x="20" y="249" width="520" height="16"/>
+                        <rect key="frame" x="20" y="249" width="523" height="16"/>
                         <buttonCell key="cell" type="check" title="Check this box to run the command without Terminal (requires an absolute path)" bezelStyle="regularSquare" imagePosition="left" inset="2" id="1Wy-Lg-g68">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                             <font key="font" metaFont="system"/>
@@ -870,7 +868,7 @@ Gw
                         </connections>
                     </button>
                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VJE-2G-TZ5">
-                        <rect key="frame" x="18" y="131" width="524" height="16"/>
+                        <rect key="frame" x="18" y="131" width="527" height="16"/>
                         <constraints>
                             <constraint firstAttribute="height" constant="16" id="Jrg-rc-z0B"/>
                         </constraints>
@@ -908,9 +906,9 @@ Gw
                         </segmentedCell>
                     </segmentedControl>
                     <textField focusRingType="none" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="X29-Bo-ixK" customClass="AddUserItemKeyTextField" customModule="MNU" customModuleProvider="target">
-                        <rect key="frame" x="286" y="98" width="162" height="21"/>
+                        <rect key="frame" x="289" y="98" width="162" height="21"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="162" id="Km7-Zg-Tlz"/>
+                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="162" id="Km7-Zg-Tlz"/>
                             <constraint firstAttribute="height" constant="21" id="hB4-bM-cjc"/>
                         </constraints>
                         <textFieldCell key="cell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" allowsUndo="NO" sendsActionOnEndEditing="YES" borderStyle="bezel" placeholderString="Key" drawsBackground="YES" usesSingleLineMode="YES" id="1hG-V3-G4u">
@@ -970,11 +968,12 @@ Gw
                     <constraint firstAttribute="bottom" secondItem="pUX-If-hMp" secondAttribute="bottom" constant="60" id="Zro-kP-kwA"/>
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="top" secondItem="luN-mo-wfm" secondAttribute="bottom" constant="8" id="bD5-kL-WuP"/>
                     <constraint firstAttribute="trailing" secondItem="RJf-rp-4EB" secondAttribute="trailing" constant="20" id="enb-3M-FCl"/>
+                    <constraint firstAttribute="trailing" secondItem="X29-Bo-ixK" secondAttribute="trailing" constant="112" id="fpt-bu-cIE"/>
                     <constraint firstItem="aL9-Qa-3Zh" firstAttribute="top" secondItem="VJE-2G-TZ5" secondAttribute="bottom" constant="12" id="gQG-vd-tyg"/>
                     <constraint firstAttribute="bottom" secondItem="WiG-6V-3VE" secondAttribute="bottom" constant="20" id="hCg-2a-Ll8"/>
                     <constraint firstItem="PIQ-xd-jED" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="hSp-QW-xyk"/>
                     <constraint firstItem="TZc-Df-MOS" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" symbolic="YES" id="i0N-Ky-Cb9"/>
-                    <constraint firstItem="X29-Bo-ixK" firstAttribute="leading" secondItem="aL9-Qa-3Zh" secondAttribute="trailing" constant="5" id="jTy-bM-muf"/>
+                    <constraint firstItem="X29-Bo-ixK" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="aL9-Qa-3Zh" secondAttribute="trailing" symbolic="YES" id="jTy-bM-muf"/>
                     <constraint firstAttribute="trailing" secondItem="Ujx-c9-tjN" secondAttribute="trailing" constant="20" id="lJh-gz-4CE"/>
                     <constraint firstItem="Ujx-c9-tjN" firstAttribute="leading" secondItem="kbT-Jg-8jd" secondAttribute="leading" constant="20" id="lki-BM-wiu"/>
                     <constraint firstItem="oWJ-xC-IC0" firstAttribute="top" secondItem="PIQ-xd-jED" secondAttribute="bottom" constant="8" id="lmv-ph-ZHY"/>
@@ -1210,7 +1209,7 @@ Gw
             <rect key="frame" x="0.0" y="0.0" width="336" height="336"/>
             <clipView key="contentView" id="ziH-fv-EY4">
                 <rect key="frame" x="1" y="1" width="334" height="334"/>
-                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <collectionView id="ecd-BA-2ts">
                         <rect key="frame" x="0.0" y="0.0" width="334" height="334"/>
