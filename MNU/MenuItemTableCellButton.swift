@@ -26,8 +26,7 @@
     SOFTWARE.
  */
 
-
-import Cocoa
+import AppKit
 
 
 final class MenuItemTableCellButton: NSButton {

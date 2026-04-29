@@ -26,8 +26,7 @@
     SOFTWARE.
 */
 
-
-import Cocoa
+import AppKit
 
 
 final class AddUserItemPopoverController: NSViewController,

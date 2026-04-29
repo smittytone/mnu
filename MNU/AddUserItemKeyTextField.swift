@@ -25,8 +25,8 @@
     SOFTWARE.
  */
 
+import AppKit
 
-import Cocoa
 
 /*
     Subclass NSTextField so we can reference a linked NSSegmentedControl. This

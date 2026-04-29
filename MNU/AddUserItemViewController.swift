@@ -26,7 +26,6 @@
     SOFTWARE.
  */
 
-
 import AppKit
 import UniformTypeIdentifiers
 

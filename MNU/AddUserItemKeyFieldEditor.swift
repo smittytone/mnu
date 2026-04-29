@@ -25,8 +25,7 @@
     SOFTWARE.
  */
 
-
-import Cocoa
+import AppKit
 
 
 /*

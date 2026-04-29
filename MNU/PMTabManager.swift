@@ -26,8 +26,6 @@
     SOFTWARE.
  */
 
-
-import Foundation
 import AppKit
 
 /**
