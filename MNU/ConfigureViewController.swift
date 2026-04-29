@@ -802,12 +802,20 @@ final class ConfigureViewController:  NSViewController,
     private func doExport() {
 
         // Create a save panel for the export operation...
-        let savePanel: NSSavePanel = NSSavePanel()
-        savePanel.allowedFileTypes = ["json"]
+        let savePanel = NSSavePanel()
+
+        // FROM 2.2.0 -- Monterey requirements
+        if let fileType = UTType(filenameExtension: "json", conformingTo: .json) {
+            savePanel.allowedContentTypes = [fileType]
+        }
+
         savePanel.allowsOtherFileTypes = false
         savePanel.canCreateDirectories = true
         savePanel.nameFieldStringValue = "MNUItems"
         savePanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
+        // FROM 2.2.0
+        savePanel.isExtensionHidden = false
+        
 
         // ...and show it
         savePanel.beginSheetModal(for: self.view.window!) { (response) in
