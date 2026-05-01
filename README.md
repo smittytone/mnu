@@ -1,4 +1,4 @@
-# MNU 2.2.0
+# MNU 2.3.0
 
 For usage and other information, please see [the MNU web site](https://smittytone.net/mnu/index.html).
 
