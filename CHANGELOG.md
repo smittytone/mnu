@@ -1,14 +1,18 @@
 ## Release Notes ##
 
-- 2.2.0 *Unreleased*
-    - Remove unloved sample commands from the default setup.
-    - Allow some sample commands to be deleted.
-    - Increase commands' menu titles from 30 characters to 128.
-    - Increase the size of the Configure window to show more items, and allow it to be resized vertically.
-    - Update the Configure window to resize according to the content shown in each tab.
-    - Update the Configure window’s Settings UI.
-    - Make separator lines more visible in the Configure window's MNU items list UI.
+- 2.3.0 *Unreleased*
+    - Update the Configure MNU window UI:
+        - Increase the size of the window to show more items, and allow it to be resized vertically.
+        - Auto-resize the window to match the content shown in each tab.
+        - Update the Settings layout and style.
+        - Make separator lines even more visible in the MNU items list UI.
     - Prepare to support other terminal emulators.
+- 2.2.0 *12 February 2026*
+    - Remove unloved sample commands from the default setup.
+    - Increase commands’ menu titles from 30 characters to 128.
+    - Increase the size of the Configure window to show more items.
+    - Allow some sample commands to be deleted.
+    - Make separator lines easier to see in the Configure window.
 - 2.1.1 *19 December 2025*
     - Add sample menu icons for macOS 26.x Tahoe users. **No app code changes**
 - 2.1.0 *11 December 2025*
