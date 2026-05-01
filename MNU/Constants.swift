@@ -26,6 +26,8 @@
     SOFTWARE.
  */
 
+import Foundation
+
 
 // Combine the app's various constants into a struct
 
@@ -174,4 +176,15 @@ struct MNU_CONSTANTS {
     static let BIG_SUR_ICON_SIZE                = 20.0
     static let CONFIG_TABLE_ROW_HEIGHT          = 32.0
     static let CUSTOM_ICON_WIDTH                = 192.0     // Picon @3x width
+
+    // FROM 2.2.0
+    static let CONFIG_WINDOW_WIDTH              = 600.0
+    struct CONFIG_TAB_PANEL_SIZE {
+
+        static let MENU_LIST                    = NSSize(width: CONFIG_WINDOW_WIDTH, height: 500.0)
+        static let MENU_LIST_MAX                = NSSize(width: 1024.0, height: 1500.0)
+        static let SETTINGS                     = NSSize(width: CONFIG_WINDOW_WIDTH, height: 400.0)
+        static let ABOUT                        = NSSize(width: CONFIG_WINDOW_WIDTH, height: 320.0)
+    }
+
 }

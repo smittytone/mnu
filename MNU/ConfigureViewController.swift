@@ -41,6 +41,7 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - UI Outlets
 
     @IBOutlet var windowTabView: NSTabView!
+    @IBOutlet var window: NSWindow!
 
     // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
@@ -53,17 +54,23 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet weak var applyChangesButton: NSButton!
 
     // Settings Tab
-    @IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
-    @IBOutlet weak var prefsNewTermTabButton: NSButton!
-    @IBOutlet weak var prefsShowImagesButton: NSButton!
+    //@IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
+    //@IBOutlet weak var prefsNewTermTabButton: NSButton!
+    //@IBOutlet weak var prefsShowImagesButton: NSButton!
     @IBOutlet weak var prefsHelpButton: NSButton!
     // FROM 1.6.0
     @IBOutlet weak var prefsTerminalChoiceTerminal: NSButton!
     @IBOutlet weak var prefsTerminalChoiceITerm2: NSButton!
     // FROM 2.0.0
-    @IBOutlet weak var prefsAutoSeparateButton: NSButton!
-    @IBOutlet weak var prefsDirectOutpuButton: NSButton!
-
+    //@IBOutlet weak var prefsAutoSeparateButton: NSButton!
+    //@IBOutlet weak var prefsDirectOutpuButton: NSButton!
+    // FROM 2.2.0
+    @IBOutlet weak var prefsLaunchAtLoginSwitch: NSSwitch!
+    @IBOutlet weak var prefsNewTermTabSwitch: NSSwitch!
+    @IBOutlet weak var prefsShowImagesSwitch: NSSwitch!
+    @IBOutlet weak var prefsAutoSeparateSwitch: NSSwitch!
+    @IBOutlet weak var prefsDirectOutputSwitch: NSSwitch!
+    
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
     @IBOutlet weak var fbvc: FeedbackSheetViewController!
@@ -173,24 +180,19 @@ final class ConfigureViewController:  NSViewController,
 
         // Preferences/Settings Tab
         self.prefsHelpButton.toolTip          = "Click here for help with this tab"
-        self.prefsLaunchAtLoginButton.toolTip = "Check to automatically launch MNU when your Mac starts up"
-        self.prefsNewTermTabButton.toolTip    = "Check to run commands in new Terminal tabs"
-        self.prefsShowImagesButton.toolTip    = "Check to display images alongside MNU menu items"
+        self.prefsLaunchAtLoginSwitch.toolTip = "Check to automatically launch MNU when your Mac starts up"
+        self.prefsNewTermTabSwitch.toolTip    = "Check to run commands in new Terminal tabs"
+        self.prefsShowImagesSwitch.toolTip    = "Check to display images alongside MNU menu items"
 
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
 
-        // Configure the tab manager
-        self.tabManager.parent = self
-        self.tabManager.buttons.append(self.tabButtonMenu)
-        self.tabManager.buttons.append(self.tabButtonSettings)
-        self.tabManager.buttons.append(self.tabButtonAbout)
-
-        // Add callback closures, one per tab, to the tab manager
-        // NOTE Can probably remove this
-        self.tabManager.callbacks.append(nil)   // Info tab
-        self.tabManager.callbacks.append(nil)   // Settings tab
-        self.tabManager.callbacks.append(nil)   // Feedback tab
+        // Configure the tab manager and its tabs
+        self.tabManager.parentController = self
+        self.tabManager.parentWindow = self.window
+        self.tabManager.buttons = [self.tabButtonMenu, self.tabButtonSettings, self.tabButtonAbout]
+        // FROM 2.0.0
+        makeTabs(self.tabManager)
 
         self.tabButtonMenu.toolTip     = "Configure MNU’s menu items"
         self.tabButtonSettings.toolTip = "Apply MNU settings"
@@ -217,9 +219,9 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
         let defaults: UserDefaults = UserDefaults.standard
-        self.prefsLaunchAtLoginButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH) ? .on : .off
-        self.prefsNewTermTabButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
-        self.prefsShowImagesButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
+        self.prefsLaunchAtLoginSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH) ? .on : .off
+        self.prefsNewTermTabSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
+        self.prefsShowImagesSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
         // FROM 1.6.0
         self.terminalChoice = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
         switch(self.terminalChoice) {
@@ -228,6 +230,16 @@ final class ConfigureViewController:  NSViewController,
             // Add other non-zero cases here to include other terminals
             default:
                 self.prefsTerminalChoiceTerminal.state = .on
+        }
+
+        // FROM 2.2.0
+        // Update the
+        setListTabSize()
+        if let pw = self.window {
+            let targetTab = self.tabManager.tabs[self.tabManager.currentIndex]
+            if let targetSize = targetTab.currentSize {
+                pw.setContentSize(targetSize)
+            }
         }
 
         // FROM 1.1.0
@@ -240,12 +252,12 @@ final class ConfigureViewController:  NSViewController,
 
         // FROM 2.0.0
         // Set up auto separation and its effect on controls
-        self.prefsAutoSeparateButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
-        self.autoSeparateInForce = self.prefsAutoSeparateButton.state == .on ? true : false
+        self.prefsAutoSeparateSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE) ? .on : .off
+        self.autoSeparateInForce = self.prefsAutoSeparateSwitch.state == .on ? true : false
 
         // Set up output for direct commands
-        self.prefsDirectOutpuButton.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT) ? .on : .off
-        self.doShowOutput = self.prefsDirectOutpuButton.state == .on ? true : false
+        self.prefsDirectOutputSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT) ? .on : .off
+        self.doShowOutput = self.prefsDirectOutputSwitch.state == .on ? true : false
 
         // FROM 2.0.0
         // Assemble a set of custom icons
@@ -657,7 +669,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleLaunchAtLogin(sender: Any?) {
 
-        let action: String = (self.prefsLaunchAtLoginButton.state == NSControl.StateValue.on
+        let action: String = (self.prefsLaunchAtLoginSwitch.state == NSControl.StateValue.on
                               ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED
                               : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
 
@@ -674,7 +686,7 @@ final class ConfigureViewController:  NSViewController,
     private func doToggleItemImages(sender: Any?) {
 
         let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsShowImagesButton.state == .on ? true : false
+        let state = self.prefsShowImagesSwitch.state == .on ? true : false
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
 
         // Notify the menu that it needs to change
@@ -691,7 +703,7 @@ final class ConfigureViewController:  NSViewController,
     private func doSetTermPref(sender: Any?) {
 
         let defaults: UserDefaults = UserDefaults.standard
-        self.tabOpenChoice = self.prefsNewTermTabButton.state == .on ? true : false
+        self.tabOpenChoice = self.prefsNewTermTabSwitch.state == .on ? true : false
         defaults.set(self.tabOpenChoice, forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
 
         // FROM 1.6.0
@@ -739,7 +751,7 @@ final class ConfigureViewController:  NSViewController,
     private func doToggleAutoSeparate(sender: Any?) {
 
         let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsAutoSeparateButton.state == .on ? true : false
+        let state = self.prefsAutoSeparateSwitch.state == .on ? true : false
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
 
         // Setting this disables manually created separators so enable/disable
@@ -763,7 +775,7 @@ final class ConfigureViewController:  NSViewController,
     private func doToggleShowDirectOutput(sender: Any?) {
 
         let defaults: UserDefaults = UserDefaults.standard
-        let state = self.prefsDirectOutpuButton.state == .on ? true : false
+        let state = self.prefsDirectOutputSwitch.state == .on ? true : false
         self.doShowOutput = state
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
 
@@ -1067,14 +1079,16 @@ final class ConfigureViewController:  NSViewController,
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.toolTip = "Delete this menu item"
                 cell!.buttonA.isEnabled = true
-                cell!.buttonA.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
+                cell!.buttonA.controlSize = .small
+                cell!.buttonA.imageScaling = .scaleProportionallyDown
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage(named: "NSTouchBarComposeTemplate")
                 cell!.buttonB.action = #selector(self.doTableButtonEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit this menu item"
                 cell!.buttonB.isEnabled = item.type != .separator
-                cell!.buttonB.imageScaling = self.systemVersion > 10 ? .scaleProportionallyUpOrDown : .scaleProportionallyDown
+                cell!.buttonB.controlSize = .small
+                cell!.buttonB.imageScaling = .scaleProportionallyDown
                 cell!.buttonB.menuItem = item
 
                 // FROM 1.7.0
@@ -1084,6 +1098,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.cellSwitch.action = #selector(self.doShowHideSwitch(sender:))
                 cell!.cellSwitch.toolTip = "Show or hide this menu item"
                 cell!.cellSwitch.isEnabled = true
+                cell!.cellSwitch.controlSize = .mini
 
                 if item.type == .switch {
                     // This is a built-in switch, so disable the edit, delete buttons
@@ -1376,15 +1391,12 @@ final class ConfigureViewController:  NSViewController,
         if let list: MenuItemList = self.menuItems {
             if list.items.count > 0 {
                 for item: MenuItem in list.items {
-                    if !item.isHidden && item.type != .separator {
+                    if !item.isHidden { //}&& item.type != .separator {
                         // Real items, visible
                         count += 1
                     }
 
-                    if !item.isHidden {
-                        // Real items, all
-                        total += 1
-                    }
+                    total += 1
                 }
             }
         }
@@ -1394,7 +1406,7 @@ final class ConfigureViewController:  NSViewController,
         let countText: String = count == 0 ? "no" : "\(count)"
 
         // Display the text
-        menuItemsCountText.stringValue = "MNU is showing \(countText) of \(total) \(itemText) (Option-click the menu to show all items)"
+        menuItemsCountText.stringValue = "MNU will show \(countText) of \(total) \(itemText) (Option-click MNU to show all items)"
     }
 
 
@@ -1423,4 +1435,56 @@ final class ConfigureViewController:  NSViewController,
         return true
     }
 
+
+    /**
+     Generate the three tabs used in this app and controlled by `tabManager`.
+
+     - Parameters:
+        - atm: A TabManager instance.
+     */
+    private func makeTabs(_ atm: PMTabManager) {
+
+        let listTab = PMTab()
+        listTab.name = "list"
+        listTab.isResizeable = true
+        listTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.MENU_LIST
+        listTab.minimumSize = listTab.defaultSize
+        listTab.maximumSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.MENU_LIST_MAX
+
+        let settingsTab = PMTab()
+        settingsTab.name = "settings"
+        settingsTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.SETTINGS
+
+        let aboutTab = PMTab()
+        aboutTab.name = "settings"
+        aboutTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.ABOUT
+
+        atm.tabs = [listTab, settingsTab, aboutTab]
+    }
+
+
+    /**
+     Called when just before the Config window appears, we use it to set a 'maximum content'
+     window size for the List tab based on the number of items in the list.
+
+     FROM 2.2.0
+     */
+    private func setListTabSize() {
+
+        guard self.tabManager.tabs.count > 0 else { return }
+        let targetTab = self.tabManager.tabs[0]
+
+        // Count the total number of MNU items in the list and the
+        // number of those that are set to be visible
+        let itemCount: Double
+        if let items: MenuItemList = self.menuItems {
+            itemCount = Double(items.items.count)
+        } else {
+            itemCount = 1.0
+        }
+
+        if targetTab.currentSize == nil {
+            targetTab.currentSize = NSSize(width: 600.0, height: 190.0 + (itemCount * 32.0))
+        }
+    }
 }

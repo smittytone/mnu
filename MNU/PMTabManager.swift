@@ -32,27 +32,38 @@ import AppKit
     Manager class for the NSTabView
  */
 
-class PMTabManager {
-    
+final public class PMTabManager {
+
     // MARK: - Public Properties
     
     var buttons: [NSButton] = []
-    var callbacks: [(()->Void)?] = []
-    var parent: ConfigureViewController? = nil
+    var parentController: ConfigureViewController? = nil
     var currentIndex: Int = 0
-    
-    
-    /**
-     Return the most recently clicked button.
-     
-     - Returns:
-        The button as an NSButton instance.
-     */
-    func currentButton() -> NSButton {
-        
-        return self.buttons[self.currentIndex]
+    // FROM 2.2.0
+    var parentWindow: NSWindow? = nil
+    var tabs: [PMTab] = []
+
+    var currentName: String? {
+        get {
+            guard self.tabs.count > self.currentIndex else { return nil }
+            return self.tabs[self.currentIndex].name
+        }
     }
-    
+
+    var currentButton: NSButton? {
+        get {
+            guard self.buttons.count > self.currentIndex else { return nil }
+            return self.buttons[self.currentIndex]
+        }
+    }
+
+    var currentTab: PMTab? {
+        get {
+            guard self.tabs.count > self.currentIndex else { return nil }
+            return self.tabs[self.currentIndex]
+        }
+    }
+
     
     /**
      Process the action of clicking one of the tab manager's buttons.
@@ -60,22 +71,30 @@ class PMTabManager {
      - Parameters:
         - button: The NSButton clicked.
      */
-    func buttonClicked(_ button: NSButton) {
-        
+    public func buttonClicked(_ button: NSButton) {
+
         // Check the user isn't just clicking the button for the tab that
         // they're already on. If they do, bail.
-        if button == self.buttons[currentIndex] {
-            self.buttons[currentIndex].state = .on
-            self.buttons[currentIndex].contentTintColor = .controlAccentColor
-            return
-        }
+        guard self.buttons.count > self.currentIndex else { return }
+        guard button != self.buttons[currentIndex] else { return }
+        //    self.buttons[currentIndex].state = .on
+        //    self.buttons[currentIndex].contentTintColor = .controlAccentColor
+        //    return
+        //}
 
         // Make sure we have access to the parent controller
-        guard let cvc: ConfigureViewController = self.parent else { return }
+        guard let cvc: ConfigureViewController = self.parentController else { return }
         
         // Select the required tab based on the button clicked
         guard let nextIndex: Int = self.buttons.firstIndex(of: button) else { return }
-        
+
+        // Moving from tab zero? Then preserve its size
+        if let pw = self.parentWindow {
+            if self.currentIndex == 0 {
+                self.tabs[0].currentSize = pw.contentView?.frame.size ?? MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.MENU_LIST
+            }
+        }
+
         // Enable the current tab's button and disable the rest
         self.currentIndex = nextIndex
         for i in 0..<self.buttons.count {
@@ -90,31 +109,22 @@ class PMTabManager {
         
         // Perform tab-specific logic BEFORE switching
         // NOTE These closures are set in the app delegate
-        switch nextIndex {
-            case 1:
-                if let handler = self.callbacks[1] {
-                    handler()
-                }
-            case 2:
-                if let handler = self.callbacks[2] {
-                    handler()
-                }
-            default: // 0
-                if let handler = self.callbacks[0] {
-                    handler()
-                }
+        let nextTab = self.tabs[nextIndex]
+        if let handler = nextTab.callback {
+            handler()
         }
-        
+
         // Select the tab we're going to show
         cvc.windowTabView.selectTabViewItem(at: nextIndex)
+        sizeWindow()
     }
     
     
     /**
      Auto-click a button by passing in the 'clicked' button.
      */
-    func programmaticallyClickButton(_ button: NSButton) {
-        
+    public func programmaticallyClickButton(_ button: NSButton) {
+
         buttonClicked(button)
     }
     
@@ -122,9 +132,30 @@ class PMTabManager {
     /**
      Auto-click a button by passing in the index of the 'clicked' button.
      */
-    func programmaticallyClickButton(at index: Int) {
-        
+    public func programmaticallyClickButton(at index: Int) {
+
         buttonClicked(self.buttons[index])
+    }
+
+
+    /**
+     Set the window's content size on a tab switch, provided a size has
+     been set.
+     */
+    private func sizeWindow() {
+
+        guard let pw = parentWindow else { return }
+        guard self.tabs.count > self.currentIndex else { return }
+        let targetTab = self.tabs[self.currentIndex]
+        guard let targetSize = self.tabs[self.currentIndex].currentSize else { return }
+        pw.setContentSize(targetSize)
+
+        if targetTab.isResizeable {
+            guard let maxSize = self.tabs[self.currentIndex].maximumSize else { return }
+            guard let minSize = self.tabs[self.currentIndex].minimumSize else { return }
+            pw.contentMaxSize = maxSize
+            pw.contentMinSize = minSize
+        }
     }
 }
 
