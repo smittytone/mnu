@@ -41,6 +41,7 @@
 		3BE25D1F2B039C5800C2349F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BE25D1B2B039B3800C2349F /* Assets.xcassets */; };
 		3BE25D202B039C5900C2349F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3BE25D1B2B039B3800C2349F /* Assets.xcassets */; };
 		3BE532922D40F1C6006670AA /* DirectOutputWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */; };
+		3BF692682FA4792A0061D0D7 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF692672FA479240061D0D7 /* SeparatorView.swift */; };
 		3BF8085E2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */; };
 /* End PBXBuildFile section */
 
@@ -97,6 +98,7 @@
 		3BE25D1B2B039B3800C2349F /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Assets.xcassets"; sourceTree = SOURCE_ROOT; };
 		3BE25D1C2B039B7E00C2349F /* Secrets.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Secrets.swift; path = "../../Library/Mobile Documents/com~apple~CloudDocs/Documents/Programming/mnu/Secrets.swift"; sourceTree = SOURCE_ROOT; };
 		3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectOutputWindow.swift; sourceTree = "<group>"; };
+		3BF692672FA479240061D0D7 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyFieldEditor.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,6 +181,7 @@
 				3B787A96230F132500468D3F /* AddUserItemPopoverController.swift */,
 				3B787A92230EF0B400468D3F /* AddUserItemCollectionViewItem.swift */,
 				3B663CE02316D4570020A1DB /* AddUserItemCollectionView.swift */,
+				3BF692672FA479240061D0D7 /* SeparatorView.swift */,
 				3B01F0DE22EC175C0045A78A /* FeedbackSheetViewController.swift */,
 				3BBEF08E22CEC634001D1CCB /* MenuItem.swift */,
 				3BCAC5C52D3820D000E35581 /* CustomIcon.swift */,
@@ -355,6 +358,7 @@
 				3BCBFD6623DF426A0018C0BC /* AddUserItemTextField.swift in Sources */,
 				3B41DF412FA4413100C7CC87 /* PMTab.swift in Sources */,
 				3B787A94230EF0B400468D3F /* AddUserItemCollectionViewItem.swift in Sources */,
+				3BF692682FA4792A0061D0D7 /* SeparatorView.swift in Sources */,
 				3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */,
 				3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */,
 				3B34AB352A2F3BB900F7BDFB /* MenuItemTableCellSwitch.swift in Sources */,

@@ -176,3 +176,28 @@ extension String {
     }
 }
 
+
+extension NSAttributedString {
+
+    /**
+     Return the width of the rendered string in points.
+     */
+    var width: CGFloat {
+        let rectA = boundingRect(
+          with: NSSize(width: Double.infinity, height: Double.infinity),
+          options: [.usesLineFragmentOrigin]
+        )
+
+        let textStorage = NSTextStorage(attributedString: self)
+        let textContainer = NSTextContainer()
+        let layoutManager = NSLayoutManager()
+
+        layoutManager.addTextContainer(textContainer)
+        textStorage.addLayoutManager(layoutManager)
+        textContainer.lineFragmentPadding = 0.0
+        layoutManager.glyphRange(for: textContainer)
+
+        let rectB = layoutManager.usedRect(for: textContainer)
+        return ceil(max(rectA.width, rectB.width))
+    }
+}

@@ -1072,6 +1072,14 @@ final class ConfigureViewController:  NSViewController,
                                                                                               .foregroundColor: self.autoSeparateInForce ? NSColor.gray : NSColor.controlAccentColor])
 
                     cell!.title.attributedStringValue = attrTitle
+
+                    // FROM 2.2.0
+                    // Add experimental signifier
+                    let lineView = SeparatorView()
+                    lineView.setFrameOrigin(CGPoint(x: attrTitle.width + 8.0, y: 15.0))
+                    lineView.setFrameSize(CGSize(width: cell!.cellSwitch.frame.origin.x - attrTitle.width - 24.0, height: 2.0))
+                    lineView.alphaValue = 0.5
+                    cell!.addSubview(lineView, positioned: .below, relativeTo: cell!.title)
                 }
 
                 // NOTE Buttons named in order, from the Left to Right
