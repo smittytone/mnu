@@ -183,7 +183,7 @@ struct MNU_CONSTANTS {
 
         static let MENU_LIST                    = NSSize(width: CONFIG_WINDOW_WIDTH, height: 500.0)
         static let MENU_LIST_MAX                = NSSize(width: 1024.0, height: 1500.0)
-        static let SETTINGS                     = NSSize(width: CONFIG_WINDOW_WIDTH, height: 400.0)
+        static let SETTINGS                     = NSSize(width: CONFIG_WINDOW_WIDTH, height: 440.0)
         static let ABOUT                        = NSSize(width: CONFIG_WINDOW_WIDTH, height: 320.0)
     }
 
