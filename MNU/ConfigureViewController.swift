@@ -41,7 +41,7 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - UI Outlets
 
     @IBOutlet var windowTabView: NSTabView!
-    @IBOutlet var window: NSWindow!
+    @IBOutlet var window: PMConfigureWindow!
 
     // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
@@ -193,6 +193,7 @@ final class ConfigureViewController:  NSViewController,
         self.tabButtonAbout.toolTip    = "Learn more about MNU"
 
         self.feedbackButton.contentTintColor = .controlAccentColor
+        
     }
 
 

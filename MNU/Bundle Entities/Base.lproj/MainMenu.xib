@@ -77,7 +77,7 @@
             </constraints>
             <point key="canvasLocation" x="-116.5" y="328"/>
         </customView>
-        <window title="Configure MNU" separatorStyle="none" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="d1y-yZ-vmh">
+        <window title="Configure MNU" separatorStyle="none" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="d1y-yZ-vmh" customClass="PMConfigureWindow" customModule="MNU" customModuleProvider="target">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="240" width="600" height="500"/>
@@ -86,8 +86,8 @@
             <value key="maxSize" type="size" width="600" height="1500"/>
             <value key="minFullScreenContentSize" type="size" width="600" height="500"/>
             <value key="maxFullScreenContentSize" type="size" width="600" height="1500"/>
-            <view key="contentView" id="gNH-Un-C4x">
-                <rect key="frame" x="0.0" y="0.0" width="600" height="500"/>
+            <view key="contentView" misplaced="YES" id="gNH-Un-C4x">
+                <rect key="frame" x="0.0" y="0.0" width="596" height="500"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <userGuides>
                     <userLayoutGuide affinity="maxY"/>
@@ -731,9 +731,9 @@
                                                         </constraints>
                                                         <textFieldCell key="cell" refusesFirstResponder="YES" allowsUndo="NO" alignment="center" id="Ndt-gO-aw4">
                                                             <font key="font" metaFont="label" size="9"/>
-                                                            <mutableString key="title">This software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and  non-infringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.  Organizaion logotypes used in menu icons remain the property of their respective organizations. This software in no way claims ownership of those logotypes, and use of those logotypes does not imply any recommendation of this software  by the owner organizations.
+                                                            <string key="title">This software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and  non-infringement. in no event shall the authors or copyright holders be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the software.  Organizaion logotypes used in menu icons remain the property of their respective organizations. This software in no way claims ownership of those logotypes, and use of those logotypes does not imply any recommendation of this software  by the owner organizations.
 
-Source code and design copyright © 2026, Tony Smith (@smittytone).</mutableString>
+Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>

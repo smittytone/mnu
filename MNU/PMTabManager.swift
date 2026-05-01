@@ -146,9 +146,17 @@ final public class PMTabManager {
 
         guard let pw = parentWindow else { return }
         guard self.tabs.count > self.currentIndex else { return }
+
         let targetTab = self.tabs[self.currentIndex]
         guard let targetSize = self.tabs[self.currentIndex].currentSize else { return }
-        pw.setContentSize(targetSize)
+
+        var windowTopLeftPoint = pw.frame.origin
+        windowTopLeftPoint.y += pw.frame.size.height - targetSize.height - 32
+
+        let targetRect = NSRect(origin: pw.frame.origin, size: targetSize)
+        var targetFrame = pw.frameRect(forContentRect: targetRect)
+        targetFrame.origin = windowTopLeftPoint
+        pw.setFrame(targetFrame, display: false, animate: true)
 
         if targetTab.isResizeable {
             guard let maxSize = self.tabs[self.currentIndex].maximumSize else { return }
