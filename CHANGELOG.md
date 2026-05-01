@@ -4,10 +4,10 @@
     - Remove unloved sample commands from the default setup.
     - Allow some sample commands to be deleted.
     - Increase commands' menu titles from 30 characters to 128.
-    - Increase the size of the Configure window to show more items, and allow it to be resized.
-    - Update the Configure window to resize according to the content.
+    - Increase the size of the Configure window to show more items, and allow it to be resized vertically.
+    - Update the Configure window to resize according to the content shown in each tab.
     - Update the Configure window’s Settings UI.
-    - Make separator lines easier to see in the Configure window's MNU items UI.
+    - Make separator lines more visible in the Configure window's MNU items list UI.
     - Prepare to support other terminal emulators.
 - 2.1.1 *19 December 2025*
     - Add sample menu icons for macOS 26.x Tahoe users. **No app code changes**
