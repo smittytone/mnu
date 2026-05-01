@@ -54,16 +54,10 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet weak var applyChangesButton: NSButton!
 
     // Settings Tab
-    //@IBOutlet weak var prefsLaunchAtLoginButton: NSButton!
-    //@IBOutlet weak var prefsNewTermTabButton: NSButton!
-    //@IBOutlet weak var prefsShowImagesButton: NSButton!
     @IBOutlet weak var prefsHelpButton: NSButton!
     // FROM 1.6.0
     @IBOutlet weak var prefsTerminalChoiceTerminal: NSButton!
     @IBOutlet weak var prefsTerminalChoiceITerm2: NSButton!
-    // FROM 2.0.0
-    //@IBOutlet weak var prefsAutoSeparateButton: NSButton!
-    //@IBOutlet weak var prefsDirectOutpuButton: NSButton!
     // FROM 2.2.0
     @IBOutlet weak var prefsLaunchAtLoginSwitch: NSSwitch!
     @IBOutlet weak var prefsNewTermTabSwitch: NSSwitch!
@@ -197,6 +191,8 @@ final class ConfigureViewController:  NSViewController,
         self.tabButtonMenu.toolTip     = "Configure MNU’s menu items"
         self.tabButtonSettings.toolTip = "Apply MNU settings"
         self.tabButtonAbout.toolTip    = "Learn more about MNU"
+
+        self.feedbackButton.contentTintColor = .controlAccentColor
     }
 
 
@@ -262,6 +258,8 @@ final class ConfigureViewController:  NSViewController,
         // FROM 2.0.0
         // Assemble a set of custom icons
         getCustomIcons()
+
+
     }
 
 
@@ -1084,6 +1082,7 @@ final class ConfigureViewController:  NSViewController,
 
                 // NOTE Buttons named in order, from the Left to Right
                 cell!.buttonA.image = NSImage(named: "NSTouchBarDeleteTemplate")
+                cell!.buttonA.contentTintColor = .controlAccentColor
                 cell!.buttonA.action = #selector(self.doDeleteScript(sender:))
                 cell!.buttonA.toolTip = "Delete this menu item"
                 cell!.buttonA.isEnabled = true
@@ -1092,6 +1091,7 @@ final class ConfigureViewController:  NSViewController,
                 cell!.buttonA.menuItem = item
 
                 cell!.buttonB.image = NSImage(named: "NSTouchBarComposeTemplate")
+                cell!.buttonB.contentTintColor = .controlAccentColor
                 cell!.buttonB.action = #selector(self.doTableButtonEditScript(sender:))
                 cell!.buttonB.toolTip = "Edit this menu item"
                 cell!.buttonB.isEnabled = item.type != .separator

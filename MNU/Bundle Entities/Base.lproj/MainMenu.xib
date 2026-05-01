@@ -87,14 +87,14 @@
             <value key="minFullScreenContentSize" type="size" width="600" height="500"/>
             <value key="maxFullScreenContentSize" type="size" width="600" height="1500"/>
             <view key="contentView" id="gNH-Un-C4x">
-                <rect key="frame" x="0.0" y="0.0" width="596" height="500"/>
+                <rect key="frame" x="0.0" y="0.0" width="600" height="500"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <userGuides>
                     <userLayoutGuide affinity="maxY"/>
                 </userGuides>
                 <subviews>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L2g-LZ-eSJ">
-                        <rect key="frame" x="335" y="470.5" width="32" height="32"/>
+                        <rect key="frame" x="337" y="470.5" width="32" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="info.square" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="hu2-CO-iYC">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -108,7 +108,7 @@
                         </connections>
                     </button>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tTC-yl-5aZ">
-                        <rect key="frame" x="230" y="470.5" width="32" height="32"/>
+                        <rect key="frame" x="232" y="470.5" width="32" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="filemenu.and.selection" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="k5q-kz-Eo1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -122,7 +122,7 @@
                         </connections>
                     </button>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exI-z2-gth">
-                        <rect key="frame" x="282" y="470.5" width="33.5" height="32"/>
+                        <rect key="frame" x="284" y="470.5" width="33.5" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="gear" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="BTM-zj-mUK">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -136,7 +136,7 @@
                         </connections>
                     </button>
                     <tabView drawsBackground="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="sBi-nr-qbJ">
-                        <rect key="frame" x="0.0" y="0.0" width="596" height="459"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="459"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Menu Items" identifier="1" id="ssD-2o-kna">
@@ -424,8 +424,9 @@
                                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="520" id="MiW-RU-kxU"/>
                                                             <constraint firstAttribute="height" constant="28" id="PaL-a9-AxJ"/>
                                                         </constraints>
-                                                        <textFieldCell key="cell" controlSize="small" allowsUndo="NO" title="If you do not have the selected alternative terminal emulator installed, then macOS’ Terminal will be used instead." id="31X-fw-0hB">
+                                                        <textFieldCell key="cell" controlSize="small" allowsUndo="NO" id="31X-fw-0hB">
                                                             <font key="font" metaFont="smallSystem"/>
+                                                            <string key="title">If you do not have the selected alternative terminal emulator application installed, then macOS’ Terminal app will be used instead.</string>
                                                             <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
@@ -442,6 +443,7 @@
                                                     <constraint firstItem="scH-B0-ntP" firstAttribute="top" secondItem="kh6-NM-Mxu" secondAttribute="top" constant="12" id="ZsI-6c-RKl"/>
                                                     <constraint firstItem="tJ0-Kb-Zci" firstAttribute="top" secondItem="Nrs-DR-81z" secondAttribute="bottom" constant="8" symbolic="YES" id="mYk-qr-W5N"/>
                                                     <constraint firstItem="scH-B0-ntP" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="mut-Eo-jRC"/>
+                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tJ0-Kb-Zci" secondAttribute="trailing" constant="20" symbolic="YES" id="q7w-fg-a0f"/>
                                                     <constraint firstAttribute="trailing" secondItem="scH-B0-ntP" secondAttribute="trailing" constant="20" symbolic="YES" id="zTy-Hn-PSA"/>
                                                 </constraints>
                                             </view>
