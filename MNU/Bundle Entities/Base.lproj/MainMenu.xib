@@ -319,6 +319,12 @@
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
                                         </textField>
+                                        <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="O0u-U2-4E1">
+                                            <rect key="frame" x="20" y="83" width="560" height="5"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="1" id="oFk-Db-A6C"/>
+                                            </constraints>
+                                        </box>
                                     </subviews>
                                     <constraints>
                                         <constraint firstAttribute="bottom" secondItem="3gR-ck-alF" secondAttribute="bottom" constant="22" id="1Zv-gn-ldI"/>
@@ -332,10 +338,13 @@
                                         <constraint firstAttribute="trailing" secondItem="YRU-ni-WJW" secondAttribute="trailing" constant="20" symbolic="YES" id="Uj6-wK-8aS"/>
                                         <constraint firstItem="YRU-ni-WJW" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="20" symbolic="YES" id="VMh-9D-Y7g"/>
                                         <constraint firstItem="nVn-04-17X" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="20" symbolic="YES" id="YrG-66-9md"/>
+                                        <constraint firstAttribute="trailing" secondItem="O0u-U2-4E1" secondAttribute="trailing" constant="20" symbolic="YES" id="bhB-MW-Hfv"/>
                                         <constraint firstItem="3gR-ck-alF" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="nVn-04-17X" secondAttribute="trailing" constant="12" symbolic="YES" id="goB-RF-4z0"/>
                                         <constraint firstItem="YRU-ni-WJW" firstAttribute="top" secondItem="Oh6-vd-bZK" secondAttribute="top" id="iMq-bh-FcW"/>
                                         <constraint firstItem="cw2-9R-dHW" firstAttribute="leading" secondItem="Xos-L3-Lxi" secondAttribute="trailing" constant="8" symbolic="YES" id="j7w-nq-kTB"/>
+                                        <constraint firstItem="O0u-U2-4E1" firstAttribute="leading" secondItem="Oh6-vd-bZK" secondAttribute="leading" constant="20" symbolic="YES" id="lIX-qp-muf"/>
                                         <constraint firstAttribute="bottom" secondItem="cw2-9R-dHW" secondAttribute="bottom" constant="56" id="nAD-Sm-1x7"/>
+                                        <constraint firstItem="cw2-9R-dHW" firstAttribute="top" secondItem="O0u-U2-4E1" secondAttribute="bottom" constant="11" id="qF6-cE-IK4"/>
                                         <constraint firstItem="eAX-ej-8rF" firstAttribute="leading" secondItem="cw2-9R-dHW" secondAttribute="trailing" constant="8" symbolic="YES" id="vSd-0F-eAw"/>
                                     </constraints>
                                 </view>
