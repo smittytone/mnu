@@ -36,7 +36,8 @@ final class MenuItemTableCellView: NSTableCellView {
     @IBOutlet weak var title: NSTextField!
     @IBOutlet weak var buttonA: MenuItemTableCellButton!
     @IBOutlet weak var buttonB: MenuItemTableCellButton!
-    // FROM 1.7.0 -- Change from buttons to to switches
-    // @IBOutlet weak var buttonC: MenuItemTableCellButton!
     @IBOutlet var cellSwitch: MenuItemTableCellSwitch!
+
+    // FROM 2.2.0
+    public var separatorView: SeparatorView? = nil
 }

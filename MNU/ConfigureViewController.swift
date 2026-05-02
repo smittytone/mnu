@@ -1079,6 +1079,14 @@ final class ConfigureViewController:  NSViewController,
                     lineView.setFrameSize(CGSize(width: cell!.cellSwitch.frame.origin.x - attrTitle.width - 24.0, height: 2.0))
                     lineView.alphaValue = 0.5
                     cell!.addSubview(lineView, positioned: .below, relativeTo: cell!.title)
+                    cell!.separatorView = lineView
+                } else {
+                    // FROM 2.2.0
+                    // Zap any unneeded separators
+                    if cell!.separatorView != nil {
+                        cell!.separatorView!.removeFromSuperview()
+                        cell!.separatorView = nil
+                    }
                 }
 
                 // NOTE Buttons named in order, from the Left to Right
