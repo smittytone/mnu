@@ -173,16 +173,19 @@ final class AppDelegate: NSObject,
     
     
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
-        
+
+        // No configure window? Terminate immediately
+        guard let cw = self.cwvc.configureWindow else { return NSApplication.TerminateReply.terminateNow }
+
         // This prevents the app closing when the user clicks the Quit control, if the
         // Configure Window is visible and is presenting the Add Item sheet
-        if self.cwvc.isVisible && self.cwvc.aivc.parentWindow != nil {
+        if cw.isVisible && self.cwvc.aivc.parentWindow != nil {
             return NSApplication.TerminateReply.terminateCancel
         }
         
         // This prevents the app closing when the user clicks the Quit control, if the Configure
         // Window has unapplied changes
-        if self.cwvc.isVisible && self.cwvc.hasChanged {
+        if cw.isVisible && self.cwvc.hasChanged {
             // Close the menu - required for controls within views added to menu items
             self.appMenu!.cancelTrackingWithoutAnimation()
             
@@ -736,16 +739,7 @@ final class AppDelegate: NSObject,
         // Duplicate the current item list to pass on to the configure window view controller.
         // We copy because the configure view controller may modify the list, but until the
         // user clicks `Apply`, we don't want the menu to be affected by the changes
-        let list: MenuItemList = self.itemList.copy() as! MenuItemList //MenuItemList()
-
-        /*if self.itemList.items.count > 0 {
-            for item: MenuItem in self.itemList.items {
-                let itemCopy: MenuItem = item.copy() as! MenuItem
-                list.items.append(itemCopy)
-            }
-        }
-         */
-
+        let list: MenuItemList = self.itemList.copy() as! MenuItemList
         self.cwvc.menuItems = list
 
         // Close the menu - required for controls within views added to menu items

@@ -41,7 +41,6 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - UI Outlets
 
     @IBOutlet var windowTabView: NSTabView!
-    @IBOutlet var window: PMConfigureWindow!
 
     // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
@@ -81,10 +80,10 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - Public Class Properties
 
     var menuItems: MenuItemList? = nil
-    var configureWindow: NSWindow? = nil
+    var configureWindow: PMConfigureWindow? = nil
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
     var hasChanged: Bool = false
-    var isVisible: Bool = false
+    //var isVisible: Bool = false
     var lastChance: Bool = false
     // FROM 1.6.0
     var terminalChoice: Int = 0
@@ -121,7 +120,7 @@ final class ConfigureViewController:  NSViewController,
         self.systemVersionMinor = sysVer.minorVersion
 
         // Ask our window to make the  first responder (for key presses)
-        self.configureWindow = self.view.window
+        self.configureWindow = self.view.window as? PMConfigureWindow
         self.configureWindow!.makeFirstResponder(self)
 
         // Set up the table view for drag and drop reordering
@@ -181,19 +180,16 @@ final class ConfigureViewController:  NSViewController,
         // About... Tab
         self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
 
-        // Configure the tab manager and its tabs
-        self.tabManager.parentController = self
-        self.tabManager.parentWindow = self.window
-        self.tabManager.buttons = [self.tabButtonMenu, self.tabButtonSettings, self.tabButtonAbout]
-        // FROM 2.0.0
-        makeTabs(self.tabManager)
-
+        // Tab control buttons
         self.tabButtonMenu.toolTip     = "Configure MNU’s menu items"
         self.tabButtonSettings.toolTip = "Apply MNU settings"
         self.tabButtonAbout.toolTip    = "Learn more about MNU"
 
+        // Configure the tab manager and its tabs
+        makeTabs(self.tabManager)
+
+        // FROM 2.2.0
         self.feedbackButton.contentTintColor = .controlAccentColor
-        
     }
 
 
@@ -229,23 +225,9 @@ final class ConfigureViewController:  NSViewController,
                 self.prefsTerminalChoiceTerminal.state = .on
         }
 
-        // FROM 2.2.0
-        // Update the
-        setListTabSize()
-        if let pw = self.window {
-            let targetTab = self.tabManager.tabs[self.tabManager.currentIndex]
-            if let targetSize = targetTab.currentSize {
-                pw.setContentSize(targetSize)
-            }
-        }
-
         // FROM 1.1.0
         // Disable/enable the Apply button until changes are made
         self.applyChangesButton.isEnabled = self.hasChanged
-
-        // FROM 2.0.0
-        // Manually select the first tab
-        self.tabManager.programmaticallyClickButton(at: 0)
 
         // FROM 2.0.0
         // Set up auto separation and its effect on controls
@@ -260,15 +242,25 @@ final class ConfigureViewController:  NSViewController,
         // Assemble a set of custom icons
         getCustomIcons()
 
+        // Manually select the first tab...
+        self.tabManager.programmaticallyClickButton(at: 0)
+        setListTabSize()
+        self.tabManager.setWindowSize()
 
+        if !self.configureWindow!.isVisible {
+            self.configureWindow!.center()
+        }
     }
 
 
-    override func viewDidAppear() {
+    override func viewWillDisappear() {
 
-        // Update the visibility state
-        self.isVisible = true
-        super.viewDidAppear()
+        // Preserve content size of the MNU List tab. It will have been saved if
+        // the users switched to another tab, but this preserves sizes when no
+        // switch took place
+        if self.tabManager.currentIndex == 0 {
+            self.tabManager.preserveCurrentSizeOfTabAt(index: 0)
+        }
     }
 
 
@@ -351,12 +343,14 @@ final class ConfigureViewController:  NSViewController,
      */
     func show() {
 
-        self.windowTabView.selectTabViewItem(at: 0)
-        self.configureWindow!.center()
-        self.configureWindow!.makeKeyAndOrderFront(nil)
-        self.applyChangesButton.isEnabled = false
+        if !self.configureWindow!.isVisible {
+            // Window is not yet present on the desktop so handle extra,
+            // post-load initialisation here
+            self.applyChangesButton.isEnabled = false
+        }
 
         // The following is required to bring the window to the front properly
+        self.configureWindow!.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 
@@ -389,7 +383,7 @@ final class ConfigureViewController:  NSViewController,
         self.configureWindow!.performClose(sender)
 
         // Update the visibility state
-        self.isVisible = false
+        //self.isVisible = false
     }
 
 
@@ -1467,16 +1461,21 @@ final class ConfigureViewController:  NSViewController,
         listTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.MENU_LIST
         listTab.minimumSize = listTab.defaultSize
         listTab.maximumSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.MENU_LIST_MAX
+        listTab.button = self.self.tabButtonMenu
 
         let settingsTab = PMTab()
         settingsTab.name = "settings"
         settingsTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.SETTINGS
+        settingsTab.button = self.tabButtonSettings
 
         let aboutTab = PMTab()
         aboutTab.name = "settings"
         aboutTab.defaultSize = MNU_CONSTANTS.CONFIG_TAB_PANEL_SIZE.ABOUT
+        aboutTab.button = self.tabButtonAbout
 
         atm.tabs = [listTab, settingsTab, aboutTab]
+        atm.parentController = self
+        atm.parentWindow = self.configureWindow
     }
 
 
@@ -1489,19 +1488,20 @@ final class ConfigureViewController:  NSViewController,
     private func setListTabSize() {
 
         guard self.tabManager.tabs.count > 0 else { return }
-        let targetTab = self.tabManager.tabs[0]
 
-        // Count the total number of MNU items in the list and the
-        // number of those that are set to be visible
-        let itemCount: Double
-        if let items: MenuItemList = self.menuItems {
-            itemCount = Double(items.items.count)
-        } else {
-            itemCount = 1.0
-        }
+        // Check for nil in case the user has altered the window size
+        let listTab = self.tabManager.tabs[0]
+        if listTab.currentSize == nil {
+            // Count the total number of MNU items in the list and the
+            // number of those that are set to be visible
+            let itemCount: Double
+            if let items: MenuItemList = self.menuItems {
+                itemCount = Double(items.items.count)
+            } else {
+                itemCount = 1.0
+            }
 
-        if targetTab.currentSize == nil {
-            targetTab.currentSize = NSSize(width: 600.0, height: 190.0 + (itemCount * 32.0))
+            listTab.currentSize = NSSize(width: 600.0, height: 190.0 + (itemCount * 32.0))
         }
     }
 }

@@ -1,12 +1,32 @@
-//
-//  PMTab.swift
-//  MNU
-//
-//  Created by Tony Smith on 01/05/2026.
-//  Copyright © 2026 Tony Smith. All rights reserved.
-//
 
-import Foundation
+/*
+ PMTab.swift
+    MNU
+
+    Created by Tony Smith on 01/05/2026.
+    Copyright © 2026 Tony Smith. All rights reserved.
+
+    MIT License
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+ */
+
+import AppKit
 
 
 /*
@@ -57,9 +77,10 @@ final public class PMTab {
 
     // MARK: - Public Properties
 
-    public var name: String? = nil                      // An optional identifier
-    public var callback: (()->Void)? = nil              // An optional callback function triggered before the switch
-    public var isResizeable: Bool = false               // Is the Tab resizeable? If it is not, you need only set the
+    public var name: String?            = nil           // An optional identifier
+    public var button: NSButton?        = nil           // The button that triggers the tab
+    public var callback: (()->Void)?    = nil           // An optional callback function triggered before the switch
+    public var isResizeable: Bool       = false         // Is the Tab resizeable? If it is not, you need only set the
                                                         // default content size -- this will be returned whatever size
                                                         // accessor is used. If the tab is resizeable, set either a
                                                         // minimum content size, a maximum one or both. Again, default
@@ -85,7 +106,7 @@ final public class PMTab {
 
     var currentSize: NSSize? {
         get { if self.isResizeable { return self.sizes.current } else { return self.defaultSize } }
-        set(new) { self.sizes.current = new }
+        set(new) { if self.isResizeable { self.sizes.current = new } }
     }
 
     var defaultSize: NSSize? {
