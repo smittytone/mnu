@@ -1,12 +1,13 @@
 ## Release Notes ##
 
 - 2.3.0 *Unreleased*
-    - Update the Configure MNU window UI:
-        - Increase the size of the window to show more items, and allow it to be resized vertically.
-        - Auto-resize the window to match the content shown in each tab.
-        - Update the Settings layout and style.
-        - Make separator lines even more visible in the MNU items list UI.
+    - Auto-resize the Configure MNU window to match the content shown in the current tab.
+    - Allow the MNU items list UI tab to be resized vertically.
+    - Make separator lines in the MNU items list UI even more visible.
+    - Update the Settings UI layout and style.
+    - Update the About MNU UI layout and style.
     - Prepare to support other terminal emulators.
+    - **BREAKING** End support for macOS 11.x: 12.0 (Monterey, 2021) is the new minium supported version.
 - 2.2.0 *12 February 2026*
     - Remove unloved sample commands from the default setup.
     - Increase commands’ menu titles from 30 characters to 128.
@@ -26,7 +27,7 @@
     - Allows you to add custom icon images.
     - Allows you to view output from direct commands (experimental).
     - Allows MNU to be restored to its default settings.
-    - End support for macOS 10.x: 11.0 (BigSur, 2020) is the new minium supported version.
+    - **BREAKING** End support for macOS 10.x: 11.0 (BigSur, 2020) is the new minium supported version.
 - 1.7.1 *30 April 2024*
     - Clarify which code you must supply to build the app.
     - Fix some typos.
