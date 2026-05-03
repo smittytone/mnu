@@ -1,4 +1,3 @@
-
 /*
     PMTabManager.swift
     MNU
@@ -168,14 +167,35 @@ final public class PMTabManager {
         let targetRect = NSRect(origin: pw.frame.origin, size: targetSize)
         var targetFrame = pw.frameRect(forContentRect: targetRect)
         targetFrame.origin = windowTopLeftPoint
-        pw.setFrame(targetFrame, display: false, animate: true)
 
+        // Make sure the window fits in the screen, but only if it's resizeable
         if targetTab.isResizeable {
-            guard let maxSize = self.tabs[self.currentIndex].maximumSize else { return }
-            guard let minSize = self.tabs[self.currentIndex].minimumSize else { return }
-            pw.contentMaxSize = maxSize
-            pw.contentMinSize = minSize
+            // Make sure it's not off the bottom of the screen
+            if targetFrame.origin.y < 0 {
+                targetFrame.origin.y = 0
+            }
+
+            // Check the above adjustment doesn't move the window
+            // up off the screen
+            let screenFrame: CGRect
+            if let screen = pw.screen {
+                screenFrame = screen.frame
+            } else {
+                screenFrame = targetFrame
+            }
+
+            if targetFrame.size.height + targetFrame.origin.y > screenFrame.size.height + screenFrame.origin.y {
+                let delta = targetFrame.origin.y + targetFrame.size.height - screenFrame.size.height - screenFrame.origin.y
+                targetFrame.size.height -= delta
+            }
+
+            // Apply max and min heights, if set
+            if let maxSize = self.tabs[self.currentIndex].maximumSize { pw.contentMaxSize = maxSize }
+            if let minSize = self.tabs[self.currentIndex].minimumSize { pw.contentMinSize = minSize }
         }
+
+        // Apply the new window size
+        pw.setFrame(targetFrame, display: false, animate: true)
     }
 
 
