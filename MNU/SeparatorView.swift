@@ -1,4 +1,3 @@
-
 /*
     SeparatorView.swift
     MNU

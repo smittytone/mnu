@@ -1,4 +1,3 @@
-
 /*
     Serializer.swift
     MNU

@@ -1,4 +1,3 @@
-
 /*
     ConfigureWindow.swift
     MNU

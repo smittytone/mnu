@@ -1,4 +1,3 @@
-
 /*
     DirectOutputWindow.swift
     MNU

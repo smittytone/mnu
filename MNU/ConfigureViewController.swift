@@ -1,4 +1,3 @@
-
 /*
     ConfigureWindowViewController.swift
     MNU
