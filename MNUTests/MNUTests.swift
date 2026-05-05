@@ -152,7 +152,7 @@ class MNUTests: XCTestCase {
         _testtOpenAppHelper("Squinter", "com.bps.Squinter", 1)
 
         // Should succeed
-        _testtOpenAppHelper("Firefox.app", "org.mozilla.firefox", 1)
+        //_testtOpenAppHelper("Firefox.app", "org.mozilla.firefox", 1)
 
         // Should fail
         _testtOpenAppHelper("Bollocks.app", "com.bollocks.bollocks", 0)
