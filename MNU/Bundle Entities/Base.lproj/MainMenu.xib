@@ -381,13 +381,13 @@
                                             </textFieldCell>
                                         </textField>
                                         <box borderType="line" title="Terminal Emulator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Qw-jPG">
-                                            <rect key="frame" x="20" y="335" width="560" height="124"/>
+                                            <rect key="frame" x="20" y="319" width="560" height="140"/>
                                             <view key="contentView" id="kh6-NM-Mxu">
-                                                <rect key="frame" x="0.0" y="0.0" width="560" height="124"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="560" height="140"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                 <subviews>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="scH-B0-ntP">
-                                                        <rect key="frame" x="18" y="96" width="524" height="16"/>
+                                                        <rect key="frame" x="18" y="112" width="524" height="16"/>
                                                         <constraints>
                                                             <constraint firstAttribute="height" constant="16" id="XLJ-6w-jcb"/>
                                                             <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="e4I-HK-oYk"/>
@@ -399,7 +399,7 @@
                                                         </textFieldCell>
                                                     </textField>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="YW9-CQ-Rbe">
-                                                        <rect key="frame" x="20" y="72" width="520" height="16"/>
+                                                        <rect key="frame" x="20" y="88" width="520" height="16"/>
                                                         <buttonCell key="cell" type="radio" title="macOS Terminal" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Y54-Tk-087">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
@@ -413,25 +413,23 @@
                                                         </connections>
                                                     </button>
                                                     <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nrs-DR-81z">
-                                                        <rect key="frame" x="20" y="50" width="520" height="16"/>
+                                                        <rect key="frame" x="20" y="66" width="520" height="16"/>
                                                         <buttonCell key="cell" type="radio" title="iTerm2" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Cw9-oK-a1n">
                                                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                             <font key="font" metaFont="system"/>
                                                         </buttonCell>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="DAg-iQ-md6"/>
-                                                            <constraint firstAttribute="height" constant="16" id="h3P-tR-Cuf"/>
+                                                            <constraint firstAttribute="height" constant="16" id="R1a-k1-b0A"/>
                                                         </constraints>
                                                         <connections>
                                                             <action selector="doToggleTerminalChoiceWithSender:" target="qtv-Yg-ACO" id="xAZ-n2-V0n"/>
                                                         </connections>
                                                     </button>
                                                     <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tJ0-Kb-Zci">
-                                                        <rect key="frame" x="18" y="14" width="524" height="28"/>
+                                                        <rect key="frame" x="18" y="8" width="524" height="28"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="width" constant="520" id="7Nd-fc-vOW"/>
-                                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="520" id="MiW-RU-kxU"/>
-                                                            <constraint firstAttribute="height" constant="28" id="PaL-a9-AxJ"/>
+                                                            <constraint firstAttribute="width" constant="520" id="8fW-Dp-xJR"/>
+                                                            <constraint firstAttribute="height" constant="28" id="qHU-pV-m7w"/>
                                                         </constraints>
                                                         <textFieldCell key="cell" controlSize="small" allowsUndo="NO" id="31X-fw-0hB">
                                                             <font key="font" metaFont="smallSystem"/>
@@ -440,28 +438,43 @@
                                                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </textFieldCell>
                                                     </textField>
+                                                    <button verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ibP-al-6qQ">
+                                                        <rect key="frame" x="20" y="44" width="520" height="16"/>
+                                                        <buttonCell key="cell" type="radio" title="Ghostty" bezelStyle="regularSquare" imagePosition="left" alignment="left" inset="2" id="Kb6-Qv-Zd9">
+                                                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                            <font key="font" metaFont="system"/>
+                                                        </buttonCell>
+                                                        <constraints>
+                                                            <constraint firstAttribute="height" constant="16" id="vyt-be-UKu"/>
+                                                        </constraints>
+                                                        <connections>
+                                                            <action selector="doToggleTerminalChoiceWithSender:" target="qtv-Yg-ACO" id="VgI-kT-Ph7"/>
+                                                        </connections>
+                                                    </button>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="Nrs-DR-81z" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="839-dZ-W4C"/>
                                                     <constraint firstItem="YW9-CQ-Rbe" firstAttribute="top" secondItem="scH-B0-ntP" secondAttribute="bottom" constant="8" symbolic="YES" id="CnA-ue-6ZH"/>
+                                                    <constraint firstAttribute="trailing" secondItem="Nrs-DR-81z" secondAttribute="trailing" constant="20" symbolic="YES" id="GOy-KJ-ldt"/>
                                                     <constraint firstItem="YW9-CQ-Rbe" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="IOu-KE-2rZ"/>
                                                     <constraint firstAttribute="trailing" secondItem="YW9-CQ-Rbe" secondAttribute="trailing" constant="20" symbolic="YES" id="Pwb-Ie-f7q"/>
-                                                    <constraint firstItem="Nrs-DR-81z" firstAttribute="top" secondItem="YW9-CQ-Rbe" secondAttribute="bottom" constant="6" symbolic="YES" id="Twy-TM-Lmr"/>
-                                                    <constraint firstAttribute="trailing" secondItem="Nrs-DR-81z" secondAttribute="trailing" constant="20" symbolic="YES" id="WVs-nd-sWD"/>
-                                                    <constraint firstItem="tJ0-Kb-Zci" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="YMY-H5-9d6"/>
+                                                    <constraint firstItem="ibP-al-6qQ" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="QpR-Qr-KRM"/>
                                                     <constraint firstItem="scH-B0-ntP" firstAttribute="top" secondItem="kh6-NM-Mxu" secondAttribute="top" constant="12" id="ZsI-6c-RKl"/>
-                                                    <constraint firstItem="tJ0-Kb-Zci" firstAttribute="top" secondItem="Nrs-DR-81z" secondAttribute="bottom" constant="8" symbolic="YES" id="mYk-qr-W5N"/>
+                                                    <constraint firstItem="ibP-al-6qQ" firstAttribute="top" secondItem="Nrs-DR-81z" secondAttribute="bottom" constant="6" symbolic="YES" id="cg7-E0-JyN"/>
+                                                    <constraint firstItem="tJ0-Kb-Zci" firstAttribute="top" secondItem="ibP-al-6qQ" secondAttribute="bottom" constant="8" symbolic="YES" id="d7v-h0-8pG"/>
+                                                    <constraint firstAttribute="trailing" secondItem="ibP-al-6qQ" secondAttribute="trailing" constant="20" symbolic="YES" id="hDe-H1-hDY"/>
+                                                    <constraint firstItem="Nrs-DR-81z" firstAttribute="top" secondItem="YW9-CQ-Rbe" secondAttribute="bottom" constant="6" symbolic="YES" id="kaa-Zz-WSm"/>
                                                     <constraint firstItem="scH-B0-ntP" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="mut-Eo-jRC"/>
-                                                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="tJ0-Kb-Zci" secondAttribute="trailing" constant="20" symbolic="YES" id="q7w-fg-a0f"/>
+                                                    <constraint firstItem="Nrs-DR-81z" firstAttribute="leading" secondItem="kh6-NM-Mxu" secondAttribute="leading" constant="20" symbolic="YES" id="o5q-Kh-paN"/>
+                                                    <constraint firstItem="tJ0-Kb-Zci" firstAttribute="centerX" secondItem="kh6-NM-Mxu" secondAttribute="centerX" id="ohB-Qy-CIp"/>
                                                     <constraint firstAttribute="trailing" secondItem="scH-B0-ntP" secondAttribute="trailing" constant="20" symbolic="YES" id="zTy-Hn-PSA"/>
                                                 </constraints>
                                             </view>
                                             <constraints>
-                                                <constraint firstAttribute="height" constant="124" id="3t6-z1-afb"/>
+                                                <constraint firstAttribute="height" constant="140" id="3t6-z1-afb"/>
                                             </constraints>
                                         </box>
                                         <box borderType="line" title="MNU" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wHL-2I-koM">
-                                            <rect key="frame" x="20" y="207" width="560" height="120"/>
+                                            <rect key="frame" x="20" y="191" width="560" height="120"/>
                                             <view key="contentView" id="FnK-Y6-zMq">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -577,7 +590,7 @@
                                             </constraints>
                                         </box>
                                         <box borderType="line" title="Command Execution" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="0Uy-8W-mDh">
-                                            <rect key="frame" x="20" y="123" width="560" height="76"/>
+                                            <rect key="frame" x="20" y="107" width="560" height="76"/>
                                             <view key="contentView" id="MUi-hr-Ubm">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="76"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -816,6 +829,7 @@ Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
                 <outlet property="prefsLaunchAtLoginSwitch" destination="EOu-49-Ybv" id="Aoo-d4-B1O"/>
                 <outlet property="prefsNewTermTabSwitch" destination="8bR-Dz-8dV" id="OtF-JY-wvn"/>
                 <outlet property="prefsShowImagesSwitch" destination="iNK-XB-Cwo" id="rp1-Ov-zK6"/>
+                <outlet property="prefsTerminalChoiceGhostty" destination="ibP-al-6qQ" id="ChM-Pw-ebD"/>
                 <outlet property="prefsTerminalChoiceITerm2" destination="Nrs-DR-81z" id="s36-ft-ram"/>
                 <outlet property="prefsTerminalChoiceTerminal" destination="YW9-CQ-Rbe" id="Ilj-Nk-ddh"/>
                 <outlet property="showHelpButton" destination="nVn-04-17X" id="Xac-Af-wW0"/>
@@ -835,8 +849,8 @@ Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
             <value key="maxSize" type="size" width="560" height="384"/>
             <value key="minFullScreenContentSize" type="size" width="560" height="384"/>
             <value key="maxFullScreenContentSize" type="size" width="560" height="384"/>
-            <view key="contentView" id="kbT-Jg-8jd">
-                <rect key="frame" x="0.0" y="0.0" width="563" height="384"/>
+            <view key="contentView" misplaced="YES" id="kbT-Jg-8jd">
+                <rect key="frame" x="0.0" y="0.0" width="560" height="384"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <userGuides>
                     <userLayoutGuide location="280" affinity="minX"/>

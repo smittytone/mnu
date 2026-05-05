@@ -62,7 +62,9 @@ final class ConfigureViewController:  NSViewController,
     @IBOutlet weak var prefsShowImagesSwitch: NSSwitch!
     @IBOutlet weak var prefsAutoSeparateSwitch: NSSwitch!
     @IBOutlet weak var prefsDirectOutputSwitch: NSSwitch!
-    
+    // FROM 2.4.0
+    @IBOutlet weak var prefsTerminalChoiceGhostty: NSButton!
+
     // About... Tab
     @IBOutlet weak var aboutVersionText: NSTextField!
     @IBOutlet weak var fbvc: FeedbackSheetViewController!
@@ -217,9 +219,12 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.6.0
         self.terminalChoice = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
         switch(self.terminalChoice) {
-            case 1:
+            case MNU_CONSTANTS.TERMINAL.ITERM:
                 self.prefsTerminalChoiceITerm2.state = .on
-            // Add other non-zero cases here to include other terminals
+            // Add other non-zero cases here to include other terminals:
+            // FROM 2.4.0 -- add Ghostty
+            case MNU_CONSTANTS.TERMINAL.GHOSTTY:
+                self.prefsTerminalChoiceGhostty.state = .on
             default:
                 self.prefsTerminalChoiceTerminal.state = .on
         }
@@ -719,6 +724,10 @@ final class ConfigureViewController:  NSViewController,
         }
 
         // Add more Terminal choices by index here...
+        // FROM 2.4.0 -- Support Ghostty
+        if self.prefsTerminalChoiceGhostty.state == .on {
+            termChoice = MNU_CONSTANTS.TERMINAL.GHOSTTY
+        }
 
         // Only write out the choice if it's different -- it should be
         if termChoice != self.terminalChoice {

@@ -58,14 +58,6 @@ struct MNU_CONSTANTS {
         }
     }
 
-    /*
-    struct TYPES {
-        static let SWITCH           = 0
-        static let SCRIPT           = 1
-        static let OPEN             = 2
-    }
-    */
-
     struct BUILT_IN_TITLES {
         static let UIMODE           = "macOS Dark Mode"
         static let DESKTOP          = "Show Files on Desktop"
@@ -117,8 +109,11 @@ struct MNU_CONSTANTS {
 
     // FROM 2.0.0
     struct TERMINAL {
+
         static let MACOS                        = 0
         static let ITERM                        = 1
+        // FROM 2.4.0
+        static let GHOSTTY                        = 2
     }
 
     struct SETTINGS_IDS {
@@ -182,7 +177,7 @@ struct MNU_CONSTANTS {
 
         static let MENU_LIST                    = NSSize(width: CONFIG_WINDOW_WIDTH, height: 500.0)
         static let MENU_LIST_MAX                = NSSize(width: CONFIG_WINDOW_WIDTH, height: 1500.0)
-        static let SETTINGS                     = NSSize(width: CONFIG_WINDOW_WIDTH, height: 440.0)
+        static let SETTINGS                     = NSSize(width: CONFIG_WINDOW_WIDTH, height: 460.0)
         static let ABOUT                        = NSSize(width: CONFIG_WINDOW_WIDTH, height: 320.0)
     }
 

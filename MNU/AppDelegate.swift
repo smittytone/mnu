@@ -465,8 +465,8 @@ final class AppDelegate: NSObject,
         
         if choice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal
-            let terminals: [String] = ["iTerm"]
-            
+            let terminals: [String] = ["iTerm", "Ghostty"]
+
             // `getAppPath()` returns nil if the app isn't present
             // Remember to zero-index `choice` because its zero value
             // is the macOS terminal
@@ -1663,6 +1663,38 @@ final class AppDelegate: NSObject,
                 end tell
                 """
         // Add other non-zero cases here to include other terminals
+        // FROM 2.4.0 -- Add Ghostty (https://ghostty.org) on macOS now it supports AppleScript
+        case MNU_CONSTANTS.TERMINAL.GHOSTTY:
+                if self.doNewTermTab {
+                    script = """
+                        tell application \"Ghostty\"
+                        activate
+                        try
+                        set term to focused terminal of selected tab of front window
+                        on error
+                        set newwin to new window
+                        set newtab to new tab in front window
+                        set term to focused terminal of newtab
+                        end try
+                        input text \"\(escapedCode)\" to term
+                        send key \"enter\" to term
+                        end tell
+                        """
+                } else {
+                    script = """
+                        tell application \"Ghostty\"
+                        activate
+                        try
+                        set term to focused terminal of selected tab of front window
+                        on error
+                        set newwin to new window
+                        set term to focused terminal of selected tab of newwin
+                        end try
+                        input text \"\(escapedCode)\" to term
+                        send key \"enter\" to term
+                        end tell
+                        """
+                }
         default:
             if self.doNewTermTab {
                 script = """
