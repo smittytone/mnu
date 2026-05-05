@@ -189,10 +189,18 @@ final public class PMTabManager {
                 targetFrame.size.height -= delta
             }
 
-            // Apply max and min heights, if set
-            if let maxSize = self.tabs[self.currentIndex].maximumSize { pw.contentMaxSize = maxSize }
-            if let minSize = self.tabs[self.currentIndex].minimumSize { pw.contentMinSize = minSize }
+            // FROM 2.4.0
+            // Enable the maximise button
+            pw.styleMask.insert(.resizable)
+        } else {
+            // FROM 2.4.0
+            // Non-resizeable content, so remove maximise button
+            pw.styleMask.remove(.resizable)
         }
+
+        // Apply max and min heights, if set (default otherwise)
+        if let maxSize = self.tabs[self.currentIndex].maximumSize { pw.contentMaxSize = maxSize }
+        if let minSize = self.tabs[self.currentIndex].minimumSize { pw.contentMinSize = minSize }
 
         // Apply the new window size
         pw.setFrame(targetFrame, display: false, animate: true)

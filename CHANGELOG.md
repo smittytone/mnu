@@ -3,6 +3,7 @@
 - 2.4.0 *Unreleased*
     - Add support for [Ghostty](https://ghostty.org).
     - Fix Configure MNU window tab switch on de-minimise.
+    - Fix maximise behaviour for Configure MNU window tabs with fixed content size.
 - 2.3.0 *06 May 2026*
     - Auto-resize the Configure MNU window to match the content shown in the current tab.
     - Allow the MNU items list UI tab to be resized vertically.

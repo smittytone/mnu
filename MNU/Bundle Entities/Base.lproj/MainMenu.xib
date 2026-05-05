@@ -837,6 +837,7 @@ Source code and design copyright © 2026, Tony Smith (@smittytone).</string>
                 <outlet property="tabButtonMenu" destination="tTC-yl-5aZ" id="RjR-Ji-Hav"/>
                 <outlet property="tabButtonSettings" destination="exI-z2-gth" id="mcg-wO-q5G"/>
                 <outlet property="view" destination="gNH-Un-C4x" id="QLw-3R-J2p"/>
+                <outlet property="window" destination="d1y-yZ-vmh" id="j0C-fh-eIb"/>
                 <outlet property="windowTabView" destination="sBi-nr-qbJ" id="eDP-pV-A5S"/>
             </connections>
         </viewController>

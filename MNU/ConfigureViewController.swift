@@ -40,6 +40,7 @@ final class ConfigureViewController:  NSViewController,
     // MARK: - UI Outlets
 
     @IBOutlet var windowTabView: NSTabView!
+    @IBOutlet var window: PMConfigureWindow!
 
     // Menu Items Tab
     @IBOutlet weak var menuItemsTableView: NSTableView!
@@ -120,9 +121,10 @@ final class ConfigureViewController:  NSViewController,
         self.systemVersion = sysVer.majorVersion
         self.systemVersionMinor = sysVer.minorVersion
 
-        // Ask our window to make the  first responder (for key presses)
-        self.configureWindow = self.view.window as? PMConfigureWindow
-        self.configureWindow!.makeFirstResponder(self)
+        // Ask our window to make the first responder (for key presses)
+        self.configureWindow = self.window
+        self.window.makeFirstResponder(self)
+        self.window.delegate = self
 
         // Set up the table view for drag and drop reordering
         self.menuItemsTableView.registerForDraggedTypes([self.mnuPasteboardType])
