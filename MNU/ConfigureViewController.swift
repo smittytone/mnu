@@ -191,6 +191,14 @@ final class ConfigureViewController:  NSViewController,
 
         // FROM 2.2.0
         self.feedbackButton.contentTintColor = .controlAccentColor
+
+        // FROM 2.4.0
+        // Move this here so un-minimising the window doesn't change its tab
+        self.tabManager.programmaticallyClickButton(at: 0)
+
+        if !self.configureWindow!.isVisible {
+            self.configureWindow!.center()
+        }
     }
 
 
@@ -246,14 +254,9 @@ final class ConfigureViewController:  NSViewController,
         // Assemble a set of custom icons
         getCustomIcons()
 
-        // Manually select the first tab...
-        self.tabManager.programmaticallyClickButton(at: 0)
+        // Size the first tab (which may not be visible)
         setListTabSize()
         self.tabManager.setWindowSize()
-
-        if !self.configureWindow!.isVisible {
-            self.configureWindow!.center()
-        }
     }
 
 
