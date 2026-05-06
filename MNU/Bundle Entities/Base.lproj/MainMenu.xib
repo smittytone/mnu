@@ -80,21 +80,21 @@
         <window title="Configure MNU" separatorStyle="none" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" titlebarAppearsTransparent="YES" id="d1y-yZ-vmh" customClass="PMConfigureWindow" customModule="MNU" customModuleProvider="target">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="600" height="500"/>
+            <rect key="contentRect" x="196" y="240" width="600" height="450"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1204"/>
             <value key="minSize" type="size" width="600" height="500"/>
             <value key="maxSize" type="size" width="600" height="1500"/>
             <value key="minFullScreenContentSize" type="size" width="600" height="500"/>
             <value key="maxFullScreenContentSize" type="size" width="600" height="1500"/>
             <view key="contentView" id="gNH-Un-C4x">
-                <rect key="frame" x="0.0" y="0.0" width="600" height="500"/>
+                <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                 <userGuides>
                     <userLayoutGuide affinity="maxY"/>
                 </userGuides>
                 <subviews>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="L2g-LZ-eSJ">
-                        <rect key="frame" x="337" y="470.5" width="32" height="32"/>
+                        <rect key="frame" x="337" y="420.5" width="32" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="info.square" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="hu2-CO-iYC">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -108,7 +108,7 @@
                         </connections>
                     </button>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="tTC-yl-5aZ">
-                        <rect key="frame" x="232" y="470.5" width="32" height="32"/>
+                        <rect key="frame" x="232" y="420.5" width="32" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="filemenu.and.selection" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="k5q-kz-Eo1">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -122,7 +122,7 @@
                         </connections>
                     </button>
                     <button allowsExpansionToolTips="YES" translatesAutoresizingMaskIntoConstraints="NO" id="exI-z2-gth">
-                        <rect key="frame" x="284" y="470.5" width="33.5" height="32"/>
+                        <rect key="frame" x="284" y="420.5" width="33.5" height="32"/>
                         <buttonCell key="cell" type="bevel" bezelStyle="regularSquare" image="gear" catalog="system" imagePosition="only" alignment="center" imageScaling="proportionallyUpOrDown" inset="2" id="BTM-zj-mUK">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
@@ -136,7 +136,7 @@
                         </connections>
                     </button>
                     <tabView drawsBackground="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="sBi-nr-qbJ">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="459"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="409"/>
                         <font key="font" metaFont="system"/>
                         <tabViewItems>
                             <tabViewItem label="Menu Items" identifier="1" id="ssD-2o-kna">
@@ -351,7 +351,7 @@
                             </tabViewItem>
                             <tabViewItem label="Preferences" identifier="" id="GJz-3Y-sEA">
                                 <view key="view" id="RX0-XS-Gl5">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="459"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="409"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <button horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WdZ-qr-xzQ">
@@ -381,7 +381,7 @@
                                             </textFieldCell>
                                         </textField>
                                         <box borderType="line" title="Terminal Emulator" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="gdc-Qw-jPG">
-                                            <rect key="frame" x="20" y="319" width="560" height="140"/>
+                                            <rect key="frame" x="20" y="269" width="560" height="140"/>
                                             <view key="contentView" id="kh6-NM-Mxu">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="140"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -474,7 +474,7 @@
                                             </constraints>
                                         </box>
                                         <box borderType="line" title="MNU" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="wHL-2I-koM">
-                                            <rect key="frame" x="20" y="191" width="560" height="120"/>
+                                            <rect key="frame" x="20" y="141" width="560" height="120"/>
                                             <view key="contentView" id="FnK-Y6-zMq">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="120"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -590,7 +590,7 @@
                                             </constraints>
                                         </box>
                                         <box borderType="line" title="Command Execution" titlePosition="noTitle" translatesAutoresizingMaskIntoConstraints="NO" id="0Uy-8W-mDh">
-                                            <rect key="frame" x="20" y="107" width="560" height="76"/>
+                                            <rect key="frame" x="20" y="57" width="560" height="76"/>
                                             <view key="contentView" id="MUi-hr-Ubm">
                                                 <rect key="frame" x="0.0" y="0.0" width="560" height="76"/>
                                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

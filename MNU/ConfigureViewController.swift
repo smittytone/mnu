@@ -85,13 +85,14 @@ final class ConfigureViewController:  NSViewController,
     var configureWindow: PMConfigureWindow? = nil
     let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
     var hasChanged: Bool = false
-    //var isVisible: Bool = false
     var lastChance: Bool = false
     // FROM 1.6.0
     var terminalChoice: Int = 0
     var tabOpenChoice: Bool = false
     // FROM 2.0.0
     var doShowOutput: Bool = false
+    // FROM 2.4.0
+    var firstOpen: Bool = true
 
 
     // MARK: - Private Class Properties
@@ -169,24 +170,24 @@ final class ConfigureViewController:  NSViewController,
 
         // FROM 1.1.0
         // Add tooltips: Menu Items Tab
-        self.menuItemsAddButton.toolTip = "Add a new menu item"
-        self.extrasButton.toolTip       = "Click here for further actions"
-        self.applyChangesButton.toolTip = "Click to apply any changes you have made"
-        self.showHelpButton.toolTip     = "Click here for help with this tab"
+        self.menuItemsAddButton.toolTip         = "Add a new menu item"
+        self.extrasButton.toolTip               = "Click here for further actions"
+        self.applyChangesButton.toolTip         = "Click to apply any changes you have made"
+        self.showHelpButton.toolTip             = "Click here for help with this tab"
 
         // Preferences/Settings Tab
-        self.prefsHelpButton.toolTip          = "Click here for help with this tab"
-        self.prefsLaunchAtLoginSwitch.toolTip = "Check to automatically launch MNU when your Mac starts up"
-        self.prefsNewTermTabSwitch.toolTip    = "Check to run commands in new Terminal tabs"
-        self.prefsShowImagesSwitch.toolTip    = "Check to display images alongside MNU menu items"
+        self.prefsHelpButton.toolTip            = "Click here for help with this tab"
+        self.prefsLaunchAtLoginSwitch.toolTip   = "Check to automatically launch MNU when your Mac starts up"
+        self.prefsNewTermTabSwitch.toolTip      = "Check to run commands in new Terminal tabs"
+        self.prefsShowImagesSwitch.toolTip      = "Check to display images alongside MNU menu items"
 
         // About... Tab
-        self.feedbackButton.toolTip = "Click here to submit comments and feedback about MNU"
+        self.feedbackButton.toolTip             = "Click here to submit comments and feedback about MNU"
 
         // Tab control buttons
-        self.tabButtonMenu.toolTip     = "Configure MNU’s menu items"
-        self.tabButtonSettings.toolTip = "Apply MNU settings"
-        self.tabButtonAbout.toolTip    = "Learn more about MNU"
+        self.tabButtonMenu.toolTip              = "Configure MNU’s menu items"
+        self.tabButtonSettings.toolTip          = "Apply MNU settings"
+        self.tabButtonAbout.toolTip             = "Learn more about MNU"
 
         // Configure the tab manager and its tabs
         makeTabs(self.tabManager)
@@ -197,10 +198,6 @@ final class ConfigureViewController:  NSViewController,
         // FROM 2.4.0
         // Move this here so un-minimising the window doesn't change its tab
         self.tabManager.programmaticallyClickButton(at: 0)
-
-        if !self.configureWindow!.isVisible {
-            self.configureWindow!.center()
-        }
     }
 
 
@@ -259,6 +256,13 @@ final class ConfigureViewController:  NSViewController,
         // Size the first tab (which may not be visible)
         setListTabSize()
         self.tabManager.setWindowSize()
+
+        // FROM 2.4.0
+        // Centre the window when it first appears
+        if self.firstOpen {
+            self.window.center()
+            self.firstOpen = false
+        }
     }
 
 
