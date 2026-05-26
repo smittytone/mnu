@@ -48,8 +48,8 @@ final class SeparatorView: NSView {
             patternPtr[1] = 2.0
 
             let pointsPtr = UnsafeMutablePointer<CGPoint>.allocate(capacity: 2)
-            pointsPtr[0] = NSPoint(x: 10.0, y: 0.0)
-            pointsPtr[1] = NSPoint(x: 358.0, y: 0.0)
+            pointsPtr[0] = NSPoint(x: 0.0, y: 0.0)
+            pointsPtr[1] = NSPoint(x: self.frame.width, y: 0.0)
 
             let line = NSBezierPath()
             line.setLineDash(patternPtr, count: 2, phase: 0.0)
