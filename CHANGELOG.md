@@ -1,5 +1,6 @@
 ## Release Notes ##
 
+- 2.4.1 *Unreleased*
 - 2.4.0 *26 May 2026*
     - Add support for [Ghostty](https://ghostty.org).
     - Fix Configure MNU window tab switch on de-minimise.
