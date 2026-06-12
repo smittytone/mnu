@@ -118,7 +118,7 @@ final class ConfigureViewController:  NSViewController,
         // FROM 1.4.6
         // Get the OS version so we can set the table view row height and cell image scaling
         // according to whether we're on Catalina or under, or Big Sur and up
-        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
+        let sysVer = ProcessInfo.processInfo.operatingSystemVersion
         self.systemVersion = sysVer.majorVersion
         self.systemVersionMinor = sysVer.minorVersion
 
@@ -133,15 +133,15 @@ final class ConfigureViewController:  NSViewController,
         self.menuItemsTableView.rowSizeStyle = .custom
 
         // Watch for notifications of changes sent by the add user item view controller
-        let nc: NotificationCenter = NotificationCenter.default
+        let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.processNewItem),
                        name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ITEM_ADDED),
                        object: nil)
 
         // Set up the About MNU... tab text
-        let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+        let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
         self.aboutVersionText.stringValue = "Version \(version) (\(build))"
 
         // FROM 1.1.0
@@ -219,7 +219,7 @@ final class ConfigureViewController:  NSViewController,
 
         // FROM 1.0.1: moved from 'viewDidLoad()' so that the items update AFTER defaults registration
         // Set up the Preferences section
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         self.prefsLaunchAtLoginSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH) ? .on : .off
         self.prefsNewTermTabSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB) ? .on : .off
         self.prefsShowImagesSwitch.state = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES) ? .on : .off
@@ -499,12 +499,12 @@ final class ConfigureViewController:  NSViewController,
     private func doDelete(_ item: MenuItem) {
 
         // Present an alert to warn the user about deleting the Menu Item
-        let alert: NSAlert = NSAlert()
+        let alert = NSAlert()
         alert.messageText = "Are you sure you wish to delete ‘\(item.title)’?"
         alert.addButton(withTitle: "Yes")
         alert.addButton(withTitle: "No")
-        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
-            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+        alert.beginSheetModal(for: self.configureWindow!) { (response) in
+            if response == .alertFirstButtonReturn {
                 // The user clicked 'Yes' so find the item referenced by the button,
                 // and remove it from the configure window controller's list
                 guard let list = self.menuItems else { return }
@@ -513,7 +513,7 @@ final class ConfigureViewController:  NSViewController,
                 // Get the index of the menu item to be deleted
                 var index = -1
                 for i in 0..<list.items.count {
-                    let anItem: MenuItem = list.items[i]
+                    let anItem = list.items[i]
                     if anItem == item {
                         index = i
                         break
@@ -553,8 +553,8 @@ final class ConfigureViewController:  NSViewController,
     private func doShowHideSwitch(sender: Any) {
 
         // Get the menu item from the reference stored in the table cell's switch object
-        let theSwitch: MenuItemTableCellSwitch = sender as! MenuItemTableCellSwitch
-        if let item: MenuItem = theSwitch.menuItem {
+        let theSwitch = sender as! MenuItemTableCellSwitch
+        if let item = theSwitch.menuItem {
             doShowHide(item)
         }
     }
@@ -564,8 +564,8 @@ final class ConfigureViewController:  NSViewController,
     private func doTableButtonEditScript(sender: Any) {
 
         // Get the menu item from the reference stored in the table cell's edit button
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
+        let button = sender as! MenuItemTableCellButton
+        if let item = button.menuItem {
             doEdit(item)
         }
     }
@@ -575,8 +575,8 @@ final class ConfigureViewController:  NSViewController,
     private func doDeleteScript(sender: Any) {
 
         // Get the menu item from the reference stored in the table cell's delete button
-        let button: MenuItemTableCellButton = sender as! MenuItemTableCellButton
-        if let item: MenuItem = button.menuItem {
+        let button = sender as! MenuItemTableCellButton
+        if let item = button.menuItem {
             doDelete(item)
         }
     }
@@ -589,8 +589,8 @@ final class ConfigureViewController:  NSViewController,
     private func doContextShowHide(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             doShowHide(item)
         }
     }
@@ -600,8 +600,8 @@ final class ConfigureViewController:  NSViewController,
     private func doContextEditScript (sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             doEdit(item)
         }
     }
@@ -612,8 +612,8 @@ final class ConfigureViewController:  NSViewController,
     private func doContextDeleteScript(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             doDelete(item)
         }
     }
@@ -624,8 +624,8 @@ final class ConfigureViewController:  NSViewController,
     private func doContextAddNewItem(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             if let index = self.menuItems?.items.firstIndex(of: item) {
                 self.newMenuItemIndex = index
                 doAdd(index)
@@ -639,8 +639,8 @@ final class ConfigureViewController:  NSViewController,
     private func doContextAddSeparator(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             if let index = self.menuItems?.items.firstIndex(of: item) {
                 let newMenuItem = MenuItem()
                 newMenuItem.type = .separator
@@ -675,9 +675,9 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleLaunchAtLogin(sender: Any?) {
 
-        let action: String = (self.prefsLaunchAtLoginSwitch.state == NSControl.StateValue.on
-                              ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED
-                              : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
+        let action = (self.prefsLaunchAtLoginSwitch.state == .on
+                      ? MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_ENABLED
+                      : MNU_CONSTANTS.NOTIFICATION_IDS.AUTOSTART_DISABLED)
 
         NotificationCenter.default.post(name: NSNotification.Name(rawValue: action),
                                         object: self)
@@ -691,7 +691,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleItemImages(sender: Any?) {
 
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         let state = self.prefsShowImagesSwitch.state == .on ? true : false
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_MENU_IMAGES)
 
@@ -708,7 +708,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doSetTermPref(sender: Any?) {
 
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         self.tabOpenChoice = self.prefsNewTermTabSwitch.state == .on ? true : false
         defaults.set(self.tabOpenChoice, forKey: MNU_CONSTANTS.SETTINGS_IDS.NEW_TERM_TAB)
 
@@ -727,7 +727,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleTerminalChoice(sender: Any?) {
 
-        var termChoice: Int = 0
+        var termChoice = 0
         if self.prefsTerminalChoiceITerm2.state == .on {
             termChoice = MNU_CONSTANTS.TERMINAL.ITERM
         }
@@ -741,7 +741,7 @@ final class ConfigureViewController:  NSViewController,
         // Only write out the choice if it's different -- it should be
         if termChoice != self.terminalChoice {
             self.terminalChoice = termChoice
-            let defaults: UserDefaults = UserDefaults.standard
+            let defaults = UserDefaults.standard
             defaults.set(termChoice, forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
 
             // Notify the mai app that it needs to change
@@ -760,7 +760,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleAutoSeparate(sender: Any?) {
 
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         let state = self.prefsAutoSeparateSwitch.state == .on ? true : false
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.AUTO_SEPARATE)
 
@@ -784,7 +784,7 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doToggleShowDirectOutput(sender: Any?) {
 
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         let state = self.prefsDirectOutputSwitch.state == .on ? true : false
         self.doShowOutput = state
         defaults.set(state, forKey: MNU_CONSTANTS.SETTINGS_IDS.SHOW_DIRECT_OUTPUT)
@@ -803,11 +803,11 @@ final class ConfigureViewController:  NSViewController,
     @IBAction
     private func doShowHelp(sender: Any?) {
 
-        var path: String = MNU_SECRETS.WEBSITE.URL_MAIN
-        let button: NSButton = sender as! NSButton
+        var path = MNU_SECRETS.WEBSITE.URL_MAIN
+        let button = sender as! NSButton
         path += button == self.prefsHelpButton ? "#mnu-preferences" : "#how-to-configure-mnu"
 
-        if let helpURL: URL = URL(string: path) {
+        if let helpURL = URL(string: path) {
             NSWorkspace.shared.open(helpURL)
         }
     }
@@ -842,16 +842,16 @@ final class ConfigureViewController:  NSViewController,
         // ...and show it
         savePanel.beginSheetModal(for: self.view.window!) { (response) in
 
-            if response == NSApplication.ModalResponse.OK {
+            if response == .OK {
                 // The user clicked the Save button
                 guard let targetUrl = savePanel.url else { return }
 
                 // Create a JSON string representation of the menu data
                 do {
-                    let dataString: String = try self.menuItems!.encode()
+                    let json = try self.menuItems!.encode()
 
                     // Convert the string to data for saving
-                    if let fileData: Data = dataString.data(using: String.Encoding.utf8) {
+                    if let fileData = json.data(using: String.Encoding.utf8) {
 
                         // Save the data
                         if !FileManager.default.createFile(atPath: targetUrl.path,
@@ -890,7 +890,7 @@ final class ConfigureViewController:  NSViewController,
     private func doImport() {
 
         // Create an open panel for the import operation...
-        let openPanel: NSOpenPanel = NSOpenPanel()
+        let openPanel = NSOpenPanel()
         openPanel.allowsOtherFileTypes = false
         openPanel.allowsMultipleSelection = false
         openPanel.directoryURL = FileManager.default.homeDirectoryForCurrentUser
@@ -905,13 +905,13 @@ final class ConfigureViewController:  NSViewController,
         // ...and show it
         openPanel.beginSheetModal(for: self.view.window!) { (response) in
 
-            if response == NSApplication.ModalResponse.OK {
+            if response == .OK {
                 // The user clicked the Save button
                 if let targetUrl = openPanel.url {
                     // Load the data if we have a valid file URL
                     do {
-                        let fileData: Data = try Data(contentsOf: targetUrl)
-                        let newMenu: MenuItemList = try MenuItemList.decode(fileData)
+                        let fileData = try Data(contentsOf: targetUrl)
+                        let newMenu = try MenuItemList.decode(fileData)
                         self.menuItems = newMenu
                         self.hasChanged = true
                         self.applyChangesButton.isEnabled = true
@@ -937,12 +937,12 @@ final class ConfigureViewController:  NSViewController,
     @objc
     private func restoreDefaults() {
 
-        let alert: NSAlert = NSAlert()
+        let alert = NSAlert()
         alert.messageText = "Are you sure you wish to restore MNU’s defaults?"
         alert.addButton(withTitle: "Yes")
         alert.addButton(withTitle: "No")
-        alert.beginSheetModal(for: self.configureWindow!) { (response: NSApplication.ModalResponse) in
-            if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+        alert.beginSheetModal(for: self.configureWindow!) { (response) in
+            if response == .alertFirstButtonReturn {
                 // The user clicked 'Yes': notify the menu that it needs to change
                 NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.RESTORE_DEFAULTS),
                                                 object: self)
@@ -1012,7 +1012,7 @@ final class ConfigureViewController:  NSViewController,
 
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
-            if let item: MenuItem = self.aivc.newMenuItem {
+            if let item = self.aivc.newMenuItem {
                 if self.newMenuItemIndex != 0 {
                     self.menuItems!.items.insert(item, at: self.newMenuItemIndex + 1)
                 } else {
@@ -1042,7 +1042,7 @@ final class ConfigureViewController:  NSViewController,
 
     func numberOfRows(in tableView: NSTableView) -> Int {
 
-        if let items: MenuItemList = self.menuItems {
+        if let items = self.menuItems {
             return items.items.count
         }
 
@@ -1052,10 +1052,10 @@ final class ConfigureViewController:  NSViewController,
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
 
-        if let items: MenuItemList = self.menuItems {
-            let item: MenuItem = items.items[row]
-            let cell: MenuItemTableCellView? = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"),
-                                                                  owner: self) as? MenuItemTableCellView
+        if let items = self.menuItems {
+            let item = items.items[row]
+            let cell = tableView.makeView(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "mnu-item-cell"),
+                                          owner: self) as? MenuItemTableCellView
 
             if cell != nil {
                 // Configure the cell's title and its three buttons
@@ -1069,10 +1069,10 @@ final class ConfigureViewController:  NSViewController,
                     labelParagraphStyle.alignment = .left
 
                     var labelFont = NSFont.systemFont(ofSize: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE)
-                    if let font: NSFont = NSFontManager.shared.font(withFamily: labelFont.familyName!,
-                                                                    traits: .italicFontMask,
-                                                                    weight: 5,
-                                                                    size: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE) {
+                    if let font = NSFontManager.shared.font(withFamily: labelFont.familyName!,
+                                                            traits: .italicFontMask,
+                                                            weight: 5,
+                                                            size: MNU_CONSTANTS.DEFAULT_SYSTEM_FONT_SIZE) {
                         labelFont = font
                     }
 
@@ -1178,9 +1178,9 @@ final class ConfigureViewController:  NSViewController,
 
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
 
-        if let items: MenuItemList = self.menuItems {
-            let item: MenuItem = items.items[row]
-            let pasteboardItem: NSPasteboardItem = NSPasteboardItem()
+        if let items = self.menuItems {
+            let item = items.items[row]
+            let pasteboardItem = NSPasteboardItem()
             pasteboardItem.setString(item.title, forType: self.mnuPasteboardType)
             return pasteboardItem
         }
@@ -1206,9 +1206,9 @@ final class ConfigureViewController:  NSViewController,
             else { return false }
 
         var originalRow = -1
-        if let items: MenuItemList = self.menuItems {
+        if let items = self.menuItems {
             for i in 0..<items.items.count {
-                let anItem: MenuItem = items.items[i]
+                let anItem = items.items[i]
                 if anItem.title == itemTitle {
                     originalRow = i
                 }
@@ -1223,7 +1223,7 @@ final class ConfigureViewController:  NSViewController,
             tableView.endUpdates()
 
             // Move the list items
-            let anItem: MenuItem = items.items[originalRow]
+            let anItem = items.items[originalRow]
             items.items.remove(at: originalRow)
             items.items.insert(anItem, at: newRow)
 
@@ -1248,7 +1248,7 @@ final class ConfigureViewController:  NSViewController,
         guard self.hasChanged else { return true }
 
         // There are unsaved changes - warn the user
-        let alert: NSAlert = NSAlert()
+        let alert = NSAlert()
         alert.messageText = "You have unapplied changes"
         alert.informativeText = "Do you wish to apply the changes you have made before closing the Configure MNU window?"
         alert.addButton(withTitle: "Yes")
@@ -1258,13 +1258,13 @@ final class ConfigureViewController:  NSViewController,
             alert.addButton(withTitle: "Cancel")
         }
 
-        alert.beginSheetModal(for: self.configureWindow!) { (selection) in
-            if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
+        alert.beginSheetModal(for: self.configureWindow!) { (response) in
+            if response == .alertFirstButtonReturn {
                 // The user said YES, so add MNU to the login items system preference
                 self.doSave(sender: nil)
             }
 
-            if selection != NSApplication.ModalResponse.alertThirdButtonReturn {
+            if response != .alertThirdButtonReturn {
                 // The user said YES or NO, so close the window
                 self.configureWindow!.close()
 
@@ -1350,13 +1350,12 @@ final class ConfigureViewController:  NSViewController,
         // the menu's items for the Menu Item clicked on
 
         // Get the NSTableView row that the user clicked
-        let clickedRow: Int = self.menuItemsTableView.clickedRow
-
+        let clickedRow = self.menuItemsTableView.clickedRow
         if clickedRow > -1 {
             // If the click was on a valid row, use that index to
             // get the MenuItem represented at the clicked row
-            if let items: MenuItemList = self.menuItems {
-                let item: MenuItem = items.items[clickedRow]
+            if let items = self.menuItems {
+                let item = items.items[clickedRow]
                 // Set the contextual menu's three items (Show/Hide, Edit, Delete)
                 // to point to the Menu Item represented at the clicked row
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.representedObject = item
@@ -1414,9 +1413,9 @@ final class ConfigureViewController:  NSViewController,
         var total = 0
         var count = 0
 
-        if let list: MenuItemList = self.menuItems {
+        if let list = self.menuItems {
             if list.items.count > 0 {
-                for item: MenuItem in list.items {
+                for item in list.items {
                     if !item.isHidden { //}&& item.type != .separator {
                         // Real items, visible
                         count += 1
@@ -1428,8 +1427,8 @@ final class ConfigureViewController:  NSViewController,
         }
 
         // Handle plurals in the text correctly, and subsitite 'no' for '0'
-        let itemText: String = count == 1 ? "item" : "items"
-        let countText: String = count == 0 ? "no" : "\(count)"
+        let itemText = count == 1 ? "item" : "items"
+        let countText = count == 0 ? "no" : "\(count)"
 
         // Display the text
         menuItemsCountText.stringValue = "MNU will show \(countText) of \(total) \(itemText) (Option-click MNU to show all items)"
@@ -1445,10 +1444,10 @@ final class ConfigureViewController:  NSViewController,
      */
     private func checkMenuItemCount() -> Bool {
 
-        if let items: MenuItemList = self.menuItems {
+        if let items = self.menuItems {
             if items.items.count >= MNU_CONSTANTS.MAX_ITEM_COUNT {
                 // Limit reached - warn the user
-                let alert: NSAlert = NSAlert()
+                let alert = NSAlert()
                 alert.messageText = "You have already added the maximum number of items to MNU"
                 alert.informativeText = "MNU can only show \(MNU_CONSTANTS.MAX_ITEM_COUNT) items. Please delete an item before adding a new one."
                 alert.addButton(withTitle: "OK")

@@ -35,7 +35,7 @@ final class AddUserItemTextField: NSTextField {
     private let commandKey: UInt = NSEvent.ModifierFlags.command.rawValue
     private let commandShiftKey: UInt = NSEvent.ModifierFlags.command.rawValue | NSEvent.ModifierFlags.shift.rawValue
 
-    
+
     // MARK: - Class Functions
     
     override func performKeyEquivalent(with event: NSEvent) -> Bool {
@@ -68,5 +68,5 @@ final class AddUserItemTextField: NSTextField {
         
         return super.performKeyEquivalent(with: event)
     }
-    
+
 }

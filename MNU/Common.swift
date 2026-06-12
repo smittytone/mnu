@@ -45,7 +45,7 @@ import AppKit
 func loadImage(_ imageUrl: URL) -> Data? {
     
     do {
-        let data: Data = try Data(contentsOf: imageUrl)
+        let data = try Data(contentsOf: imageUrl)
         return data
     } catch {
 #if DEBUG
@@ -85,10 +85,11 @@ func getImageStoreUrl(_ filename: String) -> URL {
     - message: The alert body.
     - window:  The window the alert will be modal for.
  */
+@MainActor
 func showAlert(_ title: String, _ message: String, _ window: NSWindow) {
-    
+
     // Present an alert to warn the user about deleting the Menu Item
-    let alert: NSAlert = NSAlert()
+    let alert = NSAlert()
     alert.messageText = title
     alert.informativeText = message
     alert.addButton(withTitle: "OK")
@@ -110,19 +111,19 @@ func showAlert(_ title: String, _ message: String, _ window: NSWindow) {
 func getAppPath(_ appName: String) -> String? {
 
     // Various possible Application locations are...
-    var basePaths: [String] = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
+    var basePaths = ["/Applications", "/Applications/Utilities", "/System/Applications", "/System/Applications/Utilities"]
 
     // ...and another is...
-    let homeAppPath: String = ("~/Applications" as NSString).expandingTildeInPath
+    let homeAppPath = ("~/Applications" as NSString).expandingTildeInPath
     if FileManager.default.fileExists(atPath: homeAppPath) {
         basePaths.append(homeAppPath)
     }
 
     // Run through the above list and check if the name app is there;
     // if it is, return it
-    for basePath: String in basePaths {
+    for basePath in basePaths {
         // Build the full app path
-        var appPath: String = appName
+        var appPath = appName
 
         // Make sure our temporary full path ends in '.app'
         if !appPath.contains(".app") {

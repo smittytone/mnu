@@ -49,8 +49,8 @@ final class MenuItemList: NSObject,
         guard !result.isEmpty else { throw Serializer.error.BadGroupSerialization }
         return result
     }
-    
-    
+
+
     /**
      Create a new instance from JSON data.
      

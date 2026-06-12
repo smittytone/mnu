@@ -54,7 +54,7 @@ final class AddUserItemViewController: NSViewController,
     @IBOutlet var keyEquivalentText: AddUserItemKeyTextField!
     // FROM 2.0.0
     @IBOutlet var chooseCustomIconButton: NSButton!
-    
+
 
     // MARK: - Public Class Properties
 
@@ -104,11 +104,10 @@ final class AddUserItemViewController: NSViewController,
 
         // Set up notifications
         // 'com.bps.mnu.select-image' is sent by the AddUserItemViewController when an icon is selected
-        let nc: NotificationCenter = NotificationCenter.default
-        nc.addObserver(self,
-                       selector: #selector(updateButtonIcon(_:)),
-                       name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
-                       object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateButtonIcon(_:)),
+                                               name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
+                                               object: nil)
         
         // FROM 2.0.0
         self.chooseCustomIconButton.toolTip = "Click to select a template image as a menu icon"
@@ -141,7 +140,7 @@ final class AddUserItemViewController: NSViewController,
         }
     }
 
-    
+
     /**
      Present the controller's sheet, customising it to either display an existing
      Menu Item's details for editing, or empty fields for a new Menu Item.
@@ -157,7 +156,7 @@ final class AddUserItemViewController: NSViewController,
         
         if self.isEditing {
             // We are presenting an existing item, so get it and populate the sheet's fields accordingly
-            if let item: MenuItem = self.newMenuItem {
+            if let item = self.newMenuItem {
                 // Populate the fields from the MenuItem property
                 self.titleText.stringValue = "Edit This Command"
                 self.itemScriptText.stringValue = item.script
@@ -247,7 +246,7 @@ final class AddUserItemViewController: NSViewController,
         }
     }
 
-    
+
     /**
      Add the existing custom icons to the collection of icons available.
      This only occurs when the quanity of custom icons is non-zero and greater than the number
@@ -270,8 +269,8 @@ final class AddUserItemViewController: NSViewController,
             self.iconPopoverController.collectionView.reloadData()
         }
     }
-    
-    
+
+
     /**
      When we receive a notification from the popover controller that an icon has been selected,
      we come here and set the button's image to that icon. The notification's object property
@@ -280,7 +279,7 @@ final class AddUserItemViewController: NSViewController,
     @objc
     func updateButtonIcon(_ note: Notification) {
 
-        if let obj: Any = note.object {
+        if let obj = note.object {
             // Decode the notification object
             let index = obj as! NSNumber
             
@@ -393,7 +392,7 @@ final class AddUserItemViewController: NSViewController,
         if self.isEditing {
             // Save the updated fields
             // NOTE `self.menuItem` should not be `nil` if we're editing
-            if let item: MenuItem = self.newMenuItem {
+            if let item = self.newMenuItem {
                 if item.title != self.menuTitleText.stringValue {
                     // FROM 1.2.0
                     // Check for a duplicate menu title if the
@@ -472,7 +471,7 @@ final class AddUserItemViewController: NSViewController,
             if !checkLabel() { return }
             
             // Create a Menu Item and set its values
-            let newItem: MenuItem = MenuItem()
+            let newItem = MenuItem()
             newItem.script = self.itemScriptText.stringValue
             newItem.title = self.menuTitleText.stringValue
             newItem.type = isOpenAction ? .open : .script
@@ -540,8 +539,8 @@ final class AddUserItemViewController: NSViewController,
         // Don't stop editing here, do it in the notified code (see above)
         // self.isEditing = false
     }
-    
-    
+
+
     /**
      Show help via the website.
      */
@@ -549,11 +548,12 @@ final class AddUserItemViewController: NSViewController,
     @objc
     func doShowHelp(sender: Any?) {
         
-        if let helpURL: URL = URL(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
+        if let helpURL = URL(string: MNU_SECRETS.WEBSITE.URL_MAIN + "#how-to-add-and-edit-your-own-menu-items") {
             NSWorkspace.shared.open(helpURL)
         }
     }
-    
+
+
     /**
      Present the pre-installed icon matrix.
      */
@@ -575,8 +575,8 @@ final class AddUserItemViewController: NSViewController,
                                of: self.iconButton,
                                preferredEdge: NSRectEdge.maxY)
     }
-    
-    
+
+
     /**
      Make sure mutually exclusive checkboxes aren't ticked, and present
      a warning if they are.
@@ -586,9 +586,9 @@ final class AddUserItemViewController: NSViewController,
     @objc
     func doCheckBox(sender: Any) {
         
-        let checkedButton: NSButton = sender as! NSButton
-        var doWarn: Bool = false
-        
+        let checkedButton = sender as! NSButton
+        var doWarn = false
+
         if checkedButton.state == .on {
             if checkedButton == self.directCheck {
                 if self.openCheck.state == .on {
@@ -621,11 +621,11 @@ final class AddUserItemViewController: NSViewController,
     @IBAction
     @objc
     func doClearKey(sender: Any) {
-        
+
         self.keyEquivalentText.stringValue = ""
     }
-    
-    
+
+
     /**
      Present an Open dialog to get a custom image, ie. an unprocessed PNG
      we're going to use as the basis for a menu item icon.
@@ -646,15 +646,15 @@ final class AddUserItemViewController: NSViewController,
         // FROM 2.1.0
         // Add graphics guidance
         // TODO Make this appear automatically and not just when `Show Options` is clicked.
-        let av: NSTextField = NSTextField(frame: NSMakeRect(0.0, 0.0, 600.0, 64.0))
-        av.isEditable = false
-        av.isSelectable = false
-        av.usesSingleLineMode = false
-        av.isBezeled = false
-        av.isBordered = false
-        av.lineBreakMode = .byWordWrapping
-        av.stringValue = "Images should be in PNG or WEBP format and sized to at least 256x256 pixels. Images are applied as macOS template images, so they should contain only black pixels, transparent pixels and/or pixels with opacities between these two extremes."
-        openDialog.accessoryView = av
+        let accessoryView = NSTextField(frame: NSMakeRect(0.0, 0.0, 600.0, 64.0))
+        accessoryView.isEditable = false
+        accessoryView.isSelectable = false
+        accessoryView.usesSingleLineMode = false
+        accessoryView.isBezeled = false
+        accessoryView.isBordered = false
+        accessoryView.lineBreakMode = .byWordWrapping
+        accessoryView.stringValue = "Images should be in PNG or WEBP format and sized to at least 256x256 pixels. Images are applied as macOS template images, so they should contain only black pixels, transparent pixels and/or pixels with opacities between these two extremes."
+        openDialog.accessoryView = accessoryView
 
         // Limit opening to PNG files
         if let fileType = UTType(filenameExtension: "png") {
@@ -681,8 +681,8 @@ final class AddUserItemViewController: NSViewController,
             }
         }
     }
-    
-    
+
+
     // MARK: - Image File Load/Save and Processing Functions
     
     /**
@@ -724,8 +724,8 @@ final class AddUserItemViewController: NSViewController,
         self.iconButton.index = MNU_CONSTANTS.DEFAULT_ICONS.count - 1 + self.customIcons.count
         self.iconButton.image = processedImage
     }
-    
-    
+
+
     /**
      Save a custom image that has been processed for menu item use to disk. This is the
      custom icom the user selected prior to clicking **Add** or **Update**, so will be
@@ -775,8 +775,8 @@ final class AddUserItemViewController: NSViewController,
             // The image is stored in `~/.config/mnu/` under that UUID.
         }
     }
-    
-    
+
+
     /**
      Create `.config` and `.config/mnu` directories under the user's home directory.
      
@@ -801,8 +801,8 @@ final class AddUserItemViewController: NSViewController,
         
         return false
     }
-    
-    
+
+
     // MARK: - Input Checker Functions
     
     /**
@@ -814,10 +814,10 @@ final class AddUserItemViewController: NSViewController,
      */
     private func checkLabel() -> Bool {
         
-        if let list: MenuItemList = self.menuItems {
+        if let list = self.menuItems {
             if list.items.count > 0 {
-                var got: Bool = false
-                for item: MenuItem in list.items {
+                var got = false
+                for item in list.items {
                     if item.title == self.menuTitleText.stringValue {
                         got = true
                         break
@@ -851,9 +851,9 @@ final class AddUserItemViewController: NSViewController,
      */
     func checkDirectCommand(_ command: String) -> Bool {
         
-        let shellChars: [String] = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
+        let shellChars = ["~", "$", "*", "?", "!", "+", "@", "\"", "'", "{", "["]
         for shellChar in shellChars {
-            if (command as NSString).contains(shellChar) {
+            if command.contains(shellChar) {
                 return true
             }
         }
@@ -878,13 +878,13 @@ final class AddUserItemViewController: NSViewController,
     func makeAbsolutePath(_ path: String) -> String {
         
         // Separate input path into space-separated sub-paths
-        var returnPath: String = ""
-        let parts: [String] = (path as NSString).components(separatedBy: " ")
-        
+        var returnPath = ""
+        let parts = path.components(separatedBy: " ")
+
         // Fix up each sub-path
         for i in 0..<parts.count {
-            var part: String = parts[i]
-            if (part as NSString).contains("..") {
+            var part = parts[i]
+            if part.contains("..") {
                 if !part.hasPrefix("/") {
                     part = "/" + part
                 }
@@ -902,7 +902,7 @@ final class AddUserItemViewController: NSViewController,
         return returnPath
     }
 
-    
+
     /**
      Check the modifier keys selected have not been already assigned to another menu item.
      
@@ -919,11 +919,11 @@ final class AddUserItemViewController: NSViewController,
             return true
         }
         
-        if let list: MenuItemList = self.menuItems {
+        if let list = self.menuItems {
             if list.items.count > 0 {
-                if let newMenuItem: MenuItem = self.newMenuItem {
-                    var got: Bool = false
-                    for item: MenuItem in list.items {
+                if let newMenuItem = self.newMenuItem {
+                    var got = false
+                    for item in list.items {
                         if item.uuid != newMenuItem.uuid &&
                             item.keyEquivalent == self.keyEquivalentText.stringValue.lowercased() &&
                             item.keyModFlags == modFlags {
@@ -976,7 +976,7 @@ final class AddUserItemViewController: NSViewController,
      */
     func controlTextDidChange(_ obj: Notification) {
         
-        let sender: NSTextField = obj.object as! NSTextField
+        let sender = obj.object as! NSTextField
         if sender == self.menuTitleText {
             if self.menuTitleText.stringValue.count > MNU_CONSTANTS.MENU_TEXT_LEN {
                 // The field contains more than 'MNU_CONSTANTS.MENU_TEXT_LEN' characters, so only
@@ -987,7 +987,7 @@ final class AddUserItemViewController: NSViewController,
 
             // Whenever a character is entered, update the character count
             self.textCount.stringValue = "\(self.menuTitleText.stringValue.count)/\(MNU_CONSTANTS.MENU_TEXT_LEN)"
-            return;
+            return
         }
     }
 
@@ -1002,7 +1002,7 @@ final class AddUserItemViewController: NSViewController,
      */
     func windowWillReturnFieldEditor(_ sender: NSWindow, to client: Any?) -> Any? {
         
-        if let anyClient: Any = client {
+        if let anyClient = client {
             if anyClient is AddUserItemKeyTextField {
                 if self.keyFieldEditor == nil {
                     self.keyFieldEditor = AddUserItemKeyFieldEditor()

@@ -43,7 +43,7 @@ final class AddUserItemKeyFieldEditor: NSTextView {
 
     var keyTextField: AddUserItemKeyTextField? = nil
 
-    
+
     // MARK: - Private Class Properties
 
     private let commandKey: UInt = NSEvent.ModifierFlags.command.rawValue
@@ -172,8 +172,8 @@ final class AddUserItemKeyFieldEditor: NSTextView {
         
         let rawKeys: [String] = ["C", "X", "V", "A", "Z"]
         
-        if let keyTextField: AddUserItemKeyTextField = self.keyTextField {
-            if let segment: NSSegmentedControl = keyTextField.segment {
+        if let keyTextField = self.keyTextField {
+            if let segment = keyTextField.segment {
                 // Deselect all segments...
                 segment.selectedSegment = -1
                 

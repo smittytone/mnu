@@ -36,21 +36,21 @@ final class AddUserItemPopoverController: NSViewController,
     
     @IBOutlet weak var collectionView: NSCollectionView!
     @IBOutlet weak var myPopover: NSPopover!
-    
-    
+
+
     // MARK: - Public Class Properties
     
     var availableIconImages: [NSImage] = []
     var button: AddUserItemIconButton = AddUserItemIconButton()
     var rows: Int = 5
     var columns: Int = 5
-    
-    
+
+
     // MARK: - Private Class Properties
     
     private var count: Int = 0
     private var tooltips: [String] = []
-    
+
 
     // MARK: - Lifecycle Methods
 
@@ -89,9 +89,6 @@ final class AddUserItemPopoverController: NSViewController,
         self.tooltips.append("Power")
         self.tooltips.append("App")
         self.tooltips.append("X, The Unknown")
-        
-        // Configure the collection view
-        // configureCollectionView()
     }
 
 
@@ -115,14 +112,10 @@ final class AddUserItemPopoverController: NSViewController,
      */
     private func configureCollectionView() {
         
-        let flowLayout: NSCollectionViewFlowLayout = NSCollectionViewFlowLayout()
+        let flowLayout = NSCollectionViewFlowLayout()
         flowLayout.itemSize = NSMakeSize(64, 64)
         flowLayout.minimumInteritemSpacing = 0.0
         flowLayout.minimumLineSpacing = 0.0
-        //gridLayout.minimumItemSize = NSMakeSize(64, 64)
-        //gridLayout.maximumNumberOfRows = rows
-        //gridLayout.maximumNumberOfColumns = 5
-        //gridLayout.margins = NSEdgeInsetsMake(4.0, 4.0, 4.0, 4.0)
         
         // Add the flow layout to the collection view and configure the collection view
         self.collectionView.collectionViewLayout = flowLayout
@@ -134,25 +127,24 @@ final class AddUserItemPopoverController: NSViewController,
         self.view.frame = NSMakeRect(self.view.frame.minX, self.view.frame.minY, CGFloat(columns * 64), CGFloat(rows * 64))
     }
 
+
     // MARK: - NSCollectionViewDelegate Functions
     
     func numberOfSections(in collectionView: NSCollectionView) -> Int {
         
-        // Only one section in this collection
-        
+        // There's only one section in this collection
         return 1
     }
-    
-    
+
+
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
 
         // Just return the number of icons we have
-        
         self.count = 0
         return self.availableIconImages.count
     }
-    
-    
+
+
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
         
         let item: NSCollectionViewItem = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier(rawValue: "AddUserItemCollectionViewItem"),
@@ -174,8 +166,8 @@ final class AddUserItemPopoverController: NSViewController,
         
         return item
     }
-    
-    
+
+
     /**
      Identify the selected icon and notify the parent AddUserItemViewController so that it can
      update its icon button (which triggers the popup containing this collection).
@@ -183,12 +175,11 @@ final class AddUserItemPopoverController: NSViewController,
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
 
         for index in indexPaths {
-            if let obj: NSCollectionViewItem = collectionView.item(at: index) {
+            if let obj = collectionView.item(at: index) {
                 // Send the selected item's index to the AddUserItemViewController
                 let item = obj as! AddUserItemCollectionViewItem
-                let nc: NotificationCenter = NotificationCenter.default
-                nc.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
-                        object: NSNumber(value: item.index))
+                NotificationCenter.default.post(name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.ICON_SELECTED),
+                                                object: NSNumber(value: item.index))
             }
         }
     }

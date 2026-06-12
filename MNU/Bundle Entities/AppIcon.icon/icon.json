@@ -8,14 +8,16 @@
     {
       "appearance" : "dark",
       "value" : {
-        "solid" : "srgb:0.30588,0.39608,0.68235,1.00000"
+        "solid" : "display-p3:0.17831,0.21846,0.36787,1.00000"
       }
     }
   ],
   "groups" : [
     {
+      "blur-material" : null,
       "layers" : [
         {
+          "blend-mode" : "normal",
           "fill-specializations" : [
             {
               "value" : {
@@ -35,9 +37,28 @@
           "name" : "mnu_raw"
         }
       ],
+      "lighting-specializations" : [
+        {
+          "appearance" : "dark",
+          "value" : "individual"
+        }
+      ],
+      "opacity-specializations" : [
+        {
+          "appearance" : "dark",
+          "value" : 1
+        }
+      ],
+      "position" : {
+        "scale" : 1,
+        "translation-in-points" : [
+          0,
+          0
+        ]
+      },
       "shadow" : {
-        "kind" : "neutral",
-        "opacity" : 0.5
+        "kind" : "layer-color",
+        "opacity" : 1
       },
       "translucency" : {
         "enabled" : true,

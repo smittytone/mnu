@@ -70,6 +70,7 @@ final public class PMTabManager {
      - Parameters:
         - button: The NSButton clicked.
      */
+    @MainActor
     public func buttonClicked(_ button: NSButton) {
 
         // Check the user isn't just clicking the button for the tab that
@@ -133,6 +134,7 @@ final public class PMTabManager {
     /**
      Auto-click a button by passing in the 'clicked' button.
      */
+    @MainActor
     public func programmaticallyClickButton(_ button: NSButton) {
 
         buttonClicked(button)
@@ -142,6 +144,7 @@ final public class PMTabManager {
     /**
      Auto-click a button by passing in the index of the 'clicked' button.
      */
+    @MainActor
     public func programmaticallyClickButton(at index: Int) {
 
         guard let button = self.tabs[index].button else { return }
@@ -153,6 +156,7 @@ final public class PMTabManager {
      Set the window's content size on a tab switch, provided a size has
      been set.
      */
+    @MainActor
     public func setWindowSize() {
 
         guard let pw = parentWindow else { return }
@@ -214,6 +218,7 @@ final public class PMTabManager {
      - Parameters:
         - index: The specified tab index.
      */
+    @MainActor
     public func preserveCurrentSizeOfTabAt(index: Int) {
 
         guard self.tabs.count > index else { return }

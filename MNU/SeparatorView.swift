@@ -36,9 +36,9 @@ final class SeparatorView: NSView {
 
         super.draw(dirtyRect)
 
-        if let gc: NSGraphicsContext = NSGraphicsContext.current {
+        if let context = NSGraphicsContext.current {
             // Lock the context
-            gc.saveGraphicsState()
+            context.saveGraphicsState()
 
             // Draw the dotted line
             NSColor.controlAccentColor.setStroke()
@@ -58,7 +58,7 @@ final class SeparatorView: NSView {
             line.stroke()
 
             // Unlock the context
-            gc.restoreGraphicsState()
+            context.restoreGraphicsState()
         }
     }
 

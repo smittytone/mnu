@@ -41,9 +41,9 @@ final class AddUserItemCollectionView: NSView {
 
         super.draw(dirtyRect)
 
-        if let gc: NSGraphicsContext = NSGraphicsContext.current {
+        if let context = NSGraphicsContext.current {
             // Lock the context
-            gc.saveGraphicsState()
+            context.saveGraphicsState()
 
             // Set the colours we'll be using - just use fill so we
             // get colour coming through the image
@@ -54,14 +54,14 @@ final class AddUserItemCollectionView: NSView {
             }
 
             // Make the circle
-            let rect: NSRect = NSMakeRect(0, 0, 64, 64)
+            let rect = NSMakeRect(0, 0, 64, 64)
             let highlightCircle: NSBezierPath = NSBezierPath()
             highlightCircle.lineWidth = 4.0
             highlightCircle.appendOval(in: rect)
             highlightCircle.fill()
 
             // Unlock the context
-            gc.restoreGraphicsState()
+            context.restoreGraphicsState()
         }
     }
     

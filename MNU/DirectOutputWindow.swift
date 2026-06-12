@@ -29,22 +29,23 @@ import AppKit
 
 
 class DirectOutputWindow: NSPanel {
-    
+
     // MARK: - UI Properties
     
     @IBOutlet weak var outputTextView: NSTextView!
     @IBOutlet weak var outputScrollView: NSScrollView!
-    
+
+
     // MARK: - Public Properties
     
     public var textAttributes: [NSAttributedString.Key : Any]? = nil
-    
-    
+
+
     // MARK: - Private Properties
     
     private var backingForegroundColour: NSColor = .cyan
-    
-    
+
+
     // MARK: - Window Preparation Functions
     
     public func prepareForOutput(_ subtitle: String, _ isLight: Bool) {

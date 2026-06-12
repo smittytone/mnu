@@ -152,13 +152,12 @@ fileprivate extension CIImage {
 extension NSApplication {
 
     /**
-     Indicate whether the app is in Light mode or not.
-
-     - Returns `true` if the Mac is in light mode, otherwise `false`.
+     `true` if the app is in Light mode, otherwise `false`.
      */
-    func isMacInLightMode() -> Bool {
-        
-        return (self.effectiveAppearance.name.rawValue == "NSAppearanceNameAqua")
+    var inLightMode: Bool {
+        get {
+            return (self.effectiveAppearance.name.rawValue == "NSAppearanceNameAqua")
+        }
     }
 }
 

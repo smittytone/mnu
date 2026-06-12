@@ -52,7 +52,7 @@ final class AddUserItemCollectionViewItem: NSCollectionViewItem {
         didSet {
             // Cast the item's view as our custom class then tell the view
             // whether it is selected or not, and to redew
-            let auicv: AddUserItemCollectionView = self.view as! AddUserItemCollectionView
+            let auicv = self.view as! AddUserItemCollectionView
             auicv.isSelected = isSelected
             auicv.needsDisplay = true
         }

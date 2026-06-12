@@ -36,14 +36,20 @@ struct Serializer {
         case BadSingleDeserialization
         case BadGroupDeserialization
     }
-    
-    
+
+
+    /**
+     Generate a simple JSON serialization of the specified Menu Item object.
+
+     - Parameters:
+        - item: The MenuItem instance to process.
+
+     - Returns: The MenuItem data as a JSON string.
+     */
     static func jsonize(_ item: MenuItem) -> String {
 
-        // Generate a simple JSON serialization of the specified Menu Item object
-
-        var json: String = ""
-        let dict: [String:Any] = dictionise(item)
+        var json = ""
+        let dict = dictionise(item)
 
         do {
             let data = try JSONSerialization.data(withJSONObject: dict, options: JSONSerialization.WritingOptions.sortedKeys)
@@ -54,21 +60,26 @@ struct Serializer {
 
         return json
     }
-    
-    
+
+
+    /**
+     Generatae a full JSON string containing the full list of menu items
+     The top level object, 'data', is an array of all of the Menu Item
+     JSON strings.
+
+     - Parameters:
+        - list: The MenuItemList to process.
+
+     - Returns: The MenuItemList data as a JSON string.
+     */
     static func jsonizeAll(_ list: MenuItemList) -> String {
             
-        // Generatae a full JSON string containing the full list of menu items
-        // The top level object, 'data', is an array of all of the Menu Item
-        // JSON strings
-
-        var jsonString: String = ""
-
+        var jsonString = ""
         var dict: [String:[[String:Any]]] = [:]
         dict["data"] = [[String:Any]]()
 
-        for item: MenuItem in list.items {
-            let itemDict: [String:Any] = dictionise(item)
+        for item in list.items {
+            let itemDict = dictionise(item)
             dict["data"]?.append(itemDict)
         }
 
@@ -83,9 +94,15 @@ struct Serializer {
     }
 
 
-    private static func dictionise(_ item: MenuItem) -> [String:Any] {
+    /**
+     Convert a single MenuItem into a dictionary.
 
-        // Convert a single MenuItem into a dictionary
+     - Parameters:
+        - item: The MenuItem to process.
+
+     - Returns: A dictionary of `String` keys and `Any` values.
+     */
+    private static func dictionise(_ item: MenuItem) -> [String:Any] {
 
         var dict: [String:Any] = [:]
         dict["title"] = item.title
@@ -107,15 +124,21 @@ struct Serializer {
     }
 
 
-    static func dejsonize(_ json: String) -> MenuItem? {
+    /**
+     Recreate a Menu Item object from our simple JSON serialization and return it,
+     or `nil` to indicate failure.
 
-        // Recreate a Menu Item object from our simple JSON serialization and return it,
-        // or nil to indicate failure
+     - Parameters:
+        - json: The JSON string to decode.
+
+     - Returns: A MenuItem instance or `nil` on error.
+     */
+    static func dejsonize(_ json: String) -> MenuItem? {
 
         // Convert JSON string to data
         if let data = json.data(using: .utf8) {
             do {
-                let dict: [String: Any] = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
+                let dict = try JSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 return makeNewItem(dict)
             } catch {
                 NSLog("Error in Serializer.dejsonize(): \(error.localizedDescription)")
@@ -127,23 +150,29 @@ struct Serializer {
     }
 
 
-    static func dejsonizeAll(_ jsonData: Data) -> MenuItemList? {
+    /**
+     Unpack a full JSON file - ie. a menu list archive and return it,
+     or `nil` to indicate failure
 
-        // Unpack a full JSON file - ie. a menu list archive and return it,
-        // or nil to indicate failure
-        
+     - Parameters:
+        - json: The JSON (as raw data) to decode.
+
+     - Returns: A MenuItemList instance or `nil` on error.
+     */
+    static func dejsonizeAll(_ json: Data) -> MenuItemList? {
+
         // First, create a new menu
         let newMenu: MenuItemList = MenuItemList()
 
         do {
             // Convert the JSON data to a dictionary, and get the 'data' key's array value
-            let dict: [String: Any] = try JSONSerialization.jsonObject(with: jsonData, options: []) as! [String: Any]
+            let dict = try JSONSerialization.jsonObject(with: json, options: []) as! [String: Any]
             if let dataItems = dict["data"] {
                 // Run through the array's elements, converting each to a MenuItem
                 let items: [Any] = dataItems as! [Any]
 
-                for item: Any in items {
-                    let srcItem: [String:Any] = item as! [String:Any]
+                for item in items {
+                    let srcItem = item as! [String:Any]
                     newMenu.items.append(makeNewItem(srcItem))
                 }
 
@@ -163,10 +192,18 @@ struct Serializer {
     }
 
 
+    /**
+     Generate and return a Mene Item from a dictionary, providing
+     default values in the case of missing fields.
+
+     - Parameters:
+        - dict: A dictionory of keys and values from JSON.
+
+     - Returns: A MenuItem object.
+     */
     static private func makeNewItem(_ dict: [String:Any]) -> MenuItem {
 
-        // Generate and return a Mene Item from a dictionary, providing
-        // default values in the case of missing fields
+        //
 
         let newItem = MenuItem()
         let iconIndex = dict["icon"] as? Int
