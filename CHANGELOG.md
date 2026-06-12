@@ -1,6 +1,7 @@
 ## Release Notes ##
 
-- 2.4.1 *Unreleased*
+- 2.4.1 *12 June 2026*
+    - Fix arrow key operation in the Configure MNU window.
 - 2.4.0 *26 May 2026*
     - Add support for [Ghostty](https://ghostty.org).
     - Fix Configure MNU window tab switch on de-minimise.

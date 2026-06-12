@@ -28,7 +28,7 @@
 import AppKit
 
 
-@NSApplicationMain
+@main
 final class AppDelegate: NSObject,
                          NSApplicationDelegate,
                          NSMenuDelegate {
@@ -48,7 +48,8 @@ final class AppDelegate: NSObject,
     var terminalIndex: Int = 0                          // Which terminal has the user selected?
                                                         // 0  - macOS Terminal (default)
                                                         // 1  - iTerm
-                                                        // 2+ - TBD
+                                                        // 2  - Ghostty
+                                                        // 3+ - TBD
                                                         // NOTE This is not private so that it's accessible in tests
     
     // MARK: - Private App Properties
@@ -1665,36 +1666,36 @@ final class AppDelegate: NSObject,
         // Add other non-zero cases here to include other terminals
         // FROM 2.4.0 -- Add Ghostty (https://ghostty.org) on macOS now it supports AppleScript
         case MNU_CONSTANTS.TERMINAL.GHOSTTY:
-                if self.doNewTermTab {
-                    script = """
-                        tell application \"Ghostty\"
-                        activate
-                        try
-                        set term to focused terminal of selected tab of front window
-                        on error
-                        set newwin to new window
-                        set newtab to new tab in front window
-                        set term to focused terminal of newtab
-                        end try
-                        input text \"\(escapedCode)\" to term
-                        send key \"enter\" to term
-                        end tell
-                        """
-                } else {
-                    script = """
-                        tell application \"Ghostty\"
-                        activate
-                        try
-                        set term to focused terminal of selected tab of front window
-                        on error
-                        set newwin to new window
-                        set term to focused terminal of selected tab of newwin
-                        end try
-                        input text \"\(escapedCode)\" to term
-                        send key \"enter\" to term
-                        end tell
-                        """
-                }
+            if self.doNewTermTab {
+                script = """
+                    tell application \"Ghostty\"
+                    activate
+                    try
+                    set term to focused terminal of selected tab of front window
+                    on error
+                    set newwin to new window
+                    set newtab to new tab in front window
+                    set term to focused terminal of newtab
+                    end try
+                    input text \"\(escapedCode)\" to term
+                    send key \"enter\" to term
+                    end tell
+                    """
+            } else {
+                script = """
+                    tell application \"Ghostty\"
+                    activate
+                    try
+                    set term to focused terminal of selected tab of front window
+                    on error
+                    set newwin to new window
+                    set term to focused terminal of selected tab of newwin
+                    end try
+                    input text \"\(escapedCode)\" to term
+                    send key \"enter\" to term
+                    end tell
+                    """
+            }
         default:
             if self.doNewTermTab {
                 script = """
