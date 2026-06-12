@@ -44,6 +44,7 @@
 		3BE532922D40F1C6006670AA /* DirectOutputWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */; };
 		3BF692682FA4792A0061D0D7 /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF692672FA479240061D0D7 /* SeparatorView.swift */; };
 		3BF8085E2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */; };
+		3BFD5E772FDC02C100403F2E /* FeedbackEntities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BFD5E762FDC02BB00403F2E /* FeedbackEntities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -102,6 +103,7 @@
 		3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectOutputWindow.swift; sourceTree = "<group>"; };
 		3BF692672FA479240061D0D7 /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		3BF8085D2A35883100EEA76B /* AddUserItemKeyFieldEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddUserItemKeyFieldEditor.swift; sourceTree = "<group>"; };
+		3BFD5E762FDC02BB00403F2E /* FeedbackEntities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedbackEntities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -186,9 +188,10 @@
 				3B663CE02316D4570020A1DB /* AddUserItemCollectionView.swift */,
 				3BF692672FA479240061D0D7 /* SeparatorView.swift */,
 				3B01F0DE22EC175C0045A78A /* FeedbackSheetViewController.swift */,
+				3BFD5E762FDC02BB00403F2E /* FeedbackEntities.swift */,
 				3BBEF08E22CEC634001D1CCB /* MenuItem.swift */,
-				3BCAC5C52D3820D000E35581 /* CustomIcon.swift */,
 				3BBEF08C22CEC02F001D1CCB /* MenuItemList.swift */,
+				3BCAC5C52D3820D000E35581 /* CustomIcon.swift */,
 				3B9180B223439E3A00A5CE3B /* Serializer.swift */,
 				3BE532912D40F1C6006670AA /* DirectOutputWindow.swift */,
 				3BA0416C2D35CAAD00164E2D /* Extensions.swift */,
@@ -366,6 +369,7 @@
 				3BBEF09122CECC00001D1CCB /* Constants.swift in Sources */,
 				3BBEF08B22CEBD90001D1CCB /* ConfigureViewController.swift in Sources */,
 				3B34AB352A2F3BB900F7BDFB /* MenuItemTableCellSwitch.swift in Sources */,
+				3BFD5E772FDC02C100403F2E /* FeedbackEntities.swift in Sources */,
 				3B787A8F230EECA800468D3F /* AddUserItemIconButton.swift in Sources */,
 				3BBEF08F22CEC634001D1CCB /* MenuItem.swift in Sources */,
 				3B01F0DF22EC175C0045A78A /* FeedbackSheetViewController.swift in Sources */,
@@ -540,7 +544,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 220;
+				CURRENT_PROJECT_VERSION = 221;
 				DEAD_CODE_STRIPPING = YES;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
 				ENABLE_APP_SANDBOX = NO;
@@ -554,7 +558,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.5.0;
 				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -574,7 +578,7 @@
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 220;
+				CURRENT_PROJECT_VERSION = 221;
 				DEAD_CODE_STRIPPING = YES;
 				"DEVELOPMENT_TEAM[sdk=macosx*]" = Y5J3K52DNA;
 				ENABLE_APP_SANDBOX = NO;
@@ -588,7 +592,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.4;
-				MARKETING_VERSION = 2.4.1;
+				MARKETING_VERSION = 2.5.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.bps.MNU;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

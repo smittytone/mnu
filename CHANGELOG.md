@@ -1,5 +1,7 @@
 ## Release Notes ##
 
+- 2.5.0 *Unreleased*
+    - Adopt Swift Concurrency as a prelude to Swift 6 migration.
 - 2.4.1 *12 June 2026*
     - Fix arrow key operation in the Configure MNU window.
 - 2.4.0 *26 May 2026*
