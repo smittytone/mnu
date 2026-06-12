@@ -103,7 +103,7 @@ final class AppDelegate: NSObject,
         createMenu()
         
         // Register notification handlers
-        let nc: NotificationCenter = NotificationCenter.default
+        let nc = NotificationCenter.default
         nc.addObserver(self,
                        selector: #selector(self.updateAndSaveMenu),
                        name: NSNotification.Name(rawValue: MNU_CONSTANTS.NOTIFICATION_IDS.UPDATE_LIST),
@@ -163,6 +163,7 @@ final class AppDelegate: NSObject,
     }
 
                        
+    @MainActor
     @objc
     private func performTermination() {
         
@@ -175,12 +176,12 @@ final class AppDelegate: NSObject,
     func applicationShouldTerminate(_ sender: NSApplication) -> NSApplication.TerminateReply {
 
         // No configure window? Terminate immediately
-        guard let cw = self.cwvc.configureWindow else { return NSApplication.TerminateReply.terminateNow }
+        guard let cw = self.cwvc.configureWindow else { return .terminateNow }
 
         // This prevents the app closing when the user clicks the Quit control, if the
         // Configure Window is visible and is presenting the Add Item sheet
         if cw.isVisible && self.cwvc.aivc.parentWindow != nil {
-            return NSApplication.TerminateReply.terminateCancel
+            return .terminateCancel
         }
         
         // This prevents the app closing when the user clicks the Quit control, if the Configure
@@ -192,10 +193,10 @@ final class AppDelegate: NSObject,
             // Set the Configure Window for one last apperance
             self.cwvc.lastChance = true
             self.cwvc.doCancel(sender: self)
-            return NSApplication.TerminateReply.terminateLater
+            return .terminateLater
         }
         
-        return NSApplication.TerminateReply.terminateNow
+        return .terminateNow
     }
     
     
@@ -209,37 +210,28 @@ final class AppDelegate: NSObject,
     }
 
 
-    /*
-    func applicationWillResignActive(_ notification: Notification) {
-
-        // App is backgrounding - inform interested view controllers
-        NotificationCenter.default.post(name: NSNotification.Name.init(rawValue: "com.bps.mnu.will-background"),
-                                        object: self)
-    }
-     */
-    
-
+    @MainActor
     private func firstRunCheck() {
 
         // Check whether we're running for the first time
         // If so, invite the user to run MNU at launch
 
         // Read in the defaults to see if this is MNU's first run: value will be true
-        let defaults: UserDefaults = UserDefaults.standard
-        let isFirstRun: Bool = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
+        let defaults = UserDefaults.standard
+        let isFirstRun = defaults.bool(forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
         if isFirstRun {
             // This is the first run - set the default to false so we don't
             // ever do this again
             defaults.set(false, forKey: MNU_CONSTANTS.SETTINGS_IDS.FIRST_RUN)
 
             // Ask the user if they want to run MNU at startup
-            let alert: NSAlert = NSAlert()
+            let alert = NSAlert()
             alert.messageText = "Run MNU at Login?"
             alert.informativeText = "Do you wish to set your Mac to run MNU when you log in? This can also be set in MNU’s Preferences."
             alert.addButton(withTitle: "Yes")
             alert.addButton(withTitle: "No")
-            let selection: NSApplication.ModalResponse = alert.runModal()
-            if selection == NSApplication.ModalResponse.alertFirstButtonReturn {
+            let selection = alert.runModal()
+            if selection == .alertFirstButtonReturn {
                 // The user said yes, so add MNU to the login items system preference
                 enableAutoStart()
 
@@ -279,6 +271,7 @@ final class AppDelegate: NSObject,
      Refactored from `applicationDidFinishLaunching()`
 
      */
+    @MainActor
     private func recordSystemState() {
 
         // First ensure we are running on Mojave or above - Dark Mode is not supported by earlier versons
@@ -289,12 +282,13 @@ final class AppDelegate: NSObject,
         // Support macOS 11.0.0 version numbering by forcing check to 10.13.x
         if sysVer.majorVersion < 11 {
             // Wrong version, so present a warning message
-            let alert: NSAlert = NSAlert()
+            let alert = NSAlert()
             alert.messageText = "Unsupported version of macOS"
             alert.informativeText = "MNU makes use of features not present in the version of macOS (\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion)) running on your computer. Please consider upgrading to macOS 11 or higher."
             alert.addButton(withTitle: "OK")
             alert.runModal()
             self.disableDarkMode = true
+            NSApplication.shared.terminate(self)
         }
 
         // Are we running on Tahoe?
@@ -308,20 +302,20 @@ final class AppDelegate: NSObject,
         // Use the standard user defaults to first determine whether the host Mac is in Dark Mode,
         // and the the other states of supported switches
         // OS MODE
-        let defaults: UserDefaults = UserDefaults.standard
-        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
-            if let anyValue: Any = defaultsDict["AppleInterfaceStyle"] {
+        let defaults = UserDefaults.standard
+        if let defaultsDict = defaults.persistentDomain(forName: UserDefaults.globalDomain) {
+            if let anyValue = defaultsDict["AppleInterfaceStyle"] {
                 self.inDarkMode = getTrueBool(anyValue, "Dark")
             }
         }
 
         // FINDER DESKTOP USE, SHOW HIDDEN FILES
-        if let defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") {
-            if let anyValue: Any = defaultsDict["CreateDesktop"] {
+        if let defaultsDict = defaults.persistentDomain(forName: "com.apple.finder") {
+            if let anyValue = defaultsDict["CreateDesktop"] {
                 self.useDesktop = getTrueBool(anyValue)
             }
             
-            if let anyValue: Any = defaultsDict["AppleShowAllFiles"] {
+            if let anyValue = defaultsDict["AppleShowAllFiles"] {
                 self.showHidden = getTrueBool(anyValue)
             }
         }
@@ -340,8 +334,8 @@ final class AppDelegate: NSObject,
      */
     private func recordKeyPreferences() {
         
-        let defaults: UserDefaults = UserDefaults.standard
-        
+        let defaults = UserDefaults.standard
+
         // Read in the preferred terminal by index value, then
         // check that it is actually available. If not, use the default
         self.terminalIndex = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.TERMINAL)
@@ -396,7 +390,7 @@ final class AppDelegate: NSObject,
 
         // FROM 1.5.2
         // Make sure preference is saved
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         defaults.set(doTurnOn, forKey: MNU_CONSTANTS.SETTINGS_IDS.STARTUP_LAUNCH)
 
         // NOTE This is deprecated and no longer needed
@@ -412,6 +406,7 @@ final class AppDelegate: NSObject,
      FROM 1.6.0
      */
     @objc
+    @MainActor
     private func switchTerminal() {
         
         if self.cwvc.terminalChoice != MNU_CONSTANTS.TERMINAL.MACOS {
@@ -437,6 +432,7 @@ final class AppDelegate: NSObject,
      FROM 1.6.0
      */
     @objc
+    @MainActor
     private func toggleTerminalTabbing() {
         
         self.doNewTermTab = self.cwvc.tabOpenChoice
@@ -444,6 +440,7 @@ final class AppDelegate: NSObject,
     
     
     @objc
+    @MainActor
     private func setDirectOutput() {
         
         self.doShowOutput = self.cwvc.doShowOutput
@@ -466,7 +463,7 @@ final class AppDelegate: NSObject,
         
         if choice != MNU_CONSTANTS.TERMINAL.MACOS {
             // The user has selected a non-default terminal
-            let terminals: [String] = ["iTerm", "Ghostty"]
+            let terminals = ["iTerm", "Ghostty"]
 
             // `getAppPath()` returns nil if the app isn't present
             // Remember to zero-index `choice` because its zero value
@@ -492,7 +489,7 @@ final class AppDelegate: NSObject,
     private func saveItems() {
         
         var savedItems: [Any] = []
-        for item: MenuItem in self.itemList.items {
+        for item in self.itemList.items {
             do {
                 let encoded = try item.encode()
                 savedItems.append(encoded)
@@ -501,7 +498,7 @@ final class AppDelegate: NSObject,
             }
         }
         
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         defaults.set(savedItems, forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS)
 
         // NOTE This is deprecated and no longer needed
@@ -510,8 +507,9 @@ final class AppDelegate: NSObject,
     
     
     @objc
+    @MainActor
     private func performReset() {
-        
+
         // Set the appropriate flags and make sure the
         // control panel menu item has been removed.
         self.reloadDefaults = true
@@ -536,7 +534,7 @@ final class AppDelegate: NSObject,
         self.inDarkMode = !self.inDarkMode
 
         // Update the NSMenuItem
-        let menuItem: NSMenuItem = sender as! NSMenuItem
+        let menuItem = sender as! NSMenuItem
         menuItem.title = self.inDarkMode ? "Switch to Light Mode" : "Switch to Dark Mode"
         if self.showImages {
             if self.isTahoePlus {
@@ -547,14 +545,15 @@ final class AppDelegate: NSObject,
         }
 
         // Set up the script that will switch the UI mode
-        var arg: String = "tell application \"System Events\" to tell appearance preferences to set dark mode to "
-        arg += self.inDarkMode ? "true" : "false"
+        var script = "tell application \"System Events\" to tell appearance preferences to set dark mode to "
+        script += self.inDarkMode ? "true" : "false"
 
         // Run the AppleScript
         // FROM 1.7.0 -- Run off the main thread
-        let apsQueue: DispatchQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
+        let apsQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
+        let source = script
         apsQueue.async {
-            if let aps: NSAppleScript = NSAppleScript(source: arg) {
+            if let aps = NSAppleScript(source: source) {
                 aps.executeAndReturnError(nil)
             }
         }
@@ -573,7 +572,7 @@ final class AppDelegate: NSObject,
         self.useDesktop = !self.useDesktop
 
         // Update the NSMenuItem
-        let menuItem: NSMenuItem = sender as! NSMenuItem
+        let menuItem = sender as! NSMenuItem
         menuItem.title = self.useDesktop ? "Hide Files on Desktop" : "Show Files on Desktop"
         if self.showImages {
             if self.isTahoePlus {
@@ -584,8 +583,8 @@ final class AppDelegate: NSObject,
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
-        let defaults: UserDefaults = UserDefaults.standard
-        var defaultsDict: [String:Any] = defaults.persistentDomain(forName: "com.apple.finder")!
+        let defaults = UserDefaults.standard
+        var defaultsDict = defaults.persistentDomain(forName: "com.apple.finder")!
 
         if self.useDesktop {
             // Desktop is ON, so remove the 'CreateDesktop' key from 'com.apple.finder'
@@ -611,7 +610,7 @@ final class AppDelegate: NSObject,
         self.showHidden = !self.showHidden
 
         // Update the NSMenuItem
-        let menuItem: NSMenuItem = sender as! NSMenuItem
+        let menuItem = sender as! NSMenuItem
         menuItem.title = self.showHidden ? "Hide Hidden Files in Finder" : "Show Hidden Files in Finder"
         if self.showImages {
             if self.isTahoePlus {
@@ -622,8 +621,8 @@ final class AppDelegate: NSObject,
         }
 
         // Get the defaults for Finder as this contains the 'use desktop' option
-        let defaults: UserDefaults = UserDefaults.standard
-        guard var defaultsDict: [String: Any] = defaults.persistentDomain(forName: "com.apple.finder") else {
+        let defaults = UserDefaults.standard
+        guard var defaultsDict = defaults.persistentDomain(forName: "com.apple.finder") else {
             return
         }
 
@@ -675,7 +674,7 @@ final class AppDelegate: NSObject,
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
         //            but won't display a warning
-        let brewAvailable: Bool = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
         if brewAvailable {
             runScript("brew update")
         } else {
@@ -699,7 +698,7 @@ final class AppDelegate: NSObject,
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
         //            but won't display a warning
-        let brewAvailable: Bool = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
+        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
         if brewAvailable {
             runScript("brew upgrade")
         } else {
@@ -715,8 +714,8 @@ final class AppDelegate: NSObject,
     private func doScript(sender: Any?) {
 
         // Get the source Menu Item that the menu button is linked to
-        let menuItem: NSMenuItem = sender as! NSMenuItem
-        if let item: MenuItem = menuItem.representedObject as? MenuItem {
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
             if item.type == .script {
                 if item.isDirect {
                     // FROM 1.3.0
@@ -734,12 +733,13 @@ final class AppDelegate: NSObject,
 
 
     @objc
+    @MainActor
     private func showConfigureWindow() {
 
         // Duplicate the current item list to pass on to the configure window view controller.
         // We copy because the configure view controller may modify the list, but until the
         // user clicks `Apply`, we don't want the menu to be affected by the changes
-        let list: MenuItemList = self.itemList.copy() as! MenuItemList
+        let list = self.itemList.copy() as! MenuItemList
         self.cwvc.menuItems = list
 
         // Close the menu - required for controls within views added to menu items
@@ -756,6 +756,7 @@ final class AppDelegate: NSObject,
      Create the app's menu when the app is run.
      */
     @objc
+    @MainActor
     private func createMenu() {
 
         // Load the icons
@@ -770,15 +771,15 @@ final class AppDelegate: NSObject,
         self.itemList.items.removeAll()
 
         // Get the stored list of items, if there are any - an empty array will be loaded if there are not
-        let defaults: UserDefaults = UserDefaults.standard
-        let loadedItems: [String] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS) as! [String]
+        let defaults = UserDefaults.standard
+        let loadedItems = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.STORED_ITEMS) as! [String]
 
         if !self.reloadDefaults && loadedItems.count > 0 {
             // We have loaded a set of Menu Items, in serialized form, so run through the list to
             // convert the serializations into real objects: Menu Items and their representative
             // NSMenuItems
             
-            for loadedItem: String in loadedItems {
+            for loadedItem in loadedItems {
                 do {
                     let itemInstance = try MenuItem.decode(loadedItem)
                     
@@ -806,14 +807,15 @@ final class AppDelegate: NSObject,
                     placeMenuItem(itemInstance)
                 } catch {
                     // We couldn't load one of the saved list of MNU items, so ask the user what to do
-                    DispatchQueue.main.async {
-                        let alert: NSAlert = NSAlert()
+                    // FROM 2.5.0 -- switch to Swift Concurrency
+                    Task { @MainActor in
+                        let alert = NSAlert()
                         alert.messageText = "Stored MNU items are damaged"
                         alert.informativeText = "Do you wish to continue with the default items?"
                         alert.addButton(withTitle: "Continue")
                         alert.addButton(withTitle: "Quit MNU")
-                        
-                        if alert.runModal() == NSApplication.ModalResponse.alertFirstButtonReturn {
+
+                        if alert.runModal() == .alertFirstButtonReturn {
                             // User chose to reload defaults
                             self.reloadDefaults = true
                             self.createMenu()
@@ -821,67 +823,19 @@ final class AppDelegate: NSObject,
                             // User chose to quit
                             NSApplication.shared.terminate(self)
                         }
-                    }
-                    
-                    return
-                }
-                
-                /*
-                if let itemInstance: MenuItem = Serializer.dejsonize(loadedItem) {
-                    // Add the Menu Item to the list
-                    self.itemList.items.append(itemInstance)
 
-                    // FROM 1.7.0
-                    // Inject new keys + key mods for..
-                    // ... Switch mode
-                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SWITCH.UIMODE && itemInstance.keyEquivalent == "" {
-                        itemInstance.keyEquivalent = "z"
-                        itemInstance.keyModFlags = 12
-                    }
-
-                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE && itemInstance.keyEquivalent == ""  {
-                        itemInstance.keyEquivalent = "h"
-                        itemInstance.keyModFlags = 12
-                    }
-
-                    if itemInstance.code == MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE && itemInstance.keyEquivalent == "" {
-                        itemInstance.keyEquivalent = "h"
-                        itemInstance.keyModFlags = 9
-                    }
-
-                    placeMenuItem(itemInstance)
-                } else {
-                    // FROM 1.3.0
-                    // We couldn't load one of the saved list of MNU items, so ask the user what to do
-                    DispatchQueue.main.async {
-                        let alert: NSAlert = NSAlert.init()
-                        alert.messageText = "Stored MNU items are damaged"
-                        alert.informativeText = "Do you wish to continue with the default items?"
-                        alert.addButton(withTitle: "Continue")
-                        alert.addButton(withTitle: "Quit MNU")
-                        let response: NSApplication.ModalResponse = alert.runModal()
-
-                        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
-                            // User chose to reload defaults
-                            self.reloadDefaults = true
-                            self.createMenu()
-                        } else {
-                            // User chose to quit
-                            NSApplication.shared.terminate(self)
-                        }
                     }
 
                     return
                 }
-                */
-
+                
                 // FROM 1.6.0
                 // Add new defaults to the menu if the user has already customised the menu
-                let insertNewDefaults: Int = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6)
+                let insertNewDefaults = defaults.integer(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFINITIONS_1_6)
                 if insertNewDefaults > 0 {
-                    let defaultItems: [Int] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) as! [Int]
+                    let defaultItems = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) as! [Int]
                     for i: Int in 0..<insertNewDefaults {
-                        if let item: MenuItem = getNewMenuItem(defaultItems[MNU_CONSTANTS.BASE_DEFAULT_COUNT + i]) {
+                        if let item = getNewMenuItem(defaultItems[MNU_CONSTANTS.BASE_DEFAULT_COUNT + i]) {
                             // Add the menu item to the list and make a menu item
                             self.itemList.items.append(item)
                             placeMenuItem(item)
@@ -898,10 +852,10 @@ final class AppDelegate: NSObject,
         } else {
             // No serialized items are present, so assemble a list based on the default values
             // NOTE This will typically only be called on first run (we save the order after that)
-            let defaultItems: [Int] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) as! [Int]
+            let defaultItems = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) as! [Int]
 
             for itemCode in defaultItems {
-                if let item: MenuItem = getNewMenuItem(itemCode) {
+                if let item = getNewMenuItem(itemCode) {
                     // Add the menu item to the list
                     self.itemList.items.append(item)
                     placeMenuItem(item)
@@ -916,15 +870,15 @@ final class AppDelegate: NSObject,
         addAppMenuItem(!self.showImages)
 
         // Now add the app menu to the macOS menu bar
-        let bar: NSStatusBar = NSStatusBar.system
+        let bar = NSStatusBar.system
         self.statusItem = bar.statusItem(withLength: NSStatusItem.squareLength)
         if self.statusItem != nil && self.appMenu != nil {
             self.statusItem!.button!.image = NSImage(named: "menu_icon")
             self.statusItem!.button!.isHighlighted = false
             self.statusItem!.behavior = NSStatusItem.Behavior.terminationOnRemoval
             self.statusItem!.menu = self.appMenu!
-            let version: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-            let build: String = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+            let version = Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+            let build = Bundle.main.object(forInfoDictionaryKey: "CFBundleVersion") as! String
             self.statusItem!.button!.toolTip = "MNU: handy actions in one easy-to-reach place\nVersion \(version) (\(build))"
             self.statusItem!.isVisible = true
         } else {
@@ -1016,21 +970,22 @@ final class AppDelegate: NSObject,
           be hidden from view via the Configure Window.
      */
     @objc
+    @MainActor
     private func updateMenu() {
-        
+
         // Clear the menu in order to rebuild it
         self.appMenu!.removeAllItems()
         
         // Iterate through the menu items, creating NSMenuItems to represent the visible ones
-        for item: MenuItem in self.itemList.items {
+        for item in self.itemList.items {
             placeMenuItem(item, self.optionClick)
         }
         
         // No items being shown at all? Then add a note about it!
         if self.appMenu!.items.count < 1 {
-            let noteItem: NSMenuItem = NSMenuItem(title: "You have hidden all your items",
-                                                  action: #selector(self.showConfigureWindow),
-                                                  keyEquivalent: "")
+            let noteItem = NSMenuItem(title: "You have hidden all your items",
+                                      action: #selector(self.showConfigureWindow),
+                                      keyEquivalent: "")
             noteItem.isEnabled = false
             self.appMenu!.addItem(noteItem)
             self.appMenu!.addItem(NSMenuItem.separator())
@@ -1041,22 +996,15 @@ final class AppDelegate: NSObject,
     }
 
 
+    /**
+     We have received a notification from the Configure Window's controller that the
+     list of Menu Items has changed in some way, so rebuild the menu from scratch.
+     */
     @objc
+    @MainActor
     private func updateAndSaveMenu() {
         
-        // We have received a notification from the Configure Window's controller that the
-        // list of Menu Items has changed in some way, so rebuild the menu from scratch
-        /*
-        if let itemList: MenuItemList = cwvc.menuItems {
-            //self.items = itemList.items
-            self.items.removeAll()
-            for item in itemList.items {
-                self.items.append(item)
-            }
-        }
-        */
-
-        if let itemList: MenuItemList = cwvc.menuItems {
+        if let itemList = cwvc.menuItems {
             self.itemList = itemList
         }
 
@@ -1074,12 +1022,12 @@ final class AppDelegate: NSObject,
     private func makeNSMenuItem(_ item: MenuItem) -> NSMenuItem {
 
         if item.type == .separator {
-            return NSMenuItem.separator()
+            return .separator()
         } else {
             // Create and return an NSMenuItem for the specified Menu Item instance
-            let menuItem: NSMenuItem = NSMenuItem(title: item.title,
-                                                  action: nil,
-                                                  keyEquivalent: item.keyEquivalent)
+            let menuItem = NSMenuItem(title: item.title,
+                                      action: nil,
+                                      keyEquivalent: item.keyEquivalent)
             
             // FROM 1.7.0
             // Implement key modifiers if required
@@ -1231,9 +1179,10 @@ final class AppDelegate: NSObject,
      - Parameters:
         - doSeparate - `true` to prefix the item with a separator.
      */
+    @MainActor
     private func addAppMenuItem(_ doSeparate: Bool) {
-        
-        if let appItem: NSMenuItem = self.acvc.controlMenuItem {
+
+        if let appItem = self.acvc.controlMenuItem {
             self.appMenu!.addItem(NSMenuItem.separator())
             self.appMenu!.addItem(appItem)
         }
@@ -1248,7 +1197,7 @@ final class AppDelegate: NSObject,
         
         if self.icons.count == 0 {
             for i in 0..<MNU_CONSTANTS.DEFAULT_ICONS.count {
-                let image: NSImage? = NSImage(named: "logo_" + MNU_CONSTANTS.DEFAULT_ICONS[i])
+                let image = NSImage(named: "logo_" + MNU_CONSTANTS.DEFAULT_ICONS[i])
                 self.icons.append(image!)
             }
         }
@@ -1264,7 +1213,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeModeSwitch() -> MenuItem {
 
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.UIMODE
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.UIMODE
         newItem.type = .switch
@@ -1283,7 +1232,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeDesktopSwitch() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.DESKTOP
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.DESKTOP
         newItem.type = .switch
@@ -1300,7 +1249,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeHiddenFilesSwitch() -> MenuItem {
 
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_HIDDEN
         newItem.code = MNU_CONSTANTS.ITEMS.SWITCH.SHOW_HIDDEN
         newItem.type = .switch
@@ -1317,7 +1266,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeGitScript() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GIT
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.GIT
         newItem.type = .script
@@ -1334,7 +1283,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeBrewUpdateScript() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPDATE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPDATE
         newItem.type = .script
@@ -1351,7 +1300,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeBrewUpgradeScript() -> MenuItem {
 
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.BREW_UPGRADE
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.BREW_UPGRADE
         newItem.type = .script
@@ -1370,7 +1319,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeShowIPScript() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_IP
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_IP
         newItem.type = .script
@@ -1391,7 +1340,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeShowDiskFullScript() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.SHOW_DF
         newItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.SHOW_DF
         newItem.type = .script
@@ -1412,7 +1361,7 @@ final class AppDelegate: NSObject,
      */
     internal func makeGetScreenshotOpen() -> MenuItem {
         
-        let newItem: MenuItem = MenuItem()
+        let newItem = MenuItem()
         newItem.title = MNU_CONSTANTS.BUILT_IN_TITLES.GRAB_WINDOW
         newItem.code = MNU_CONSTANTS.ITEMS.OPEN.GRAB_WINDOW
         newItem.type = .open
@@ -1484,13 +1433,13 @@ final class AppDelegate: NSObject,
 
         assert(keyArray.count == valueArray.count, "Default preferences arrays are mismatched")
         let defaultsDict = Dictionary(uniqueKeysWithValues: zip(keyArray, valueArray))
-        let defaults: UserDefaults = UserDefaults.standard
+        let defaults = UserDefaults.standard
         defaults.register(defaults: defaultsDict)
         
         // FROM 1.6.0
         // Reset the stored defaults to add new items
         // NOTE This catches users only working with the default items
-        if let storedDefaults: [Any] = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) {
+        if let storedDefaults = defaults.array(forKey: MNU_CONSTANTS.SETTINGS_IDS.DEFAULT_ITEMS) {
             if storedDefaults.count < defaultItemArray.count {
                 // Previously stored defaults don't contain new values,
                 // so write them into the store
@@ -1525,7 +1474,7 @@ final class AppDelegate: NSObject,
         }
         
         if !isTest {
-            let scriptName: String = (path as NSString).lastPathComponent
+            let scriptName = (path as NSString).lastPathComponent
             showErrorOnMainThread("\(scriptName) is not installed", "You will need to install this script to run this MNU item (or hide the item).")
         }
         
@@ -1554,9 +1503,10 @@ final class AppDelegate: NSObject,
         - text: The alert body copy.
      */
     private func showErrorOnMainThread(_ head: String, _ text: String) {
-        
-        DispatchQueue.main.async {
-            let alert: NSAlert = NSAlert()
+
+        // FROM 2.5.0 -- switch to Swift Concurrency
+        Task { @MainActor in
+            let alert = NSAlert()
             alert.messageText = head
             alert.informativeText = text
             alert.addButton(withTitle: "OK")
@@ -1593,8 +1543,8 @@ final class AppDelegate: NSObject,
         //   'parts': ['/usr/local/bin/pdfmaker', '-f', 'jpg', '-s', '/Users/z/source', '-d', '/users/z/target']
         
         // FROM 1.6.0 -- first handle for path space escapes
-        let spacedCode: String = (code as NSString).replacingOccurrences(of: "\\ ", with: "!--ESC_SPACE--!")
-        let parts = (spacedCode as NSString).components(separatedBy: " ")
+        let spacedCode = code.replacingOccurrences(of: "\\ ", with: "!--ESC_SPACE--!")
+        let parts = spacedCode.components(separatedBy: " ")
         
         // FROM 1.3.0 - Just in case that didn't quite work...
         if parts.count == 0 {
@@ -1605,14 +1555,14 @@ final class AppDelegate: NSObject,
         // TODO Add limited quoting
         
         // Get the app and its arguments
-        let app: String = parts[0]
-        var args: [String] = [String]()
-        
+        let app = parts[0]
+        var args = [String]()
+
         if parts.count > 1 {
             // Copy args beyond index 0 (the app)
             for i in 1..<parts.count {
                 // FROM 1.6.0 -- put back per-arg spaces
-                args.append((parts[i] as NSString).replacingOccurrences(of: "!--ESC_SPACE--!", with: " "))
+                args.append(parts[i].replacingOccurrences(of: "!--ESC_SPACE--!", with: " "))
             }
         }
         
@@ -1638,8 +1588,8 @@ final class AppDelegate: NSObject,
 #endif
         
         // Handle escapable characters
-        let escapedCode: NSString = escaper(code)
-        
+        let escapedCode = escaper(code)
+
         // FROM 1.6.0
         // Support multiple terminals
         let script: String
@@ -1648,7 +1598,7 @@ final class AppDelegate: NSObject,
         // in a new Terminal tab if that is required by the user -- 'tabSelection' contains
         // script variations to accommodate this
         case MNU_CONSTANTS.TERMINAL.ITERM:
-            let tabSelection: String = self.doNewTermTab ? "create tab with default profile" : "current tab"
+            let tabSelection = self.doNewTermTab ? "create tab with default profile" : "current tab"
             script = """
                 tell application \"iTerm\"
                 activate
@@ -1746,20 +1696,20 @@ final class AppDelegate: NSObject,
      - Parameters
         - appName: The name of the script in the bundle.
      */
-    internal func escaper(_ unescapedString: String) -> NSString {
+    internal func escaper(_ unescapedString: String) -> String {
         
         // Convert the script string to an NSString so we can run 'replacingOccurrences()'
-        var escapedCode: NSString = unescapedString as NSString
-        
+        //var escapedCode = unescapedString as NSString
+
         // Look for user-escaped DQs and temporarily hide them
-        escapedCode = escapedCode.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") as NSString
-        
+        var escapedCode = unescapedString.replacingOccurrences(of: "\\\"", with: "!-USER-ESCAPED-D-QUOTES-!") //as NSString
+
         // FROM 1.6.0
         // Process escaped slashes ***
-        escapedCode = escapedCode.replacingOccurrences(of: "\\", with: "\\\\") as NSString
+        escapedCode = escapedCode.replacingOccurrences(of: "\\", with: "\\\\") //as NSString
         // Look for escaped DQs
-        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") as NSString
-        
+        escapedCode = escapedCode.replacingOccurrences(of: "\"", with: "\\\"") //as NSString
+
         // FROM 1.6.0
         // Remove specific slash-symbol combos, which should now be covered by *** above
         // Look for escaped $ symbols: \$ -> \\$ -> \\\\$
@@ -1768,8 +1718,8 @@ final class AppDelegate: NSObject,
         //escapedCode = escapedCode.replacingOccurrences(of: "\\`", with: "\\\\`") as NSString
         
         // Put back user-escaped DQs
-        escapedCode = escapedCode.replacingOccurrences(of: "!-USER-ESCAPED-D-QUOTES-!", with: "\\\\\\\"") as NSString
-        
+        escapedCode = escapedCode.replacingOccurrences(of: "!-USER-ESCAPED-D-QUOTES-!", with: "\\\\\\\"") //as NSString
+
         return escapedCode
     }
 
@@ -1790,7 +1740,7 @@ final class AppDelegate: NSObject,
         
         // FROM 1.5.0
         // Get the app's valid path (or nil if there isn't one)
-        if let path: String = getAppPath(appName) {
+        if let path = getAppPath(appName) {
             #if DEBUG
             NSLog("MNU running script \'open \(path)\'")
             #endif
@@ -1815,9 +1765,9 @@ final class AppDelegate: NSObject,
      */
     private func runBundleScript(named scriptName: String, doAddPath: Bool) {
         
-        if let scriptPath: String = Bundle.main.path(forResource: scriptName, ofType: "scpt") {
-            let appPath: String = Bundle.main.bundlePath
-            var args: [String] = [scriptPath]
+        if let scriptPath = Bundle.main.path(forResource: scriptName, ofType: "scpt") {
+            let appPath = Bundle.main.bundlePath
+            var args = [scriptPath]
             if doAddPath {
                 // Add 'appPath' to the args so it's passed into the
                 // AppleScript 'AddToLogin' by osascript. Not required
@@ -1857,21 +1807,22 @@ final class AppDelegate: NSObject,
             }
             
             // This will display the window, ready for output
-            DispatchQueue.main.async {
+            // FROM 2.5.0 -- switch to Swift Concurrency
+            Task { @MainActor in
                 self.outputWindow.prepareForOutput(subtitle, !self.inDarkMode)
             }
         }
         
         // FROM 1.6.1
         // Run the process on a secondary thread
-        let processQueue: DispatchQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
+        let processQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
         processQueue.async {
-            let task: Process = Process()
+            let task = Process()
             task.executableURL = URL(fileURLWithPath: path)
-            if args.count > 0 { task.arguments = args }
+            task.arguments = args
 
             // Pipe out the output to avoid putting it in the log
-            let outputPipe: Pipe = Pipe()
+            let outputPipe = Pipe()
             task.standardOutput = outputPipe
             task.standardError = outputPipe
 
@@ -1909,8 +1860,8 @@ final class AppDelegate: NSObject,
             
             if !task.isRunning && task.terminationStatus != 0 && !self.doShowOutput {
                 // Command failed -- collect the output if there is any
-                var outString: String = ""
-                if let line: String = String(data: outputHandle.availableData, encoding: String.Encoding.utf8) {
+                var outString = ""
+                if let line = String(data: outputHandle.availableData, encoding: .utf8) {
                     outString = line
                 }
                 
@@ -1934,8 +1885,9 @@ final class AppDelegate: NSObject,
 
 
     func scrollToEndOnMain() {
-        
-        DispatchQueue.main.async {
+
+        // FROM 2.5.0 -- switch to Swift Concurrency
+        Task { @MainActor in
             self.outputWindow.appendRule()
             self.outputWindow.outputTextView.scrollToEndOfDocument(self)
         }
@@ -1950,7 +1902,7 @@ final class AppDelegate: NSObject,
      */
     internal func killFinder(andDock: Bool) {
         
-        var args: [String] = ["Finder"]
+        var args = ["Finder"]
         if andDock { args.append("Dock") }
         
         // Run the process

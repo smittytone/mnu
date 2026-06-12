@@ -43,10 +43,6 @@ final class FeedbackSheetViewController: NSViewController,
     // MARK: - Public Class Properties
 
     var parentWindow: NSWindow? = nil
-    
-    // MARK: - Private Class Properties
-
-    private var feedbackTask: URLSessionTask? = nil
 
 
     // MARK: - Lifecycle Functions
@@ -69,22 +65,18 @@ final class FeedbackSheetViewController: NSViewController,
         }
     }
 
-    
+
     // MARK: - User Actions
     
     @IBAction
     @objc
     func doCancel(sender: Any?) {
         
-        // FROM 1.7.0
         // Stop editing the NSTextField
-        if let theText: NSText = self.feedbackText.currentEditor() {
-            self.feedbackText.endEditing(theText)
-        }
-        
+        endEditing()
+
         // Close the sheet
-        self.parentWindow!.endSheet(self.feedbackSheet)
-        self.parentWindow = nil
+        closeFeedackSheet()
     }
 
 
@@ -92,114 +84,151 @@ final class FeedbackSheetViewController: NSViewController,
     @objc
     func doSend(sender: Any?) {
         
-        let feedback: String = self.feedbackText.stringValue
-        
-        if feedback.count > 0 {
-            // Start the connection indicator if it's not already visible
-            self.connectionProgress.startAnimation(self)
-            
-            // Send the string etc.
-            let userAgent: String = getUserAgentForFeedback()
-            let dateString: String = getDateForFeedback()
-            
-            // Assemble the message string
-            let dataString: String = """
-             *FEEDBACK REPORT*
-             *Date:* \(dateString)
-             *User Agent:* \(userAgent)
-             *Feedback:*
-             \(feedback)
-             """
-            
-            let dict: NSMutableDictionary = NSMutableDictionary()
-            dict.setObject(dataString, forKey: NSString(string: "text"))
-            dict.setObject(true, forKey: NSString(string: "mrkdown"))
-            
-            if let url: URL = URL(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
-                var request: URLRequest = URLRequest(url: url)
-                request.httpMethod = "POST"
-                do {
-                    request.httpBody = try JSONSerialization.data(withJSONObject: dict,
-                                                                  options:JSONSerialization.WritingOptions(rawValue: 0))
-                    
-                    request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
-                    request.addValue("application/json", forHTTPHeaderField: "Content-type")
-                    
-                    let config: URLSessionConfiguration = URLSessionConfiguration.ephemeral
-                    let session: URLSession = URLSession(configuration: config,
-                                                         delegate: self,
-                                                         delegateQueue: OperationQueue.main)
-                    self.feedbackTask = session.dataTask(with: request)
-                    self.feedbackTask?.resume()
-                } catch {
-                    sendFeedbackError()
-                }
+        let feedback = self.feedbackText.stringValue
+        if feedback.isEmpty {
+            closeFeedackSheet()
+            return
+        }
+
+        // FROM 2.5.0
+        // Use Swift Concurrency
+        // NOTE Use of Task and closure required because @IBAction functions
+        //      cannot be `async`, but we make an `await` call later on
+        Task { @MainActor in
+            // Post the feedback asynchronously
+            let error = await self.sendFeedback(feedback)
+            self.connectionProgress.stopAnimation(self)
+            if error.code != .noError {
+                // Error - inform the user
+                await presentFeedbackError(error)
+            } else {
+                // No error - feedback sent successfully
+                await presentFeedbackSuccess()
             }
-        } else {
-            self.parentWindow!.endSheet(self.feedbackSheet)
-            self.parentWindow = nil
         }
     }
 
-    
-    // MARK: - URLSession Delegate Functions
 
-    func urlSession(_ session: URLSession, didBecomeInvalidWithError error: Error?) {
-        
-        // Some sort of connection error - report it
-        sendFeedbackError()
+    // MARK: - Alert Functions
+
+    /**
+     Present an error message specific to sending feedback.
+
+     This is called from multiple locations: if the initial request can't be created,
+     there was a send failure, or a server error.
+
+     FROM 2.5.0
+     */
+    private func presentFeedbackError(_ error: FeedbackError) async {
+
+        await showFeedbackAlert("Feedback Could Not Be Sent",
+                                "Unfortunately, your comments could not be send at this time. Please try again later.\n\nReason: \(error.localizedDescription)")
     }
 
 
-    func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+    /**
+     Present a message on successfully sending feedback.
 
-        // The operation to send the comment completed
-        
-        if let _ = error {
-            // An error took place - report it
-            sendFeedbackError()
-        } else {
-            // The comment was submitted successfully
-            let alert: NSAlert = NSAlert()
-            alert.messageText = "Thanks For Your Feedback!"
-            alert.informativeText = "Your comments have been received and we’ll take a look at them shortly."
-            alert.addButton(withTitle: "OK")
-            alert.beginSheetModal(for: self.feedbackSheet) { (resp) in
-                // FROM 1.7.0 -- stop editing the NSTextField
-                if let theText: NSText = self.feedbackText.currentEditor() {
-                    self.feedbackText.endEditing(theText)
-                }
-                
-                // Close the feedback window when the modal alert returns
-                self.parentWindow!.endSheet(self.feedbackSheet)
-            }
+     FROM 2.5.0
+     */
+    private func presentFeedbackSuccess() async {
+
+        await showFeedbackAlert("Thanks For Your Feedback!",
+                                "Your comments have been received and we’ll take a look at them shortly.")
+
+    }
+
+
+    /**
+     Generic alert generator.
+
+     FROM 2.5.0
+
+     - Parameters:
+        - head:        The alert's title.
+        - message:     The alert's message.
+     */
+    private func showFeedbackAlert(_ head: String, _ message: String) async {
+
+        let alert = NSAlert()
+        alert.messageText = head
+        alert.informativeText = message
+        alert.beginSheetModal(for: self.feedbackSheet) { (_) in
+            self.endEditing()
+            self.closeFeedackSheet()
         }
-        
-        // FROM 1.7.0 -- Stop the animation
-        self.connectionProgress.stopAnimation(self)
     }
 
 
     // MARK: - Misc Functions
 
     /**
-     Present an error message specific to sending feedback.
-     This is called from multiple locations: if the initial request can't be created,
-     there was a send failure, or a server error.
+     Send entered feedback to the server.
+
+     FROM 2.5.0
+
+     - Parameters:
+        - `feedback`: The text of the feedback
+
+     - Returns: An error instance.
      */
-    func sendFeedbackError() {
-        
-        let alert: NSAlert = NSAlert()
-        alert.messageText = "Feedback Could Not Be Sent"
-        alert.informativeText = "Unfortunately, your comments could not be send at this time. Please try again later."
-        alert.addButton(withTitle: "OK")
-        alert.beginSheetModal(for: self.feedbackSheet) { (resp) in
-            // FROM 1.7.0
-            // Stop editing the NSTextField
-            if let theText: NSText = self.feedbackText.currentEditor() {
-                self.feedbackText.endEditing(theText)
+    private func sendFeedback(_ feedback: String) async -> FeedbackError {
+
+        // Start the connection indicator if it's not already visible
+        self.connectionProgress.startAnimation(self)
+        defer { self.connectionProgress.stopAnimation(self) }
+
+        // Send the string etc.
+        let userAgent = getUserAgentForFeedback()
+        let date = getDateForFeedback()
+
+        // Assemble the message string
+        let message = """
+         *FEEDBACK REPORT*
+         *Date:* \(date)
+         *User Agent:* \(userAgent)
+         *Feedback:*
+         \(feedback)
+         """
+
+        // Build the data we will POST:
+        let payload = NSMutableDictionary()
+        payload.setObject(message, forKey: NSString(string: "text"))
+        payload.setObject(true, forKey: NSString(string: "mrkdown"))
+
+        if let url = URL(string: MNU_SECRETS.ADDRESS.B + MNU_SECRETS.ADDRESS.A) {
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.addValue(userAgent, forHTTPHeaderField: "User-Agent")
+            request.addValue("application/json", forHTTPHeaderField: "Content-type")
+
+            do {
+                request.httpBody = try JSONSerialization.data(withJSONObject: payload,
+                                                              options:JSONSerialization.WritingOptions(rawValue: 0))
+            } catch {
+                return FeedbackError(code: .badEncode)
+            }
+
+            // Send the feedback
+            do {
+                let (_, response): (Data, URLResponse) = try await URLSession.shared.data(for: request)
+
+                // Check we received an HTTP response
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    return FeedbackError(code: .badResponse)
+                }
+
+                // Check the HTTP response status code
+                guard (200..<300).contains(httpResponse.statusCode) else {
+                    return FeedbackError(code: .badStatusCode, text: "\(httpResponse.statusCode)")
+                }
+            } catch {
+                // TX failed
+                return FeedbackError(code: .badSession)
             }
         }
+
+        return FeedbackError(code: .noError)
     }
 
 
@@ -225,10 +254,10 @@ final class FeedbackSheetViewController: NSViewController,
      
      - Returns The date string.
      */
-    func getDateForFeedback() -> String {
-        
-        let date: Date = Date()
-        let dateFormatter: DateFormatter = DateFormatter()
+    private func getDateForFeedback() -> String {
+
+        let date = Date()
+        let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale(identifier: "en_US_POSIX")
         dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
         dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
@@ -243,17 +272,40 @@ final class FeedbackSheetViewController: NSViewController,
      
      - Returns The user agent string.
      */
-    func getUserAgentForFeedback() -> String {
-        
-        let sysVer: OperatingSystemVersion = ProcessInfo.processInfo.operatingSystemVersion
-        let bundle: Bundle = Bundle.main
-        let app: String = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
-        let version: String = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
-        let build: String = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
-        
+    private func getUserAgentForFeedback() -> String {
+
+        let sysVer = ProcessInfo.processInfo.operatingSystemVersion
+        let bundle = Bundle.main
+        let app = bundle.object(forInfoDictionaryKey: "CFBundleExecutable") as! String
+        let version = bundle.object(forInfoDictionaryKey: "CFBundleShortVersionString") as! String
+        let build = bundle.object(forInfoDictionaryKey: "CFBundleVersion") as! String
+
         // FROM 1.7.0
         // Standardise the user agent format
         return "\(app)/\(version)-\(build) (macOS/\(sysVer.majorVersion).\(sysVer.minorVersion).\(sysVer.patchVersion))"
+    }
+
+
+    /**
+     End editing of the primary text field.
+     */
+    @MainActor
+    private func endEditing() {
+
+        if let theText = self.feedbackText.currentEditor() {
+            self.feedbackText.endEditing(theText)
+        }
+    }
+
+
+    /**
+     Close the feedback sheet and zap the reference to the parent window.
+     */
+    @MainActor
+    private func closeFeedackSheet() {
+
+        self.parentWindow!.endSheet(self.feedbackSheet)
+        self.parentWindow = nil
     }
 
 }
