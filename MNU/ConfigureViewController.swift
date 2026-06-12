@@ -1301,34 +1301,32 @@ final class ConfigureViewController:  NSViewController,
             // Right Arrow key pressed
             // Cycle through the tabs in that direction
             if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
-                if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
-                    let index: Int = self.windowTabView.indexOfTabViewItem(selectedTab)
-                    if index == 2 {
-                        self.windowTabView.selectTabViewItem(at: 0)
-                        return
-                    }
+                let index = self.tabManager.currentIndex
+                if index == 2 {
+                    self.tabManager.programmaticallyClickButton(at: 0)
+                    return
                 }
 
-                self.windowTabView.selectNextTabViewItem(self)
-                return
+                self.tabManager.programmaticallyClickButton(at: index + 1)
             }
+
+            return
         }
 
         if (event.keyCode == MNU_CONSTANTS.MENU_ARL_KEY) {
             // Left Arrow key pressed
             // Cycle through the tabs in that direction
             if self.aivc.parentWindow == nil && self.fbvc.parentWindow == nil {
-                if let selectedTab: NSTabViewItem = self.windowTabView.selectedTabViewItem {
-                    let index: Int = self.windowTabView.indexOfTabViewItem(selectedTab)
-                    if index == 0 {
-                        self.windowTabView.selectTabViewItem(at: 2)
-                        return
-                    }
+                let index = self.tabManager.currentIndex
+                if index == 0 {
+                    self.tabManager.programmaticallyClickButton(at: 2)
+                    return
                 }
 
-                self.windowTabView.selectPreviousTabViewItem(self)
-                return
+                self.tabManager.programmaticallyClickButton(at: index - 1)
             }
+
+            return
         }
 
         if event.keyCode == 46 && event.modifierFlags.contains(NSEvent.ModifierFlags.command) {
