@@ -550,9 +550,15 @@ final class AppDelegate: NSObject,
 
         // Run the AppleScript
         // FROM 1.7.0 -- Run off the main thread
-        let apsQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
+        //let apsQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.APS_QUEUE)
         let source = script
-        apsQueue.async {
+        //apsQueue.async {
+        //    if let aps = NSAppleScript(source: source) {
+        //        aps.executeAndReturnError(nil)
+        //    }
+        //}
+
+        Task {
             if let aps = NSAppleScript(source: source) {
                 aps.executeAndReturnError(nil)
             }
@@ -807,7 +813,7 @@ final class AppDelegate: NSObject,
                     placeMenuItem(itemInstance)
                 } catch {
                     // We couldn't load one of the saved list of MNU items, so ask the user what to do
-                    // FROM 2.5.0 -- switch to Swift Concurrency
+                    // FROM 2.5.0 -- use Swift Concurrency
                     Task { @MainActor in
                         let alert = NSAlert()
                         alert.messageText = "Stored MNU items are damaged"
@@ -1504,7 +1510,7 @@ final class AppDelegate: NSObject,
      */
     private func showErrorOnMainThread(_ head: String, _ text: String) {
 
-        // FROM 2.5.0 -- switch to Swift Concurrency
+        // FROM 2.5.0 -- use Swift Concurrency
         Task { @MainActor in
             let alert = NSAlert()
             alert.messageText = head
@@ -1807,7 +1813,7 @@ final class AppDelegate: NSObject,
             }
             
             // This will display the window, ready for output
-            // FROM 2.5.0 -- switch to Swift Concurrency
+            // FROM 2.5.0 -- use Swift Concurrency
             Task { @MainActor in
                 self.outputWindow.prepareForOutput(subtitle, !self.inDarkMode)
             }
@@ -1815,8 +1821,8 @@ final class AppDelegate: NSObject,
         
         // FROM 1.6.1
         // Run the process on a secondary thread
-        let processQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
-        processQueue.async {
+        //let processQueue = DispatchQueue(label: MNU_CONSTANTS.MISC_IDS.PROCESS_QUEUE)
+        Task {
             let task = Process()
             task.executableURL = URL(fileURLWithPath: path)
             task.arguments = args
@@ -1839,7 +1845,7 @@ final class AppDelegate: NSObject,
                 let data = fileHandle.availableData
                 if let output = String(data: data, encoding: .utf8) {
                     // TODO Extract (and then parse) ANSI strings, eg. ESC [ 31 m
-                    DispatchQueue.main.async {
+                    Task { @MainActor in
                         strongSelf.outputWindow.appendText(output)
                     }
                 }
@@ -1886,7 +1892,7 @@ final class AppDelegate: NSObject,
 
     func scrollToEndOnMain() {
 
-        // FROM 2.5.0 -- switch to Swift Concurrency
+        // FROM 2.5.0 -- use Swift Concurrency
         Task { @MainActor in
             self.outputWindow.appendRule()
             self.outputWindow.outputTextView.scrollToEndOfDocument(self)
