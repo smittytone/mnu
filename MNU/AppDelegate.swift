@@ -704,9 +704,8 @@ final class AppDelegate: NSObject,
         // FROM 1.5.1 Support standard ARM Mac install location too
         //            This will see if we have brew in either location,
         //            but won't display a warning
-        let brewAvailable = (checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true))
-        if brewAvailable {
-            runScript("brew upgrade")
+        if checkScriptExists("/usr/local/bin/brew", true) || checkScriptExists("/opt/homebrew/bin/brew", true) {
+            runScript("brew upgrade --yes")
         } else {
             // This will check for brew again, which we've already done,
             // but this time we don't pass 'true' so a warning is presented to the user
