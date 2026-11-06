@@ -1,6 +1,6 @@
 ## Release Notes ##
 
-- 2.5.0 *Unreleased*
+- 2.5.0 *6 November 2026*
     - Adopt Swift Concurrency as a prelude to Swift 6 migration.
     - Use new `--yes` flag to force `brew upgrade` to operate as before.
     - Allow new MNU items to be added via the contextual menu above as well as below clicked menu items.
