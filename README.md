@@ -25,3 +25,5 @@ MNU is copyright &copy; 2026, Tony Smith.
 ## Licence
 
 MNU’s source code is issued under the [MIT Licence](./LICENSE). MNU’s graphics are not included in the source code. However, I do include a selection of custom menu images for users of macOS 26.x and up. Select and these by editing a menu item and choosing a custom image.
+
+_AI was not used in the development of this software. This is a statement of plain fact, not of policy. AI tools may be used in future._
