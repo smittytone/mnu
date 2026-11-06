@@ -81,32 +81,32 @@ final class ConfigureViewController:  NSViewController,
 
     // MARK: - Public Class Properties
 
-    var menuItems: MenuItemList? = nil
-    var configureWindow: PMConfigureWindow? = nil
-    let mnuPasteboardType = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
-    var hasChanged: Bool = false
-    var lastChance: Bool = false
+    var menuItems: MenuItemList?                    = nil
+    var configureWindow: PMConfigureWindow?         = nil
+    let mnuPasteboardType                           = NSPasteboard.PasteboardType(rawValue: MNU_CONSTANTS.MISC_IDS.PASTEBOARD)
+    var hasChanged: Bool                            = false
+    var lastChance: Bool                            = false
     // FROM 1.6.0
-    var terminalChoice: Int = 0
-    var tabOpenChoice: Bool = false
+    var terminalChoice: Int                         = 0
+    var tabOpenChoice: Bool                         = false
     // FROM 2.0.0
-    var doShowOutput: Bool = false
+    var doShowOutput: Bool                          = false
     // FROM 2.4.0
-    var firstOpen: Bool = true
+    var firstOpen: Bool                             = true
 
 
     // MARK: - Private Class Properties
 
-    private  var systemVersion: Int = 10
+    private  var systemVersion: Int                 = 10
     // FROM 1.1.0
-    private  var extrasMenu: NSMenu? = nil
+    private  var extrasMenu: NSMenu?                = nil
     // FROM 1.7.0
-    private  var systemVersionMinor: Int = 14
+    private  var systemVersionMinor: Int            = 14
     // FROM 2.0.0
-    private  var tabManager: PMTabManager = PMTabManager()
-    private  var autoSeparateInForce: Bool = false
-    private  var newMenuItemIndex: Int = 0
-    internal var customIcons: [CustomIcon] = []
+    private  var tabManager: PMTabManager           = PMTabManager()
+    private  var autoSeparateInForce: Bool          = false
+    private  var newMenuItemIndex: Int              = -1
+    internal var customIcons: [CustomIcon]          = []
 
 
     // MARK: - Lifecycle Functions
@@ -422,7 +422,7 @@ final class ConfigureViewController:  NSViewController,
     @objc
     private func doNewScriptItem(sender: Any?) {
 
-        doAdd(self.menuItems?.items.count ?? -1)
+        doAdd()
     }
 
 
@@ -447,7 +447,7 @@ final class ConfigureViewController:  NSViewController,
 
      FROM 2.0.0
      */
-    private func doAdd(_ additionPoint: Int) {
+    private func doAdd() {
 
         guard checkMenuItemCount() else { return }
 
@@ -621,37 +621,114 @@ final class ConfigureViewController:  NSViewController,
 
     @IBAction
     @objc
-    private func doContextAddNewItem(sender: Any) {
+    private func doContextAddNewItemAbove(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
         let menuItem = sender as! NSMenuItem
         if let item = menuItem.representedObject as? MenuItem {
-            if let index = self.menuItems?.items.firstIndex(of: item) {
-                self.newMenuItemIndex = index
-                doAdd(index)
-            }
+            insertItem(above: true, item)
         }
     }
 
 
     @IBAction
     @objc
-    private func doContextAddSeparator(sender: Any) {
+    private func doContextAddNewItemBelow(sender: Any) {
 
         // Get the menu item from the reference stored in the contextual menu item
         let menuItem = sender as! NSMenuItem
         if let item = menuItem.representedObject as? MenuItem {
-            if let index = self.menuItems?.items.firstIndex(of: item) {
-                let newMenuItem = MenuItem()
-                newMenuItem.type = .separator
-                newMenuItem.title = "Separator"
-                newMenuItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
-                self.menuItems?.items.insert(newMenuItem, at: index + 1)
-                self.hasChanged = true
-                self.applyChangesButton.isEnabled = true
-                self.menuItemsTableView.reloadData()
+            insertItem(above: false, item)
+        }
+    }
+
+
+    /**
+     Insert a new menu item above or below the menu item option-clicked.
+
+     FROM 2.5.0
+
+     - Parameters:
+        - above:       Whether the separator should be placed above (`true`) or
+                       below (`false`) the clicked NSMenuItem.
+        - clickedItem: The MenuItem representation of the clicked NSMenuItem.
+     */
+    private func insertItem(above: Bool, _ clickedItem: MenuItem) {
+
+        if let index = self.menuItems?.items.firstIndex(of: clickedItem) {
+            let insertIndex = above ? index : index + 1
+            self.newMenuItemIndex = insertIndex
+            doAdd()
+        }
+    }
+
+
+    @IBAction
+    @objc
+    private func doContextAddSeparatorAbove(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
+            addSeparator(above: true, item)
+        }
+    }
+
+
+    @IBAction
+    @objc
+    private func doContextAddSeparatorBelow(sender: Any) {
+
+        // Get the menu item from the reference stored in the contextual menu item
+        let menuItem = sender as! NSMenuItem
+        if let item = menuItem.representedObject as? MenuItem {
+            addSeparator(above: false, item)
+        }
+    }
+
+
+    /**
+     Insert a menu separator above or below the menu item option-clicked.
+
+     FROM 2.5.0
+
+     - Parameters:
+        - above:       Whether the separator should be placed above (`true`) or
+                       below (`false`) the clicked NSMenuItem.
+        - clickedItem: The MenuItem representation of the clicked NSMenuItem.
+     */
+    private func addSeparator(above: Bool, _ clickedItem: MenuItem) {
+
+        if let index = self.menuItems?.items.firstIndex(of: clickedItem) {
+            let newMenuItem = newSeparator()
+            self.menuItems?.items.insert(newMenuItem, at: above ? index : index + 1)
+            self.hasChanged = true
+            self.applyChangesButton.isEnabled = true
+            self.menuItemsTableView.reloadData()
+
+            // Scroll to make the last row visible if we've just added a separator
+            // below what was the last item (it won't be shown otherwise)
+            if index == self.menuItemsTableView.numberOfRows - 2 {
+                self.menuItemsTableView.scrollRowToVisible(self.menuItemsTableView.numberOfRows - 1)
             }
         }
+    }
+
+
+    /**
+     Generate a separator MenuItem.
+
+     FROM 2.5.0
+
+     - Returns: A separator MenuItem.
+     */
+    private func newSeparator() -> MenuItem {
+
+        let newMenuItem = MenuItem()
+        newMenuItem.type = .separator
+        newMenuItem.title = "Separator"
+        newMenuItem.code = MNU_CONSTANTS.ITEMS.SCRIPT.USER
+        return newMenuItem
     }
 
 
@@ -1010,13 +1087,20 @@ final class ConfigureViewController:  NSViewController,
     @objc
     private func processNewItem() {
 
+        var scrollToEnd = false
         if !self.aivc.isEditing {
             // Add a newly created Menu Item to the list
             if let item = self.aivc.newMenuItem {
-                if self.newMenuItemIndex != 0 {
-                    self.menuItems!.items.insert(item, at: self.newMenuItemIndex + 1)
+                if self.newMenuItemIndex != -1 {
+                    self.menuItems!.items.insert(item, at: self.newMenuItemIndex)
+
+                    // Scroll to make the last row visible if we've just added a separator
+                    // below what was the last item (it won't be shown otherwise)
+                    scrollToEnd = (self.newMenuItemIndex == self.menuItems!.items.count - 1)
+                    self.newMenuItemIndex = -1
                 } else {
                     self.menuItems!.items.append(item)
+                    scrollToEnd = true
                 }
             }
         }
@@ -1031,6 +1115,11 @@ final class ConfigureViewController:  NSViewController,
         self.applyChangesButton.isEnabled = true
         self.menuItemsTableView.reloadData()
         displayItemCount()
+
+        // FROM 2.5.0
+        if scrollToEnd {
+            self.menuItemsTableView.scrollRowToVisible(self.menuItemsTableView.numberOfRows - 1)
+        }
 
         // FROM 2.1.0
         // Get the custom icon list back from `AddUserItemViewController`
@@ -1361,8 +1450,10 @@ final class ConfigureViewController:  NSViewController,
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.representedObject = item
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.representedObject = item
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.representedObject = item
-                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.representedObject = item
-                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW_ABOVE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW_BELOW)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR_ABOVE)!.representedObject = item
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR_BELOW)!.representedObject = item
 
                 // Contextualise the Show/Hide menu item's title
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)?.title = item.isHidden ? "Show" : "Hide"
@@ -1371,8 +1462,10 @@ final class ConfigureViewController:  NSViewController,
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SHOW_HIDE)!.isEnabled = true
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.EDIT)!.isEnabled = true
                 menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.DELETE)!.isEnabled = true
-                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW)!.isEnabled = true
-                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR)!.isEnabled = !self.autoSeparateInForce
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW_ABOVE)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.NEW_BELOW)!.isEnabled = true
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR_ABOVE)!.isEnabled = !self.autoSeparateInForce
+                menu.item(at: MNU_CONSTANTS.CONFIG_TABLE_CONTEXT_MENU.SEPARATOR_BELOW)!.isEnabled = !self.autoSeparateInForce
 
                 // ... but disabled those that are not needed by the Menu Item
                 // (ie. it represents a built-in item)

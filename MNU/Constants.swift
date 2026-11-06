@@ -159,8 +159,11 @@ struct MNU_CONSTANTS {
         static let SHOW_HIDE                    = 0
         static let EDIT                         = 1
         static let DELETE                       = 2
-        static let NEW                          = 3
-        static let SEPARATOR                    = 4
+        // FROM 2.5.0
+        static let NEW_ABOVE                    = 3
+        static let NEW_BELOW                    = 4
+        static let SEPARATOR_ABOVE              = 5
+        static let SEPARATOR_BELOW              = 6
     }
 
     static let DEFAULT_SYSTEM_FONT_SIZE         = 13.0
