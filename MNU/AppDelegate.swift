@@ -1079,6 +1079,13 @@ final class AppDelegate: NSObject,
             }
             
             if self.showImages {
+                // FROM 2.5.0
+                // Make sure menu items show up in macOS 27+
+                // (as the user has asked for them to be shown)
+                if #available(macOS 27.0, *) {
+                    menuItem.preferredImageVisibility = .visible
+                }
+
                 // FROM 2.1.0
                 // Include Tahoe-specific images
                 switch item.code {
