@@ -1832,7 +1832,7 @@ final class AppDelegate: NSObject,
             task.standardError = outputPipe
 
             let outputHandle = outputPipe.fileHandleForReading
-            outputHandle.readabilityHandler = { [weak self] fileHandle in
+            outputHandle.readabilityHandler = { [weak self = self] fileHandle in
                 // NOTE Pass in `weak self` to avoid reference cycle to `self`.
                 //      Hence the following check: bail if the instance reference
                 //      is `nil`.
